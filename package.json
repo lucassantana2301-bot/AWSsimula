@@ -1,0 +1,19 @@
+{
+  "name": "cloudquest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Estudo para certificações Azure e AWS: fichas, aulas curtas, simulados e trilha de carreira.",
+  "type": "commonjs",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node tests/test-logic.js && node tests/test-perimetro.js && node tests/test-dom.js && node tests/test-features.js",
+    "test:browser": "node tests/browser/check-layout.js && node tests/browser/check-a11y.js && node tests/browser/check-disabled.js && node tests/browser/check-weights.js && node tests/browser/check-motion.js && node tests/browser/check-csp.js",
+    "verify": "npm run build && npm test && npm run test:browser",
+    "vercel-build": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "jsdom": "31.0.0",
+    "puppeteer-core": "25.16.0"
+  }
+}
