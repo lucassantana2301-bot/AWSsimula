@@ -109,7 +109,7 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <g class="dp" style="animation-delay:.95s"><rect x="350" y="96" width="156" height="54" rx="4" fill="#2e2410" stroke="#fbbf24"/>
       <text x="428" y="116" fill="#fbbf24" font-size="12" text-anchor="middle">Artifact</text><text x="428" y="136" fill="#e8edf7" font-size="10.5" text-anchor="middle">entrega relatório</text></g>
     <text class="dp" style="animation-delay:1.15s" x="260" y="180" fill="#fb7185" font-size="11" text-anchor="middle">CloudTrail registra API. CloudWatch mede métrica. Não troque os dois.</text>
-    <text class="dp" style="animation-delay:1.3s" x="260" y="206" fill="#6b7a99" font-size="11" text-anchor="middle">Security Hub só junta os achados: quem detecta é o GuardDuty.</text>
+    <text class="dp" style="animation-delay:1.3s" x="260" y="206" fill="#6b7a99" font-size="11" text-anchor="middle">Security Hub centraliza e correlaciona achados: quem detecta ameaça é o GuardDuty.</text>
   </svg>`,
 
   computeEscolha: `<svg class="diag" viewBox="0 0 520 225" xmlns="http://www.w3.org/2000/svg">
@@ -129,7 +129,7 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <g class="dp" style="animation-delay:.85s"><rect x="360" y="40" width="130" height="90" rx="4" fill="#2a1a08" stroke="#ff9a2e"/>
       <text x="425" y="62" fill="#ffc182" font-size="12.5" text-anchor="middle">EC2</text>
       <text x="425" y="84" fill="#e8edf7" font-size="10" text-anchor="middle">máquina virtual</text>
-      <text x="425" y="102" fill="#9aa8c4" font-size="9.5" text-anchor="middle">controla o SÓ</text>
+      <text x="425" y="102" fill="#9aa8c4" font-size="9.5" text-anchor="middle">controla o SO</text>
       <text x="425" y="118" fill="#9aa8c4" font-size="9.5" text-anchor="middle">carga constante</text></g>
     <text class="dp" style="animation-delay:1.05s" x="260" y="212" fill="#fbbf24" font-size="11" text-anchor="middle">Duração, previsibilidade e quanto você quer administrar decidem.</text>
   </svg>`,
@@ -180,12 +180,12 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text class="dp" style="animation-delay:.2s" x="86" y="80" fill="#e8edf7" font-size="11" text-anchor="middle">QUEM pode</text>
     <text class="dp" style="animation-delay:.25s" x="86" y="98" fill="#e8edf7" font-size="11" text-anchor="middle">fazer o que</text>
     <text class="dp" style="animation-delay:.3s" x="86" y="128" fill="#9aa8c4" font-size="10" text-anchor="middle">Leitor / Colaborador</text>
-    <text class="dp" style="animation-delay:.3s" x="86" y="144" fill="#9aa8c4" font-size="10" text-anchor="middle">Proprietario</text>
+    <text class="dp" style="animation-delay:.3s" x="86" y="144" fill="#9aa8c4" font-size="10" text-anchor="middle">Proprietário</text>
     <rect class="dp" style="animation-delay:.45s" x="182" y="28" width="156" height="150" rx="14" fill="#2e2410" stroke="#fbbf24" stroke-width="2"/>
     <text class="dp" style="animation-delay:.55s" x="260" y="56" fill="#fbbf24" font-size="13" text-anchor="middle">Azure Policy</text>
     <text class="dp" style="animation-delay:.6s" x="260" y="80" fill="#e8edf7" font-size="11" text-anchor="middle">O QUE pode</text>
     <text class="dp" style="animation-delay:.65s" x="260" y="98" fill="#e8edf7" font-size="11" text-anchor="middle">existir</text>
-    <text class="dp" style="animation-delay:.7s" x="260" y="128" fill="#9aa8c4" font-size="10" text-anchor="middle">So região X</text>
+    <text class="dp" style="animation-delay:.7s" x="260" y="128" fill="#9aa8c4" font-size="10" text-anchor="middle">Só região X</text>
     <text class="dp" style="animation-delay:.7s" x="260" y="144" fill="#9aa8c4" font-size="10" text-anchor="middle">Exige tag custo</text>
     <rect class="dp" style="animation-delay:.85s" x="356" y="28" width="156" height="150" rx="14" fill="#2b0710" stroke="#fb7185" stroke-width="2"/>
     <text class="dp" style="animation-delay:.95s" x="434" y="56" fill="#fb7185" font-size="13" text-anchor="middle">Resource Lock</text>
@@ -193,7 +193,7 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text class="dp" style="animation-delay:1.05s" x="434" y="98" fill="#e8edf7" font-size="11" text-anchor="middle">mexer</text>
     <text class="dp" style="animation-delay:1.1s" x="434" y="128" fill="#9aa8c4" font-size="10" text-anchor="middle">CanNotDelete</text>
     <text class="dp" style="animation-delay:1.1s" x="434" y="144" fill="#9aa8c4" font-size="10" text-anchor="middle">ReadOnly</text>
-    <text class="dp" style="animation-delay:1.25s" x="260" y="205" fill="#6b7a99" font-size="11" text-anchor="middle">Lock vence RBAC: nem Proprietario apaga</text>
+    <text class="dp" style="animation-delay:1.25s" x="260" y="205" fill="#6b7a99" font-size="11" text-anchor="middle">Lock vence RBAC: nem Proprietário apaga</text>
   </svg>`,
 
   regionAz: `<svg class="diag" viewBox="0 0 520 230" xmlns="http://www.w3.org/2000/svg">
@@ -221,18 +221,18 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <g class="dp" style="animation-delay:.3s"><rect x="138" y="30" width="118" height="110" rx="12" fill="#15243c" stroke="#3b9dff" stroke-width="2"/>
     <text x="197" y="54" fill="#8dc8ff" font-size="12" text-anchor="middle">Cool</text>
     <text x="197" y="78" fill="#e8edf7" font-size="10" text-anchor="middle">armazenar $$</text>
-    <text x="197" y="96" fill="#9aa8c4" font-size="10" text-anchor="middle">ler medio</text>
-    <text x="197" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">min 30 dias</text></g>
+    <text x="197" y="96" fill="#9aa8c4" font-size="10" text-anchor="middle">ler médio</text>
+    <text x="197" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">mín 30 dias</text></g>
     <g class="dp" style="animation-delay:.55s"><rect x="266" y="30" width="118" height="110" rx="12" fill="#0f2430" stroke="#38bdf8" stroke-width="2"/>
     <text x="325" y="54" fill="#7dd3fc" font-size="12" text-anchor="middle">Cold</text>
     <text x="325" y="78" fill="#e8edf7" font-size="10" text-anchor="middle">armazenar $</text>
     <text x="325" y="96" fill="#9aa8c4" font-size="10" text-anchor="middle">ler caro</text>
-    <text x="325" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">min 90 dias</text></g>
+    <text x="325" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">mín 90 dias</text></g>
     <g class="dp" style="animation-delay:.8s"><rect x="394" y="30" width="118" height="110" rx="12" fill="#1c1630" stroke="#a78bfa" stroke-width="2"/>
     <text x="453" y="54" fill="#c4b5fd" font-size="12" text-anchor="middle">Archive</text>
-    <text x="453" y="78" fill="#e8edf7" font-size="10" text-anchor="middle">quase de graca</text>
+    <text x="453" y="78" fill="#e8edf7" font-size="10" text-anchor="middle">quase de graça</text>
     <text x="453" y="96" fill="#fbbf24" font-size="10" text-anchor="middle">OFFLINE</text>
-    <text x="453" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">min 180 dias</text></g>
+    <text x="453" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">mín 180 dias</text></g>
     <text class="dp" style="animation-delay:1.05s" x="260" y="172" fill="#fbbf24" font-size="11" text-anchor="middle">Archive precisa de reidratação: horas, não segundos</text>
     <text class="dp" style="animation-delay:1.2s" x="260" y="196" fill="#6b7a99" font-size="11" text-anchor="middle">Quanto mais frio, mais barato guardar e mais caro ler</text>
   </svg>`,
@@ -244,14 +244,14 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text class="dp" style="animation-delay:.3s" x="130" y="96" fill="#e8edf7" font-size="10.5" text-anchor="middle">liberou entrada,</text>
     <text class="dp" style="animation-delay:.35s" x="130" y="112" fill="#e8edf7" font-size="10.5" text-anchor="middle">a volta sai sozinha</text>
     <text class="dp" style="animation-delay:.45s" x="130" y="138" fill="#9aa8c4" font-size="10" text-anchor="middle">só regra de ALLOW</text>
-    <text class="dp" style="animation-delay:.5s" x="130" y="156" fill="#9aa8c4" font-size="10" text-anchor="middle">nivel da instância (ENI)</text>
+    <text class="dp" style="animation-delay:.5s" x="130" y="156" fill="#9aa8c4" font-size="10" text-anchor="middle">nível da instância (ENI)</text>
     <rect class="dp" style="animation-delay:.6s" x="270" y="22" width="240" height="160" rx="14" fill="#15243c" stroke="#3b9dff" stroke-width="2"/>
     <text class="dp" style="animation-delay:.65s" x="390" y="46" fill="#8dc8ff" font-size="13" text-anchor="middle">Network ACL</text>
     <text class="dp" style="animation-delay:.75s" x="390" y="72" fill="#fb7185" font-size="11" text-anchor="middle">STATELESS</text>
     <text class="dp" style="animation-delay:.85s" x="390" y="96" fill="#e8edf7" font-size="10.5" text-anchor="middle">precisa liberar</text>
     <text class="dp" style="animation-delay:.9s" x="390" y="112" fill="#e8edf7" font-size="10.5" text-anchor="middle">entrada E saída</text>
     <text class="dp" style="animation-delay:1s" x="390" y="138" fill="#9aa8c4" font-size="10" text-anchor="middle">ALLOW e DENY, numeradas</text>
-    <text class="dp" style="animation-delay:1.05s" x="390" y="156" fill="#9aa8c4" font-size="10" text-anchor="middle">nivel da sub-rede</text>
+    <text class="dp" style="animation-delay:1.05s" x="390" y="156" fill="#9aa8c4" font-size="10" text-anchor="middle">nível da sub-rede</text>
     <text class="dp" style="animation-delay:1.25s" x="260" y="208" fill="#fbbf24" font-size="11" text-anchor="middle">Bloquear um IP malicioso: só a NACL faz, porque SG não tem DENY</text>
   </svg>`,
 
@@ -274,8 +274,8 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text x="428" y="86" fill="#e8edf7" font-size="10.5" text-anchor="middle">roteia por conteúdo</text>
     <text x="428" y="112" fill="#9aa8c4" font-size="10" text-anchor="middle">eventos de SaaS e AWS,</text>
     <text x="428" y="128" fill="#9aa8c4" font-size="10" text-anchor="middle">agendamento</text></g>
-    <text class="dp" style="animation-delay:.95s" x="260" y="172" fill="#34d399" font-size="11" text-anchor="middle">Padrao classico: SNS -> várias filas SQS (fan-out durave)</text>
-    <text class="dp" style="animation-delay:1.1s" x="260" y="200" fill="#fbbf24" font-size="11" text-anchor="middle">Precisa de ORDEM e reprocessar o histórico? Ai e Kinesis, não SQS.</text>
+    <text class="dp" style="animation-delay:.95s" x="260" y="172" fill="#34d399" font-size="11" text-anchor="middle">Padrão clássico: SNS -> várias filas SQS (fan-out durável)</text>
+    <text class="dp" style="animation-delay:1.1s" x="260" y="200" fill="#fbbf24" font-size="11" text-anchor="middle">Precisa de ORDEM e reprocessar o histórico? Aí é Kinesis, não SQS.</text>
   </svg>`,
 
   iamRole: `<svg class="diag" viewBox="0 0 520 210" xmlns="http://www.w3.org/2000/svg">
@@ -294,7 +294,7 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <rect class="dp" style="animation-delay:1.05s" x="434" y="38" width="76" height="86" rx="12" fill="#15243c" stroke="#3b9dff" stroke-width="2"/>
     <text class="dp" style="animation-delay:1.15s" x="472" y="86" fill="#8dc8ff" font-size="12" text-anchor="middle">S3</text>
     <text class="dp" style="animation-delay:1.35s" x="260" y="166" fill="#fb7185" font-size="11.5" text-anchor="middle">NUNCA: access key gravada no código ou na imagem</text>
-    <text class="dp" style="animation-delay:1.5s" x="260" y="190" fill="#6b7a99" font-size="11" text-anchor="middle">Chave estatica não expira, vaza no Git e ninguem percebe</text>
+    <text class="dp" style="animation-delay:1.5s" x="260" y="190" fill="#6b7a99" font-size="11" text-anchor="middle">Chave estática não expira, vaza no Git e ninguém percebe</text>
   </svg>`,
 
   savings: `<svg class="diag" viewBox="0 0 520 215" xmlns="http://www.w3.org/2000/svg">
@@ -302,12 +302,12 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text x="69" y="50" fill="#e8edf7" font-size="12" text-anchor="middle">On-Demand</text>
     <text x="69" y="76" fill="#9aa8c4" font-size="10" text-anchor="middle">sem compromisso</text>
     <text x="69" y="100" fill="#fb7185" font-size="13" text-anchor="middle">0%</text>
-    <text x="69" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">carga imprevisivel</text></g>
+    <text x="69" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">carga imprevisível</text></g>
     <g class="dp" style="animation-delay:.3s"><rect x="138" y="26" width="118" height="112" rx="12" fill="#15243c" stroke="#3b9dff" stroke-width="2"/>
     <text x="197" y="50" fill="#8dc8ff" font-size="12" text-anchor="middle">Savings Plan</text>
     <text x="197" y="76" fill="#9aa8c4" font-size="10" text-anchor="middle">compromisso $/h</text>
-    <text x="197" y="100" fill="#34d399" font-size="13" text-anchor="middle">até ~72%</text>
-    <text x="197" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">flexivel: EC2+Fargate+Lambda</text></g>
+    <text x="197" y="100" fill="#34d399" font-size="13" text-anchor="middle">até ~66%</text>
+    <text x="197" y="122" fill="#6b7a99" font-size="9" text-anchor="middle">flexível: EC2+Fargate+Lambda</text></g>
     <g class="dp" style="animation-delay:.55s"><rect x="266" y="26" width="118" height="112" rx="12" fill="#1c2e1a" stroke="#84cc16" stroke-width="2"/>
     <text x="325" y="50" fill="#bef264" font-size="12" text-anchor="middle">Reserved</text>
     <text x="325" y="76" fill="#9aa8c4" font-size="10" text-anchor="middle">compromisso 1-3 anos</text>
@@ -319,7 +319,7 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text x="453" y="100" fill="#34d399" font-size="13" text-anchor="middle">até ~90%</text>
     <text x="453" y="122" fill="#fb7185" font-size="9" text-anchor="middle">pode morrer em 2 min</text></g>
     <text class="dp" style="animation-delay:1.05s" x="260" y="170" fill="#fb7185" font-size="11.5" text-anchor="middle">Pegadinha: Spot em banco de dados ou carga que não pode cair = resposta errada</text>
-    <text class="dp" style="animation-delay:1.2s" x="260" y="194" fill="#6b7a99" font-size="11" text-anchor="middle">Carga estavel 24/7 -> Savings Plan. Pico curto -> On-Demand. Lote tolerante -> Spot.</text>
+    <text class="dp" style="animation-delay:1.2s" x="260" y="194" fill="#6b7a99" font-size="11" text-anchor="middle">Carga estável 24/7 -> Savings Plan. Pico curto -> On-Demand. Lote tolerante -> Spot.</text>
   </svg>`,
 
   entra: `<svg class="diag" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -339,7 +339,7 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
   </svg>`,
 
   s3classes: `<svg class="diag" viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg">
-    <text class="dp" style="animation-delay:.05s" x="260" y="24" fill="#ffc182" font-size="12" text-anchor="middle">S3: durabilidade e sempre 11 noves. O que muda e ACESSO e AZ.</text>
+    <text class="dp" style="animation-delay:.05s" x="260" y="24" fill="#ffc182" font-size="12" text-anchor="middle">S3: durabilidade é sempre 11 noves. O que muda é ACESSO e AZ.</text>
     <g class="dp" style="animation-delay:.25s"><rect x="10" y="40" width="156" height="96" rx="12" fill="#2a1a08" stroke="#ff9a2e" stroke-width="2"/>
     <text x="88" y="64" fill="#ffc182" font-size="11.5" text-anchor="middle">Standard / Int-Tiering</text>
     <text x="88" y="88" fill="#e8edf7" font-size="10" text-anchor="middle">acesso imediato</text>
@@ -349,12 +349,12 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text x="256" y="64" fill="#8dc8ff" font-size="11.5" text-anchor="middle">Standard-IA</text>
     <text x="256" y="88" fill="#e8edf7" font-size="10" text-anchor="middle">acesso raro, imediato</text>
     <text x="256" y="106" fill="#34d399" font-size="10" text-anchor="middle">3+ AZ</text>
-    <text x="256" y="126" fill="#6b7a99" font-size="9" text-anchor="middle">min 30 dias + taxa de leitura</text></g>
+    <text x="256" y="126" fill="#6b7a99" font-size="9" text-anchor="middle">mín 30 dias + taxa de leitura</text></g>
     <g class="dp" style="animation-delay:.75s"><rect x="346" y="40" width="164" height="96" rx="12" fill="#2b1414" stroke="#fb7185" stroke-width="2"/>
     <text x="428" y="64" fill="#fb7185" font-size="11.5" text-anchor="middle">One Zone-IA</text>
     <text x="428" y="88" fill="#e8edf7" font-size="10" text-anchor="middle">acesso raro, imediato</text>
     <text x="428" y="106" fill="#fb7185" font-size="10" text-anchor="middle">1 ÚNICA AZ</text>
-    <text x="428" y="126" fill="#6b7a99" font-size="9" text-anchor="middle">AZ cai = dado indisponivel</text></g>
+    <text x="428" y="126" fill="#6b7a99" font-size="9" text-anchor="middle">AZ cai = dado indisponível</text></g>
     <g class="dp" style="animation-delay:1s"><rect x="90" y="150" width="340" height="44" rx="12" fill="#1c1630" stroke="#a78bfa" stroke-width="2"/>
     <text x="260" y="170" fill="#c4b5fd" font-size="11.5" text-anchor="middle">Glacier Instant / Flexible / Deep Archive</text>
     <text x="260" y="187" fill="#9aa8c4" font-size="10" text-anchor="middle">Instant = ms. Flexible = minutos a horas. Deep = horas.</text></g>
@@ -374,13 +374,13 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
   awsGlobal: `<svg class="diag" viewBox="0 0 520 215" xmlns="http://www.w3.org/2000/svg">
     <g class="dp" style="animation-delay:.05s"><rect x="10" y="26" width="118" height="100" rx="12" fill="#2a1a08" stroke="#ff9a2e" stroke-width="2"/>
     <text x="69" y="50" fill="#ffc182" font-size="11.5" text-anchor="middle">Região</text>
-    <text x="69" y="74" fill="#e8edf7" font-size="10" text-anchor="middle">area geografica</text>
+    <text x="69" y="74" fill="#e8edf7" font-size="10" text-anchor="middle">área geográfica</text>
     <text x="69" y="92" fill="#9aa8c4" font-size="9.5" text-anchor="middle">tem várias AZ</text>
     <text x="69" y="112" fill="#6b7a99" font-size="9" text-anchor="middle">ex: sa-east-1</text></g>
     <g class="dp" style="animation-delay:.3s"><rect x="138" y="26" width="118" height="100" rx="12" fill="#15243c" stroke="#3b9dff" stroke-width="2"/>
     <text x="197" y="50" fill="#8dc8ff" font-size="11.5" text-anchor="middle">Zona (AZ)</text>
     <text x="197" y="74" fill="#e8edf7" font-size="10" text-anchor="middle">datacenter isolado</text>
-    <text x="197" y="92" fill="#9aa8c4" font-size="9.5" text-anchor="middle">energia e rede propria</text>
+    <text x="197" y="92" fill="#9aa8c4" font-size="9.5" text-anchor="middle">energia e rede própria</text>
     <text x="197" y="112" fill="#6b7a99" font-size="9" text-anchor="middle">alta disponibilidade</text></g>
     <g class="dp" style="animation-delay:.55s"><rect x="266" y="26" width="118" height="100" rx="12" fill="#1c1630" stroke="#a78bfa" stroke-width="2"/>
     <text x="325" y="50" fill="#c4b5fd" font-size="11.5" text-anchor="middle">Edge location</text>
@@ -389,28 +389,28 @@ camadas: `<svg class="diag" viewBox="0 0 520 240" xmlns="http://www.w3.org/2000/
     <text x="325" y="112" fill="#6b7a99" font-size="9" text-anchor="middle">conteúdo, não servidor</text></g>
     <g class="dp" style="animation-delay:.8s"><rect x="394" y="26" width="118" height="100" rx="12" fill="#1c2e1a" stroke="#84cc16" stroke-width="2"/>
     <text x="453" y="50" fill="#bef264" font-size="11.5" text-anchor="middle">Local Zone</text>
-    <text x="453" y="74" fill="#e8edf7" font-size="10" text-anchor="middle">computacao proxima</text>
+    <text x="453" y="74" fill="#e8edf7" font-size="10" text-anchor="middle">computação próxima</text>
     <text x="453" y="92" fill="#9aa8c4" font-size="9.5" text-anchor="middle">de uma cidade</text>
-    <text x="453" y="112" fill="#6b7a99" font-size="9" text-anchor="middle">latencia de milissegundo</text></g>
-    <text class="dp" style="animation-delay:1.05s" x="260" y="158" fill="#fbbf24" font-size="11" text-anchor="middle">Edge location NÃO roda sua aplicação: ela guarda copia de conteúdo</text>
-    <text class="dp" style="animation-delay:1.2s" x="260" y="186" fill="#6b7a99" font-size="11" text-anchor="middle">Usuario longe reclamando de download lento -> CDN, não mais uma região</text>
+    <text x="453" y="112" fill="#6b7a99" font-size="9" text-anchor="middle">latência de milissegundo</text></g>
+    <text class="dp" style="animation-delay:1.05s" x="260" y="158" fill="#fbbf24" font-size="11" text-anchor="middle">Edge location NÃO roda sua aplicação: ela guarda cópia de conteúdo</text>
+    <text class="dp" style="animation-delay:1.2s" x="260" y="186" fill="#6b7a99" font-size="11" text-anchor="middle">Usuário longe reclamando de download lento -> CDN, não mais uma região</text>
   </svg>`,
 
   shared: `<svg class="diag" viewBox="0 0 520 215" xmlns="http://www.w3.org/2000/svg">
     <rect class="dp" style="animation-delay:.05s" x="40" y="22" width="440" height="56" rx="12" fill="#15243c" stroke="#3b9dff" stroke-width="2"/>
     <text class="dp" style="animation-delay:.1s" x="260" y="44" fill="#8dc8ff" font-size="12" text-anchor="middle">VOCÊ: seus dados, seus acessos, sua configuração</text>
-    <text class="dp" style="animation-delay:.2s" x="260" y="64" fill="#9aa8c4" font-size="10" text-anchor="middle">quem entra, o que e publico, o que e criptografado</text>
+    <text class="dp" style="animation-delay:.2s" x="260" y="64" fill="#9aa8c4" font-size="10" text-anchor="middle">quem entra, o que é público, o que é criptografado</text>
     <path class="dw" style="animation-delay:.35s" d="M60 92 H460" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6 5" fill="none"/>
-    <text class="dp" style="animation-delay:.5s" x="260" y="108" fill="#fbbf24" font-size="10" text-anchor="middle">a linha sobe conforme o serviço e mais gerenciado</text>
+    <text class="dp" style="animation-delay:.5s" x="260" y="108" fill="#fbbf24" font-size="10" text-anchor="middle">a linha sobe conforme o serviço é mais gerenciado</text>
     <rect class="dp" style="animation-delay:.6s" x="40" y="120" width="440" height="56" rx="12" fill="#2a1a08" stroke="#ff9a2e" stroke-width="2"/>
     <text class="dp" style="animation-delay:.7s" x="260" y="142" fill="#ffc182" font-size="12" text-anchor="middle">PROVEDOR: prédio, rede física, hipervisor, hardware</text>
-    <text class="dp" style="animation-delay:.8s" x="260" y="162" fill="#9aa8c4" font-size="10" text-anchor="middle">no PaaS/SaaS tambem o SÓ e o patch da plataforma</text>
+    <text class="dp" style="animation-delay:.8s" x="260" y="162" fill="#9aa8c4" font-size="10" text-anchor="middle">no PaaS/SaaS também o SO e o patch da plataforma</text>
     <text class="dp" style="animation-delay:1s" x="260" y="200" fill="#fb7185" font-size="11" text-anchor="middle">Seus DADOS e seus ACESSOS nunca saem do seu lado. Em nenhum modelo.</text>
   </svg>`
 };
 
-/* exam:"both" usa o mapa doms para cair no dominio certo de cada exame,
-   porque o mesmo conceito tem peso e numeracao diferentes nas duas provas. */
+/* exam:"both" usa o mapa doms para cair no domínio certo de cada exame,
+   porque o mesmo conceito tem peso e numeração diferentes nas duas provas. */
 const LESSONS = [
   {
     id:"l-az-models", exam:"az900", dom:"d1", concept:"modelos-nuvem", secs:78,
@@ -449,7 +449,7 @@ const LESSONS = [
       { k:"gancho", emoji:"\u{1F50E}", h:"Sete nomes parecidos numa questão só", p:"A prova adora embaralhar. A saída é decorar o verbo de cada um." },
       { k:"analogia", emoji:"\u{1F3E2}", h:"Pense na segurança de um prédio", p:"O CloudTrail é o livro da portaria: quem entrou, quando. O Config é o checklist de manutenção: o extintor está no lugar? O GuardDuty é o segurança que percebe movimento estranho. O Macie é quem descobre que tem documento confidencial largado na copa. O Artifact é o arquivo com os laudos para o fiscal." },
       { k:"diagrama", diagram:"awsVerbos", h:"Cada um com seu verbo", p:"Registra, detecta, classifica, compara, varre, entrega." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"As trocas mais comuns", gotcha:"CloudTrail registra chamada de API; CloudWatch mede métrica e log. Inspector procura vulnerabilidade de software, não dado pessoal: dado pessoal é Macie. Config avalia configuração, não distribui relatório de conformidade: isso é Artifact. E o Security Hub só agrega os achados, quem detecta ameaça é o GuardDuty." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"As trocas mais comuns", gotcha:"CloudTrail registra chamada de API; CloudWatch mede métrica e log. Inspector procura vulnerabilidade de software, não dado pessoal: dado pessoal é Macie. Config avalia configuração, não distribui relatório de conformidade: isso é Artifact. E o Security Hub centraliza e correlaciona os achados (GuardDuty, Inspector, Macie e o Security Hub CSPM, antigo Security Hub); quem detecta ameaça é o GuardDuty." },
       { k:"quiz" }
     ],
     quiz:[
@@ -491,90 +491,90 @@ const LESSONS = [
     id:"l-az-elastic", exam:"az900", dom:"d1", concept:"elasticidade", secs:72,
     title:"Elasticidade, escalabilidade e agilidade",
     slides:[
-      { k:"gancho", emoji:"\u{1F4C8}", h:"Tres palavras que a prova troca de proposito", p:"Elas parecem sinonimo e nao sao. A diferenca vale ponto." },
-      { k:"analogia", emoji:"\u{1F371}", h:"Pense num restaurante", p:"Escalabilidade e poder colocar mais mesas quando precisar. Elasticidade e colocar e tirar mesas sozinho conforme o movimento. Agilidade e conseguir abrir uma filial nova em uma tarde, para testar uma ideia." },
-      { k:"diagrama", diagram:"elastic", h:"Capacidade seguindo a demanda", p:"A marca da elasticidade e o automatismo nos DOIS sentidos." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Como decidir no enunciado", gotcha:"Se o texto diz que a capacidade aumenta E diminui automaticamente conforme a metrica, a resposta e elasticidade. Se diz apenas que o sistema suporta crescer, e escalabilidade. Se o tema e provisionar um ambiente novo em minutos para testar, e agilidade. E lembre: escalar vertical e aumentar a maquina; horizontal e somar maquinas." },
+      { k:"gancho", emoji:"\u{1F4C8}", h:"Três palavras que a prova troca de propósito", p:"Elas parecem sinônimo e não são. A diferença vale ponto." },
+      { k:"analogia", emoji:"\u{1F371}", h:"Pense num restaurante", p:"Escalabilidade é poder colocar mais mesas quando precisar. Elasticidade é colocar e tirar mesas sozinho conforme o movimento. Agilidade é conseguir abrir uma filial nova em uma tarde, para testar uma ideia." },
+      { k:"diagrama", diagram:"elastic", h:"Capacidade seguindo a demanda", p:"A marca da elasticidade é o automatismo nos DOIS sentidos." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Como decidir no enunciado", gotcha:"Se o texto diz que a capacidade aumenta E diminui automaticamente conforme a métrica, a resposta é elasticidade. Se diz apenas que o sistema suporta crescer, é escalabilidade. Se o tema é provisionar um ambiente novo em minutos para testar, é agilidade. E lembre: escalar vertical é aumentar a máquina; horizontal é somar máquinas." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"A capacidade sobe no pico e cai sozinha na madrugada.", a:["Elasticidade","Agilidade","Tolerancia a falhas"], c:0, e:"Automatico e nos dois sentidos: elasticidade." },
-      { q:"Criar um ambiente de teste completo em 10 minutos para validar uma ideia.", a:["Agilidade","Elasticidade","Alta disponibilidade"], c:0, e:"Velocidade de provisionar e experimentar e agilidade." }
+      { q:"A capacidade sobe no pico e cai sozinha na madrugada.", a:["Elasticidade","Agilidade","Tolerância a falhas"], c:0, e:"Automático e nos dois sentidos: elasticidade." },
+      { q:"Criar um ambiente de teste completo em 10 minutos para validar uma ideia.", a:["Agilidade","Elasticidade","Alta disponibilidade"], c:0, e:"Velocidade de provisionar e experimentar é agilidade." }
     ]
   },
   {
     id:"l-az-rbac", exam:"az900", dom:"d3", concept:"rbac-policy-lock", secs:82,
     title:"RBAC x Azure Policy x Lock",
     slides:[
-      { k:"gancho", emoji:"⚡", h:"Tres coisas que a prova adora trocar", p:"Se voce confundir essas tres, perde questao de graca no AZ-900 e no AZ-104." },
-      { k:"analogia", emoji:"\u{1F3E2}", h:"Pense num predio", p:"RBAC e o cracha: diz quem entra em qual andar. A Policy e o regulamento do condominio: diz o que pode ser construido. O Lock e a fita de obra: ninguem mexe, nem o sindico." },
-      { k:"diagrama", diagram:"rbacPolicy", h:"Cada um responde uma pergunta diferente", p:"RBAC = QUEM. Policy = O QUE. Lock = NAO MEXE." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"A pegadinha classica", gotcha:"O enunciado diz: impedir que QUALQUER pessoa crie recurso fora do Brazil South. Muita gente marca RBAC. Errado: RBAC nao sabe o que e regiao, ele so distribui permissao. A resposta e Azure Policy. E para impedir que alguem apague um recurso critico mesmo sendo Proprietario, a resposta e Resource Lock, nao RBAC." },
+      { k:"gancho", emoji:"⚡", h:"Três coisas que a prova adora trocar", p:"Se você confundir essas três, perde questão de graça no AZ-900 e no AZ-104." },
+      { k:"analogia", emoji:"\u{1F3E2}", h:"Pense num prédio", p:"RBAC é o crachá: diz quem entra em qual andar. A Policy é o regulamento do condomínio: diz o que pode ser construído. O Lock é a fita de obra: ninguém mexe, nem o síndico." },
+      { k:"diagrama", diagram:"rbacPolicy", h:"Cada um responde uma pergunta diferente", p:"RBAC = QUEM. Policy = O QUE. Lock = NÃO MEXE." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"A pegadinha clássica", gotcha:"O enunciado diz: impedir que QUALQUER pessoa crie recurso fora do Brazil South. Muita gente marca RBAC. Errado: RBAC não sabe o que é região, ele só distribui permissão. A resposta é Azure Policy. E para impedir que alguém apague um recurso crítico mesmo sendo Proprietário, a resposta é Resource Lock, não RBAC." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Impedir a criacao de VMs de tamanho caro em toda a assinatura.", a:["Azure Policy","RBAC","Resource Lock"], c:0, e:"Policy restringe O QUE pode existir, inclusive SKUs permitidos." },
-      { q:"Impedir que um Proprietario apague por acidente o banco de producao.", a:["RBAC Leitor","Resource Lock CanNotDelete","Azure Policy"], c:1, e:"O lock vale acima do RBAC: nem Proprietario apaga sem remover o lock antes." }
+      { q:"Impedir a criação de VMs de tamanho caro em toda a assinatura.", a:["Azure Policy","RBAC","Resource Lock"], c:0, e:"Policy restringe O QUE pode existir, inclusive SKUs permitidos." },
+      { q:"Impedir que um Proprietário apague por acidente o banco de produção.", a:["RBAC Leitor","Resource Lock CanNotDelete","Azure Policy"], c:1, e:"O lock vale acima do RBAC: nem Proprietário apaga sem remover o lock antes." }
     ]
   },
   {
     id:"l-az-region", exam:"az900", dom:"d2", concept:"region-az-pair", secs:78,
-    title:"Regiao, Zona e Par de Regiao",
+    title:"Região, Zona e Par de Região",
     slides:[
-      { k:"gancho", emoji:"\u{1F30E}", h:"Alta disponibilidade ou recuperacao de desastre?", p:"Sao duas perguntas diferentes e a resposta certa muda." },
-      { k:"analogia", emoji:"\u{1F3EC}", h:"Pense em lojas", p:"Zonas sao lojas diferentes no mesmo bairro: se uma pega fogo, as outras atendem. O par de regiao e a loja em outro estado: serve quando o bairro inteiro alaga." },
-      { k:"diagrama", diagram:"regionAz", h:"Escala de protecao", p:"Zona protege de datacenter. Par de regiao protege de desastre regional." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Onde todo mundo erra", gotcha:"Grupo de recursos NAO e limite de regiao: ele guarda metadados em uma regiao, mas pode conter recursos de varias regioes. E atualizacao planejada do Azure nao sai nas duas regioes do par ao mesmo tempo, exatamente para voce nunca perder as duas de uma vez. Brazil South tem como par o South Central US." },
+      { k:"gancho", emoji:"\u{1F30E}", h:"Alta disponibilidade ou recuperação de desastre?", p:"São duas perguntas diferentes e a resposta certa muda." },
+      { k:"analogia", emoji:"\u{1F3EC}", h:"Pense em lojas", p:"Zonas são lojas diferentes no mesmo bairro: se uma pega fogo, as outras atendem. O par de região é a loja em outro estado: serve quando o bairro inteiro alaga." },
+      { k:"diagrama", diagram:"regionAz", h:"Escala de proteção", p:"Zona protege de datacenter. Par de região protege de desastre regional." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Onde todo mundo erra", gotcha:"Grupo de recursos NÃO é limite de região: ele guarda metadados em uma região, mas pode conter recursos de várias regiões. E atualização planejada do Azure não sai nas duas regiões do par ao mesmo tempo, exatamente para você nunca perder as duas de uma vez. Brazil South tem como par o South Central US." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Proteger uma aplicacao da queda de um datacenter dentro da mesma regiao.", a:["Zonas de disponibilidade","Par de regiao","Grupo de recursos separado"], c:0, e:"Zonas sao datacenters isolados na mesma regiao, com energia e rede independentes." },
-      { q:"Um grupo de recursos pode conter recursos de regioes diferentes?", a:["Sim","Nao"], c:0, e:"Pode. A regiao do grupo so define onde ficam os metadados." }
+      { q:"Proteger uma aplicação da queda de um datacenter dentro da mesma região.", a:["Zonas de disponibilidade","Par de região","Grupo de recursos separado"], c:0, e:"Zonas são datacenters isolados na mesma região, com energia e rede independentes." },
+      { q:"Um grupo de recursos pode conter recursos de regiões diferentes?", a:["Sim","Não"], c:0, e:"Pode. A região do grupo só define onde ficam os metadados." }
     ]
   },
   {
     id:"l-az-blob", exam:"az900", dom:"d2", concept:"blob-tiers", secs:74,
     title:"Camadas do Blob Storage",
     slides:[
-      { k:"gancho", emoji:"\u{1F9CA}", h:"Quanto mais frio, mais barato guardar", p:"E mais caro e mais lento ler. Toda questao de custo de storage gira nisso." },
-      { k:"analogia", emoji:"\u{1F4E6}", h:"Pense no seu armario", p:"Hot e a gaveta ao lado da cama. Cool e o alto do guarda-roupa. Cold e a caixa em cima do armario. Archive e o deposito no outro bairro: baratissimo, mas voce espera horas para buscar." },
-      { k:"diagrama", diagram:"blobTiers", h:"As quatro camadas", p:"Hot, Cool, Cold e Archive, com minimos de 0, 30, 90 e 180 dias." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"A pegadinha de prova", gotcha:"Se o enunciado disser que o arquivo precisa ser lido em segundos, Archive esta eliminado, por mais barato que seja: Archive e offline e exige reidratacao que leva horas. E se disser que o dado sai antes do minimo da camada, existe taxa de exclusao antecipada: mover tudo para Cold pode sair mais caro." },
+      { k:"gancho", emoji:"\u{1F9CA}", h:"Quanto mais frio, mais barato guardar", p:"E mais caro e mais lento ler. Toda questão de custo de storage gira nisso." },
+      { k:"analogia", emoji:"\u{1F4E6}", h:"Pense no seu armário", p:"Hot é a gaveta ao lado da cama. Cool é o alto do guarda-roupa. Cold é a caixa em cima do armário. Archive é o depósito no outro bairro: baratíssimo, mas você espera horas para buscar." },
+      { k:"diagrama", diagram:"blobTiers", h:"As quatro camadas", p:"Hot, Cool, Cold e Archive, com mínimos de 0, 30, 90 e 180 dias." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"A pegadinha de prova", gotcha:"Se o enunciado disser que o arquivo precisa ser lido em segundos, Archive está eliminado, por mais barato que seja: Archive é offline e exige reidratação que leva horas. E se disser que o dado sai antes do mínimo da camada, existe taxa de exclusão antecipada: mover tudo para Cold pode sair mais caro." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Backup legal de 7 anos, acesso quase nunca, resgate pode levar horas.", a:["Archive","Hot","Cool"], c:0, e:"Caso exato do Archive: minimo 180 dias e resgate em horas." },
-      { q:"Arquivo auditado 2 vezes por ano, mas que precisa abrir na hora quando pedem.", a:["Archive","Cool ou Cold","Hot"], c:1, e:"Acesso raro mas imediato: Cool ou Cold. Archive cairia por causa da reidratacao." }
+      { q:"Backup legal de 7 anos, acesso quase nunca, resgate pode levar horas.", a:["Archive","Hot","Cool"], c:0, e:"Caso exato do Archive: mínimo 180 dias e resgate em horas." },
+      { q:"Arquivo auditado 2 vezes por ano, mas que precisa abrir na hora quando pedem.", a:["Archive","Cool ou Cold","Hot"], c:1, e:"Acesso raro mas imediato: Cool ou Cold. Archive cairia por causa da reidratação." }
     ]
   },
   {
     id:"l-az-entra", exam:"az900", dom:"d2", concept:"entra-vs-adds", secs:70,
-    title:"Entra ID nao e controlador de dominio",
+    title:"Entra ID não é controlador de domínio",
     slides:[
-      { k:"gancho", emoji:"\u{1F511}", h:"O erro mais caro de identidade no Azure", p:"Trocar Entra ID por AD DS custa questao na prova e retrabalho no projeto." },
-      { k:"analogia", emoji:"\u{1F6AA}", h:"Catraca x cadeado", p:"Entra ID e a catraca moderna da portaria: cracha digital, token, aprovacao no celular. AD DS e o cadeado antigo: o app legado so abre com aquela chave especifica." },
+      { k:"gancho", emoji:"\u{1F511}", h:"O erro mais caro de identidade no Azure", p:"Trocar Entra ID por AD DS custa questão na prova e retrabalho no projeto." },
+      { k:"analogia", emoji:"\u{1F6AA}", h:"Catraca x cadeado", p:"Entra ID é a catraca moderna da portaria: crachá digital, token, aprovação no celular. AD DS é o cadeado antigo: o app legado só abre com aquela chave específica." },
       { k:"diagrama", diagram:"entra", h:"Protocolos diferentes", p:"Entra ID fala OAuth, SAML e OIDC. Kerberos, LDAP e GPO ficam no AD DS." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Gatilho no enunciado", gotcha:"Se aparecer LDAP, Kerberos, Group Policy ou ingresso em dominio, a resposta NAO e Entra ID puro: e Microsoft Entra Domain Services ou um controlador de dominio em VM. Entra ID tambem nao e uma extensao do seu AD local, mesmo com sincronizacao: sao diretorios diferentes." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Gatilho no enunciado", gotcha:"Se aparecer LDAP, Kerberos, Group Policy ou ingresso em domínio, a resposta NÃO é Entra ID puro: é Microsoft Entra Domain Services ou um controlador de domínio em VM. Entra ID também não é uma extensão do seu AD local, mesmo com sincronização: são diretórios diferentes." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"App legado que precisa autenticar via LDAP, sem alterar o codigo.", a:["Entra ID puro","Entra Domain Services ou AD DS em VM","Chave SSH"], c:1, e:"LDAP e Kerberos exigem servicos de dominio, nao o Entra ID puro." },
-      { q:"Login unico em um SaaS moderno com MFA.", a:["Entra ID","AD DS em VM"], c:0, e:"Caso classico do Entra ID: SAML/OIDC e MFA." }
+      { q:"App legado que precisa autenticar via LDAP, sem alterar o código.", a:["Entra ID puro","Entra Domain Services ou AD DS em VM","Chave SSH"], c:1, e:"LDAP e Kerberos exigem serviços de domínio, não o Entra ID puro." },
+      { q:"Login único em um SaaS moderno com MFA.", a:["Entra ID","AD DS em VM"], c:0, e:"Caso clássico do Entra ID: SAML/OIDC e MFA." }
     ]
   },
   {
     id:"l-aws-global", exam:"clf", dom:"d1", concept:"infra-global", secs:76,
-    title:"Regiao, AZ, Edge e Local Zone",
+    title:"Região, AZ, Edge e Local Zone",
     slides:[
-      { k:"gancho", emoji:"\u{1F310}", h:"Quatro camadas da infraestrutura global", p:"Confundir edge location com regiao e erro classico de prova." },
-      { k:"analogia", emoji:"\u{1F4E6}", h:"Pense numa rede de lojas", p:"A regiao e a cidade. As zonas sao lojas diferentes nessa cidade. O ponto de presenca e o armario de entregas do seu predio: so guarda copia do que ja existe. A Local Zone e uma mini-loja no seu bairro, que consegue atender de verdade." },
-      { k:"diagrama", diagram:"awsGlobal", h:"O que cada camada faz", p:"Regiao e geografia, AZ e isolamento, edge e cache, Local Zone e computacao proxima." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"O detalhe que elimina alternativa", gotcha:"Ponto de presenca nao executa a sua aplicacao: ele guarda conteudo em cache para o CloudFront. Se o enunciado fala em usuario distante reclamando de download lento, a resposta e CDN, nao abrir outra regiao. E alta disponibilidade dentro da mesma regiao vem de usar varias AZ, nao varias regioes." },
+      { k:"gancho", emoji:"\u{1F310}", h:"Quatro camadas da infraestrutura global", p:"Confundir edge location com região é erro clássico de prova." },
+      { k:"analogia", emoji:"\u{1F4E6}", h:"Pense numa rede de lojas", p:"A região é a cidade. As zonas são lojas diferentes nessa cidade. O ponto de presença é o armário de entregas do seu prédio: só guarda cópia do que já existe. A Local Zone é uma mini-loja no seu bairro, que consegue atender de verdade." },
+      { k:"diagrama", diagram:"awsGlobal", h:"O que cada camada faz", p:"Região é geografia, AZ é isolamento, edge é cache, Local Zone é computação próxima." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"O detalhe que elimina alternativa", gotcha:"Ponto de presença não executa a sua aplicação: ele guarda conteúdo em cache para o CloudFront. Se o enunciado fala em usuário distante reclamando de download lento, a resposta é CDN, não abrir outra região. E alta disponibilidade dentro da mesma região vem de usar várias AZ, não várias regiões." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Usuarios na America do Sul reclamam de download lento de arquivos no S3 em us-east-1.", a:["CloudFront com pontos de presenca","Mais uma zona de disponibilidade","Auto Scaling"], c:0, e:"Conteudo estatico distante do usuario: a resposta e CDN." },
-      { q:"Proteger a aplicacao contra a queda de um datacenter dentro da regiao.", a:["Distribuir entre varias AZ","Usar pontos de presenca","Usar instancias maiores"], c:0, e:"AZ sao datacenters isolados: e a base da alta disponibilidade regional." }
+      { q:"Usuários na América do Sul reclamam de download lento de arquivos no S3 em us-east-1.", a:["CloudFront com pontos de presença","Mais uma zona de disponibilidade","Auto Scaling"], c:0, e:"Conteúdo estático distante do usuário: a resposta é CDN." },
+      { q:"Proteger a aplicação contra a queda de um datacenter dentro da região.", a:["Distribuir entre várias AZ","Usar pontos de presença","Usar instâncias maiores"], c:0, e:"AZ são datacenters isolados: é a base da alta disponibilidade regional." }
     ]
   },
   {
@@ -582,60 +582,60 @@ const LESSONS = [
     title:"Security Group x Network ACL",
     slides:[
       { k:"gancho", emoji:"\u{1F6E1}", h:"Stateful x stateless em 80 segundos", p:"Essa dupla aparece em praticamente toda prova de AWS." },
-      { k:"analogia", emoji:"\u{1F3AF}", h:"Porteiro com memoria", p:"O Security Group e um porteiro que lembra de voce: deixou entrar, deixa sair sem perguntar. A NACL e um porteiro amnesico: na saida ele pergunta tudo de novo, entao voce precisa liberar os dois sentidos." },
-      { k:"diagrama", diagram:"sgNacl", h:"Onde cada um atua", p:"SG na instancia, so com ALLOW. NACL na sub-rede, com ALLOW e DENY numerados." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"A pegadinha que derruba gente boa", gotcha:"Precisa BLOQUEAR um IP especifico que esta atacando? Security Group nao consegue, porque ele so tem regra de permissao: nao existe deny em SG. A resposta e NACL. E ao usar NACL para abrir uma porta, lembre de liberar tambem as portas efemeras na saida, senao a resposta nunca volta." },
+      { k:"analogia", emoji:"\u{1F3AF}", h:"Porteiro com memória", p:"O Security Group é um porteiro que lembra de você: deixou entrar, deixa sair sem perguntar. A NACL é um porteiro amnésico: na saída ele pergunta tudo de novo, então você precisa liberar os dois sentidos." },
+      { k:"diagrama", diagram:"sgNacl", h:"Onde cada um atua", p:"SG na instância, só com ALLOW. NACL na sub-rede, com ALLOW e DENY numerados." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"A pegadinha que derruba gente boa", gotcha:"Precisa BLOQUEAR um IP específico que está atacando? Security Group não consegue, porque ele só tem regra de permissão: não existe deny em SG. A resposta é NACL. E ao usar NACL para abrir uma porta, lembre de liberar também as portas efêmeras na saída, senão a resposta nunca volta." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Bloquear um unico IP de origem que esta atacando a sub-rede.", a:["Network ACL","Security Group","IAM Policy"], c:0, e:"Somente a NACL tem regra de DENY. O SG so permite." },
-      { q:"Liberei a porta 443 de entrada no Security Group. Preciso criar regra de saida para a resposta?", a:["Sim","Nao"], c:1, e:"SG e stateful: a resposta da conexao permitida volta automaticamente." }
+      { q:"Bloquear um único IP de origem que está atacando a sub-rede.", a:["Network ACL","Security Group","IAM Policy"], c:0, e:"Somente a NACL tem regra de DENY. O SG só permite." },
+      { q:"Liberei a porta 443 de entrada no Security Group. Preciso criar regra de saída para a resposta?", a:["Sim","Não"], c:1, e:"SG é stateful: a resposta da conexão permitida volta automaticamente." }
     ]
   },
   {
     id:"l-aws-msg", exam:"clf", dom:"d3", concept:"sqs-sns-eb", secs:86,
     title:"SQS x SNS x EventBridge",
     slides:[
-      { k:"gancho", emoji:"\u{1F4EC}", h:"Tres servicos de mensagem, tres problemas", p:"Marcar o errado aqui e o jeito mais rapido de perder ponto em integracao." },
-      { k:"analogia", emoji:"\u{1F3E4}", h:"Correio, radio e triagem", p:"SQS e a caixa postal: a carta fica esperando e um carteiro leva. SNS e o radio: anuncia e todo mundo inscrito ouve na hora. EventBridge e a central de triagem: le o conteudo e decide para qual setor mandar." },
-      { k:"diagrama", diagram:"msgSvcs", h:"Fila, publicacao e roteamento", p:"SQS desacopla. SNS distribui. EventBridge roteia por regra." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Palavras que decidem a resposta", gotcha:"Absorver pico de carga sem perder pedido: SQS. Um evento que precisa chegar a varios destinos ao mesmo tempo: SNS. Reagir a eventos de servicos AWS ou de SaaS, filtrando por conteudo, ou agendar execucao: EventBridge. Se o enunciado exigir ORDEM e poder reprocessar o historico, nao e nenhum dos tres: e Kinesis." },
+      { k:"gancho", emoji:"\u{1F4EC}", h:"Três serviços de mensagem, três problemas", p:"Marcar o errado aqui é o jeito mais rápido de perder ponto em integração." },
+      { k:"analogia", emoji:"\u{1F3E4}", h:"Correio, rádio e triagem", p:"SQS é a caixa postal: a carta fica esperando e um carteiro leva. SNS é o rádio: anuncia e todo mundo inscrito ouve na hora. EventBridge é a central de triagem: lê o conteúdo e decide para qual setor mandar." },
+      { k:"diagrama", diagram:"msgSvcs", h:"Fila, publicação e roteamento", p:"SQS desacopla. SNS distribui. EventBridge roteia por regra." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Palavras que decidem a resposta", gotcha:"Absorver pico de carga sem perder pedido: SQS. Um evento que precisa chegar a vários destinos ao mesmo tempo: SNS. Reagir a eventos de serviços AWS ou de SaaS, filtrando por conteúdo, ou agendar execução: EventBridge. Se o enunciado exigir ORDEM e poder reprocessar o histórico, não é nenhum dos três: é Kinesis." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"A cada upload, tres sistemas diferentes precisam ser avisados ao mesmo tempo.", a:["SNS","SQS","Nenhum"], c:0, e:"Fan-out: um publisher, varios inscritos. Padrao comum: SNS para varias filas SQS." },
-      { q:"O processamento e lento e nao pode perder pedido quando chega pico de 10x.", a:["SQS","SNS"], c:0, e:"A fila absorve o pico e o consumidor processa no ritmo que aguenta." }
+      { q:"A cada upload, três sistemas diferentes precisam ser avisados ao mesmo tempo.", a:["SNS","SQS","Nenhum"], c:0, e:"Fan-out: um publisher, vários inscritos. Padrão comum: SNS para várias filas SQS." },
+      { q:"O processamento é lento e não pode perder pedido quando chega pico de 10x.", a:["SQS","SNS"], c:0, e:"A fila absorve o pico e o consumidor processa no ritmo que aguenta." }
     ]
   },
   {
     id:"l-aws-iam", exam:"clf", dom:"d2", concept:"iam-role-ec2", secs:72,
     title:"IAM Role em vez de access key",
     slides:[
-      { k:"gancho", emoji:"\u{1F510}", h:"A resposta certa e quase sempre role", p:"Qualquer questao em que uma aplicacao da AWS acessa outro servico da AWS." },
-      { k:"analogia", emoji:"\u{1F3AB}", h:"Cracha de visitante", p:"Access key e uma chave de casa copiada: vale para sempre e voce nao sabe quem tem. Role e um cracha de visitante que expira sozinho no fim do dia." },
-      { k:"diagrama", diagram:"iamRole", h:"Como a aplicacao autentica", p:"EC2 assume a role via instance profile e recebe credencial temporaria." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Sinais de alternativa errada", gotcha:"Se a alternativa fala em gravar chave de acesso no codigo, em variavel de ambiente, na imagem da instancia ou passar por user data, pode descartar. Tambem descarte usar o usuario root para a aplicacao. Para credencial de terceiro que nao e da AWS, a resposta tende a Secrets Manager, nao role." },
+      { k:"gancho", emoji:"\u{1F510}", h:"A resposta certa é quase sempre role", p:"Qualquer questão em que uma aplicação da AWS acessa outro serviço da AWS." },
+      { k:"analogia", emoji:"\u{1F3AB}", h:"Crachá de visitante", p:"Access key é uma chave de casa copiada: vale para sempre e você não sabe quem tem. Role é um crachá de visitante que expira sozinho no fim do dia." },
+      { k:"diagrama", diagram:"iamRole", h:"Como a aplicação autentica", p:"EC2 assume a role via instance profile e recebe credencial temporária." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Sinais de alternativa errada", gotcha:"Se a alternativa fala em gravar chave de acesso no código, em variável de ambiente, na imagem da instância ou passar por user data, pode descartar. Também descarte usar o usuário root para a aplicação. Para credencial de terceiro que não é da AWS, a resposta tende a Secrets Manager, não role." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Aplicacao em EC2 precisa ler um bucket S3. Qual a forma recomendada?",
-        a:["IAM Role anexada a instancia","Access key no arquivo de configuracao","Usuario root"], c:0, e:"Credencial temporaria, rotacionada pela AWS, sem segredo no codigo." },
-      { q:"Guardar a senha de um banco MySQL de terceiro, com rotacao automatica.", a:["Secrets Manager","IAM Role","Security Group"], c:0, e:"Role nao guarda senha de sistema externo. Secrets Manager faz rotacao." }
+      { q:"Aplicação em EC2 precisa ler um bucket S3. Qual a forma recomendada?",
+        a:["IAM Role anexada à instância","Access key no arquivo de configuração","Usuário root"], c:0, e:"Credencial temporária, rotacionada pela AWS, sem segredo no código." },
+      { q:"Guardar a senha de um banco MySQL de terceiro, com rotação automática.", a:["Secrets Manager","IAM Role","Security Group"], c:0, e:"Role não guarda senha de sistema externo. Secrets Manager faz rotação." }
     ]
   },
   {
     id:"l-aws-cost", exam:"clf", dom:"d4", concept:"pricing-models", secs:84,
     title:"On-Demand, Savings Plan, Reserved e Spot",
     slides:[
-      { k:"gancho", emoji:"\u{1F4B0}", h:"Quatro formas de pagar computacao", p:"A questao sempre da uma pista do perfil da carga. Ache a pista e a resposta aparece." },
-      { k:"analogia", emoji:"\u{1F697}", h:"Como alugar carro", p:"On-Demand e diaria no balcao. Savings Plan e um contrato de gasto mensal com desconto. Reserved e alugar aquele modelo por um ano. Spot e pegar o carro que sobrou no patio: baratissimo, mas podem pedir de volta em 2 minutos." },
+      { k:"gancho", emoji:"\u{1F4B0}", h:"Quatro formas de pagar computação", p:"A questão sempre dá uma pista do perfil da carga. Ache a pista e a resposta aparece." },
+      { k:"analogia", emoji:"\u{1F697}", h:"Como alugar carro", p:"On-Demand é diária no balcão. Savings Plan é um contrato de gasto mensal com desconto. Reserved é alugar aquele modelo por um ano. Spot é pegar o carro que sobrou no pátio: baratíssimo, mas podem pedir de volta em 2 minutos." },
       { k:"diagrama", diagram:"savings", h:"Compromisso x desconto", p:"Quanto mais compromisso, maior o desconto e menor a flexibilidade." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"O que elimina alternativa", gotcha:"Se a carga nao pode ser interrompida, Spot esta eliminado, por mais barato que seja. Se o enunciado fala em trocar de familia, regiao ou ate migrar para Fargate e Lambda, prefira Savings Plan em vez de Reserved padrao. Pico curto e imprevisivel que nao vale compromisso: On-Demand mesmo." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"O que elimina alternativa", gotcha:"Se a carga não pode ser interrompida, Spot está eliminado, por mais barato que seja. Se o enunciado fala em trocar de família, região ou até migrar para Fargate e Lambda, prefira Savings Plan em vez de Reserved padrão. Pico curto e imprevisível que não vale compromisso: On-Demand mesmo." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Processamento de lote a noite, pode ser interrompido e reiniciado.", a:["Spot","Reserved de 3 anos","On-Demand"], c:0, e:"Tolerante a interrupcao: caso ideal de Spot, com o maior desconto." },
-      { q:"Base estavel 24/7 por 3 anos, mas a equipe quer liberdade de trocar de familia e usar Fargate.", a:["Savings Plan de computacao","Reserved padrao","Spot"], c:0, e:"Savings Plan de computacao e flexivel entre familia, regiao, EC2, Fargate e Lambda." }
+      { q:"Processamento de lote à noite, pode ser interrompido e reiniciado.", a:["Spot","Reserved de 3 anos","On-Demand"], c:0, e:"Tolerante a interrupção: caso ideal de Spot, com o maior desconto." },
+      { q:"Base estável 24/7 por 3 anos, mas a equipe quer liberdade de trocar de família e usar Fargate.", a:["Savings Plan de computação","Reserved padrão","Spot"], c:0, e:"Savings Plan de computação é flexível entre família, região, EC2, Fargate e Lambda." }
     ]
   },
   {
@@ -643,29 +643,29 @@ const LESSONS = [
     title:"Responsabilidade compartilhada (vale nas duas nuvens)",
     slides:[
       { k:"gancho", emoji:"⚖", h:"O conceito que aparece nas duas provas", p:"Azure e AWS cobram a mesma ideia com nomes diferentes." },
-      { k:"analogia", emoji:"\u{1F3E0}", h:"Predio alugado", p:"O provedor cuida da estrutura, da fiacao e da portaria do predio. Voce cuida do que ha dentro do seu apartamento e de quem recebe a chave." },
-      { k:"diagrama", diagram:"shared", h:"A linha se move", p:"Quanto mais gerenciado o servico, mais sobe a parte do provedor." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"O que NUNCA e do provedor", gotcha:"Seus dados, a classificacao deles, suas identidades e a configuracao de acesso sao sempre seus, em IaaS, PaaS ou SaaS. Bucket publico por engano e culpa sua, nao da AWS. Patch do sistema operacional: em VM ou EC2 e seu; em servico gerenciado como App Service ou RDS, o provedor aplica, mas voce ainda responde pelos usuarios e pelas regras de rede." },
+      { k:"analogia", emoji:"\u{1F3E0}", h:"Prédio alugado", p:"O provedor cuida da estrutura, da fiação e da portaria do prédio. Você cuida do que há dentro do seu apartamento e de quem recebe a chave." },
+      { k:"diagrama", diagram:"shared", h:"A linha se move", p:"Quanto mais gerenciado o serviço, mais sobe a parte do provedor." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"O que NUNCA é do provedor", gotcha:"Seus dados, a classificação deles, suas identidades e a configuração de acesso são sempre seus, em IaaS, PaaS ou SaaS. Bucket público por engano é culpa sua, não da AWS. Patch do sistema operacional: em VM ou EC2 é seu; em serviço gerenciado como App Service ou RDS, o provedor aplica, mas você ainda responde pelos usuários e pelas regras de rede." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Em um banco gerenciado (RDS ou Azure SQL), quem aplica patch no sistema operacional?", a:["O provedor","Voce"], c:0, e:"Em servico gerenciado o provedor cuida de SO e engine. Voce cuida de usuarios, rede e dados." },
-      { q:"Um bucket S3 ficou publico por configuracao errada. De quem e a responsabilidade?", a:["Sua","Da AWS"], c:0, e:"Configuracao de acesso e dados sao sempre do cliente, em qualquer modelo." }
+      { q:"Em um banco gerenciado (RDS ou Azure SQL), quem aplica patch no sistema operacional?", a:["O provedor","Você"], c:0, e:"Em serviço gerenciado o provedor cuida de SO e engine. Você cuida de usuários, rede e dados." },
+      { q:"Um bucket S3 ficou público por configuração errada. De quem é a responsabilidade?", a:["Sua","Da AWS"], c:0, e:"Configuração de acesso e dados são sempre do cliente, em qualquer modelo." }
     ]
   },
   {
     id:"l-aws-s3", exam:"clf", dom:"d3", concept:"s3-classes", secs:80,
     title:"Classes de armazenamento do S3",
     slides:[
-      { k:"gancho", emoji:"\u{1FAA3}", h:"Durabilidade nao e o que muda", p:"Quase toda classe tem os mesmos 11 noves de durabilidade. O que muda e acesso, AZ e preco." },
-      { k:"analogia", emoji:"\u{1F5C4}", h:"Arquivo do escritorio", p:"Standard e a mesa. Standard-IA e o armario da sala. One Zone-IA e o armario de uma unica sala: se aquela sala fechar, voce nao alcanca. Glacier e o arquivo morto no subsolo." },
+      { k:"gancho", emoji:"\u{1FAA3}", h:"Durabilidade não é o que muda", p:"Quase toda classe tem os mesmos 11 noves de durabilidade. O que muda é acesso, AZ e preço." },
+      { k:"analogia", emoji:"\u{1F5C4}", h:"Arquivo do escritório", p:"Standard é a mesa. Standard-IA é o armário da sala. One Zone-IA é o armário de uma única sala: se aquela sala fechar, você não alcança. Glacier é o arquivo morto no subsolo." },
       { k:"diagrama", diagram:"s3classes", h:"Comparando as classes", p:"Repare em quem tem 3+ AZ e quem tem apenas uma." },
-      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Pistas do enunciado", gotcha:"Padrao de acesso desconhecido ou que muda: Intelligent-Tiering, porque ele move sozinho sem taxa de recuperacao. Dado que pode ser gerado de novo e voce quer o menor custo: One Zone-IA e aceitavel. Mas se o enunciado disser que nao pode perder o dado, One Zone-IA cai, porque ele vive em uma unica AZ." },
+      { k:"pegadinha", emoji:"\u{1F6A8}", h:"Pistas do enunciado", gotcha:"Padrão de acesso desconhecido ou que muda: Intelligent-Tiering, porque ele move sozinho sem taxa de recuperação. Dado que pode ser gerado de novo e você quer o menor custo: One Zone-IA é aceitável. Mas se o enunciado disser que não pode perder o dado, One Zone-IA cai, porque ele vive em uma única AZ." },
       { k:"quiz" }
     ],
     quiz:[
-      { q:"Padrao de acesso imprevisivel e ninguem quer administrar ciclo de vida.", a:["S3 Intelligent-Tiering","Standard-IA","Glacier Deep Archive"], c:0, e:"Ele move o objeto entre camadas automaticamente, sem taxa de recuperacao." },
-      { q:"Thumbnails que podem ser regerados a partir do original, com menor custo possivel.", a:["One Zone-IA","Standard","Glacier Flexible"], c:0, e:"Dado reproduzivel tolera uma unica AZ, e One Zone-IA e mais barato." }
+      { q:"Padrão de acesso imprevisível e ninguém quer administrar ciclo de vida.", a:["S3 Intelligent-Tiering","Standard-IA","Glacier Deep Archive"], c:0, e:"Ele move o objeto entre camadas automaticamente, sem taxa de recuperação." },
+      { q:"Thumbnails que podem ser regerados a partir do original, com menor custo possível.", a:["One Zone-IA","Standard","Glacier Flexible"], c:0, e:"Dado reproduzível tolera uma única AZ, e One Zone-IA é mais barato." }
     ]
   }
 ];
@@ -674,34 +674,34 @@ const LESSONS = [
    EQUIVALÊNCIAS Azure <-> AWS (modo comparativo)
    ============================================================ */
 const EQUIV = [
-  { c:"Maquina virtual", az:"Azure Virtual Machines", aw:"Amazon EC2", n:"IaaS puro; patch do SO e seu nas duas." },
+  { c:"Máquina virtual", az:"Azure Virtual Machines", aw:"Amazon EC2", n:"IaaS puro; patch do SO é seu nas duas." },
   { c:"Rede privada", az:"Virtual Network (VNet)", aw:"Amazon VPC", n:"Sub-redes, rotas e peering em ambas." },
-  { c:"Permissao de quem faz o que", az:"Azure RBAC", aw:"AWS IAM", n:"IAM tambem cobre o que o Azure separa em Policy." },
+  { c:"Permissão de quem faz o que", az:"Azure RBAC", aw:"AWS IAM", n:"IAM também cobre o que o Azure separa em Policy." },
   { c:"Regras do que pode existir", az:"Azure Policy", aw:"Service Control Policies (Organizations)", n:"SCP limita a conta inteira; Policy audita e nega recurso." },
   { c:"Objetos", az:"Blob Storage", aw:"Amazon S3", n:"Camadas: Hot/Cool/Cold/Archive x Standard/IA/Glacier." },
   { c:"Disco de bloco", az:"Managed Disks", aw:"Amazon EBS", n:"Presos a uma zona nas duas nuvens." },
-  { c:"Compartilhamento de arquivo", az:"Azure Files", aw:"Amazon EFS / FSx", n:"EFS e NFS para Linux; Files tambem fala SMB." },
-  { c:"Funcao serverless", az:"Azure Functions", aw:"AWS Lambda", n:"Limites de tempo de execucao diferentes; confira na doc." },
-  { c:"Container gerenciado", az:"Container Apps / ACI", aw:"AWS Fargate", n:"Sem gerenciar no (worker) nas duas." },
+  { c:"Compartilhamento de arquivo", az:"Azure Files", aw:"Amazon EFS / FSx", n:"EFS é NFS para Linux; Files também fala SMB." },
+  { c:"Função serverless", az:"Azure Functions", aw:"AWS Lambda", n:"Limites de tempo de execução diferentes; confira na doc." },
+  { c:"Container gerenciado", az:"Container Apps / ACI", aw:"AWS Fargate", n:"Sem gerenciar nó (worker) nas duas." },
   { c:"Kubernetes", az:"AKS", aw:"Amazon EKS", n:"Control plane gerenciado." },
-  { c:"Banco relacional gerenciado", az:"Azure SQL Database", aw:"Amazon RDS / Aurora", n:"Provedor aplica patch; usuarios e dados sao seus." },
-  { c:"NoSQL chave-valor", az:"Azure Cosmos DB", aw:"Amazon DynamoDB", n:"Cosmos tem varios modelos de API." },
-  { c:"Data warehouse", az:"Microsoft Fabric / Synapse", aw:"Amazon Redshift", n:"OLAP, nao OLTP." },
-  { c:"Cache em memoria", az:"Azure Cache for Redis", aw:"Amazon ElastiCache", n:"Reduz latencia de leitura repetida." },
-  { c:"CDN", az:"Azure Front Door", aw:"Amazon CloudFront", n:"Front Door tambem faz balanceamento global." },
-  { c:"DNS gerenciado", az:"Azure DNS / Traffic Manager", aw:"Amazon Route 53", n:"Politicas de roteamento equivalentes." },
-  { c:"Balanceador camada 7", az:"Application Gateway", aw:"Application Load Balancer", n:"Roteia por caminho e host; WAF acoplavel." },
-  { c:"Link privado dedicado", az:"ExpressRoute", aw:"AWS Direct Connect", n:"Nao passa pela internet publica." },
-  { c:"Fila", az:"Azure Queue / Service Bus", aw:"Amazon SQS", n:"Service Bus tem topicos e transacoes." },
+  { c:"Banco relacional gerenciado", az:"Azure SQL Database", aw:"Amazon RDS / Aurora", n:"Provedor aplica patch; usuários e dados são seus." },
+  { c:"NoSQL chave-valor", az:"Azure Cosmos DB", aw:"Amazon DynamoDB", n:"Cosmos tem vários modelos de API." },
+  { c:"Data warehouse", az:"Microsoft Fabric / Synapse", aw:"Amazon Redshift", n:"OLAP, não OLTP." },
+  { c:"Cache em memória", az:"Azure Cache for Redis", aw:"Amazon ElastiCache", n:"Reduz latência de leitura repetida." },
+  { c:"CDN", az:"Azure Front Door", aw:"Amazon CloudFront", n:"Front Door também faz balanceamento global." },
+  { c:"DNS gerenciado", az:"Azure DNS / Traffic Manager", aw:"Amazon Route 53", n:"Políticas de roteamento equivalentes." },
+  { c:"Balanceador camada 7", az:"Application Gateway", aw:"Application Load Balancer", n:"Roteia por caminho e host; WAF acoplável." },
+  { c:"Link privado dedicado", az:"ExpressRoute", aw:"AWS Direct Connect", n:"Não passa pela internet pública." },
+  { c:"Fila", az:"Azure Queue / Service Bus", aw:"Amazon SQS", n:"Service Bus tem tópicos e transações." },
   { c:"Pub/sub", az:"Event Grid", aw:"Amazon SNS / EventBridge", n:"Event Grid roteia por assunto, como o EventBridge." },
   { c:"Streaming ordenado", az:"Event Hubs", aw:"Amazon Kinesis Data Streams", n:"Quando o enunciado pede ordem e reprocessamento." },
-  { c:"Monitoramento", az:"Azure Monitor", aw:"Amazon CloudWatch", n:"Metricas, logs e alarmes." },
+  { c:"Monitoramento", az:"Azure Monitor", aw:"Amazon CloudWatch", n:"Métricas, logs e alarmes." },
   { c:"Auditoria de API", az:"Activity Log", aw:"AWS CloudTrail", n:"Quem chamou qual API e quando." },
-  { c:"Postura de seguranca", az:"Defender for Cloud", aw:"AWS Security Hub + GuardDuty", n:"Recomendacao e deteccao de ameaca." },
-  { c:"SIEM", az:"Microsoft Sentinel", aw:"Amazon Security Lake + parceiros", n:"Correlacao e resposta a incidente." },
-  { c:"Segredos", az:"Azure Key Vault", aw:"KMS + Secrets Manager", n:"Key Vault junta chave e segredo num servico." },
-  { c:"Recomendacao de custo", az:"Azure Advisor", aw:"AWS Trusted Advisor", n:"Custo, seguranca, confiabilidade, desempenho." },
-  { c:"Analise de gasto", az:"Cost Management", aw:"Cost Explorer + Budgets", n:"Orcamento com alerta nas duas." },
-  { c:"Hierarquia de contas", az:"Management Groups + Assinaturas", aw:"AWS Organizations + Contas", n:"Politica herda de cima para baixo." },
+  { c:"Postura de segurança", az:"Defender for Cloud", aw:"AWS Security Hub CSPM + GuardDuty", n:"Recomendação e detecção de ameaça." },
+  { c:"SIEM", az:"Microsoft Sentinel", aw:"Amazon Security Lake + parceiros", n:"Correlação e resposta a incidente." },
+  { c:"Segredos", az:"Azure Key Vault", aw:"KMS + Secrets Manager", n:"Key Vault junta chave e segredo num serviço." },
+  { c:"Recomendação de custo", az:"Azure Advisor", aw:"AWS Trusted Advisor", n:"Custo, segurança, confiabilidade, desempenho." },
+  { c:"Análise de gasto", az:"Cost Management", aw:"Cost Explorer + Budgets", n:"Orçamento com alerta nas duas." },
+  { c:"Hierarquia de contas", az:"Management Groups + Assinaturas", aw:"AWS Organizations + Contas", n:"Política herda de cima para baixo." },
   { c:"Estimativa antes de gastar", az:"Pricing Calculator / TCO", aw:"AWS Pricing Calculator", n:"TCO compara com on-premises." }
 ];

@@ -152,16 +152,30 @@ function qScore(q){
   return prof*.8+due+rep+was+fit*.6+Math.random()*.18;
 }
 const pick=(exam,dom,n)=>qPool(exam,dom).slice().sort((a,b)=>qScore(a)-qScore(b)).slice(0,n);
+/* Ordem de preferência no sorteio: questão nunca vista, depois a que o
+   estudante errou, depois a acertada há mais tempo. Assim simulados seguidos
+   não repetem as mesmas questões enquanto houver inéditas no banco. */
+function simPriority(qs){
+  const tier=q=>{ const s=S.seen[q.id]; return !s?0:s.ok?2:1; };
+  const ts=q=>{ const s=S.seen[q.id]; return s&&s.lastTs||0; };
+  return shuffle(qs).map((q,i)=>({q,i})).sort((a,b)=>
+    tier(a.q)-tier(b.q) || (tier(a.q)===2?ts(a.q)-ts(b.q):0) || a.i-b.i).map(x=>x.q);
+}
 function pickSim(exam,n){
   const e=ex0(exam), out=[];
   const ws=e.domains.map(d=>parseFloat(d.w)||25), tot=ws.reduce((a,b)=>a+b,0);
   e.domains.forEach((d,i)=>{
     const want=Math.max(1,Math.round(n*(ws[i]/tot)));
-    out.push(...shuffle(qPool(exam,d.id)).slice(0,want));
+    out.push(...simPriority(qPool(exam,d.id)).slice(0,want));
   });
-  if(out.length<n) out.push(...shuffle(qPool(exam).filter(q=>!out.includes(q))).slice(0,n-out.length));
+  if(out.length<n) out.push(...simPriority(qPool(exam).filter(q=>!out.includes(q))).slice(0,n-out.length));
   return shuffle(out.slice(0,n));
 }
+/* Prova completa no formato oficial. Só é oferecida quando o banco tem
+   folga (1,5 questão por vaga); senão viraria repetição. */
+const fullSpec=exam=>{ const e=ex0(exam), q=parseInt(e.realQ,10);
+  return (String(q)===String(e.realQ).trim()&&e.realMin)?{q,min:e.realMin}:null; };
+const fullReady=exam=>{ const f=fullSpec(exam); return !!f&&qPool(exam).length>=Math.ceil(f.q*1.5); };
 
 /* ---------- cartões de memorização ----------
    Gerados das tabelas "sinal no enunciado -> resposta" das fichas: é o
@@ -638,10 +652,13 @@ function viewExam(){
     <section class="sheet tight">
       <div class="spread">
         <div style="max-width:46ch">
-          <h2 class="t-sm">Simulado completo</h2>
-          <p class="t-xs dim" style="margin-top:2px">${e.simQ} questões em ${e.simMin} min, na proporção dos domínios. Sem retorno durante a prova.${sims.length?" Último: "+sims[0].score+" pontos.":""}</p>
+          <h2 class="t-sm">Simulado</h2>
+          <p class="t-xs dim" style="margin-top:2px">Curto: ${e.simQ} questões em ${e.simMin} min.${fullReady(V.exam)?` Prova completa: ${fullSpec(V.exam).q} questões em ${fullSpec(V.exam).min} min, como a real.`:""} Na proporção dos domínios, priorizando questões que você ainda não viu. Sem retorno durante a prova.${sims.length?" Último: "+sims[0].score+" pontos"+(sims[0].full?" (completa)":"")+".":""}</p>
         </div>
-        <button class="btn fill sm" data-act="simstart" data-exam="${V.exam}">Iniciar</button>
+        <div class="row" style="gap:6px">
+          <button class="btn sm" data-act="simstart" data-exam="${V.exam}">Curto</button>
+          ${fullReady(V.exam)?`<button class="btn fill sm" data-act="simstart" data-full="1" data-exam="${V.exam}">Prova completa</button>`:""}
+        </div>
       </div>
     </section>
 
@@ -978,7 +995,7 @@ function sessionEnd(){
 /* ---------------- simulado ---------------- */
 function saveSim(){
   if(!SIM||SIM.done){ S.sim=null; }
-  else S.sim={exam:SIM.exam,ids:SIM.qs.map(q=>q.id),i:SIM.i,ans:SIM.ans,flags:SIM.flags,end:SIM.end};
+  else{ simClock(); S.sim={exam:SIM.exam,ids:SIM.qs.map(q=>q.id),i:SIM.i,ans:SIM.ans,flags:SIM.flags,end:SIM.end,full:!!SIM.full,t:SIM.t}; }
   save();
 }
 function restoreSim(){
@@ -986,13 +1003,24 @@ function restoreSim(){
   if(r.end<=Date.now()){ S.sim=null; save(); return false; }
   const qs=r.ids.map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean);
   if(qs.length!==r.ids.length){ S.sim=null; save(); return false; }
-  SIM={exam:r.exam,qs,i:r.i,ans:r.ans,flags:r.flags,end:r.end,done:false};
+  SIM={exam:r.exam,qs,i:r.i,ans:r.ans,flags:r.flags,end:r.end,done:false,full:!!r.full,
+    t:Array.isArray(r.t)&&r.t.length===qs.length?r.t:qs.map(()=>0),cur:r.i,at:Date.now()};
   go("sim",{exam:r.exam});
   return true;
 }
-function startSim(exam){
-  const e=ex0(exam), qs=pickSim(exam,e.simQ).map(prep);
-  SIM={exam,qs,i:0,ans:qs.map(initSel),flags:qs.map(()=>false),end:Date.now()+e.simMin*6e4,done:false};
+/* Tempo por questão: o intervalo desde o último registro vai para a questão
+   que estava na tela. Trechos acima de 10 min contam como 10 (aba esquecida). */
+function simClock(){
+  if(!SIM) return;
+  const now=Date.now();
+  if(SIM.cur!=null&&SIM.at) SIM.t[SIM.cur]=(SIM.t[SIM.cur]||0)+Math.min(now-SIM.at,6e5);
+  SIM.cur=SIM.i; SIM.at=now;
+}
+function startSim(exam,full){
+  const e=ex0(exam), f=full&&fullReady(exam)?fullSpec(exam):null;
+  const n=f?f.q:e.simQ, min=f?f.min:e.simMin, qs=pickSim(exam,n).map(prep);
+  SIM={exam,qs,i:0,ans:qs.map(initSel),flags:qs.map(()=>false),end:Date.now()+min*6e4,done:false,
+    full:!!f,t:qs.map(()=>0),cur:0,at:Date.now()};
   saveSim(); go("sim",{exam});
 }
 function viewSim(){
@@ -1000,7 +1028,7 @@ function viewSim(){
   const e=ex0(SIM.exam), q=SIM.qs[SIM.i], aw=isAws(SIM.exam), left=SIM.end-Date.now();
   return `<div class="stack">
     <div class="sim-bar">
-      <span class="tag ${aw?"aw":"az"} mono">${e.code}</span>
+      <span class="tag ${aw?"aw":"az"} mono">${e.code}${SIM.full?" · completa":""}</span>
       <span class="clock ${left<12e4?"crit":left<3e5?"warn":""}" id="simclock">${clock(left)}</span>
       <span class="tag mono">${SIM.i+1}/${SIM.qs.length}</span>
       <span style="flex:1"></span>
@@ -1032,7 +1060,7 @@ function twoStep(act,msg){
 }
 function finishSim(){
   if(!SIM) return;
-  SIM.done=true;
+  simClock(); SIM.done=true;
   const e=ex0(SIM.exam), byDom={}; let right=0;
   e.domains.forEach(d=>byDom[d.id]={n:0,ok:0});
   SIM.qs.forEach((q,i)=>{
@@ -1045,14 +1073,40 @@ function finishSim(){
   let ws=0,acc=0;
   e.domains.forEach(d=>{ const w=parseFloat(d.w)||25, b=byDom[d.id]; ws+=w; acc+=w*(b.n?b.ok/b.n:0); });
   const score=Math.round(300+700*(ws?acc/ws:0)), pass=score>=e.pass;
-  const rec={exam:SIM.exam,score,pass,right,total:SIM.qs.length,byDom,ts:Date.now(),chall:!!SIM.chall};
+  const rec={exam:SIM.exam,score,pass,right,total:SIM.qs.length,byDom,ts:Date.now(),chall:!!SIM.chall,full:!!SIM.full,
+    secs:Math.round(SIM.t.reduce((a,b)=>a+b,0)/1000)};
   S.sims.unshift(rec); S.sims=S.sims.slice(0,20);
   if(S.answered>=50) unlock("q50");
   if(pass) unlock(isAws(SIM.exam)?"passaw":"passaz");
   if(right===SIM.qs.length) unlock("perfect");
   addXp(40+right*5,"simulado concluído");
-  const qs=SIM.qs, ans=SIM.ans; SIM=null; S.sim=null; save();
-  clearTimers(); V={name:"simres",exam:rec.exam,res:rec,qs,ans}; render(); window.scrollTo(0,0);
+  const qs=SIM.qs, ans=SIM.ans, t=SIM.t, flags=SIM.flags; SIM=null; S.sim=null; save();
+  clearTimers(); V={name:"simres",exam:rec.exam,res:rec,qs,ans,t,flags}; render(); window.scrollTo(0,0);
+}
+/* Diagnóstico depois da entrega: ritmo e o que estudar a seguir. */
+function simDiagHtml(r,e){
+  const qs=V.qs||[], ans=V.ans||[], t=V.t||[];
+  const n=qs.length; if(!n) return "";
+  const gasto=t.reduce((a,b)=>a+b,0)/1000, orc=(r.full&&fullSpec(r.exam)?fullSpec(r.exam).min:e.simMin)*60/n;
+  const media=gasto/n;
+  const lentas=qs.map((q,i)=>({i,s:(t[i]||0)/1000})).filter(x=>x.s>orc*2).sort((a,b)=>b.s-a.s).slice(0,3);
+  /* fichas: soma os erros por conceito e aponta a ficha de cada um */
+  const erros={};
+  qs.forEach((q,i)=>{ if(!grade(q,ans[i])) (q.tags||[]).forEach(c=>erros[c]=(erros[c]||0)+1); });
+  const fichas=[]; const vistas=new Set();
+  Object.entries(erros).sort((a,b)=>b[1]-a[1]).forEach(([c,k])=>{
+    const f=FICHAS.find(x=>x.concept===c&&x.exam===r.exam)||FICHAS.find(x=>x.concept===c);
+    if(f&&!vistas.has(f.id)&&fichas.length<3){ vistas.add(f.id); fichas.push({f,k}); }
+  });
+  const ritmo=gasto?(media<=orc?"Dentro do tempo":"Acima do tempo"):null;
+  return `<section class="sheet">
+    <div class="hd"><h2 class="t-md">Diagnóstico</h2><span class="n">o que fazer agora</span></div>
+    ${ritmo?`<p class="t-sm"><b>${ritmo}.</b> Média de ${clock(media*1000)} por questão, para um orçamento de ${clock(orc*1000)}.${lentas.length?` As mais demoradas foram a ${lentas.map(x=>x.i+1).join(", a ")}: nelas vale reler a explicação mesmo se acertou.`:""}</p>`:""}
+    ${fichas.length?`<p class="t-sm" style="margin-top:9px">Seus erros se concentram nestes temas. Leia a ficha antes do próximo simulado:</p>
+      <div class="lst" style="margin-top:7px">${fichas.map(({f,k})=>`<button class="lst-i" data-act="ficha" data-ficha="${f.id}" data-exam="${f.exam}">
+        <span class="nm">${esc(f.title)}</span><span class="tm">${k} erro${k>1?"s":""}</span></button>`).join("")}</div>`
+      :`<p class="t-sm" style="margin-top:9px">Nenhum erro concentrado num tema. Siga com a revisão espaçada.</p>`}
+  </section>`;
 }
 function viewSimRes(){
   const r=V.res; if(!r) return viewHome();
@@ -1065,6 +1119,7 @@ function viewSimRes(){
       <p class="t-sm dim">${r.right} de ${r.total} questões corretas</p>
     </div>
     <p class="t-xs dim2" style="text-align:center">Este simulado é calibrado acima da prova real. Reprovar aqui no começo é esperado.</p>
+    ${simDiagHtml(r,e)}
 
     <section class="sheet">
       <div class="hd"><h2 class="t-md">Desempenho por domínio</h2><span class="n">ponderado pelo peso oficial</span></div>
@@ -1077,12 +1132,20 @@ function viewSimRes(){
 
     <section class="stack">
       <div class="hd"><h2>Gabarito comentado</h2><span class="n">${r.total} questões</span></div>
+      <div class="row" role="group" aria-label="Filtrar o gabarito" style="gap:6px">
+        ${[["all","Todas",r.total],["no","Que errei",r.total-r.right],["flag","Marcadas",(V.flags||[]).filter(Boolean).length]]
+          .map(([f,l,n],k)=>`<button class="btn sm" data-act="simfilter" data-f="${f}" aria-pressed="${k===0}">${l} <span class="mono dim2">${n}</span></button>`).join("")}
+      </div>
+      <div id="gabarito" class="gab" data-f="all">
       ${V.qs.map((q,i)=>{
-        const ok=grade(q,V.ans[i]);
-        return `<div class="sheet" style="border-left:3px solid ${ok?"var(--go)":"var(--no)"}">
+        const ok=grade(q,V.ans[i]), sec=V.t?Math.round((V.t[i]||0)/1000):null, fl=!!(V.flags&&V.flags[i]);
+        return `<div class="sheet gab-i" data-ok="${ok?1:0}" data-flag="${fl?1:0}" style="border-left:3px solid ${ok?"var(--go)":"var(--no)"}">
           <div class="row" style="margin-bottom:9px"><span class="tag ${ok?"go":"no"} mono">${i+1}</span>
-          <span class="t-sm ${ok?"":"dim"}">${ok?"Você acertou":"Você errou"}</span></div>
+          <span class="t-sm ${ok?"":"dim"}">${ok?"Você acertou":"Você errou"}</span>
+          ${fl?'<span class="tag mono">marcada</span>':""}<span style="flex:1"></span>
+          ${sec!=null?`<span class="t-xs mono dim2" title="Tempo nesta questão">${clock(sec*1000)}</span>`:""}</div>
           ${qHtml(q,true,V.ans[i])}${verdictHtml(q,V.ans[i])}</div>`;}).join("")}
+      </div>
     </section>
 
     <div class="row" style="justify-content:center">
@@ -1467,7 +1530,7 @@ function viewMe(){
     ${last.length?`<section class="sheet">
       <h2 class="t-md" style="margin-bottom:10px">Últimos simulados</h2>
       ${last.map(r=>`<div class="spread" style="padding:7px 0;border-bottom:1px solid var(--rule)">
-        <span class="t-sm"><b class="mono">${ex0(r.exam).code}</b> <span class="dim2">${new Date(r.ts).toLocaleDateString("pt-BR")}</span></span>
+        <span class="t-sm"><b class="mono">${ex0(r.exam).code}</b>${r.full?' <span class="tag mono">completa</span>':""} <span class="dim2">${new Date(r.ts).toLocaleDateString("pt-BR")}</span></span>
         <span class="tag ${r.pass?"go":"no"} mono">${r.score}</span></div>`).join("")}
     </section>`:""}
 
@@ -1725,7 +1788,16 @@ document.addEventListener("click",ev=>{
   if(a==="qnext"){ SES.i++; SES.sel=initSel(SES.qs[SES.i]); SES.shown=false; clearTimers(); return render(); }
 
   /* simulado */
-  if(a==="simstart") return startSim(b.dataset.exam||V.exam);
+  if(a==="simstart"){
+    if(((SIM&&!SIM.done)||S.sim)&&!twoStep("simstart","Há um simulado em andamento. Toque de novo para descartá-lo e começar outro.")) return;
+    return startSim(b.dataset.exam||V.exam,b.dataset.full==="1");
+  }
+  if(a==="simfilter"){
+    const box=document.getElementById("gabarito"); if(!box) return;
+    box.dataset.f=b.dataset.f;
+    document.querySelectorAll('[data-act="simfilter"]').forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    return;
+  }
   if(a==="simnext")  return SIM.i<SIM.qs.length-1?(SIM.i++,saveSim(),render()):finishSim();
   if(a==="simprev"){ if(SIM.i>0){ SIM.i--; saveSim(); render(); } return; }
   if(a==="simgo"){ SIM.i=+b.dataset.i; saveSim(); return render(); }

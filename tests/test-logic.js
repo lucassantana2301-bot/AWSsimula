@@ -9,7 +9,7 @@ global.window={scrollTo(){},addEventListener(){},location:global.location};
 global.navigator={};
 global.setInterval=()=>0; global.clearInterval=()=>{}; global.setTimeout=()=>0; global.clearTimeout=()=>{};
 global.requestAnimationFrame=()=>0;
-eval(require("fs").readFileSync(require("path").join(__dirname,"..","build","all.js"),"utf8")+"\n;Object.assign(global,{DECKS,CARDS,buildChall,parseChall,FICHAS,FICHAS_AZ,FICHAS_AWS,QUESTIONS,EXAMS,LESSONS,EQUIV,DIAGRAMS,S,grade,prep,pick,pickSim,predict,schedule,cs,domProf,qHtml,verdictHtml,blockHtml,fichasOf,lessonsOf,contentDone,domOpen,ex0,daily,DEF,viewFicha,shell,CATALOGO,METAS,cat0,coverage,viewTrilha,viewCat,NIVEIS,PROVIDERS,pick,qPool,pickSim});");
+eval(require("fs").readFileSync(require("path").join(__dirname,"..","build","all.js"),"utf8")+"\n;Object.assign(global,{DECKS,CARDS,buildChall,parseChall,FICHAS,FICHAS_AZ,FICHAS_AWS,QUESTIONS,EXAMS,LESSONS,EQUIV,DIAGRAMS,S,grade,prep,pick,pickSim,predict,schedule,fullSpec,fullReady,cs,domProf,qHtml,verdictHtml,blockHtml,fichasOf,lessonsOf,contentDone,domOpen,ex0,daily,DEF,viewFicha,shell,CATALOGO,METAS,cat0,coverage,viewTrilha,viewCat,NIVEIS,PROVIDERS,pick,qPool,pickSim});");
 
 let f=0; const ok=(c,m)=>{ if(!c){ console.log("FALHOU: "+m); f++; } };
 const ACT=EXAMS.filter(e=>e.status==="active");
@@ -91,6 +91,26 @@ for(const e of ACT){
   ok(qs.length===e.simQ,e.code+": simulado com "+qs.length+" de "+e.simQ);
   ok(new Set(qs.map(q=>q.id)).size===qs.length,e.code+": questão repetida");
   for(const d of e.domains) ok(qs.some(q=>q.dom===d.id),e.code+": domínio "+d.name+" fora do simulado");
+}
+/* --- 7b. prova completa e sorteio por prioridade --- */
+{
+  const saa=ex0("saa"), clf=ex0("clf");
+  ok(fullReady("saa")&&fullSpec("saa").q===65&&fullSpec("saa").min===130,"SAA: prova completa deveria ser 65 questões em 130 min");
+  ok(fullReady("clf")&&fullSpec("clf").q===65,"CLF: prova completa indisponível");
+  ok(fullSpec("az900")===null,"AZ-900 tem faixa de questões (40-60): não deveria ter prova completa fixa");
+  const full=pickSim("saa",65);
+  ok(full.length===65&&new Set(full.map(q=>q.id)).size===65,"prova completa do SAA com tamanho errado ou repetição");
+  for(const d of saa.domains){
+    const want=Math.round(65*parseFloat(d.w)/100), got=full.filter(q=>q.dom===d.id).length;
+    ok(Math.abs(got-want)<=1,"SAA completa: "+d.name+" com "+got+" questões, esperado ~"+want);
+  }
+  /* sorteio prioriza inéditas: marca metade do banco como vista e acertada */
+  const pool=qPool("clf"), antes=JSON.stringify(S.seen);
+  pool.slice(0,Math.floor(pool.length/2)).forEach(q=>S.seen[q.id]={ok:true,n:1,lastTs:Date.now()});
+  const s2=pickSim("clf",clf.simQ), vistas=s2.filter(q=>S.seen[q.id]).length;
+  const ineditas=pool.length-Math.floor(pool.length/2);
+  ok(vistas<=Math.max(0,clf.simQ-ineditas)+clf.domains.length,"sorteio usou "+vistas+" questões já vistas havendo "+ineditas+" inéditas");
+  S.seen=JSON.parse(antes);
 }
 /* --- 8. nota prevista --- */
 for(const e of ACT){

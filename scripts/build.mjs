@@ -18,8 +18,8 @@ const PARTES = [
   "p4-questions.js", "p4b-questions-az.js", "p4c-questions-aws.js",
   "p4d-questions-az104.js", "p4e-questions-az104b.js",
   "p4f-questions-saa.js", "p4g-questions-saa-b.js",
-  "p4h-questions-az104c.js", "p4i-questions-saa-c.js", "p4j-questions-aws-d.js",
-  "p6-decks.js", "p2b-catalog-az104.js", "p2c-catalog-saa.js",
+  "p4h-questions-az104c.js", "p4i-questions-saa-c.js", "p4j-questions-aws-d.js", "p4k-questions-saa-max.js",
+  "p6-decks.js", "p2b-catalog-az104.js", "p2c-catalog-saa.js", "p6b-decks-aws.js",
   "p7-catalogo.js", "p8-motion.js", "p5-engine.js"
 ];
 
