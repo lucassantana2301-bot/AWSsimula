@@ -230,7 +230,9 @@ try{
   const inp=d.getElementById("examdate");
   if(!inp) errs.push("FALHOU: campo de data da prova ausente");
   else{
-    const dd=new Date(Date.now()+20*864e5).toISOString().slice(0,10);
+    /* data local, como o app calcula; em UTC o teste quebrava entre 21h e 0h no Brasil */
+    const alvo=new Date(Date.now()+20*864e5);
+    const dd=new Date(alvo.getTime()-alvo.getTimezoneOffset()*6e4).toISOString().slice(0,10);
     inp.value=dd; inp.dispatchEvent(new w.Event("change",{bubbles:true}));
     if(st().dates.az900!==dd) errs.push("FALHOU: data da prova não foi salva");
     const pace=d.getElementById("pace").textContent;
