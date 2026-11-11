@@ -55,6 +55,16 @@ fs.slice(0,-1).forEach(x=>S.fichas[x.id]=1);
 ok(contentDone(e0.id,d0.id)===false,"prática abriu faltando uma ficha");
 S.fichas[fs[fs.length-1].id]=1;
 ok(contentDone(e0.id,d0.id)===true,"prática não abriu com todas as fichas lidas");
+/* --- 3b. ficha de aprofundamento (extra) não tranca a prática --- */
+{
+  const fake={id:"f-teste-extra",exam:e0.id,dom:d0.id,extra:true,mins:5,title:"t",lead:"",blocks:[],check:[],src:[]};
+  FICHAS.push(fake);
+  ok(contentDone(e0.id,d0.id)===true,"ficha extra trancou a prática de quem já leu as fichas base");
+  delete S.fichas[fs[0].id];
+  ok(contentDone(e0.id,d0.id)===false,"faltando ficha base, a prática abriu mesmo com ficha extra presente");
+  S.fichas[fs[0].id]=1;
+  FICHAS.splice(FICHAS.indexOf(fake),1);
+}
 /* --- 4. domínio seguinte só abre vencendo o chefe --- */
 S.bosses={};
 ok(domOpen(e0.id,0)===true,"primeiro domínio deveria começar aberto");

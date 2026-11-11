@@ -266,12 +266,13 @@ const QUESTIONS_AW2 = [
   ],
   ans:["A"],
   why:{
-    ok:"O Security Hub centraliza e normaliza achados de vários serviços e de parceiros, além de medir a conformidade com padrões.",
+    ok:"O Security Hub centraliza e normaliza achados de vários serviços e de parceiros, além de medir a conformidade com padrões. Atenção ao nome: desde dezembro de 2025 o Security Hub original se chama AWS Security Hub CSPM, e o novo AWS Security Hub correlaciona os sinais do GuardDuty, do Inspector, do Macie e do CSPM para priorizar riscos. Os dois fazem parte da mesma família, e a resposta continua sendo Security Hub.",
     B:"Detective ajuda a investigar a causa de um achado, analisando o grafo de eventos. Não é o agregador.",
     C:"CloudTrail é o registro de chamadas de API.",
-    D:"Trusted Advisor dá recomendações em cinco categorias, com verificações de segurança básicas, mas não é o painel de achados."
+    D:"Trusted Advisor dá recomendações em seis categorias, com verificações de segurança, mas não é o painel de achados."
   },
-  src:[{t:"AWS Security Hub",u:"https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html"}]
+  src:[{t:"AWS Security Hub CSPM",u:"https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html"},
+       {t:"AWS Security Hub",u:"https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub-v2.html"}]
 },
 {
   id:"aw-d3-10", exam:"clf", dom:"d3", lvl:4, type:"single", sec:80, tags:["bancos-aws"],
@@ -435,7 +436,7 @@ const QUESTIONS_AW2 = [
   ],
   ans:["A"],
   why:{
-    ok:"ElastiCache oferece Redis e Memcached gerenciados, usados como camada de cache em memória na frente do banco.",
+    ok:"ElastiCache oferece Valkey, Redis OSS e Memcached gerenciados, usados como camada de cache em memória na frente do banco.",
     B:"RDS é o banco relacional gerenciado, justamente o que o cache alivia.",
     C:"Redshift é data warehouse para consulta analítica.",
     D:"S3 é armazenamento de objetos, com latência muito maior que memória."
@@ -454,7 +455,7 @@ const QUESTIONS_AW2 = [
   ],
   ans:["A","B","C"],
   why:{
-    ok:"O Trusted Advisor verifica otimização de custos, desempenho, segurança, tolerância a falhas e limites de serviço.",
+    ok:"O Trusted Advisor tem seis categorias: otimização de custos, desempenho, segurança, tolerância a falhas, limites de serviço e excelência operacional.",
     D:"Análise de código não é função do Trusted Advisor.",
     E:"Acessibilidade de interface de aplicação não é avaliada por ele."
   },
@@ -465,19 +466,20 @@ const QUESTIONS_AW2 = [
   case:"Uma empresa com conta nova precisa de suporte técnico 24 horas por telefone para um sistema de produção, mas ainda não tem orçamento para gerente técnico de conta designado.",
   stem:"Qual plano de suporte é o mais adequado?",
   opts:[
-    {k:"A",t:"Business"},
-    {k:"B",t:"Developer"},
+    {k:"A",t:"Business Support+"},
+    {k:"B",t:"Unified Operations"},
     {k:"C",t:"Basic"},
     {k:"D",t:"Enterprise"}
   ],
   ans:["A"],
   why:{
-    ok:"O Business oferece suporte técnico 24 horas por telefone, chat e e-mail, com tempo de resposta agressivo para sistema de produção fora do ar, sem o custo dos planos com gerente designado.",
-    B:"O Developer atende em horário comercial e por e-mail, insuficiente para produção 24 horas.",
-    C:"O Basic não inclui suporte técnico.",
+    ok:"O Business Support+, a partir de US$ 29 por mês por conta, dá acesso 24 horas a engenheiros por telefone, chat e web, com até 1 hora para sistema de produção fora do ar, sem TAM designado. Até 2026 essa resposta era o plano Business; Developer, Business e Enterprise On-Ramp serão descontinuados em 01/01/2027, e a prova pode ainda citar esses nomes.",
+    B:"O Unified Operations é o nível mais alto, com TAM e engenheiro especialista designados. Inclui justamente o que o enunciado diz não caber no orçamento.",
+    C:"O Basic cobre conta, cobrança e documentação. Não inclui suporte técnico de engenheiros.",
     D:"O Enterprise atende, mas inclui o gerente técnico designado que o enunciado diz não caber no orçamento."
   },
-  src:[{t:"Planos de suporte",u:"https://aws.amazon.com/premiumsupport/plans/"}]
+  src:[{t:"Planos de suporte",u:"https://aws.amazon.com/premiumsupport/plans/"},
+       {t:"Fim do Developer, Business e Enterprise On-Ramp",u:"https://docs.aws.amazon.com/awssupport/latest/user/support-plans-eos.html"}]
 },
 {
   id:"aw-d4-09", exam:"clf", dom:"d4", lvl:5, type:"single", sec:85, tags:["pricing-models"],
@@ -491,7 +493,7 @@ const QUESTIONS_AW2 = [
   ],
   ans:["A"],
   why:{
-    ok:"O Cost and Usage Report é o conjunto de dados mais granular de cobrança da AWS, entregue em arquivo no S3, feito para ser processado por ferramentas externas.",
+    ok:"O Cost and Usage Report é o conjunto de dados mais granular de cobrança da AWS, entregue em arquivo no S3, feito para ser processado por ferramentas externas. Hoje ele é criado pelo AWS Data Exports, na versão CUR 2.0.",
     B:"Cost Explorer é visualização e análise interativa, com exportação limitada frente ao detalhamento do CUR.",
     C:"Budgets dispara alerta ao atingir limite; não é fonte de dado detalhado.",
     D:"A calculadora estima custo de algo que ainda não existe."

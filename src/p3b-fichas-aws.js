@@ -189,7 +189,7 @@ const FICHAS_AWS = [
       ["Inspector","Varre","Há vulnerabilidade conhecida em EC2, contêiner ou função"],
       ["Macie","Classifica","Há dado pessoal ou sensível nos buckets"],
       ["Detective","Investiga","Qual foi a cadeia de eventos por trás do alerta"],
-      ["Security Hub","Agrega","Visão única dos achados de vários serviços"],
+      ["Security Hub","Agrega","Visão única dos achados de vários serviços. O original hoje se chama Security Hub CSPM"],
       ["Artifact","Entrega","Relatórios de conformidade como SOC e PCI, para o auditor"],
       ["IAM Access Analyzer","Revela","Qual recurso está acessível de fora da conta"]
     ]},
@@ -296,7 +296,7 @@ const FICHAS_AWS = [
       ["Aurora","Relacional compatível com MySQL e PostgreSQL","Alta disponibilidade e desempenho com compatibilidade relacional"],
       ["DynamoDB","NoSQL de chave e valor, sem servidor","Leitura por chave em milissegundos com tráfego muito variável"],
       ["Redshift","Data warehouse colunar","Consulta analítica varrendo bilhões de linhas históricas"],
-      ["ElastiCache","Cache em memória, Redis ou Memcached","Reduzir latência de leitura repetida e aliviar o banco"],
+      ["ElastiCache","Cache em memória: Valkey, Redis OSS ou Memcached","Reduzir latência de leitura repetida e aliviar o banco"],
       ["DocumentDB","Documentos","Carga compatível com MongoDB"],
       ["Neptune","Grafo","Relacionamento entre entidades, recomendação, fraude"],
       ["Athena","Consulta SQL sobre dados no S3","Análise sob demanda sem carregar em warehouse"]
@@ -417,27 +417,28 @@ const FICHAS_AWS = [
       ["AWS Pricing Calculator","Quanto vai custar algo que ainda não existe"],
       ["Cost Explorer","Quanto já gastei, por serviço e por período, com projeção"],
       ["AWS Budgets","Avisar ou agir quando o gasto passar de um valor"],
-      ["Cost and Usage Report","Dados detalhados de cobrança, linha a linha, para análise"],
-      ["Trusted Advisor","Recomendação em custo, desempenho, segurança, tolerância a falhas e limites de serviço"],
+      ["Cost and Usage Report","Dados detalhados de cobrança, linha a linha, para análise; hoje criado pelo AWS Data Exports"],
+      ["Trusted Advisor","Recomendação em custo, desempenho, segurança, tolerância a falhas, limites de serviço e excelência operacional"],
       ["Compute Optimizer","Qual instância está superdimensionada"]
     ]},
     {t:"h", x:"Organizations e nível gratuito"},
-    {t:"p", x:"O AWS Organizations consolida a fatura de várias contas, soma o consumo para efeito de faixa de desconto por volume, permite compartilhar reservas e Savings Plans e aplica SCPs. O nível gratuito tem três formatos: ofertas sempre gratuitas com cota mensal permanente, ofertas gratuitas por doze meses a partir da criação da conta e testes de curta duração."},
+    {t:"p", x:"O AWS Organizations consolida a fatura de várias contas, soma o consumo para efeito de faixa de desconto por volume, permite compartilhar reservas e Savings Plans e aplica SCPs. Contas criadas desde 15/07/2025 recebem até US$ 200 em créditos e podem usar o plano gratuito por até seis meses; as ofertas sempre gratuitas, com cota mensal, continuam valendo. Contas anteriores seguem no modelo antigo, com três formatos que a prova ainda cita: sempre gratuito, gratuito por doze meses a partir da criação da conta e testes de curta duração."},
     {t:"h", x:"Planos de suporte"},
     {t:"table", head:["Plano","Inclui"], rows:[
-      ["Basic","Documentação, fóruns e verificações limitadas do Trusted Advisor. Sem suporte técnico"],
-      ["Developer","Suporte técnico por e-mail em horário comercial, orientação geral"],
-      ["Business","Suporte 24 horas por telefone, chat e e-mail; Trusted Advisor completo; suporte a software de terceiros"],
-      ["Enterprise On-Ramp","Casos críticos de negócio atendidos por um grupo de arquitetos; revisões e orientação"],
-      ["Enterprise","Menor tempo de resposta para caso crítico de negócio, gerente técnico de conta designado, revisões de Well-Architected e serviço de concierge de cobrança"]
+      ["Basic","Atendimento de conta e cobrança, documentação, re:Post, AWS Health e verificações principais do Trusted Advisor. Sem suporte técnico"],
+      ["Business Support+","A partir de US$ 29 por mês por conta. Assistência com IA, engenheiros 24 horas por telefone, chat e web, até 30 minutos para sistema crítico fora do ar, Trusted Advisor completo e suporte a software de terceiros"],
+      ["Enterprise","Mínimo de US$ 5.000 por mês. Tudo do Business Support+, mais gerente técnico de conta (TAM) designado, até 15 minutos para sistema crítico, revisões de Well-Architected, concierge de cobrança e AWS Security Incident Response"],
+      ["Unified Operations","Nível mais alto: TAM e engenheiro especialista designados, até 5 minutos para sistema crítico, revisões de cargas críticas e runbooks personalizados"]
     ]},
+    {t:"p", x:"Até 2026 existiam também Developer, Business e Enterprise On-Ramp. Eles serão descontinuados em 01/01/2027: Developer e Business migram para o Business Support+ e o Enterprise On-Ramp passa para o Enterprise. Como a prova pode ainda citar os nomes antigos, lembre a equivalência: Business era o plano com suporte 24 horas sem TAM, e Enterprise sempre foi o do TAM designado e dos 15 minutos."},
     {t:"trap", x:"Spot nunca é a resposta para carga de produção que não pode cair. E se o enunciado valoriza liberdade de trocar de família ou migrar para Fargate e Lambda, prefira Savings Plans a reserva padrão."},
     {t:"case", q:"Doze contas, uma por equipe. A diretoria quer fatura única, aproveitar faixa de desconto somando o consumo de todas e impedir que qualquer equipe use regiões fora da América do Sul.",
       a:"AWS Organizations com cobrança consolidada e Service Control Policies. Grupo de segurança filtra tráfego e não restringe região. Budgets alerta, mas não consolida fatura. Control Tower é construído sobre o Organizations e não o substitui."}
   ],
-  check:["Dizer a diferença entre Savings Plans e Reserved Instances","Citar os três formatos do nível gratuito","Saber qual plano tem gerente técnico designado"],
+  check:["Dizer a diferença entre Savings Plans e Reserved Instances","Dizer o que mudou no nível gratuito em julho de 2025","Saber qual plano tem gerente técnico designado"],
   src:[{t:"Savings Plans", u:"https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html"},
        {t:"Planos de suporte", u:"https://aws.amazon.com/premiumsupport/plans/"},
+       {t:"Fim do Developer, Business e Enterprise On-Ramp", u:"https://docs.aws.amazon.com/awssupport/latest/user/support-plans-eos.html"},
        {t:"AWS Organizations", u:"https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html"}]
 }
 ];

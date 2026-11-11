@@ -112,7 +112,11 @@ const qPool=(exam,dom)=>QUESTIONS.filter(q=>q.exam===exam&&(!dom||q.dom===dom));
 
 /* conteúdo antes da lição: a prática do domínio exige as fichas lidas */
 const fichasRead=(exam,dom)=>fichasOf(exam,dom).filter(f=>S.fichas[f.id]).length;
-const contentDone=(exam,dom)=>{ const t=fichasOf(exam,dom); return t.length>0&&t.every(f=>S.fichas[f.id]); };
+/* Fichas marcadas extra:true são aprofundamento: contam no progresso,
+   mas não trancam a prática. Assim, publicar ficha nova nunca tranca de
+   volta um domínio que o estudante já tinha liberado. */
+const fichasBase=(exam,dom)=>{ const t=fichasOf(exam,dom), b=t.filter(f=>!f.extra); return b.length?b:t; };
+const contentDone=(exam,dom)=>{ const t=fichasBase(exam,dom); return t.length>0&&t.every(f=>S.fichas[f.id]); };
 const domOpen=(exam,i)=>{ const e=ex0(exam); return i===0||!!S.bosses[exam+":"+e.domains[i-1].id]; };
 
 function domProf(exam,dom){
@@ -671,7 +675,7 @@ function domBlock(d,i,aw){
       ${node("wide",st(ready,open),"Conteúdo",fr+"/"+fs.length+" fichas · "+mins+" min",
         lock?`<p class="node-p">Vença o chefe do domínio anterior.</p>`
         :`<div class="lst">${fs.map(f=>`<button class="lst-i" data-k="f:${f.id}" data-done="${S.fichas[f.id]?1:0}" data-act="ficha" data-ficha="${f.id}">
-            <span class="bx"></span><span class="nm">${esc(f.title)}</span><span class="tm">${f.mins}m</span></button>`).join("")}</div>`)}
+            <span class="bx"></span><span class="nm">${esc(f.title)}${f.extra?` <span class="xt">aprofundamento</span>`:""}</span><span class="tm">${f.mins}m</span></button>`).join("")}</div>`)}
       ${conn}
       ${node("",st(ls.length&&lw===ls.length,open),"Aula",ls.length?lw+"/"+ls.length+" vistas · 90s":"sem aula",
         lock||!ls.length?`<p class="node-p">${lock?"Bloqueado.":"Este domínio não tem aula."}</p>`
@@ -679,7 +683,7 @@ function domBlock(d,i,aw){
             <span class="bx"></span><span class="nm">${esc(l.title)}</span><span class="tm">${l.secs}s</span></button>`).join("")}</div>`)}
       ${conn}
       ${node("",st(domProf(exam,d.id)>.6,open&&ready),"Prática",qPool(exam,d.id).length+" no banco",
-        `<p class="node-p">${lock?"Bloqueado.":ready?"Seis questões escolhidas pelo que você ainda erra.":"Falta ler "+(fs.length-fr)+" ficha"+(fs.length-fr>1?"s":"")+"."}</p>
+        `<p class="node-p">${lock?"Bloqueado.":ready?"Seis questões escolhidas pelo que você ainda erra.":(n=>"Falta ler "+n+" ficha"+(n>1?"s":"")+".")(fichasBase(exam,d.id).filter(f=>!S.fichas[f.id]).length)}</p>
          <button class="btn sm ${aw?"aw":"az"}" ${open&&ready?`data-act="study" data-exam="${exam}" data-dom="${d.id}"`:"disabled"}>Praticar</button>`)}
       ${conn}
       ${node("",st(bossDone,open&&ready),"Chefe",bossDone?"derrotado":"5 questões, cronometrado",

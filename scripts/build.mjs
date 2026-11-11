@@ -14,11 +14,11 @@ const SRC = join(ROOT, "src");
 const PARTES = [
   "p2-catalog.js",
   "p3a-fichas-az.js", "p3b-fichas-aws.js", "p3c-fichas-az104.js", "p3d-fichas-az104b.js",
-  "p3e-fichas-saa.js", "p3f-fichas-saa-b.js",
+  "p3e-fichas-saa.js", "p3f-fichas-saa-b.js", "p3g-fichas-aws-c.js",
   "p4-questions.js", "p4b-questions-az.js", "p4c-questions-aws.js",
   "p4d-questions-az104.js", "p4e-questions-az104b.js",
   "p4f-questions-saa.js", "p4g-questions-saa-b.js",
-  "p4h-questions-az104c.js", "p4i-questions-saa-c.js",
+  "p4h-questions-az104c.js", "p4i-questions-saa-c.js", "p4j-questions-aws-d.js",
   "p6-decks.js", "p2b-catalog-az104.js", "p2c-catalog-saa.js",
   "p7-catalogo.js", "p8-motion.js", "p5-engine.js"
 ];

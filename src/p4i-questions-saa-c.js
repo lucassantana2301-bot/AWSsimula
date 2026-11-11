@@ -10,17 +10,17 @@ const QUESTIONS_SAA_C = [
   case:"Um instantâneo do EBS criptografado com a chave padrão aws/ebs precisa ser compartilhado com a conta de recuperação de desastres da empresa. A opção de compartilhar falha.",
   stem:"Qual caminho resolve?",
   opts:[
-    {k:"A",t:"Copiar o instantâneo recriptografando com uma chave gerenciada pelo cliente, liberar a chave para a outra conta na política da chave e compartilhar a cópia"},
-    {k:"B",t:"Editar a política da chave aws/ebs para incluir a outra conta"},
-    {k:"C",t:"Tornar o instantâneo público por alguns minutos"},
-    {k:"D",t:"Criar um volume sem criptografia a partir do instantâneo e compartilhá-lo"}
+    {k:"A",t:"Copiar o instantâneo com uma chave gerenciada pelo cliente e compartilhar a cópia e a chave"},
+    {k:"B",t:"Editar a política da chave aws/ebs para incluir a conta de recuperação"},
+    {k:"C",t:"Tornar o instantâneo público por alguns minutos e copiá-lo na outra conta"},
+    {k:"D",t:"Criar um volume sem criptografia a partir do instantâneo e compartilhá-lo com a outra conta"}
   ],
   ans:["A"],
   why:{
-    ok:"Para usar o instantâneo, a outra conta precisa de acesso à chave. Isso só é possível com chave gerenciada pelo cliente, cuja política você controla.",
+    ok:"Instantâneos cifrados com a chave padrão aws/ebs não podem ser compartilhados. A cópia cifrada com uma chave gerenciada pelo cliente pode, desde que a política dessa chave libere o uso para a outra conta.",
     B:"A política de uma chave gerenciada pela AWS não pode ser editada. É exatamente por isso que o compartilhamento falha.",
-    C:"Instantâneo criptografado não pode ser público, e torná-lo público seria um vazamento.",
-    D:"Remove a proteção dos dados e ainda não funciona, porque volumes não são compartilhados entre contas."
+    C:"Só instantâneos sem criptografia podem ser públicos, e torná-lo público seria um vazamento.",
+    D:"Não é possível criar um volume sem criptografia a partir de um instantâneo criptografado. Além disso, volumes não são compartilhados entre contas."
   },
   src:[{t:"Compartilhar instantâneos do EBS",u:"https://docs.aws.amazon.com/ebs/latest/userguide/ebs-modifying-snapshot-permissions.html"}]
 },
@@ -48,16 +48,16 @@ const QUESTIONS_SAA_C = [
   case:"Usuários de um aplicativo móvel fazem login com e-mail e senha e precisam enviar fotos direto para o S3, cada um só no próprio prefixo. Não pode haver chave de acesso dentro do aplicativo.",
   stem:"Qual desenho atende?",
   opts:[
-    {k:"A",t:"Grupo de usuários do Cognito para login e grupo de identidades com função cuja política usa o identificador do usuário no caminho do prefixo"},
-    {k:"B",t:"Um usuário do IAM para cada usuário do aplicativo"},
-    {k:"C",t:"Uma chave de acesso de um usuário do IAM, ofuscada no código do aplicativo"},
+    {k:"A",t:"Cognito: grupo de usuários para o login e grupo de identidades com função limitada ao prefixo de cada usuário"},
+    {k:"B",t:"Um usuário do IAM para cada usuário do aplicativo, com política restrita ao próprio prefixo"},
+    {k:"C",t:"Uma chave de acesso de um usuário do IAM, ofuscada no código e trocada a cada nova versão do aplicativo"},
     {k:"D",t:"Bucket com escrita pública e nomes de arquivo aleatórios"}
   ],
   ans:["A"],
   why:{
     ok:"O grupo de identidades troca o login por credenciais temporárias. A variável de política com o identificador do usuário restringe cada pessoa ao próprio prefixo.",
     B:"Usuários do IAM são para pessoas e sistemas da empresa. Têm limite por conta e não servem para milhões de clientes.",
-    C:"Chave ofuscada continua sendo extraível do aplicativo, e dá a mesma permissão a todos.",
+    C:"Viola a exigência de não ter chave no aplicativo. Chave ofuscada continua extraível e dá a mesma permissão a todos.",
     D:"Escrita pública permite que qualquer um grave qualquer coisa no bucket."
   },
   src:[{t:"Grupos de identidades do Cognito",u:"https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html"}]
@@ -67,7 +67,7 @@ const QUESTIONS_SAA_C = [
   stem:"Responda Sim ou Não para cada afirmação sobre o AWS KMS.",
   rows:[
     {t:"Uma chave gerenciada pelo cliente pode ter rotação automática habilitada.", a:true,
-     e:"A rotação gera novo material de chave periodicamente e mantém o antigo para decifrar o que já foi cifrado."},
+     e:"Vale para chaves simétricas com material gerado pelo KMS. A rotação gera novo material de chave periodicamente e mantém o antigo para decifrar o que já foi cifrado."},
     {t:"A política de uma chave gerenciada pela AWS, como aws/s3, pode ser editada.", a:false,
      e:"Chaves gerenciadas pela AWS têm política fixa. Para controlar quem usa a chave, é preciso uma chave gerenciada pelo cliente."},
     {t:"Agendar a exclusão de uma chave a apaga imediatamente.", a:false,
@@ -78,7 +78,7 @@ const QUESTIONS_SAA_C = [
   src:[{t:"Conceitos do AWS KMS",u:"https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html"}]
 },
 {
-  id:"saa-d1-17", exam:"saa", dom:"d1", lvl:4, type:"single", sec:85, tags:["vpc-seguranca"],
+  id:"saa-d1-17", exam:"saa", dom:"d1", lvl:4, type:"single", sec:85, tags:["deteccao-auditoria"],
   case:"A segurança quer ser avisada automaticamente quando uma instância passar a se comunicar com endereços conhecidos de mineração de criptomoeda ou quando houver chamadas de API vindas de locais incomuns.",
   stem:"Qual serviço atende?",
   opts:[
@@ -108,7 +108,7 @@ const QUESTIONS_SAA_C = [
   ],
   ans:["A"],
   why:{
-    ok:"O Shield Advanced inclui a equipe de resposta a negação de serviço e a proteção de custo, que credita o gasto extra de escala causado pelo ataque.",
+    ok:"O Shield Advanced dá acesso à equipe de resposta a DDoS (Shield Response Team) e oferece proteção de custo, em forma de créditos pelo gasto extra causado pelo ataque. Para acionar a equipe, a conta também precisa do plano de suporte Business ou Enterprise.",
     B:"O Standard é automático e gratuito contra ataques comuns, mas não tem equipe de resposta nem proteção de custo.",
     C:"O WAF ajuda contra ataques na camada de aplicação, mas não traz nenhum dos dois benefícios pedidos.",
     D:"O Network Firewall filtra tráfego da VPC. Não é proteção contra negação de serviço em larga escala."
@@ -130,7 +130,7 @@ const QUESTIONS_SAA_C = [
     ok:"O ponto de extremidade dá o caminho privado até o S3, e a negação na política do bucket fecha todas as outras origens, inclusive acesso com credenciais válidas vindo de fora.",
     C:"Bucket não tem grupo de segurança. Grupos de segurança se aplicam a interfaces de rede.",
     D:"ACL de rede controla a sub-rede, não quem acessa o bucket a partir de outros lugares.",
-    E:"A NAT leva o tráfego pela internet pública, o oposto do pedido."
+    E:"A NAT leva o tráfego ao endereço público do S3, em vez de um caminho privado, e não impede acesso ao bucket vindo de outras origens."
   },
   src:[{t:"Políticas de bucket com pontos de extremidade da VPC",u:"https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies-vpc-endpoint.html"}]
 },
@@ -141,7 +141,7 @@ const QUESTIONS_SAA_C = [
   opts:[
     {k:"A",t:"O CloudFront só usa certificados do ACM da região Norte da Virgínia (us-east-1)"},
     {k:"B",t:"Certificados do ACM não podem ser usados no CloudFront"},
-    {k:"C",t:"O certificado precisa ser exportado e importado no IAM"},
+    {k:"C",t:"O certificado precisa ser exportado do ACM e importado no repositório de certificados do IAM"},
     {k:"D",t:"A distribuição precisa estar na mesma região do certificado"}
   ],
   ans:["A"],
@@ -191,8 +191,8 @@ const QUESTIONS_SAA_C = [
   stem:"Qual desenho atende?",
   opts:[
     {k:"A",t:"Fila FIFO do SQS com o identificador do cliente como ID do grupo de mensagens"},
-    {k:"B",t:"Fila FIFO do SQS com o mesmo ID de grupo para todas as mensagens"},
-    {k:"C",t:"Fila padrão do SQS com tempo limite de visibilidade maior"},
+    {k:"B",t:"Fila FIFO do SQS com o mesmo ID de grupo de mensagens para todos os pedidos"},
+    {k:"C",t:"Fila padrão do SQS com tempo limite de visibilidade maior e vários consumidores"},
     {k:"D",t:"Tópico padrão do SNS com um assinante por consumidor"}
   ],
   ans:["A"],
@@ -251,7 +251,7 @@ const QUESTIONS_SAA_C = [
   ans:["A"],
   why:{
     ok:"O Step Functions modela o fluxo, tem novas tentativas configuráveis, espera por retorno externo com token e mostra o estado de cada execução.",
-    B:"Uma Lambda dura no máximo 15 minutos, então não espera dois dias, e o fluxo fica espalhado pelo código.",
+    B:"Cada invocação da Lambda dura no máximo 15 minutos, então uma cadeia de chamadas diretas não espera dois dias. Além disso, o fluxo fica espalhado pelo código, sem visão do estado.",
     C:"Desacopla, mas não dá visão do fluxo nem trata a espera pela aprovação de forma natural.",
     D:"O EventBridge roteia eventos, mas não guarda o estado de um fluxo de várias etapas."
   },
@@ -316,7 +316,7 @@ const QUESTIONS_SAA_C = [
 },
 /* ---------------- D3 desempenho ---------------- */
 {
-  id:"saa-d3-11", exam:"saa", dom:"d3", lvl:5, type:"single", sec:100, tags:["computacao-armazenamento"],
+  id:"saa-d3-11", exam:"saa", dom:"d3", lvl:5, type:"single", sec:100, tags:["dados-analise"],
   case:"Eventos de clique de um site chegam a milhares por segundo. Três equipes precisam ler o mesmo fluxo de forma independente, e uma delas quer reprocessar os últimos sete dias quando corrigir um erro.",
   stem:"Qual serviço atende?",
   opts:[
@@ -347,14 +347,14 @@ const QUESTIONS_SAA_C = [
   ans:["A"],
   why:{
     ok:"O Transfer Acceleration entra pelo ponto de presença mais próximo e segue pela rede da AWS. O envio em partes manda pedaços em paralelo e repete só a parte que falhar.",
-    B:"Cache acelera leitura. Não ajuda no envio de arquivos novos.",
+    B:"Cache só acelera a leitura de conteúdo repetido. Não resolve o envio lento e as falhas de arquivos grandes e novos.",
     C:"Classe de armazenamento muda custo e durabilidade, não velocidade de envio.",
     D:"Prefixos ajudam com muitas requisições por segundo, não com distância e arquivo grande."
   },
   src:[{t:"Transfer Acceleration",u:"https://docs.aws.amazon.com/AmazonS3/latest/userguide/transfer-acceleration.html"}]
 },
 {
-  id:"saa-d3-13", exam:"saa", dom:"d3", lvl:5, type:"single", sec:100, tags:["computacao-armazenamento"],
+  id:"saa-d3-13", exam:"saa", dom:"d3", lvl:5, type:"single", sec:100, tags:["dados-analise"],
   case:"Consultas do Athena sobre logs em CSV no S3 estão lentas e caras. Quase toda consulta filtra por data e usa poucas das 60 colunas.",
   stem:"Qual mudança traz o maior ganho?",
   opts:[
@@ -377,8 +377,8 @@ const QUESTIONS_SAA_C = [
   case:"Uma tabela do DynamoDB usa a data do dia como chave de partição. As gravações sofrem limitação, embora o consumo total esteja bem abaixo da capacidade provisionada.",
   stem:"Qual é a causa e a correção?",
   opts:[
-    {k:"A",t:"Partição quente. Usar uma chave com alta cardinalidade, por exemplo acrescentando um sufixo à data"},
-    {k:"B",t:"Capacidade baixa. Dobrar as unidades de gravação"},
+    {k:"A",t:"Partição quente. Espalhar as gravações acrescentando um sufixo à data na chave"},
+    {k:"B",t:"Capacidade insuficiente. Dobrar as unidades de capacidade de gravação provisionadas"},
     {k:"C",t:"Falta de cache. Colocar o DAX na frente da tabela"},
     {k:"D",t:"Modo errado. Mudar para sob demanda, mantendo a chave"}
   ],
@@ -396,7 +396,7 @@ const QUESTIONS_SAA_C = [
   stem:"Responda Sim ou Não para cada afirmação sobre armazenamento em bloco no EC2.",
   rows:[
     {t:"Volumes gp3 permitem provisionar IOPS e taxa de transferência independentemente do tamanho.", a:true,
-     e:"É a principal diferença para o gp2, em que o desempenho cresce com o tamanho do volume."},
+     e:"É a principal diferença para o gp2, em que o desempenho cresce com o tamanho do volume. No gp3 existem apenas proporções máximas, como IOPS por GiB."},
     {t:"Um volume st1 pode ser usado como volume de inicialização.", a:false,
      e:"Os volumes HDD, st1 e sc1, não podem ser de inicialização."},
     {t:"Dados no armazenamento de instância sobrevivem à parada e ao início da instância.", a:false,
@@ -411,8 +411,8 @@ const QUESTIONS_SAA_C = [
   case:"Um cluster do Aurora tem picos de leitura imprevisíveis durante o dia. A equipe quer adicionar e remover réplicas automaticamente e espalhar as leituras entre elas sem mudar a aplicação a cada mudança.",
   stem:"O que configurar?",
   opts:[
-    {k:"A",t:"Aurora Auto Scaling para as réplicas, com a aplicação lendo pelo endpoint de leitura"},
-    {k:"B",t:"Um tamanho de instância maior na primária"},
+    {k:"A",t:"Aurora Auto Scaling de réplicas, com leituras pelo endpoint de leitura"},
+    {k:"B",t:"Uma classe de instância maior na primária, dimensionada para o pico de leitura"},
     {k:"C",t:"Leituras pelo endpoint do cluster"},
     {k:"D",t:"Uma réplica em espera em outra zona"}
   ],
@@ -426,7 +426,7 @@ const QUESTIONS_SAA_C = [
   src:[{t:"Aurora Auto Scaling",u:"https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Integrating.AutoScaling.html"}]
 },
 {
-  id:"saa-d3-17", exam:"saa", dom:"d3", lvl:5, type:"multi", sec:105, tags:["computacao-armazenamento"],
+  id:"saa-d3-17", exam:"saa", dom:"d3", lvl:5, type:"multi", sec:105, tags:["containers-serverless"],
   stem:"Uma API em Lambda tem latência alta nas primeiras requisições após períodos sem tráfego. Quais medidas reduzem esse efeito? Escolha as DUAS corretas.",
   opts:[
     {k:"A",t:"Configurar concorrência provisionada para o horário de uso"},
@@ -465,21 +465,21 @@ const QUESTIONS_SAA_C = [
   src:[{t:"O que são Savings Plans",u:"https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html"}]
 },
 {
-  id:"saa-d4-10", exam:"saa", dom:"d4", lvl:5, type:"single", sec:100, tags:["custo-computacao","alta-disponibilidade"],
+  id:"saa-d4-10", exam:"saa", dom:"d4", lvl:5, type:"single", sec:100, tags:["custo-banco-rede","alta-disponibilidade"],
   case:"Uma VPC tem sub-redes privadas em três zonas, e todas usam um único gateway da NAT na zona A. A conta mostra cobrança alta de tráfego entre zonas, e uma falha na zona A derruba a saída de todas.",
   stem:"Qual mudança resolve as duas questões?",
   opts:[
-    {k:"A",t:"Um gateway da NAT por zona, com a tabela de rotas de cada sub-rede apontando para o da própria zona"},
+    {k:"A",t:"Um gateway da NAT por zona, cada sub-rede roteando para o da própria zona"},
     {k:"B",t:"Trocar o gateway por uma instância NAT maior"},
-    {k:"C",t:"Associar o gateway de internet às sub-redes privadas"},
+    {k:"C",t:"Associar o gateway de internet às sub-redes privadas e remover a rota para a NAT"},
     {k:"D",t:"Aumentar a largura de banda do gateway da NAT"}
   ],
   ans:["A"],
   why:{
-    ok:"Cada zona sai pelo próprio gateway, o que elimina o tráfego entre zonas e remove o ponto único de falha.",
+    ok:"Cada zona sai pelo próprio gateway, o que elimina o tráfego entre zonas e remove o ponto único de falha. Hoje existe também o gateway da NAT regional, que se expande sozinho pelas zonas com carga e chega ao mesmo resultado.",
     B:"Continua sendo um ponto único numa só zona, e ainda passa a exigir manutenção.",
     C:"Rota para o gateway de internet transforma a sub-rede em pública, com instâncias expostas.",
-    D:"A banda não é o problema. O custo vem do caminho entre zonas."
+    D:"A banda do gateway da NAT escala sozinha e não é o problema. O custo vem do caminho entre zonas, e a falha vem da zona única."
   },
   src:[{t:"Gateways da NAT",u:"https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html"}]
 },
@@ -509,7 +509,7 @@ const QUESTIONS_SAA_C = [
     {t:"Uma regra de ciclo de vida só move um objeto do S3 Standard para o Standard-IA depois de pelo menos 30 dias.", a:true,
      e:"A transição para Standard-IA e One Zone-IA exige pelo menos 30 dias no Standard."},
     {t:"No Standard-IA, um objeto de 40 KB é cobrado como se tivesse 128 KB.", a:true,
-     e:"Existe tamanho mínimo de cobrança de 128 KB. Muitos objetos pequenos podem sair mais caros no IA que no Standard."},
+     e:"Existe tamanho mínimo de cobrança de 128 KB. Por isso, por padrão, o ciclo de vida não move objetos menores que 128 KB."},
     {t:"O Glacier Deep Archive tem permanência mínima de 90 dias.", a:false,
      e:"São 180 dias. Os 90 dias valem para o Glacier Flexible Retrieval e o Glacier Instant Retrieval."},
     {t:"Uma regra de ciclo de vida pode expirar versões não atuais de objetos.", a:true,
@@ -518,7 +518,7 @@ const QUESTIONS_SAA_C = [
   src:[{t:"Transições do ciclo de vida",u:"https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html"}]
 },
 {
-  id:"saa-d4-13", exam:"saa", dom:"d4", lvl:4, type:"single", sec:90, tags:["custo-computacao"],
+  id:"saa-d4-13", exam:"saa", dom:"d4", lvl:4, type:"single", sec:90, tags:["custo-banco-rede"],
   case:"Uma tabela do DynamoDB recebe tráfego imprevisível: dias inteiros sem uso e picos curtos e intensos depois de campanhas. Hoje ela usa capacidade provisionada dimensionada para o pico.",
   stem:"Qual mudança reduz o custo?",
   opts:[
@@ -537,7 +537,7 @@ const QUESTIONS_SAA_C = [
   src:[{t:"Modo sob demanda",u:"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html"}]
 },
 {
-  id:"saa-d4-14", exam:"saa", dom:"d4", lvl:5, type:"multi", sec:105, tags:["custo-armazenamento"],
+  id:"saa-d4-14", exam:"saa", dom:"d4", lvl:5, type:"multi", sec:105, tags:["custo-banco-rede"],
   stem:"Um site serve arquivos estáticos de um bucket diretamente aos usuários, e a maior parte da conta é transferência de dados para a internet. Quais medidas reduzem esse custo? Escolha as DUAS corretas.",
   opts:[
     {k:"A",t:"Servir os arquivos pelo CloudFront, com o bucket como origem"},
