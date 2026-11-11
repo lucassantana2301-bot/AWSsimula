@@ -9,7 +9,7 @@ global.window={scrollTo(){},addEventListener(){},location:global.location};
 global.navigator={};
 global.setInterval=()=>0; global.clearInterval=()=>{}; global.setTimeout=()=>0; global.clearTimeout=()=>{};
 global.requestAnimationFrame=()=>0;
-eval(require("fs").readFileSync(require("path").join(__dirname,"..","build","all.js"),"utf8")+"\n;Object.assign(global,{DECKS,CARDS,buildChall,parseChall,FICHAS,FICHAS_AZ,FICHAS_AWS,QUESTIONS,EXAMS,LESSONS,EQUIV,DIAGRAMS,S,grade,prep,pick,pickSim,predict,schedule,fullSpec,fullReady,cs,domProf,qHtml,verdictHtml,blockHtml,fichasOf,lessonsOf,contentDone,domOpen,ex0,daily,DEF,viewFicha,shell,CATALOGO,METAS,cat0,coverage,viewTrilha,viewCat,NIVEIS,PROVIDERS,pick,qPool,pickSim});");
+eval(require("fs").readFileSync(require("path").join(__dirname,"..","build","all.js"),"utf8")+"\n;Object.assign(global,{DECKS,CARDS,buildChall,parseChall,FICHAS,FICHAS_AZ,FICHAS_AWS,QUESTIONS,EXAMS,LESSONS,EQUIV,DIAGRAMS,S,grade,prep,pick,pickSim,predict,schedule,fullSpec,fullReady,prontidao,prontidaoHtml,cs,domProf,qHtml,verdictHtml,blockHtml,fichasOf,lessonsOf,contentDone,domOpen,ex0,daily,DEF,viewFicha,shell,CATALOGO,METAS,cat0,coverage,viewTrilha,viewCat,NIVEIS,PROVIDERS,pick,qPool,pickSim});");
 
 let f=0; const ok=(c,m)=>{ if(!c){ console.log("FALHOU: "+m); f++; } };
 const ACT=EXAMS.filter(e=>e.status==="active");
@@ -111,6 +111,27 @@ for(const e of ACT){
   const ineditas=pool.length-Math.floor(pool.length/2);
   ok(vistas<=Math.max(0,clf.simQ-ineditas)+clf.domains.length,"sorteio usou "+vistas+" questões já vistas havendo "+ineditas+" inéditas");
   S.seen=JSON.parse(antes);
+}
+/* --- 7c. prontidão --- */
+{
+  const guarda={sims:S.sims,seen:S.seen};
+  const dom=(a,b,c,d)=>({d1:{n:20,ok:a},d2:{n:17,ok:b},d3:{n:16,ok:c},d4:{n:12,ok:d}});
+  const r=(score,full,dias,doms)=>({exam:"saa",score,full,ts:Date.now()-dias*864e5,right:0,total:65,byDom:doms});
+  S.sims=[]; S.seen={};
+  ok(prontidao("saa").n===0,"sem simulados não pode haver critério atingido");
+  S.sims=[r(790,true,1,dom(16,14,13,10)),r(760,true,3,dom(15,13,12,9))];
+  let p=prontidao("saa");
+  ok(p.c1&&p.c2&&!p.c3,"duas completas acima de 750 e domínios acima de 70%: c1 e c2 deveriam passar, c3 não");
+  qPool("saa").slice(0,Math.ceil(qPool("saa").length*.7)).forEach(q=>S.seen[q.id]={ok:true,n:1,lastTs:1});
+  ok(prontidao("saa").n===3,"com 70% do banco visto deveria ficar pronto");
+  S.sims=[r(790,true,1,dom(16,14,13,10)),r(749,true,3,dom(15,13,12,9))];
+  ok(!prontidao("saa").c1,"749 está abaixo de corte+30 (750): c1 não pode passar");
+  S.sims=[r(900,false,1,dom(16,14,13,10)),r(900,false,2,dom(16,14,13,10)),r(790,true,3,dom(16,14,13,10))];
+  ok(!prontidao("saa").c1,"simulados curtos não podem contar como prova completa no SAA");
+  S.sims=[r(790,true,1,dom(16,14,13,6)),r(790,true,2,dom(16,14,13,10))];
+  ok(!prontidao("saa").c2,"domínio abaixo de 70% nas últimas tentativas deveria reprovar c2");
+  ok(/Prontidão/.test(prontidaoHtml("saa"))&&!/undefined|NaN/.test(prontidaoHtml("saa")),"painel de prontidão com undefined/NaN");
+  S.sims=guarda.sims; S.seen=guarda.seen;
 }
 /* --- 8. nota prevista --- */
 for(const e of ACT){

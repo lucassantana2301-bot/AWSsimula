@@ -661,6 +661,7 @@ function viewExam(){
         </div>
       </div>
     </section>
+    ${prontidaoHtml(V.exam)}
 
     <section class="stack">
       <div class="hd"><h2>Trilha</h2><span class="n">${e.domains.length} domínios em sequência</span></div>
@@ -1083,6 +1084,79 @@ function finishSim(){
   const qs=SIM.qs, ans=SIM.ans, t=SIM.t, flags=SIM.flags; SIM=null; S.sim=null; save();
   clearTimers(); V={name:"simres",exam:rec.exam,res:rec,qs,ans,t,flags}; render(); window.scrollTo(0,0);
 }
+/* ---------- prontidão: evolução das notas e quando marcar a prova ----------
+   Critérios (o simulado é calibrado acima da prova real):
+   1) as duas últimas provas completas (ou simulados, se o exame não tem prova
+      completa) com nota pelo menos 30 pontos acima do corte;
+   2) todos os domínios com 70% ou mais nas últimas três tentativas;
+   3) pelo menos 70% do banco de questões já respondido. */
+function prontidao(exam){
+  const e=ex0(exam), todas=S.sims.filter(r=>r.exam===exam&&!r.chall);
+  const temFull=fullReady(exam), base=temFull?todas.filter(r=>r.full):todas;
+  const ult2=base.slice(0,2);
+  const c1=ult2.length===2&&ult2.every(r=>r.score>=e.pass+30);
+  const rec=todas.slice(0,3), ant=todas.slice(3,6);
+  const pct=(lst,d)=>{ let ok=0,n=0; lst.forEach(r=>{ const b=r.byDom&&r.byDom[d]; if(b){ ok+=b.ok; n+=b.n; } }); return n?ok/n:null; };
+  const doms=e.domains.map(d=>({d,agora:pct(rec,d.id),antes:pct(ant,d.id)}));
+  const c2=rec.length>0&&doms.every(x=>x.agora!=null&&x.agora>=.7);
+  const pool=qPool(exam), vistas=pool.filter(q=>S.seen[q.id]).length, cob=pool.length?vistas/pool.length:0;
+  const c3=cob>=.7;
+  const n=[c1,c2,c3].filter(Boolean).length;
+  return {e,todas,temFull,c1,c2,c3,n,doms,cob,vistas,total:pool.length};
+}
+function scoreChartSvg(lst,e){
+  /* lst do mais antigo para o mais novo; eixo y de 300 a 1000 */
+  const W=360,H=190,L=34,R=12,T=16,B=22, w=W-L-R, h=H-T-B;
+  const x=i=>L+(lst.length===1?w/2:i*w/(lst.length-1)), y=v=>T+h*(1-(v-300)/700);
+  const ticks=[300,500,700,900].map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" class="ch-grid"/>
+    <text x="${L-6}" y="${y(v)+4}" text-anchor="end" class="ch-tx">${v}</text>`).join("");
+  const corte=`<line x1="${L}" x2="${W-R}" y1="${y(e.pass)}" y2="${y(e.pass)}" class="ch-ref"/>
+    <text x="${L+4}" y="${y(e.pass)-5}" text-anchor="start" class="ch-tx">corte ${e.pass}</text>`;
+  const pts=lst.map((r,i)=>[x(i),y(r.score)]);
+  const linha=pts.length>1?`<polyline points="${pts.map(p=>p.join(",")).join(" ")}" class="ch-line"/>`:"";
+  const dt=r=>new Date(r.ts).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+  const marcas=lst.map((r,i)=>{
+    const [cx,cy]=pts[i], lbl=`${r.full?"Prova completa":"Simulado curto"} em ${new Date(r.ts).toLocaleDateString("pt-BR")}: ${r.score} pontos, ${r.right} de ${r.total}`;
+    return `<g class="ch-pt" tabindex="0" role="img" aria-label="${esc(lbl)}" data-lbl="${esc(lbl)}">
+      <circle cx="${cx}" cy="${cy}" r="12" class="ch-hit"/>
+      ${r.full?`<circle cx="${cx}" cy="${cy}" r="5" class="ch-dot"/>`:`<circle cx="${cx}" cy="${cy}" r="4.5" class="ch-dot-o"/>`}</g>`;}).join("");
+  const ult=lst[lst.length-1], [ux,uy]=pts[pts.length-1];
+  const fim=`<text x="${Math.min(ux,W-R-4)}" y="${uy-12}" text-anchor="${lst.length>1?"end":"middle"}" class="ch-val">${ult.score}</text>`;
+  const xs=lst.length>1?[0,lst.length-1]:[0];
+  const xl=xs.map(i=>`<text x="${pts[i][0]}" y="${H-6}" text-anchor="${lst.length===1?"middle":i===0?"start":"end"}" class="ch-tx">${dt(lst[i])}</text>`).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" class="ch ${isAws(e.id)?"":"az"}" role="group" aria-label="Notas dos simulados ao longo do tempo">${ticks}${corte}${linha}${marcas}${fim}${xl}</svg>`;
+}
+function prontidaoHtml(exam){
+  const p=prontidao(exam), e=p.e;
+  if(!p.todas.length) return `<section class="sheet tight"><h2 class="t-sm">Prontidão</h2>
+    <p class="t-xs dim" style="margin-top:2px">Faça ${fullReady(exam)?"uma prova completa":"um simulado"} para o app começar a medir quando você está pronto para marcar a prova.</p></section>`;
+  const lst=p.todas.slice(0,12).reverse();
+  const veredito=p.n===3?["Pronto para marcar","go"]:p.n===2?["Quase lá","fl"]:["Ainda não",""];
+  const crit=[[p.c1,p.temFull?"Duas últimas provas completas com 30 pontos acima do corte":"Dois últimos simulados com 30 pontos acima do corte"],
+    [p.c2,"Todos os domínios com 70% ou mais nas últimas três tentativas"],
+    [p.c3,`Banco respondido: ${p.vistas} de ${p.total} questões (${Math.round(p.cob*100)}%, meta 70%)`]];
+  const pp=v=>v==null?"–":Math.round(v*100)+"%";
+  return `<section class="sheet">
+    <div class="hd"><h2 class="t-md">Prontidão</h2><span class="n">${p.todas.length} tentativa${p.todas.length>1?"s":""}</span></div>
+    <div class="pront-top">
+      <div><p class="t-xs dim">Veredito</p><p class="pront-v ${veredito[1]}">${veredito[0]}</p><p class="t-xs dim2">${p.n} de 3 critérios</p></div>
+      <ul class="pront-c">${crit.map(([ok,t])=>`<li data-ok="${ok?1:0}"><span class="ic" aria-hidden="true">${ok?"✓":"·"}</span><span>${t}<span class="sr-only">${ok?": atingido":": ainda não"}</span></span></li>`).join("")}</ul>
+    </div>
+    <div class="ch-wrap ${isAws(exam)?"":"az"}">${scoreChartSvg(lst,e)}
+      <p class="t-xs dim2 ch-key"><span class="k-full" aria-hidden="true"></span> prova completa <span class="k-short" aria-hidden="true"></span> simulado curto</p>
+      <p class="t-xs dim" id="chread" aria-live="polite" style="min-height:1.4em;margin-top:2px">Toque num ponto para ver a nota.</p></div>
+    <h3 class="t-sm" style="margin:12px 0 6px">Por domínio <span class="dim2 t-xs">últimas 3 tentativas${p.todas.length>3?", comparadas às 3 anteriores":""}</span></h3>
+    <div class="domrows">${p.doms.map(({d,agora,antes})=>{
+      const v=agora==null?0:Math.round(agora*100), delta=agora!=null&&antes!=null?Math.round((agora-antes)*100):null;
+      return `<div class="domrow"><div class="t"><span>${esc(d.name)}</span>
+        <b class="mono">${pp(agora)}${delta!=null?` <span class="dim2 t-xs">${delta>0?"▲ +":delta<0?"▼ ":"= "}${delta} pp</span>`:""}</b></div>
+        <div class="meter"><i class="${v>=70?"hi":v>=50?"mid":"lo"}" style="width:${v}%"></i></div></div>`;}).join("")}</div>
+    <details style="margin-top:10px"><summary class="t-xs dim">Ver em tabela</summary>
+      <table class="t-xs" style="width:100%;margin-top:6px;border-collapse:collapse"><thead><tr><th align="left">Data</th><th align="left">Tipo</th><th align="right">Nota</th><th align="right">Acertos</th></tr></thead>
+      <tbody>${p.todas.map(r=>`<tr><td>${new Date(r.ts).toLocaleDateString("pt-BR")}</td><td>${r.full?"Completa":"Curto"}</td><td align="right" class="mono">${r.score}</td><td align="right" class="mono">${r.right}/${r.total}</td></tr>`).join("")}</tbody></table></details>
+  </section>`;
+}
+
 /* Diagnóstico depois da entrega: ritmo e o que estudar a seguir. */
 function simDiagHtml(r,e){
   const qs=V.qs||[], ans=V.ans||[], t=V.t||[];
@@ -1934,6 +2008,10 @@ function pickIndex(i){
   if(SES) SES.sel=next; else { SIM.ans[SIM.i]=next; saveSim(); }
   render(); return true;
 }
+const chRead=ev=>{ const g=ev.target&&ev.target.closest&&ev.target.closest(".ch-pt"), out=document.getElementById("chread");
+  if(g&&out) out.textContent=g.dataset.lbl; };
+document.addEventListener("pointerover",chRead);
+document.addEventListener("focusin",chRead);
 document.addEventListener("keydown",ev=>{
   const t=ev.target;
   if(t&&(t.tagName==="INPUT"||t.tagName==="TEXTAREA"||t.isContentEditable)) return;
