@@ -10,6 +10,15 @@ const pup=require("puppeteer-core");
     await new Promise(r=>setTimeout(r,700));
     await p.click('[data-act="exam"][data-exam="az900"]');
     await new Promise(r=>setTimeout(r,400));
+    /* espera as animações de entrada terminarem: medir no meio delas dá falso alarme */
+    await p.evaluate(()=>new Promise(fim=>{
+      /* a troca de tela usa View Transitions: enquanto ela roda, uma camada
+         cobre a página. Espera três quadros seguidos sem nenhuma animação. */
+      let quietos=0, t0=performance.now();
+      const passo=()=>{ quietos=document.getAnimations().length?0:quietos+1;
+        if(quietos>=3||performance.now()-t0>4000) fim(); else requestAnimationFrame(passo); };
+      requestAnimationFrame(passo);
+    }));
     const r=await p.evaluate(()=>{
       const out={clipped:[],tiny:[],overflowX:document.documentElement.scrollWidth>window.innerWidth+1};
       document.querySelectorAll(".node").forEach(n=>{
@@ -45,6 +54,14 @@ const pup=require("puppeteer-core");
     for(const [act,nome,sel] of [["trilha","trilha",".flow.vert .node"],["cat","catálogo",".catc"]]){
       await p.click('[data-act="'+act+'"]');
       await new Promise(r=>setTimeout(r,350));
+      await p.evaluate(()=>new Promise(fim=>{
+      /* a troca de tela usa View Transitions: enquanto ela roda, uma camada
+         cobre a página. Espera três quadros seguidos sem nenhuma animação. */
+      let quietos=0, t0=performance.now();
+      const passo=()=>{ quietos=document.getAnimations().length?0:quietos+1;
+        if(quietos>=3||performance.now()-t0>4000) fim(); else requestAnimationFrame(passo); };
+      requestAnimationFrame(passo);
+    }));
       const t=await p.evaluate(sel=>{
         const o={clipped:[],tiny:[],overflowX:document.documentElement.scrollWidth>window.innerWidth+1,count:0};
         const caixas=document.querySelectorAll(sel);
