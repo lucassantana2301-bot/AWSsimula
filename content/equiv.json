@@ -1,0 +1,182 @@
+[
+  {
+    "c": "Máquina virtual",
+    "az": "Azure Virtual Machines",
+    "aw": "Amazon EC2",
+    "n": "IaaS puro; patch do SO é seu nas duas."
+  },
+  {
+    "c": "Rede privada",
+    "az": "Virtual Network (VNet)",
+    "aw": "Amazon VPC",
+    "n": "Sub-redes, rotas e peering em ambas."
+  },
+  {
+    "c": "Permissão de quem faz o que",
+    "az": "Azure RBAC",
+    "aw": "AWS IAM",
+    "n": "IAM também cobre o que o Azure separa em Policy."
+  },
+  {
+    "c": "Regras do que pode existir",
+    "az": "Azure Policy",
+    "aw": "Service Control Policies (Organizations)",
+    "n": "SCP limita a conta inteira; Policy audita e nega recurso."
+  },
+  {
+    "c": "Objetos",
+    "az": "Blob Storage",
+    "aw": "Amazon S3",
+    "n": "Camadas: Hot/Cool/Cold/Archive x Standard/IA/Glacier."
+  },
+  {
+    "c": "Disco de bloco",
+    "az": "Managed Disks",
+    "aw": "Amazon EBS",
+    "n": "Presos a uma zona nas duas nuvens."
+  },
+  {
+    "c": "Compartilhamento de arquivo",
+    "az": "Azure Files",
+    "aw": "Amazon EFS / FSx",
+    "n": "EFS é NFS para Linux; Files também fala SMB."
+  },
+  {
+    "c": "Função serverless",
+    "az": "Azure Functions",
+    "aw": "AWS Lambda",
+    "n": "Limites de tempo de execução diferentes; confira na doc."
+  },
+  {
+    "c": "Container gerenciado",
+    "az": "Container Apps / ACI",
+    "aw": "AWS Fargate",
+    "n": "Sem gerenciar nó (worker) nas duas."
+  },
+  {
+    "c": "Kubernetes",
+    "az": "AKS",
+    "aw": "Amazon EKS",
+    "n": "Control plane gerenciado."
+  },
+  {
+    "c": "Banco relacional gerenciado",
+    "az": "Azure SQL Database",
+    "aw": "Amazon RDS / Aurora",
+    "n": "Provedor aplica patch; usuários e dados são seus."
+  },
+  {
+    "c": "NoSQL chave-valor",
+    "az": "Azure Cosmos DB",
+    "aw": "Amazon DynamoDB",
+    "n": "Cosmos tem vários modelos de API."
+  },
+  {
+    "c": "Data warehouse",
+    "az": "Microsoft Fabric / Synapse",
+    "aw": "Amazon Redshift",
+    "n": "OLAP, não OLTP."
+  },
+  {
+    "c": "Cache em memória",
+    "az": "Azure Cache for Redis",
+    "aw": "Amazon ElastiCache",
+    "n": "Reduz latência de leitura repetida."
+  },
+  {
+    "c": "CDN",
+    "az": "Azure Front Door",
+    "aw": "Amazon CloudFront",
+    "n": "Front Door também faz balanceamento global."
+  },
+  {
+    "c": "DNS gerenciado",
+    "az": "Azure DNS / Traffic Manager",
+    "aw": "Amazon Route 53",
+    "n": "Políticas de roteamento equivalentes."
+  },
+  {
+    "c": "Balanceador camada 7",
+    "az": "Application Gateway",
+    "aw": "Application Load Balancer",
+    "n": "Roteia por caminho e host; WAF acoplável."
+  },
+  {
+    "c": "Link privado dedicado",
+    "az": "ExpressRoute",
+    "aw": "AWS Direct Connect",
+    "n": "Não passa pela internet pública."
+  },
+  {
+    "c": "Fila",
+    "az": "Azure Queue / Service Bus",
+    "aw": "Amazon SQS",
+    "n": "Service Bus tem tópicos e transações."
+  },
+  {
+    "c": "Pub/sub",
+    "az": "Event Grid",
+    "aw": "Amazon SNS / EventBridge",
+    "n": "Event Grid roteia por assunto, como o EventBridge."
+  },
+  {
+    "c": "Streaming ordenado",
+    "az": "Event Hubs",
+    "aw": "Amazon Kinesis Data Streams",
+    "n": "Quando o enunciado pede ordem e reprocessamento."
+  },
+  {
+    "c": "Monitoramento",
+    "az": "Azure Monitor",
+    "aw": "Amazon CloudWatch",
+    "n": "Métricas, logs e alarmes."
+  },
+  {
+    "c": "Auditoria de API",
+    "az": "Activity Log",
+    "aw": "AWS CloudTrail",
+    "n": "Quem chamou qual API e quando."
+  },
+  {
+    "c": "Postura de segurança",
+    "az": "Defender for Cloud",
+    "aw": "AWS Security Hub CSPM + GuardDuty",
+    "n": "Recomendação e detecção de ameaça."
+  },
+  {
+    "c": "SIEM",
+    "az": "Microsoft Sentinel",
+    "aw": "Amazon Security Lake + parceiros",
+    "n": "Correlação e resposta a incidente."
+  },
+  {
+    "c": "Segredos",
+    "az": "Azure Key Vault",
+    "aw": "KMS + Secrets Manager",
+    "n": "Key Vault junta chave e segredo num serviço."
+  },
+  {
+    "c": "Recomendação de custo",
+    "az": "Azure Advisor",
+    "aw": "AWS Trusted Advisor",
+    "n": "Custo, segurança, confiabilidade, desempenho."
+  },
+  {
+    "c": "Análise de gasto",
+    "az": "Cost Management",
+    "aw": "Cost Explorer + Budgets",
+    "n": "Orçamento com alerta nas duas."
+  },
+  {
+    "c": "Hierarquia de contas",
+    "az": "Management Groups + Assinaturas",
+    "aw": "AWS Organizations + Contas",
+    "n": "Política herda de cima para baixo."
+  },
+  {
+    "c": "Estimativa antes de gastar",
+    "az": "Pricing Calculator / TCO",
+    "aw": "AWS Pricing Calculator",
+    "n": "TCO compara com on-premises."
+  }
+]

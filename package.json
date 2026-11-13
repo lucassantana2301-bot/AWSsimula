@@ -4,7 +4,9 @@
   "private": true,
   "description": "Estudo para certificações Azure e AWS: fichas, aulas curtas, simulados e trilha de carreira.",
   "type": "commonjs",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node tests/test-logic.js && node tests/test-questoes.js && node tests/test-perimetro.js && node tests/test-dom.js && node tests/test-features.js",
@@ -13,7 +15,17 @@
     "vercel-build": "npm run build && npm test"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^22.20.5",
+    "eslint": "^9.39.5",
+    "globals": "^17.14.0",
     "jsdom": "31.0.0",
-    "puppeteer-core": "25.16.0"
+    "prettier": "^3.10.1",
+    "puppeteer-core": "25.16.0",
+    "typescript": "5.9",
+    "typescript-eslint": "^8.72.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0",
+    "zod": "^4.6.7"
   }
 }

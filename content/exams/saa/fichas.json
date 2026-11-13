@@ -1,0 +1,2998 @@
+[
+  {
+    "id": "f-saa-iam",
+    "exam": "saa",
+    "dom": "d1",
+    "mins": 7,
+    "concept": "iam-permissoes",
+    "title": "IAM: função em vez de chave, e a ordem da avaliação",
+    "lead": "O domínio de segurança é o mais pesado da prova, e metade dele cabe em duas ideias: aplicação na AWS nunca carrega chave de acesso, e negação explícita vence tudo.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "As quatro peças"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Peça",
+          "O que é",
+          "Quando usar"
+        ],
+        "rows": [
+          [
+            "Usuário",
+            "Identidade permanente com senha ou chave",
+            "Pessoa que entra no console; evite para aplicação"
+          ],
+          [
+            "Grupo",
+            "Coleção de usuários",
+            "Aplicar a mesma política a muita gente"
+          ],
+          [
+            "Função",
+            "Identidade sem credencial fixa, que se assume",
+            "Aplicação, serviço, acesso entre contas, federação"
+          ],
+          [
+            "Política",
+            "Documento JSON que permite ou nega ações",
+            "Anexada a identidade ou ao próprio recurso"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Uma instância EC2 que precisa ler um bucket recebe uma função por meio do perfil de instância. A credencial é temporária, rotacionada pela plataforma, e não existe nada para vazar em arquivo de configuração. Qualquer alternativa que fale em gravar chave de acesso na instância, na imagem ou na variável de ambiente está errada por construção."
+      },
+      {
+        "t": "h",
+        "x": "A ordem da avaliação"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Passo",
+          "Resultado"
+        ],
+        "rows": [
+          [
+            "Existe negação explícita em alguma política aplicável",
+            "Nega, e a avaliação termina"
+          ],
+          [
+            "Existe permissão explícita",
+            "Permite"
+          ],
+          [
+            "Não há nada dizendo nada",
+            "Nega por padrão"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Política de controle de serviço, aplicada pelo Organizations a uma conta ou unidade organizacional, define o teto do que pode ser permitido naquela conta. Ela não concede nada: mesmo com Administrador na conta, o que a política de controle não deixa passar não acontece. Limite de permissões faz o mesmo papel para um usuário ou função específica."
+      },
+      {
+        "t": "h",
+        "x": "Entre contas e para pessoas"
+      },
+      {
+        "t": "p",
+        "x": "Acesso entre contas se resolve com função assumida: a conta dona do recurso cria a função com uma relação de confiança apontando para a outra conta, e quem precisa chama o serviço de token de segurança para receber credencial temporária. Para funcionários, o caminho é o IAM Identity Center ligado ao diretório corporativo, em vez de criar usuário IAM por pessoa."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Aplicação em EC2 precisa acessar S3",
+            "Função com perfil de instância, nunca chave"
+          ],
+          [
+            "Conta A precisa ler um bucket da conta B",
+            "Função assumida, com relação de confiança"
+          ],
+          [
+            "Nenhuma conta pode usar uma região proibida",
+            "Política de controle de serviço no Organizations"
+          ],
+          [
+            "Funcionários entram com o login corporativo",
+            "IAM Identity Center com federação"
+          ],
+          [
+            "Credencial não pode ser permanente",
+            "Serviço de token de segurança, credencial temporária"
+          ],
+          [
+            "Quem tem Administrador ainda assim não consegue",
+            "Política de controle de serviço ou negação explícita"
+          ],
+          [
+            "Desenvolvedor não pode escalar a própria permissão",
+            "Limite de permissões na função dele"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Política baseada em recurso e política baseada em identidade somam, não se anulam: para acessar um bucket de outra conta, as duas precisam permitir. Mas basta uma negação explícita em qualquer uma delas para derrubar o acesso inteiro. É por isso que negar na política do bucket é mais forte que conceder na política do usuário."
+      },
+      {
+        "t": "case",
+        "q": "Uma função Lambda precisa ler segredos de banco e gravar em um bucket da mesma conta, e a auditoria exige que a credencial expire. Qual desenho?",
+        "a": "Função de execução anexada à Lambda, com política que permite somente a ação de leitura daquele segredo e a de escrita naquele prefixo do bucket. A credencial já é temporária por construção, porque a Lambda recebe um token do serviço de token de segurança a cada invocação. Não há chave para rotacionar nem segredo para guardar em variável de ambiente."
+      }
+    ],
+    "check": [
+      "Dizer por que uma aplicação na AWS nunca deve carregar chave de acesso",
+      "Recitar a ordem da avaliação de política em três linhas",
+      "Explicar o que uma política de controle de serviço faz e o que ela não faz"
+    ],
+    "src": [
+      {
+        "t": "AWS: lógica de avaliação de políticas",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html"
+      },
+      {
+        "t": "AWS: funções para EC2",
+        "u": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-rede-seg",
+    "exam": "saa",
+    "dom": "d1",
+    "mins": 7,
+    "concept": "vpc-seguranca",
+    "title": "VPC: grupo de segurança, lista de rede e por onde a sub-rede sai",
+    "lead": "A dupla grupo de segurança e lista de controle de acesso de rede é a pergunta mais previsível da prova. Uma é com estado, a outra não, e essa única diferença decide a resposta.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "A diferença que importa"
+      },
+      {
+        "t": "table",
+        "head": [
+          "",
+          "Grupo de segurança",
+          "Lista de controle de rede"
+        ],
+        "rows": [
+          [
+            "Onde atua",
+            "Na interface de rede do recurso",
+            "Na sub-rede inteira"
+          ],
+          [
+            "Guarda estado",
+            "Sim: a resposta volta sozinha",
+            "Não: precisa de regra de volta"
+          ],
+          [
+            "Tipos de regra",
+            "Só permitir",
+            "Permitir e negar"
+          ],
+          [
+            "Como avalia",
+            "Todas as regras somadas",
+            "Em ordem de número, a primeira que casa decide"
+          ],
+          [
+            "Padrão",
+            "Nega entrada, permite saída",
+            "Permite tudo nos dois sentidos"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Por não guardar estado, a lista de rede precisa liberar as portas efêmeras, de 1024 a 65535, no sentido do retorno. Enunciado em que a conexão sai mas a resposta não volta, e o grupo de segurança está correto, é quase sempre lista de rede sem a regra de volta."
+      },
+      {
+        "t": "p",
+        "x": "Negar um endereço específico só é possível na lista de rede: grupo de segurança não tem regra de negação. Sempre que o cenário fala em bloquear um atacante por IP, a resposta é lista de rede, ou um firewall de aplicação web na frente."
+      },
+      {
+        "t": "h",
+        "x": "Pública, privada e a saída para a internet"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Construção",
+          "Serve para"
+        ],
+        "rows": [
+          [
+            "Gateway de internet",
+            "Dar à VPC caminho de ida e volta com a internet"
+          ],
+          [
+            "Sub-rede pública",
+            "Sub-rede com rota 0.0.0.0/0 apontando para o gateway de internet"
+          ],
+          [
+            "Gateway NAT",
+            "Deixar a sub-rede privada iniciar conexão de saída, sem aceitar entrada"
+          ],
+          [
+            "Gateway de saída somente para IPv6",
+            "Mesmo papel do NAT, para endereços IPv6"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O gateway NAT vive em uma zona de disponibilidade. Um só vira ponto único de falha e ainda cobra tráfego atravessando zonas: o desenho resiliente é um por zona, com a tabela de rotas de cada sub-rede apontando para o da própria zona."
+      },
+      {
+        "t": "h",
+        "x": "Chegar a serviços da AWS sem passar pela internet"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Tipo de ponto de extremidade",
+          "Serve a",
+          "Custo"
+        ],
+        "rows": [
+          [
+            "De gateway",
+            "S3 e DynamoDB, via tabela de rotas",
+            "Sem custo"
+          ],
+          [
+            "De interface (PrivateLink)",
+            "Quase todos os demais, via interface na sub-rede",
+            "Por hora e por tráfego"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Bloquear um endereço IP específico",
+            "Lista de controle de rede, com regra de negação"
+          ],
+          [
+            "Conexão sai mas a resposta não volta",
+            "Portas efêmeras faltando na lista de rede"
+          ],
+          [
+            "Instância privada precisa baixar atualização",
+            "Gateway NAT na sub-rede pública"
+          ],
+          [
+            "Tráfego para o S3 não pode sair para a internet",
+            "Ponto de extremidade de gateway"
+          ],
+          [
+            "Acesso privado a um serviço que não é S3 nem DynamoDB",
+            "Ponto de extremidade de interface"
+          ],
+          [
+            "Quer eliminar o custo de NAT no tráfego para o S3",
+            "Ponto de extremidade de gateway, sem custo"
+          ],
+          [
+            "Administrar instância privada sem abrir porta 22",
+            "Session Manager, sem bastião"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Grupo de segurança pode referenciar outro grupo de segurança como origem. É assim que se diz camada de aplicação fala com camada de banco, sem citar endereço nenhum, e o desenho continua certo quando as instâncias mudam de IP. Alternativa que resolve isso com faixa de endereços funciona e é pior."
+      },
+      {
+        "t": "case",
+        "q": "Um banco de dados em sub-rede privada só pode receber tráfego das instâncias de aplicação, e os administradores precisam de acesso sem expor a porta 22 na internet. Qual configuração?",
+        "a": "Grupo de segurança do banco permitindo a porta do banco com origem no grupo de segurança da aplicação, e nada mais. Para o acesso administrativo, Session Manager, que usa o agente e as permissões do IAM em vez de porta aberta, dispensando bastião, par de chaves e regra de entrada. A lista de rede pode ficar no padrão, porque toda a restrição necessária está no grupo de segurança."
+      }
+    ],
+    "check": [
+      "Dizer qual dos dois guarda estado e o que isso muda na prática",
+      "Explicar quando as portas efêmeras entram na conta",
+      "Separar ponto de extremidade de gateway do de interface pelo serviço e pelo custo"
+    ],
+    "src": [
+      {
+        "t": "AWS: comparar grupos de segurança e listas de rede",
+        "u": "https://docs.aws.amazon.com/vpc/latest/userguide/infrastructure-security.html"
+      },
+      {
+        "t": "AWS: pontos de extremidade da VPC",
+        "u": "https://docs.aws.amazon.com/vpc/latest/privatelink/concepts.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-cripto",
+    "exam": "saa",
+    "dom": "d1",
+    "mins": 6,
+    "concept": "criptografia-segredos",
+    "title": "Chaves, certificados e segredos",
+    "lead": "Três serviços parecidos que resolvem problemas diferentes. A prova testa se você sabe qual guarda chave, qual guarda senha e qual emite certificado.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Quem faz o quê"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Guarda",
+          "Rotação"
+        ],
+        "rows": [
+          [
+            "KMS",
+            "Chaves de criptografia",
+            "Automática anual na chave gerenciada pelo cliente"
+          ],
+          [
+            "CloudHSM",
+            "Chaves em hardware dedicado seu",
+            "Por sua conta"
+          ],
+          [
+            "Secrets Manager",
+            "Senha, chave de API, credencial de banco",
+            "Automática, com função de rotação"
+          ],
+          [
+            "Parameter Store",
+            "Configuração e segredo simples",
+            "Não tem rotação nativa"
+          ],
+          [
+            "Certificate Manager",
+            "Certificado TLS público ou privado",
+            "Renovação automática do público"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "A escolha entre Secrets Manager e Parameter Store quase sempre cai em duas palavras do enunciado: se pede rotação automática da credencial do banco, é Secrets Manager; se pede guardar configuração com o menor custo possível, é Parameter Store no nível padrão, que não cobra por parâmetro."
+      },
+      {
+        "t": "p",
+        "x": "CloudHSM aparece quando o enunciado exige controle exclusivo do material da chave ou conformidade com módulo de hardware validado em nível alto. Em qualquer outro caso, KMS é a resposta, porque ele integra com os serviços e tem política de chave auditável."
+      },
+      {
+        "t": "h",
+        "x": "Criptografia no S3"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Modo",
+          "Quem gerencia a chave",
+          "Observação"
+        ],
+        "rows": [
+          [
+            "SSE-S3",
+            "A AWS, de forma transparente",
+            "Padrão aplicado a objeto novo"
+          ],
+          [
+            "SSE-KMS",
+            "Você, no KMS",
+            "Dá rastro de uso por chamada e permite negar quem usa a chave"
+          ],
+          [
+            "SSE-C",
+            "Você, enviando a chave na requisição",
+            "A AWS não guarda a chave; perdeu, perdeu o dado"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Quando o requisito é auditar quem descriptografou e poder revogar o acesso ao conteúdo sem mexer no bucket, a resposta é SSE-KMS, porque a política da chave é um segundo portão independente da política do bucket."
+      },
+      {
+        "t": "h",
+        "x": "Em trânsito"
+      },
+      {
+        "t": "p",
+        "x": "Certificado público do Certificate Manager é gratuito e se integra a balanceador de aplicação, CloudFront e API Gateway, com renovação automática. Para o CloudFront, o certificado precisa estar emitido na região da Virgínia do Norte, porque o serviço é global e a distribuição busca ali."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Rotacionar a senha do banco sozinho",
+            "Secrets Manager"
+          ],
+          [
+            "Guardar configuração sem custo por item",
+            "Parameter Store, nível padrão"
+          ],
+          [
+            "Auditar cada uso da chave e poder revogar",
+            "SSE-KMS com chave gerenciada pelo cliente"
+          ],
+          [
+            "Exigência de módulo de hardware dedicado",
+            "CloudHSM"
+          ],
+          [
+            "Certificado TLS gratuito no balanceador",
+            "Certificate Manager"
+          ],
+          [
+            "Certificado para o CloudFront",
+            "Certificate Manager na Virgínia do Norte"
+          ],
+          [
+            "A AWS não pode ter acesso à chave",
+            "SSE-C ou CloudHSM, conforme o caso"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Habilitar criptografia em repouso não protege contra bucket aberto: são portões diferentes. Objeto criptografado com SSE-S3 em bucket público continua sendo baixado por qualquer pessoa, porque a plataforma descriptografa de forma transparente para quem tem permissão de leitura. Quem fecha o bucket é o bloqueio de acesso público e a política, não a criptografia."
+      },
+      {
+        "t": "case",
+        "q": "Uma empresa precisa provar, em auditoria, quem leu cada arquivo sensível de um bucket, e poder cortar esse acesso em minutos sem alterar a política do bucket. Como fazer?",
+        "a": "Criptografar com SSE-KMS usando chave gerenciada pelo cliente, e conceder o uso da chave somente às funções que precisam ler. Cada leitura gera uma chamada registrada no CloudTrail, o que entrega o rastro, e remover o principal da política da chave corta o acesso ao conteúdo imediatamente, mesmo que a política do bucket continue permitindo a leitura do objeto."
+      }
+    ],
+    "check": [
+      "Separar Secrets Manager de Parameter Store por uma palavra do enunciado",
+      "Dizer quando SSE-KMS ganha de SSE-S3",
+      "Lembrar a região exigida para certificado do CloudFront"
+    ],
+    "src": [
+      {
+        "t": "AWS: conceitos do KMS",
+        "u": "https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html"
+      },
+      {
+        "t": "AWS: criptografia de objetos no S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-multiaz",
+    "exam": "saa",
+    "dom": "d2",
+    "mins": 7,
+    "concept": "alta-disponibilidade",
+    "title": "Alta disponibilidade: balanceador, dimensionamento e zonas",
+    "lead": "Resiliência na AWS começa em uma frase: nada importante roda em uma única zona de disponibilidade. O resto é escolher o balanceador certo e deixar o grupo de dimensionamento cuidar do número de instâncias.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Qual balanceador"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Balanceador",
+          "Camada",
+          "Escolha quando"
+        ],
+        "rows": [
+          [
+            "De aplicação",
+            "7, HTTP e HTTPS",
+            "Roteamento por caminho, por host ou por cabeçalho; contêiner; firewall de aplicação web"
+          ],
+          [
+            "De rede",
+            "4, TCP e UDP",
+            "Endereço IP fixo, latência mínima, protocolo que não é HTTP, milhões de requisições"
+          ],
+          [
+            "De gateway",
+            "3",
+            "Colocar dispositivo de inspeção de terceiro no caminho"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O balanceador só distribui para destinos saudáveis, e quem decide isso é a verificação de integridade. O grupo de dimensionamento automático pode usar essa mesma verificação em vez da checagem básica da instância: com isso, uma instância que responde no sistema operacional mas devolve erro na aplicação é substituída."
+      },
+      {
+        "t": "h",
+        "x": "Grupo de dimensionamento automático"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Política",
+          "Como decide"
+        ],
+        "rows": [
+          [
+            "Rastreamento de alvo",
+            "Mantém uma métrica em um valor, por exemplo 60% de CPU"
+          ],
+          [
+            "Em degraus",
+            "Degraus de ajuste conforme o tamanho do desvio do alarme"
+          ],
+          [
+            "Agendada",
+            "Hora marcada, para pico previsível"
+          ],
+          [
+            "Preditiva",
+            "Aprende o padrão histórico e provisiona antes do pico"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Mínimo, desejado e máximo são três números diferentes, e a prova cobra isso: o mínimo é o piso que nunca desce, mesmo sem carga, e é ele que garante instância em cada zona. Distribuir o grupo por várias zonas e deixar o mínimo igual ao número de zonas é a receita padrão de alta disponibilidade."
+      },
+      {
+        "t": "h",
+        "x": "Zona, região e borda"
+      },
+      {
+        "t": "p",
+        "x": "Zona de disponibilidade é um ou mais datacenters independentes dentro de uma região, com energia e rede próprias. Região é um conjunto de zonas, geograficamente separado das demais. Falha de zona se resolve com várias zonas; falha de região exige desenho em duas regiões, que custa e complica muito mais."
+      },
+      {
+        "t": "p",
+        "x": "O Route 53 faz o papel de direcionar entre regiões, com verificação de integridade e roteamento por falha, por latência, por peso ou por geografia. Já o Global Accelerator entrega endereços estáticos de difusão por proximidade e serve a protocolo que não é HTTP."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Rotear /api para um conjunto e /web para outro",
+            "Balanceador de aplicação"
+          ],
+          [
+            "Precisa de endereço IP fixo para liberar em firewall",
+            "Balanceador de rede"
+          ],
+          [
+            "Instância responde no sistema mas a aplicação dá erro",
+            "Verificação de integridade do balanceador no grupo"
+          ],
+          [
+            "Pico todo dia às 9h, previsível",
+            "Política agendada ou preditiva"
+          ],
+          [
+            "Sobreviver à perda de uma zona",
+            "Grupo em várias zonas, mínimo igual ao número de zonas"
+          ],
+          [
+            "Sobreviver à perda da região",
+            "Segunda região com Route 53 por falha"
+          ],
+          [
+            "Jogo em UDP precisa de entrada global rápida",
+            "Global Accelerator"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Balanceador não deixa a aplicação com estado virar sem estado. Se a sessão vive na memória da instância, trocar de instância derruba o usuário. As saídas são sessão fixa no balanceador, que é remendo e desequilibra a carga, ou tirar a sessão de dentro da instância e guardá-la no ElastiCache ou no DynamoDB, que é a resposta esperada."
+      },
+      {
+        "t": "case",
+        "q": "Uma aplicação web precisa continuar no ar com a perda de uma zona, substituir instância que devolve erro 500 e absorver um pico diário às 20h. Qual configuração?",
+        "a": "Grupo de dimensionamento automático em três zonas, com mínimo três e balanceador de aplicação na frente, usando a verificação de integridade do balanceador como fonte de saúde do grupo, para que o erro 500 cause substituição. Para o pico das 20h, política agendada somada ao rastreamento de alvo: a agendada provisiona antes, e o rastreamento cobre o que fugir do padrão."
+      }
+    ],
+    "check": [
+      "Escolher entre balanceador de aplicação e de rede com uma frase de requisito",
+      "Explicar por que o mínimo do grupo garante disponibilidade",
+      "Dizer o que fazer com sessão guardada na memória da instância"
+    ],
+    "src": [
+      {
+        "t": "AWS: tipos de Elastic Load Balancing",
+        "u": "https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html"
+      },
+      {
+        "t": "AWS: dimensionamento dinâmico",
+        "u": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scale-based-on-demand.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-desacopla",
+    "exam": "saa",
+    "dom": "d2",
+    "mins": 7,
+    "concept": "desacoplamento",
+    "title": "Desacoplar: fila, tópico, barramento e orquestrador",
+    "lead": "Toda questão que começa com um componente derrubando o outro termina em desacoplamento. São quatro serviços com papéis distintos, e trocar um pelo outro é o erro clássico.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Quem faz o quê"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Modelo",
+          "Use quando"
+        ],
+        "rows": [
+          [
+            "SQS",
+            "Fila, um consumidor por mensagem",
+            "Absorver pico e processar no ritmo do consumidor"
+          ],
+          [
+            "SNS",
+            "Tópico, muitos assinantes pela mesma mensagem",
+            "Avisar vários destinos de uma vez"
+          ],
+          [
+            "EventBridge",
+            "Barramento com regras e filtro por conteúdo",
+            "Rotear evento por regra, integrar SaaS, agendar"
+          ],
+          [
+            "Step Functions",
+            "Máquina de estados",
+            "Coordenar passos com repetição, espera e tratamento de erro"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O padrão de distribuição que a prova adora é SNS na frente de várias filas SQS: o produtor publica uma vez, cada assinante tem a própria fila e processa no próprio ritmo, sem um consumidor lento segurar os outros."
+      },
+      {
+        "t": "h",
+        "x": "SQS por dentro"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Conceito",
+          "O que significa"
+        ],
+        "rows": [
+          [
+            "Fila padrão",
+            "Entrega pelo menos uma vez, ordem apenas aproximada, taxa praticamente ilimitada"
+          ],
+          [
+            "Fila FIFO",
+            "Ordem garantida e exatamente uma vez, com limite de taxa bem menor"
+          ],
+          [
+            "Tempo de visibilidade",
+            "Quanto a mensagem fica escondida enquanto é processada"
+          ],
+          [
+            "Fila de mensagens mortas",
+            "Para onde vai a mensagem que falhou o número máximo de vezes"
+          ],
+          [
+            "Sondagem longa",
+            "Espera por mensagem em vez de perguntar sem parar, reduzindo custo"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Mensagem processada duas vezes costuma ser tempo de visibilidade menor que o tempo de processamento: o consumidor ainda está trabalhando quando a mensagem reaparece para outro. Mensagem que some depois de muitas tentativas costuma ser falta de fila de mensagens mortas para inspecionar o veneno."
+      },
+      {
+        "t": "p",
+        "x": "O limite de uma mensagem é 256 KB e a retenção máxima é de 14 dias. Carga maior vai para o S3, com a mensagem carregando apenas a referência."
+      },
+      {
+        "t": "h",
+        "x": "Quando é fluxo contínuo e não mensagem"
+      },
+      {
+        "t": "p",
+        "x": "Kinesis Data Streams entra quando o enunciado fala de telemetria contínua, de muitos consumidores lendo o mesmo registro, de ordem por chave de partição ou de reprocessar as últimas horas. Fila apaga a mensagem depois de consumida; fluxo mantém o registro durante a janela de retenção."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Pico derruba o processador de pedidos",
+            "SQS entre o site e o processamento"
+          ],
+          [
+            "Um evento precisa chegar a quatro sistemas",
+            "SNS com várias filas assinando"
+          ],
+          [
+            "Rotear por conteúdo do evento, com regra",
+            "EventBridge"
+          ],
+          [
+            "Fluxo com repetição, espera e tratamento de erro",
+            "Step Functions"
+          ],
+          [
+            "Ordem estrita por cliente, sem duplicata",
+            "Fila FIFO com agrupamento por cliente"
+          ],
+          [
+            "A mesma mensagem está sendo processada duas vezes",
+            "Aumentar o tempo de visibilidade"
+          ],
+          [
+            "Telemetria contínua, muitos consumidores",
+            "Kinesis Data Streams"
+          ],
+          [
+            "Mensagem de 5 MB",
+            "Guardar no S3 e enfileirar a referência"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Fila padrão não garante ordem. Se o enunciado pede ordem, a resposta é FIFO, e com ela vem um teto de taxa bem menor, que o próprio enunciado às vezes usa para eliminar a alternativa. Reconhecer esse par ordem contra taxa resolve a questão sem decorar número."
+      },
+      {
+        "t": "case",
+        "q": "Um site de ingressos trava quando abre uma venda. O processamento de cada pedido leva até 40 segundos e não pode perder pedido nem cobrar duas vezes o mesmo cliente. Qual desenho?",
+        "a": "Fila FIFO entre o site e o processamento, com identificador de deduplicação igual ao número do pedido e agrupamento por cliente, o que garante ordem por cliente e descarta a reentrega do mesmo pedido. Tempo de visibilidade acima dos 40 segundos de processamento, para a mensagem não reaparecer no meio do trabalho, e fila de mensagens mortas para separar o que falhar várias vezes. O site passa a responder imediatamente, porque só enfileira."
+      }
+    ],
+    "check": [
+      "Separar SQS, SNS e EventBridge por uma frase de cenário",
+      "Explicar a causa mais comum de processamento duplicado",
+      "Dizer quando fluxo ganha de fila"
+    ],
+    "src": [
+      {
+        "t": "AWS: o que é o Amazon SQS",
+        "u": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html"
+      },
+      {
+        "t": "AWS: distribuição com SNS e SQS",
+        "u": "https://docs.aws.amazon.com/sns/latest/dg/sns-common-scenarios.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-dados-res",
+    "exam": "saa",
+    "dom": "d2",
+    "mins": 7,
+    "concept": "dados-resilientes",
+    "title": "Dados resilientes: cópia, réplica e a diferença que custa caro",
+    "lead": "Multi-AZ e réplica de leitura são escritos parecido e servem a coisas opostas. Confundir os dois é o erro mais caro do domínio de resiliência.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "RDS: as duas construções"
+      },
+      {
+        "t": "table",
+        "head": [
+          "",
+          "Implantação Multi-AZ",
+          "Réplica de leitura"
+        ],
+        "rows": [
+          [
+            "Para que serve",
+            "Disponibilidade",
+            "Desempenho de leitura"
+          ],
+          [
+            "Como copia",
+            "Síncrona",
+            "Assíncrona"
+          ],
+          [
+            "Dá para ler",
+            "Não, no modo de espera clássico",
+            "Sim, é esse o ponto"
+          ],
+          [
+            "Assume sozinha",
+            "Sim, automática",
+            "Não, promoção manual"
+          ],
+          [
+            "Outra região",
+            "Não",
+            "Sim"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Enunciado que fala de relatório pesado derrubando o banco pede réplica de leitura. Enunciado que fala de continuar no ar se a zona cair pede Multi-AZ. Quando pede as duas coisas, a resposta é as duas construções juntas, e não escolher uma."
+      },
+      {
+        "t": "p",
+        "x": "O Aurora muda a escala do problema: guarda seis cópias do dado em três zonas, aceita até quinze réplicas que também servem de alvo de falha, e o banco de dados global replica para outra região com atraso de cerca de um segundo, o que é a resposta quando o requisito é recuperação regional com perda mínima."
+      },
+      {
+        "t": "h",
+        "x": "S3"
+      },
+      {
+        "t": "p",
+        "x": "A durabilidade de onze noves vem de graça e não resolve exclusão: o que protege contra apagar por engano é o versionamento, somado à exclusão com autenticação de dois fatores quando o requisito é mais duro. Replicação entre regiões exige versionamento nos dois buckets e copia apenas o que for gravado depois de ligada, salvo replicação em lote para o que já existe."
+      },
+      {
+        "t": "p",
+        "x": "Bloqueio de objeto do S3, no modo de conformidade, impede que qualquer pessoa, inclusive a conta raiz, apague o objeto antes do prazo. É a resposta para exigência regulatória de retenção, e não versionamento."
+      },
+      {
+        "t": "h",
+        "x": "As quatro estratégias de recuperação"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Estratégia",
+          "Tempo de retomada",
+          "Custo parado"
+        ],
+        "rows": [
+          [
+            "Cópia e restauração",
+            "Horas",
+            "O menor"
+          ],
+          [
+            "Luz piloto",
+            "Dezenas de minutos",
+            "Baixo: só o núcleo do dado replicado"
+          ],
+          [
+            "Espera morna",
+            "Minutos",
+            "Médio: ambiente reduzido rodando"
+          ],
+          [
+            "Ativo em duas regiões",
+            "Quase zero",
+            "O maior"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O enunciado dá o objetivo de tempo de retomada e o objetivo de ponto de retomada, e espera a estratégia mais barata que atende aos dois. Quanto menor o tempo exigido, mais alto na tabela você precisa ir, e mais caro fica."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Relatório pesado está derrubando o banco",
+            "Réplica de leitura"
+          ],
+          [
+            "Banco precisa sobreviver à perda da zona",
+            "Implantação Multi-AZ"
+          ],
+          [
+            "Retomada regional com perda de segundos",
+            "Aurora com banco de dados global"
+          ],
+          [
+            "Protegido contra exclusão acidental de objeto",
+            "Versionamento no bucket"
+          ],
+          [
+            "Regulador exige que ninguém apague por 7 anos",
+            "Bloqueio de objeto no modo de conformidade"
+          ],
+          [
+            "Tempo de retomada de poucos minutos",
+            "Espera morna"
+          ],
+          [
+            "Tempo de retomada de horas, menor custo",
+            "Cópia e restauração"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Ligar a replicação entre regiões não copia o que já estava no bucket. Quem precisa do acervo antigo do outro lado precisa de replicação em lote. A mesma lógica de a partir de agora aparece no versionamento: objeto apagado antes de ligar não volta."
+      },
+      {
+        "t": "case",
+        "q": "Um banco relacional precisa aguentar a perda de uma zona sem intervenção, servir um painel analítico que hoje o sobrecarrega, e ter cópia em outra região com retomada em minutos. Qual combinação?",
+        "a": "Aurora com implantação em várias zonas para a falha automática, uma réplica de leitura apontada ao painel, para tirar a carga analítica do nó de escrita, e banco de dados global para a segunda região, que dá retomada em cerca de um minuto com atraso de aproximadamente um segundo. Réplica de leitura entre regiões no RDS clássico atenderia à cópia, mas a promoção é manual e não entrega retomada em minutos de forma confiável."
+      }
+    ],
+    "check": [
+      "Dizer em uma frase para que serve cada uma das duas construções do RDS",
+      "Explicar o que a replicação entre regiões não faz",
+      "Ordenar as quatro estratégias de recuperação por tempo e por custo"
+    ],
+    "src": [
+      {
+        "t": "AWS: implantações Multi-AZ no RDS",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+      },
+      {
+        "t": "AWS: estratégias de recuperação de desastre",
+        "u": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-compute-store",
+    "exam": "saa",
+    "dom": "d3",
+    "mins": 7,
+    "concept": "computacao-armazenamento",
+    "title": "Qual computação e qual armazenamento",
+    "lead": "O domínio de desempenho é uma sequência de escolhas entre opções que funcionam. A certa é a que atende ao padrão de acesso descrito, com o menor esforço operacional.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Computação"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Opção",
+          "Escolha quando",
+          "Cuidado"
+        ],
+        "rows": [
+          [
+            "EC2",
+            "Precisa do sistema operacional, software legado, licença própria",
+            "Você administra patch, escala e imagem"
+          ],
+          [
+            "Lambda",
+            "Evento, pico irregular, nada parado",
+            "Tempo máximo de execução e partida a frio"
+          ],
+          [
+            "Fargate",
+            "Contêiner sem administrar nó",
+            "Menos controle fino que o ECS ou EKS em EC2"
+          ],
+          [
+            "ECS ou EKS em EC2",
+            "Precisa de tipo de instância específico ou GPU",
+            "Você administra a frota de nós"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Enunciado com processamento curto disparado por upload no S3 ou por mensagem é Lambda. Enunciado com processo que roda por horas, ou que precisa de agente instalado, não cabe em Lambda e vai para contêiner ou EC2."
+      },
+      {
+        "t": "h",
+        "x": "Armazenamento de bloco e de arquivo"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Natureza",
+          "Use quando"
+        ],
+        "rows": [
+          [
+            "EBS",
+            "Bloco, uma zona, anexado a uma instância",
+            "Disco de sistema e de banco de dados"
+          ],
+          [
+            "Armazenamento de instância",
+            "Bloco local, efêmero",
+            "Cache e scratch de altíssimo desempenho"
+          ],
+          [
+            "EFS",
+            "Arquivo NFS, em várias zonas",
+            "Muitas instâncias Linux lendo e gravando o mesmo diretório"
+          ],
+          [
+            "FSx for Windows",
+            "Arquivo SMB",
+            "Compartilhamento Windows com Active Directory"
+          ],
+          [
+            "FSx for Lustre",
+            "Arquivo de alto desempenho",
+            "Computação intensiva lendo direto do S3"
+          ],
+          [
+            "S3",
+            "Objeto",
+            "Qualquer coisa acessada por chave e por HTTP"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Volume EBS vive em uma zona de disponibilidade e não atravessa zona. Quando o enunciado fala em compartilhar o mesmo conteúdo entre instâncias de zonas diferentes, EBS está eliminado e a resposta é EFS, ou S3 se o acesso for por chave."
+      },
+      {
+        "t": "h",
+        "x": "Tipos de volume EBS"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Tipo",
+          "Perfil",
+          "Pista no enunciado"
+        ],
+        "rows": [
+          [
+            "gp3",
+            "Uso geral, desempenho configurado à parte do tamanho",
+            "Padrão de hoje, melhor custo"
+          ],
+          [
+            "gp2",
+            "Uso geral antigo, desempenho atrelado ao tamanho",
+            "Migração para gp3 reduz custo"
+          ],
+          [
+            "io2",
+            "Provisionado, altíssimo e durável",
+            "Banco crítico com exigência de operações por segundo"
+          ],
+          [
+            "st1",
+            "Vazão em disco rígido",
+            "Leitura sequencial grande, log e dado bruto"
+          ],
+          [
+            "sc1",
+            "Disco rígido frio",
+            "Acesso raro, menor custo por gigabyte"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Em gp2 o desempenho cresce com o tamanho do volume, o que levava a inflar o disco só para ganhar velocidade. Em gp3 vazão e operações por segundo se configuram separadamente, então a resposta de redução de custo com desempenho igual costuma ser migrar de gp2 para gp3."
+      },
+      {
+        "t": "h",
+        "x": "Grupos de posicionamento"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Tipo",
+          "Faz",
+          "Para"
+        ],
+        "rows": [
+          [
+            "Cluster",
+            "Junta as instâncias no mesmo ponto da rede",
+            "Latência mínima entre nós, computação de alto desempenho"
+          ],
+          [
+            "Spread",
+            "Separa em hardware distinto",
+            "Poucas instâncias críticas que não podem cair juntas"
+          ],
+          [
+            "Partição",
+            "Separa em blocos de hardware",
+            "Sistema distribuído grande, como HDFS e Cassandra"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Processa arquivo assim que ele chega no bucket",
+            "Lambda disparada por evento do S3"
+          ],
+          [
+            "Várias instâncias precisam do mesmo diretório",
+            "EFS"
+          ],
+          [
+            "Compartilhamento Windows com domínio",
+            "FSx for Windows"
+          ],
+          [
+            "Banco exige operações por segundo garantidas",
+            "io2"
+          ],
+          [
+            "Mesmo desempenho, menos custo no disco",
+            "Migrar de gp2 para gp3"
+          ],
+          [
+            "Nós precisam de latência mínima entre si",
+            "Grupo de posicionamento do tipo cluster"
+          ],
+          [
+            "Contêiner sem administrar servidor",
+            "Fargate"
+          ],
+          [
+            "Processo roda por três horas",
+            "Não cabe em Lambda; contêiner ou EC2"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "O armazenamento de instância some quando a instância para, e isso não é defeito: é a razão de ele ser rápido e barato. Alternativa que propõe guardar dado persistente ali está errada, mesmo quando o requisito de desempenho combina."
+      },
+      {
+        "t": "case",
+        "q": "Uma frota de instâncias Linux em três zonas precisa ler e gravar no mesmo conjunto de arquivos, com milhares de arquivos pequenos e acesso simultâneo. Qual armazenamento?",
+        "a": "EFS, que é o único da lista que entrega semântica de sistema de arquivos com acesso simultâneo de várias zonas. EBS não atravessa zona nem aceita montagem múltipla fora de casos específicos; S3 serviria se o acesso fosse por chave, mas o enunciado descreve leitura e gravação em arquivos, que é justamente onde objeto não se encaixa."
+      }
+    ],
+    "check": [
+      "Dizer quando Lambda está eliminada pelo enunciado",
+      "Explicar por que EBS não resolve compartilhamento entre zonas",
+      "Lembrar o que muda de gp2 para gp3"
+    ],
+    "src": [
+      {
+        "t": "AWS: tipos de volume EBS",
+        "u": "https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html"
+      },
+      {
+        "t": "AWS: Amazon EFS",
+        "u": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-banco-cache",
+    "exam": "saa",
+    "dom": "d3",
+    "mins": 7,
+    "concept": "banco-cache",
+    "title": "Banco de dados, cache e entrega na borda",
+    "lead": "Quando o enunciado diz que algo está lento, a resposta quase nunca é uma instância maior. É tirar a leitura do caminho crítico: réplica, cache ou borda.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Qual banco"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Modelo",
+          "Pista no enunciado"
+        ],
+        "rows": [
+          [
+            "RDS",
+            "Relacional gerenciado",
+            "Precisa de SQL, junção, transação, motor conhecido"
+          ],
+          [
+            "Aurora",
+            "Relacional compatível com MySQL e PostgreSQL",
+            "Mesmo caso, com mais desempenho e resiliência"
+          ],
+          [
+            "DynamoDB",
+            "Chave e valor, documento",
+            "Latência de milissegundo em qualquer escala, sem administrar servidor"
+          ],
+          [
+            "ElastiCache",
+            "Cache em memória",
+            "Repetir leitura cara, sessão, placar"
+          ],
+          [
+            "Redshift",
+            "Armazém analítico",
+            "Consulta sobre volume histórico grande"
+          ],
+          [
+            "Neptune",
+            "Grafo",
+            "Relacionamento entre entidades, recomendação"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "DynamoDB aparece quando o enunciado diz escala imprevisível, acesso por chave e nenhuma administração. Modo sob demanda cobra por requisição e absorve pico sem planejamento; modo provisionado sai mais barato quando a carga é estável e previsível. O DAX acrescenta cache em memória e derruba a leitura para microssegundos sem mudar o código."
+      },
+      {
+        "t": "h",
+        "x": "Os dois mecanismos do ElastiCache"
+      },
+      {
+        "t": "table",
+        "head": [
+          "",
+          "Redis",
+          "Memcached"
+        ],
+        "rows": [
+          [
+            "Persistência e réplica",
+            "Sim",
+            "Não"
+          ],
+          [
+            "Estruturas de dados",
+            "Listas, conjuntos, conjuntos ordenados",
+            "Só chave e valor"
+          ],
+          [
+            "Multithread",
+            "Não, no modelo clássico",
+            "Sim"
+          ],
+          [
+            "Escolha quando",
+            "Precisa sobreviver a reinício, placar, pub e sub",
+            "Cache simples que pode ser perdido"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Na borda"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Trabalha em",
+          "Serve para"
+        ],
+        "rows": [
+          [
+            "CloudFront",
+            "HTTP e HTTPS, cache na borda",
+            "Conteúdo estático e dinâmico perto do usuário"
+          ],
+          [
+            "Global Accelerator",
+            "Qualquer TCP e UDP, sem cache",
+            "Endereço estático global e caminho otimizado"
+          ],
+          [
+            "Route 53",
+            "DNS",
+            "Escolher para qual região mandar o usuário"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Para servir um site estático do S3 sem expor o bucket, a combinação é CloudFront com controle de acesso de origem: o bucket fica fechado e só a distribuição consegue ler. Qualquer alternativa que torne o bucket público para isso está errada."
+      },
+      {
+        "t": "h",
+        "x": "Conexão e Lambda"
+      },
+      {
+        "t": "p",
+        "x": "Lambda abrindo conexão direta com RDS esgota o limite de conexões em pico. A resposta é o RDS Proxy, que mantém um reservatório de conexões e ainda melhora a falha automática. Esse par é cobrado com frequência."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Relatório pesado derruba o banco",
+            "Réplica de leitura"
+          ],
+          [
+            "A mesma consulta cara se repete o tempo todo",
+            "ElastiCache na frente"
+          ],
+          [
+            "Sessão de usuário precisa sobreviver à troca de instância",
+            "ElastiCache Redis ou DynamoDB"
+          ],
+          [
+            "Latência de milissegundo em escala imprevisível",
+            "DynamoDB sob demanda"
+          ],
+          [
+            "Quer microssegundo sem mudar o código",
+            "DAX na frente do DynamoDB"
+          ],
+          [
+            "Usuários distantes reclamam de lentidão no site",
+            "CloudFront"
+          ],
+          [
+            "Protocolo UDP precisa de entrada global",
+            "Global Accelerator"
+          ],
+          [
+            "Lambda esgota as conexões do RDS",
+            "RDS Proxy"
+          ],
+          [
+            "Site estático no S3 sem bucket público",
+            "CloudFront com controle de acesso de origem"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Cache não conserta consulta errada e introduz o problema da invalidação: o enunciado que fala de dado que precisa estar sempre atualizado está afastando a resposta de cache. Da mesma forma, réplica de leitura é assíncrona, então leitura logo após a escrita pode vir velha; se o requisito é leitura consistente, ela não serve."
+      },
+      {
+        "t": "case",
+        "q": "Uma API de catálogo responde em 900 ms. O perfil mostra que 80% do tempo é a mesma consulta de listagem, que muda uma vez por hora, e os usuários estão espalhados pelo mundo. O que fazer, em ordem?",
+        "a": "Primeiro ElastiCache na frente da consulta de listagem, porque ela é repetida e tolera uma hora de defasagem, o que elimina a maior parte dos 900 ms. Depois CloudFront, para que o usuário distante não pague a viagem até a região a cada chamada. Aumentar a instância do banco atacaria os 20% restantes com o maior custo e o menor ganho."
+      }
+    ],
+    "check": [
+      "Dizer quando cache é a resposta errada",
+      "Separar Redis de Memcached por um requisito",
+      "Lembrar o par Lambda e RDS Proxy"
+    ],
+    "src": [
+      {
+        "t": "AWS: Amazon ElastiCache",
+        "u": "https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html"
+      },
+      {
+        "t": "AWS: restringir acesso à origem no CloudFront",
+        "u": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-s3-custo",
+    "exam": "saa",
+    "dom": "d4",
+    "mins": 7,
+    "concept": "custo-armazenamento",
+    "title": "Custo de armazenamento e de tráfego",
+    "lead": "O domínio de custo tem duas fontes de questão: a classe errada no S3 e o tráfego que ninguém viu. As duas se resolvem com tabela decorada.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Classes do S3"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Classe",
+          "Recuperação",
+          "Permanência mínima",
+          "Use quando"
+        ],
+        "rows": [
+          [
+            "Standard",
+            "Imediata",
+            "Nenhuma",
+            "Acesso frequente"
+          ],
+          [
+            "Intelligent-Tiering",
+            "Imediata",
+            "Nenhuma",
+            "Padrão de acesso desconhecido ou que muda"
+          ],
+          [
+            "Standard-IA",
+            "Imediata, com taxa",
+            "30 dias",
+            "Acesso raro, precisa na hora"
+          ],
+          [
+            "One Zone-IA",
+            "Imediata, com taxa",
+            "30 dias",
+            "Acesso raro e recriável; uma zona só"
+          ],
+          [
+            "Glacier Instant Retrieval",
+            "Milissegundos",
+            "90 dias",
+            "Arquivo acessado trimestralmente"
+          ],
+          [
+            "Glacier Flexible Retrieval",
+            "Minutos a horas",
+            "90 dias",
+            "Arquivo raro, pode esperar"
+          ],
+          [
+            "Glacier Deep Archive",
+            "Até 12 horas",
+            "180 dias",
+            "Retenção longa, quase nunca lido"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Intelligent-Tiering é a resposta sempre que o enunciado diz que o padrão de acesso é desconhecido ou imprevisível: ele move o objeto entre camadas sozinho, cobrando uma pequena taxa de monitoramento, e não cobra recuperação. Quando o padrão É conhecido, uma regra de ciclo de vida sai mais barata."
+      },
+      {
+        "t": "p",
+        "x": "One Zone-IA guarda em uma única zona de disponibilidade. Ela é a resposta quando o dado pode ser recriado, como miniatura gerada a partir do original, e é a resposta errada para qualquer coisa que não possa ser perdida."
+      },
+      {
+        "t": "h",
+        "x": "Onde o tráfego cobra"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Trajeto",
+          "Cobrança"
+        ],
+        "rows": [
+          [
+            "Entrada na AWS",
+            "Sem custo"
+          ],
+          [
+            "Entre instâncias na mesma zona, por endereço privado",
+            "Sem custo"
+          ],
+          [
+            "Entre zonas da mesma região",
+            "Cobrado nos dois sentidos"
+          ],
+          [
+            "Para a internet",
+            "Cobrado, com faixas decrescentes"
+          ],
+          [
+            "Saída pelo CloudFront",
+            "Mais barata que a saída direta"
+          ],
+          [
+            "Por ponto de extremidade de gateway para S3",
+            "Sem custo"
+          ],
+          [
+            "Por gateway NAT",
+            "Por hora mais por gigabyte processado"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "A conta surpresa mais comum da prova é instância privada baixando muitos dados do S3 através do gateway NAT: paga-se o processamento do NAT sem necessidade. Trocar por ponto de extremidade de gateway zera essa linha da fatura e ainda tira o tráfego da internet."
+      },
+      {
+        "t": "h",
+        "x": "Ferramentas"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Ferramenta",
+          "Responde"
+        ],
+        "rows": [
+          [
+            "Cost Explorer",
+            "Para onde foi o dinheiro, por serviço e por marca"
+          ],
+          [
+            "Budgets",
+            "Avisar quando passar de um valor ou de uma previsão"
+          ],
+          [
+            "Compute Optimizer",
+            "Qual instância está grande demais para a carga"
+          ],
+          [
+            "Trusted Advisor",
+            "O que está ocioso, inseguro ou fora da boa prática"
+          ],
+          [
+            "S3 Storage Lens",
+            "Como os objetos estão distribuídos entre classes"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Padrão de acesso imprevisível",
+            "Intelligent-Tiering"
+          ],
+          [
+            "Dado recriável, acesso raro, menor custo",
+            "One Zone-IA"
+          ],
+          [
+            "Retenção de sete anos, quase nunca lido",
+            "Glacier Deep Archive"
+          ],
+          [
+            "Arquivo raro mas que precisa vir em milissegundos",
+            "Glacier Instant Retrieval"
+          ],
+          [
+            "Instância privada baixa muito do S3",
+            "Ponto de extremidade de gateway"
+          ],
+          [
+            "Avisar antes de estourar o orçamento",
+            "Budgets"
+          ],
+          [
+            "Descobrir instância superdimensionada",
+            "Compute Optimizer"
+          ],
+          [
+            "Reduzir custo de saída para usuários finais",
+            "CloudFront na frente"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Mover para Glacier algo que será lido no mês seguinte sai mais caro que deixar em Standard, por causa da permanência mínima e da taxa de recuperação. A classe mais barata por gigabyte não é a mais barata no total: o cálculo tem três parcelas, guardar, recuperar e as requisições."
+      },
+      {
+        "t": "case",
+        "q": "Um bucket guarda 40 TB de imagens originais, lidas muito no primeiro mês e quase nunca depois, e 12 TB de miniaturas geradas a partir delas, lidas o tempo todo. Qual configuração de menor custo?",
+        "a": "Originais com regra de ciclo de vida: Standard por 30 dias, depois Standard-IA e, a partir de 90 dias, Glacier Instant Retrieval se ainda houver leitura ocasional, ou Flexible Retrieval se puder esperar. Miniaturas em One Zone-IA não serve, porque são lidas o tempo todo: elas ficam em Standard, e o argumento de recriável só valeria se o acesso fosse raro. Se o padrão das originais fosse desconhecido, Intelligent-Tiering substituiria toda a regra."
+      }
+    ],
+    "check": [
+      "Recitar as permanências mínimas das classes de acesso infrequente e de arquivo",
+      "Dizer quando Intelligent-Tiering ganha de uma regra de ciclo de vida",
+      "Apontar o trajeto de tráfego que mais gera conta surpresa"
+    ],
+    "src": [
+      {
+        "t": "AWS: classes de armazenamento do S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+      },
+      {
+        "t": "AWS: pontos de extremidade de gateway",
+        "u": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-compute-custo",
+    "exam": "saa",
+    "dom": "d4",
+    "mins": 6,
+    "concept": "custo-computacao",
+    "title": "Os modelos de compra do EC2",
+    "lead": "Quatro formas de pagar a mesma instância, com diferença de até noventa por cento. A prova descreve o perfil da carga e espera o modelo certo.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "A tabela"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Modelo",
+          "Desconto",
+          "Compromisso",
+          "Perfil da carga"
+        ],
+        "rows": [
+          [
+            "Sob demanda",
+            "Nenhum",
+            "Nenhum",
+            "Imprevisível, curta, primeiro teste"
+          ],
+          [
+            "Savings Plans",
+            "Até cerca de 72%",
+            "Valor por hora, por 1 ou 3 anos",
+            "Base estável, com liberdade de mudar de família"
+          ],
+          [
+            "Instância reservada",
+            "Até cerca de 72%",
+            "Configuração específica, por 1 ou 3 anos",
+            "Base estável e previsível, sem mudar de tipo"
+          ],
+          [
+            "Spot",
+            "Até cerca de 90%",
+            "Nenhum, mas pode ser retomada",
+            "Tolerante a interrupção: lote, renderização, teste"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Spot avisa a retomada com dois minutos de antecedência. Isso define quem pode usar: processamento em lote com ponto de verificação, consumidor de fila, nó de trabalho de cluster. Banco de dados, nó com estado e qualquer coisa que não possa sumir no meio ficam de fora."
+      },
+      {
+        "t": "p",
+        "x": "Entre Savings Plans e instância reservada, o compromisso é diferente: o plano amarra um valor por hora e deixa você trocar de família, tamanho e até de região; a reserva amarra a configuração. Enunciado que fala em flexibilidade para mudar de tipo pede Savings Plans; enunciado que fala em reservar capacidade em uma zona pede instância reservada zonal."
+      },
+      {
+        "t": "h",
+        "x": "Hospedagem dedicada"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Opção",
+          "Para"
+        ],
+        "rows": [
+          [
+            "Instância dedicada",
+            "Hardware não compartilhado com outra conta"
+          ],
+          [
+            "Host dedicado",
+            "Mesmo isolamento, com visibilidade do servidor físico, exigida por licença por soquete ou por núcleo"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Reduzir sem trocar o modelo"
+      },
+      {
+        "t": "p",
+        "x": "Antes de comprometer, três movimentos costumam estar na resposta: ajustar o tamanho da instância à carga real, desligar ambiente de não produção fora do horário e apagar o que está parado, como volumes órfãos, endereços IP elásticos não associados e imagens antigas. Endereço IP elástico não associado cobra por hora justamente para desencorajar o desperdício."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Processamento em lote que pode recomeçar",
+            "Spot"
+          ],
+          [
+            "Carga base constante por três anos",
+            "Savings Plans ou reserva"
+          ],
+          [
+            "Quer desconto mas pode trocar de família",
+            "Savings Plans de computação"
+          ],
+          [
+            "Licença exige contar soquete físico",
+            "Host dedicado"
+          ],
+          [
+            "Ambiente de teste ligado 24 horas",
+            "Agendar desligamento fora do horário"
+          ],
+          [
+            "Fatura com endereço IP sem uso",
+            "Liberar o endereço elástico"
+          ],
+          [
+            "Não sabe se a carga vai continuar",
+            "Sob demanda, sem compromisso"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Spot é descartado pelo enunciado quando aparece a palavra crítico, com estado ou sem interrupção. Mas cuidado com o inverso: enunciado com fila de trabalho e ponto de verificação está pedindo Spot, e a alternativa com sob demanda, apesar de funcionar, perde por custo. A pergunta é sempre o mais barato que atende."
+      },
+      {
+        "t": "case",
+        "q": "Uma empresa roda, o ano todo, 20 instâncias de aplicação com carga constante e, à noite, um processamento de vídeo que pode recomeçar do zero e leva de duas a cinco horas. Qual combinação?",
+        "a": "Savings Plans de computação cobrindo a base das 20 instâncias, pela previsibilidade e pela liberdade de trocar de família se a aplicação mudar, e Spot para o processamento noturno, que tolera interrupção por definição. Reserva também cobriria a base, com menos flexibilidade; usar sob demanda nos dois casos é a resposta que funciona e perde na conta."
+      }
+    ],
+    "check": [
+      "Dizer o que elimina Spot de um cenário",
+      "Separar Savings Plans de instância reservada pelo tipo de compromisso",
+      "Listar três reduções de custo que não exigem compromisso"
+    ],
+    "src": [
+      {
+        "t": "AWS: opções de compra do EC2",
+        "u": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html"
+      },
+      {
+        "t": "AWS: Savings Plans",
+        "u": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-deteccao",
+    "exam": "saa",
+    "dom": "d1",
+    "mins": 7,
+    "concept": "deteccao-auditoria",
+    "extra": true,
+    "title": "Detecção e auditoria: quem responde qual pergunta",
+    "lead": "Sete serviços de segurança com nomes parecidos, e cada um responde a uma pergunta diferente. A prova descreve a pergunta no enunciado; quem sabe a tabela de perguntas acerta sem hesitar.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "A tabela que resolve a questão"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Pergunta do enunciado",
+          "Serviço",
+          "O que ele olha"
+        ],
+        "rows": [
+          [
+            "Quem fez, quando e de onde?",
+            "CloudTrail",
+            "Chamadas de API na conta: identidade, horário, origem, parâmetros"
+          ],
+          [
+            "Como está configurado e o que mudou?",
+            "AWS Config",
+            "Estado e histórico de configuração de cada recurso, avaliado por regras"
+          ],
+          [
+            "Estou sendo atacado agora?",
+            "GuardDuty",
+            "CloudTrail, VPC Flow Logs e DNS, com inteligência de ameaças e aprendizado de máquina"
+          ],
+          [
+            "Tenho vulnerabilidade de software?",
+            "Inspector",
+            "Pacotes de EC2, imagens no ECR e funções Lambda contra CVEs, mais exposição de rede"
+          ],
+          [
+            "Tenho dado sensível exposto?",
+            "Macie",
+            "Conteúdo dos objetos no S3, buscando dados pessoais e credenciais"
+          ],
+          [
+            "Onde vejo tudo junto?",
+            "Security Hub e Security Hub CSPM",
+            "Security Hub correlaciona e prioriza achados de GuardDuty, Inspector e CSPM; o CSPM verifica padrões como CIS e FSBP"
+          ],
+          [
+            "Como investigo o que aconteceu?",
+            "Detective",
+            "Grafo de comportamento montado com CloudTrail, Flow Logs e achados do GuardDuty"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "CloudTrail: os três tipos de evento"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Tipo",
+          "Exemplo",
+          "Gravado por padrão na trilha"
+        ],
+        "rows": [
+          [
+            "Gerenciamento",
+            "Criar instância, anexar política, apagar bucket",
+            "Sim"
+          ],
+          [
+            "Dados",
+            "GetObject e PutObject no S3, Invoke na Lambda",
+            "Não: precisa ligar por tipo de recurso, com cobrança extra"
+          ],
+          [
+            "Insights",
+            "Taxa anormal de chamadas ou de erros",
+            "Não: precisa ligar, com cobrança extra"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O histórico de eventos do console é gratuito, mas guarda só eventos de gerenciamento dos últimos 90 dias, por região. Retenção longa, eventos de dados e entrega em bucket exigem criar uma trilha ou um armazenamento de dados de eventos do CloudTrail Lake."
+      },
+      {
+        "t": "p",
+        "x": "Trilha organizacional é criada na conta de gerenciamento do Organizations, ou numa conta de administrador delegado, e grava os eventos de todas as contas num único bucket. Conta nova que entra na organização passa a ser registrada automaticamente, e as contas-membro enxergam a trilha mas não conseguem desligar nem alterar."
+      },
+      {
+        "t": "p",
+        "x": "A validação de integridade do log faz o CloudTrail gerar, a cada hora, um arquivo de resumo com o hash SHA-256 de cada arquivo entregue, assinado com chave privada e encadeado ao resumo anterior. Com ele se prova que um log foi alterado, apagado ou está intacto. Para impedir a exclusão, e não só detectá-la, some a isso o bloqueio de objeto no bucket de logs."
+      },
+      {
+        "t": "h",
+        "x": "AWS Config: avaliar e corrigir"
+      },
+      {
+        "t": "ul",
+        "x": [
+          "Regra gerenciada ou personalizada diz se o recurso está em conformidade, por exemplo volume EBS sem criptografia.",
+          "Pacote de conformidade reúne regras e ações de correção num modelo YAML, implantado como uma unidade numa conta ou na organização inteira.",
+          "Correção usa documentos de automação do Systems Manager, de forma manual ou automática, quando a regra aponta não conformidade.",
+          "Agregador junta a visão de conformidade de várias contas e regiões numa conta só."
+        ]
+      },
+      {
+        "t": "p",
+        "x": "VPC Flow Logs registram metadados do tráfego IP das interfaces de rede, como origem, destino, porta e se foi aceito ou rejeitado, e publicam no CloudWatch Logs, no S3 ou no Amazon Data Firehose, sem afetar a latência. Não mostram o conteúdo do pacote."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Descobrir quem apagou a tabela ontem",
+            "CloudTrail"
+          ],
+          [
+            "Registrar cada leitura de objeto num bucket",
+            "Evento de dados do CloudTrail para o S3"
+          ],
+          [
+            "Provar que o log de auditoria não foi adulterado",
+            "Validação de integridade do log do CloudTrail"
+          ],
+          [
+            "Registrar todas as contas, inclusive as que ainda vão ser criadas",
+            "Trilha organizacional"
+          ],
+          [
+            "Alertar e corrigir sozinho grupo de segurança com porta 22 aberta",
+            "Regra do AWS Config com correção automática"
+          ],
+          [
+            "Instância conversando com IP de mineração de criptomoeda",
+            "GuardDuty"
+          ],
+          [
+            "Imagem de contêiner com biblioteca vulnerável",
+            "Inspector"
+          ],
+          [
+            "Encontrar CPF e cartão de crédito em buckets",
+            "Macie"
+          ],
+          [
+            "Painel único de achados e checagem contra CIS e FSBP",
+            "Security Hub, com os padrões do Security Hub CSPM"
+          ],
+          [
+            "Analisar a causa raiz de um achado do GuardDuty",
+            "Detective"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "GuardDuty não exige que você ligue CloudTrail nem Flow Logs: ele consome um fluxo próprio e independente desses dados assim que é ativado. Alternativa que manda criar trilha e Flow Logs só para o GuardDuty funcionar está errada. Outra pegadinha: GuardDuty detecta, mas não investiga a fundo nem corrige; investigação é Detective, correção é automação disparada pelo EventBridge ou pelo Config."
+      },
+      {
+        "t": "case",
+        "q": "Uma empresa com 40 contas no Organizations precisa registrar todas as chamadas de API, inclusive de contas futuras, guardar os registros por sete anos sem que ninguém consiga apagá-los antes do prazo, e provar ao auditor que nenhum arquivo foi alterado. Qual desenho atende com o menor esforço?",
+        "a": "Trilha organizacional criada na conta de gerenciamento, entregando num bucket de uma conta de arquivamento de logs, com validação de integridade ligada. A trilha cobre contas novas sozinha e as contas-membro não conseguem desligá-la. O bloqueio de objeto no modo de conformidade, com retenção de sete anos, impede a exclusão até pela conta raiz, e os arquivos de resumo com SHA-256 assinados provam que nada foi modificado. Trilha por conta funcionaria, mas exige manutenção em cada conta e deixa a conta nova descoberta."
+      }
+    ],
+    "check": [
+      "Ligar cada uma das sete perguntas ao serviço certo sem olhar a tabela",
+      "Dizer quais eventos do CloudTrail não são gravados por padrão e o que custa ligá-los",
+      "Explicar a diferença entre detectar alteração no log e impedir sua exclusão"
+    ],
+    "src": [
+      {
+        "t": "AWS: conceitos do CloudTrail",
+        "u": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-concepts.html"
+      },
+      {
+        "t": "AWS: fontes de dados do GuardDuty",
+        "u": "https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_data-sources.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-dr",
+    "exam": "saa",
+    "dom": "d2",
+    "mins": 8,
+    "concept": "recuperacao-desastre",
+    "extra": true,
+    "title": "Recuperação de desastres: RTO, RPO e a estratégia mais barata que atende",
+    "lead": "Toda questão de recuperação de desastres dá dois números, o tempo que pode ficar fora e o dado que pode perder, e pede a opção mais barata que cumpre os dois. Saber ler esses números é metade da resposta.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Os dois objetivos"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Objetivo",
+          "Pergunta que responde",
+          "O que reduz"
+        ],
+        "rows": [
+          [
+            "RTO, tempo de recuperação",
+            "Quanto tempo o sistema pode ficar fora do ar?",
+            "Ter infraestrutura já pronta ou rodando na região de recuperação"
+          ],
+          [
+            "RPO, ponto de recuperação",
+            "Quantos minutos de dado posso perder?",
+            "Copiar o dado com mais frequência, ou replicar de forma contínua"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Os dois são independentes. Um sistema pode aceitar ficar fora quatro horas mas não perder mais que alguns segundos de transação: aí o dado precisa de replicação contínua, enquanto os servidores podem ficar desligados. Leia cada número separado antes de escolher."
+      },
+      {
+        "t": "h",
+        "x": "As quatro estratégias lado a lado"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Estratégia",
+          "O que existe na região de recuperação",
+          "RTO e RPO típicos (aproximados)",
+          "Custo parado"
+        ],
+        "rows": [
+          [
+            "Backup e restauração",
+            "Só cópias de dados e modelos de infraestrutura como código",
+            "Horas (aprox.)",
+            "O menor"
+          ],
+          [
+            "Luz piloto",
+            "Dados replicados e infraestrutura central; servidores de aplicação desligados",
+            "Dezenas de minutos (aprox.)",
+            "Baixo"
+          ],
+          [
+            "Espera morna",
+            "Cópia completa e funcional, em tamanho reduzido, sempre rodando",
+            "Minutos (aprox.)",
+            "Médio"
+          ],
+          [
+            "Multissite ativo-ativo",
+            "Carga completa atendendo usuários em mais de uma região",
+            "Quase zero (aprox.)",
+            "O maior"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "As faixas de RTO e RPO acima são ordens de grandeza usadas pela AWS para comparar as estratégias, não limites garantidos: o valor real depende da carga, da automação e do teste de failover."
+      },
+      {
+        "t": "p",
+        "x": "A diferença entre luz piloto e espera morna é a que mais cai: na luz piloto nada atende requisição até alguém ligar os servidores e escalar; na espera morna o ambiente já responde com capacidade reduzida e só precisa crescer. Se o enunciado diz que a região de recuperação deve atender tráfego imediatamente, mesmo que pouco, é espera morna."
+      },
+      {
+        "t": "h",
+        "x": "Serviços que aparecem em cada estratégia"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "O que entrega",
+          "Estratégia típica"
+        ],
+        "rows": [
+          [
+            "AWS Backup",
+            "Plano central de cópias, com cópia para outra região e para outra conta da mesma organização",
+            "Backup e restauração"
+          ],
+          [
+            "AWS Elastic Disaster Recovery",
+            "Replicação contínua em bloco de servidores locais, de outra nuvem ou EC2; RPO normalmente de segundos e RTO normalmente de minutos",
+            "Luz piloto"
+          ],
+          [
+            "Aurora Global Database",
+            "Réplica em outra região com atraso típico abaixo de 1 segundo e promoção em menos de 1 minuto",
+            "Luz piloto, espera morna ou ativo-ativo"
+          ],
+          [
+            "DynamoDB tabelas globais",
+            "Réplicas graváveis em várias regiões; o modo de consistência forte entre regiões dá RPO zero",
+            "Ativo-ativo"
+          ],
+          [
+            "Replicação do S3 entre regiões",
+            "Cópia assíncrona de objetos novos; com Replication Time Control, 99,9% em até 15 minutos",
+            "Todas"
+          ],
+          [
+            "Route 53 e ARC",
+            "Failover de DNS por verificação de integridade; controles de roteamento e plano de troca de região no ARC",
+            "Todas que trocam de região"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O Elastic Disaster Recovery mantém uma área de preparo, com servidores de replicação leves e volumes EBS, recebendo os blocos alterados e só sobe as instâncias de recuperação na hora do desastre. Por isso entrega RPO de segundos pagando pouco enquanto nada acontece: é a resposta quando o enunciado fala em servidores físicos ou virtuais, muitos sistemas diferentes e menor custo."
+      },
+      {
+        "t": "p",
+        "x": "Como ler o enunciado: primeiro elimine o que não cumpre o RTO, depois o que não cumpre o RPO, e entre o que sobrou escolha o mais barato. Pedir minutos de RTO elimina backup e restauração; pedir que a segunda região já atenda usuários elimina luz piloto; pedir tempo de recuperação praticamente nulo leva ao ativo-ativo."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "RTO de 24 horas, menor custo possível",
+            "Backup e restauração com AWS Backup copiando para outra região"
+          ],
+          [
+            "Cópias precisam ficar em outra conta, protegidas de quem administra a produção",
+            "AWS Backup com cópia entre contas da organização"
+          ],
+          [
+            "Servidores locais, RPO de segundos, pagar pouco até o desastre",
+            "AWS Elastic Disaster Recovery"
+          ],
+          [
+            "Banco MySQL ou PostgreSQL, perda de cerca de 1 segundo, retomada em 1 minuto",
+            "Aurora Global Database"
+          ],
+          [
+            "Gravar em qualquer região, sem failover",
+            "DynamoDB tabelas globais, ativo-ativo"
+          ],
+          [
+            "Prazo garantido de replicação de objetos para auditoria",
+            "Replicação do S3 com Replication Time Control"
+          ],
+          [
+            "Região de recuperação já atende parte do tráfego",
+            "Espera morna"
+          ],
+          [
+            "Trocar de região de forma controlada, sem depender do console",
+            "Controles de roteamento do ARC"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Replicação não é backup. Se alguém apaga ou corrompe o dado na região principal, a réplica recebe o mesmo estrago em segundos. Por isso até o ativo-ativo precisa de cópias pontuais, com versionamento no S3 e AWS Backup, e alternativa que oferece só replicação para proteger contra exclusão ou ransomware está incompleta."
+      },
+      {
+        "t": "case",
+        "q": "Uma empresa tem 60 servidores Windows e Linux num datacenter próprio, com aplicações e bancos variados. Requisitos: perder no máximo alguns segundos de dado, voltar a operar em menos de uma hora na AWS e pagar o mínimo enquanto não houver desastre. Qual solução?",
+        "a": "AWS Elastic Disaster Recovery. O agente replica de forma contínua, em nível de bloco, cada servidor para uma área de preparo com volumes EBS, o que dá RPO de segundos sem precisar de solução diferente para cada banco. As instâncias de recuperação só são lançadas no desastre, então o custo parado é baixo, e o RTO fica em minutos, limitado ao tempo de inicialização. AWS Backup custaria menos, mas a cópia periódica não entrega perda de segundos; uma espera morna atenderia, mas pagaria um ambiente rodando o tempo todo."
+      }
+    ],
+    "check": [
+      "Separar RTO de RPO e dizer o que reduz cada um",
+      "Explicar por que a luz piloto não atende requisição sem ação humana e a espera morna atende",
+      "Dizer por que replicação sozinha não protege contra exclusão ou corrupção"
+    ],
+    "src": [
+      {
+        "t": "AWS: opções de recuperação de desastres na nuvem",
+        "u": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"
+      },
+      {
+        "t": "AWS: conceitos do Elastic Disaster Recovery",
+        "u": "https://docs.aws.amazon.com/drs/latest/userguide/CloudEndure-Concepts.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-dados",
+    "exam": "saa",
+    "dom": "d3",
+    "mins": 8,
+    "concept": "dados-analise",
+    "extra": true,
+    "title": "Ingestão e análise: fluxo, lago de dados e armazém",
+    "lead": "A prova descreve dados chegando e alguém querendo consultar. A resposta sai de três perguntas: quem lê o fluxo, onde o dado fica guardado e quem consulta com SQL.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Ingestão em fluxo"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "O que é",
+          "Escolha quando"
+        ],
+        "rows": [
+          [
+            "Kinesis Data Streams",
+            "Fluxo com fragmentos, retenção de 24 horas a 365 dias",
+            "Vários consumidores próprios, ordem por chave, reprocessar o passado"
+          ],
+          [
+            "Amazon Data Firehose",
+            "Entrega gerenciada, sem consumidor próprio",
+            "Levar o fluxo para S3, Redshift, OpenSearch ou Splunk sem escrever código"
+          ],
+          [
+            "Amazon MSK",
+            "Apache Kafka gerenciado",
+            "Já usa Kafka ou precisa do ecossistema e das APIs do Kafka"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Firehose acumula registros em um buffer, por tamanho e por tempo, e grava em lote no destino. Por isso é quase em tempo real, não em milissegundos. Ele pode transformar registros com Lambda e converter JSON para Parquet ou ORC antes de gravar no S3, usando o esquema de uma tabela do Glue Data Catalog."
+      },
+      {
+        "t": "p",
+        "x": "Data Streams guarda os registros e deixa cada aplicação ler no próprio ritmo, inclusive voltar no tempo dentro da retenção. Firehose não tem isso: o dado passa e vai para o destino. Enunciado que fala em reprocessar ou em várias equipes lendo o mesmo fluxo pede Data Streams."
+      },
+      {
+        "t": "h",
+        "x": "Guardar, catalogar e consultar"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Papel",
+          "Pista no enunciado"
+        ],
+        "rows": [
+          [
+            "Glue",
+            "ETL serverless em Spark, rastreador e Data Catalog",
+            "Descobrir esquema, transformar e catalogar sem administrar cluster"
+          ],
+          [
+            "Athena",
+            "SQL serverless direto no S3, cobrança por dado lido",
+            "Consulta ocasional sobre o lago, sem carregar nada"
+          ],
+          [
+            "Redshift",
+            "Armazém de dados colunar",
+            "Painéis e relatórios frequentes sobre volume grande, junções pesadas"
+          ],
+          [
+            "Redshift Spectrum",
+            "Redshift lendo tabelas externas no S3",
+            "Juntar dado do armazém com histórico que ficou no S3"
+          ],
+          [
+            "EMR",
+            "Spark, Hive e Hadoop gerenciados",
+            "Controle do framework, trabalho grande e customizado"
+          ],
+          [
+            "OpenSearch Service",
+            "Busca e análise de logs",
+            "Busca textual, análise de logs quase em tempo real, painéis"
+          ],
+          [
+            "Amazon Quick Sight",
+            "BI e painéis gerenciados, hoje parte do Amazon Quick (antigo QuickSight)",
+            "Visualizar para a área de negócio"
+          ],
+          [
+            "Lake Formation",
+            "Governança e permissão do lago",
+            "Restringir por banco, tabela, coluna ou linha em um só lugar"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Lake Formation trabalha sobre o Glue Data Catalog e centraliza as permissões que Athena, Redshift Spectrum e EMR respeitam. É a resposta quando o enunciado pede que um grupo não veja certas colunas, sem duplicar o dado nem escrever política de bucket por prefixo."
+      },
+      {
+        "t": "h",
+        "x": "Formato e particionamento"
+      },
+      {
+        "t": "ul",
+        "x": [
+          "Parquet e ORC são colunares: a consulta lê só as colunas usadas e pula blocos pelos metadados de mínimo e máximo",
+          "Compressão reduz a conta do Athena, que cobra pelos bytes lidos",
+          "Partição por data, ou pela coluna mais filtrada, faz a consulta ler só as pastas que interessam",
+          "Partição demais gera milhares de arquivos pequenos, e arquivo pequeno deixa tudo mais lento",
+          "Glue ETL compacta arquivos pequenos e converte CSV ou JSON para Parquet"
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Gravar o fluxo no S3 sem código e sem servidor",
+            "Amazon Data Firehose"
+          ],
+          [
+            "Várias equipes leem o mesmo fluxo e uma reprocessa sete dias",
+            "Kinesis Data Streams"
+          ],
+          [
+            "A empresa já usa Kafka e quer manter as APIs",
+            "Amazon MSK"
+          ],
+          [
+            "SQL ocasional sobre arquivos no S3, sem infraestrutura",
+            "Athena"
+          ],
+          [
+            "Relatórios diários pesados com muitas junções",
+            "Redshift"
+          ],
+          [
+            "Juntar tabela do armazém com histórico antigo no S3",
+            "Redshift Spectrum"
+          ],
+          [
+            "Analista não pode ver a coluna de CPF",
+            "Lake Formation, permissão por coluna"
+          ],
+          [
+            "Descobrir o esquema de arquivos novos automaticamente",
+            "Rastreador do Glue"
+          ],
+          [
+            "Busca textual e análise de logs com painéis",
+            "OpenSearch Service"
+          ],
+          [
+            "Consulta cara que filtra por data e lê poucas colunas",
+            "Parquet particionado por data"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Firehose e Data Streams aparecem lado a lado como se fossem intercambiáveis. Firehose entrega com buffer e não tem consumidor próprio nem reprocessamento; Data Streams exige que você escreva ou configure os consumidores. Se o enunciado pede menor esforço para chegar ao S3, Data Streams perde; se pede releitura, Firehose perde."
+      },
+      {
+        "t": "case",
+        "q": "Arquivos de vendas em CSV chegam todo dia num bucket. Analistas querem consultar com SQL e montar painéis, a equipe financeira não pode ver a coluna de CPF, e ninguém quer administrar servidor. Qual arquitetura?",
+        "a": "Um trabalho do Glue converte o CSV para Parquet particionado por data e registra a tabela no Data Catalog. Lake Formation concede ao grupo financeiro acesso à tabela sem a coluna de CPF. Athena consulta o lago e o Amazon Quick Sight monta os painéis. Tudo é serverless, e a permissão por coluna fica num só lugar, em vez de copiar o dado sem a coluna ou separar buckets."
+      }
+    ],
+    "check": [
+      "Separar Firehose de Data Streams por dois requisitos",
+      "Explicar por que Parquet particionado barateia o Athena",
+      "Dizer quando Redshift Spectrum ganha de carregar tudo no Redshift"
+    ],
+    "src": [
+      {
+        "t": "AWS: otimizar dados no Athena",
+        "u": "https://docs.aws.amazon.com/athena/latest/ug/performance-tuning-data-optimization-techniques.html"
+      },
+      {
+        "t": "AWS: conversão de formato no Data Firehose",
+        "u": "https://docs.aws.amazon.com/firehose/latest/dev/enable-record-format-conversion.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-rede-desemp",
+    "exam": "saa",
+    "dom": "d3",
+    "mins": 8,
+    "concept": "rede-desempenho",
+    "extra": true,
+    "title": "Rede de alto desempenho: borda, híbrido e entre instâncias",
+    "lead": "Desempenho de rede cai em três lugares: perto do usuário, entre o datacenter e a AWS, e entre instâncias. Cada lugar tem serviços próprios, e misturar é a pegadinha.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Perto do usuário"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Recurso",
+          "Faz",
+          "Escolha quando"
+        ],
+        "rows": [
+          [
+            "CloudFront",
+            "Cache HTTP e HTTPS na borda",
+            "Conteúdo que se repete, estático ou dinâmico com cache curto"
+          ],
+          [
+            "Origin Shield",
+            "Camada extra de cache antes da origem",
+            "Origem frágil ou cara, usuários em muitas regiões"
+          ],
+          [
+            "CloudFront Functions",
+            "JavaScript leve na borda, submilissegundo",
+            "Reescrever URL, ajustar cabeçalho, normalizar chave de cache"
+          ],
+          [
+            "Lambda@Edge",
+            "Node.js ou Python, até 30 segundos, com rede",
+            "Chamar serviço externo, ler o corpo, eventos de origem"
+          ],
+          [
+            "Global Accelerator",
+            "Dois IPs anycast fixos, rede global da AWS",
+            "TCP ou UDP sem cache, IP fixo, troca rápida de região"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Origin Shield junta os pedidos de todos os caches regionais em um ponto só, de modo que a origem vê muitas vezes um único pedido por objeto. Ele é cobrado à parte e ajuda pouco em conteúdo que não se repete."
+      },
+      {
+        "t": "h",
+        "x": "Entre o datacenter e a AWS"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Opção",
+          "Característica",
+          "Cuidado"
+        ],
+        "rows": [
+          [
+            "Site-to-Site VPN",
+            "IPsec pela internet, pronta em minutos",
+            "Banda e latência variam com a internet"
+          ],
+          [
+            "Direct Connect",
+            "Link privado dedicado, latência estável",
+            "Semanas para instalar; não criptografa por padrão"
+          ],
+          [
+            "Direct Connect com VPN de reserva",
+            "VPN assume se o link cair",
+            "Banda menor durante a falha"
+          ],
+          [
+            "Dois Direct Connect em locais diferentes",
+            "Resiliência máxima",
+            "Custo maior"
+          ],
+          [
+            "LAG",
+            "Agrega conexões no mesmo equipamento",
+            "Soma banda, não protege contra falha do equipamento"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Criptografia sobre Direct Connect: MACsec protege o enlace em alguns locais e conexões dedicadas; para cifrar o caminho todo, roda-se uma VPN IPsec por cima do Direct Connect."
+      },
+      {
+        "t": "h",
+        "x": "Entre VPCs"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Opção",
+          "Modelo",
+          "Use quando"
+        ],
+        "rows": [
+          [
+            "VPC peering",
+            "Um para um, sem transitividade, sem CIDR sobreposto",
+            "Poucas VPCs, menor custo, sem gargalo central"
+          ],
+          [
+            "Transit Gateway",
+            "Hub com rotas transitivas, inclui VPN e Direct Connect",
+            "Dezenas de VPCs e redes locais"
+          ],
+          [
+            "PrivateLink",
+            "Expõe um serviço por ponto de extremidade de interface",
+            "Consumir um serviço específico, mesmo com CIDR sobreposto"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Entre instâncias"
+      },
+      {
+        "t": "ul",
+        "x": [
+          "Grupo cluster: uma zona só, latência mínima e muita vazão entre nós",
+          "Grupo spread: no máximo sete instâncias em execução por zona, cada uma em rack separado",
+          "Grupo partition: até sete partições por zona, para HDFS, Cassandra e Kafka",
+          "Rede aprimorada com ENA: mais pacotes por segundo e menos latência, sem custo extra",
+          "EFA: desvia do kernel para MPI e NCCL; o tráfego EFA não atravessa zona nem VPC"
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Origem local com pouca banda e usuários no mundo todo",
+            "CloudFront com Origin Shield"
+          ],
+          [
+            "Reescrever URL na borda com o menor custo",
+            "CloudFront Functions"
+          ],
+          [
+            "Na borda, chamar API externa antes de responder",
+            "Lambda@Edge"
+          ],
+          [
+            "IP fixo global para TCP ou UDP, sem cache",
+            "Global Accelerator"
+          ],
+          [
+            "Link dedicado com reserva barata",
+            "Direct Connect com VPN de reserva"
+          ],
+          [
+            "Sobreviver à perda de um local do Direct Connect",
+            "Conexões em dois locais"
+          ],
+          [
+            "Trinta VPCs e dois datacenters com rota central",
+            "Transit Gateway"
+          ],
+          [
+            "Expor um serviço a outra conta com CIDR sobreposto",
+            "PrivateLink"
+          ],
+          [
+            "Simulação MPI com milhares de mensagens entre nós",
+            "Grupo cluster com EFA"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "LAG parece alta disponibilidade, mas todas as conexões terminam no mesmo equipamento da AWS: ele aumenta a banda e não protege contra falha de equipamento ou de local. Do mesmo jeito, VPC peering não é transitivo: A ligada a B e B ligada a C não faz A falar com C."
+      },
+      {
+        "t": "case",
+        "q": "Uma empresa tem um Direct Connect de 10 Gbps. Se ele cair, a operação precisa continuar, ainda que mais lenta, e a diretoria quer o menor custo para essa proteção. O que fazer?",
+        "a": "Configurar uma Site-to-Site VPN como caminho de reserva, com BGP preferindo o Direct Connect. A VPN custa pouco, sobe pela internet e só carrega tráfego na falha, o que atende ao aceite de banda menor. Uma segunda conexão Direct Connect em outro local daria resiliência máxima, mas não é o menor custo. Um LAG não resolve, porque fica no mesmo equipamento."
+      }
+    ],
+    "check": [
+      "Separar CloudFront Functions de Lambda@Edge por dois critérios",
+      "Dizer por que LAG não é alta disponibilidade",
+      "Escolher entre peering, Transit Gateway e PrivateLink por um requisito"
+    ],
+    "src": [
+      {
+        "t": "AWS: estratégias de grupos de posicionamento",
+        "u": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-strategies.html"
+      },
+      {
+        "t": "AWS: CloudFront Functions e Lambda@Edge",
+        "u": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/edge-functions-choosing.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-containers",
+    "exam": "saa",
+    "dom": "d3",
+    "mins": 7,
+    "concept": "containers-serverless",
+    "extra": true,
+    "title": "Contêineres e serverless: onde rodar cada código",
+    "lead": "Quase toda carga cabe em mais de um serviço. A prova escolhe pelo detalhe: duração, GPU, Kubernetes, esforço operacional. Saber os limites decide a resposta.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Orquestrador e tipo de execução"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Escolha",
+          "Opção A",
+          "Opção B"
+        ],
+        "rows": [
+          [
+            "Orquestrador",
+            "ECS: nativo da AWS, mais simples",
+            "EKS: Kubernetes, portabilidade e ecossistema"
+          ],
+          [
+            "Tipo de execução",
+            "EC2: você escolhe e administra os nós",
+            "Fargate: sem nó, paga por tarefa"
+          ],
+          [
+            "GPU",
+            "EC2 atende",
+            "Fargate não oferece GPU"
+          ],
+          [
+            "Esforço operacional",
+            "Maior: patch, escala e imagem dos nós",
+            "Menor: só a definição da tarefa"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "EKS aparece quando o enunciado diz que a empresa já usa Kubernetes, quer manter manifestos ou precisa rodar igual em outro ambiente. Sem essa pista, ECS com Fargate costuma ser a resposta de menor esforço para contêiner."
+      },
+      {
+        "t": "p",
+        "x": "A AWS fechou o App Runner para novos clientes: quem já usa continua, mas não há recursos novos planejados. Para uma aplicação web em contêiner com o mínimo de configuração, a recomendação atual é o ECS Express Mode, que cria serviço Fargate, balanceador e dimensionamento a partir de uma imagem."
+      },
+      {
+        "t": "h",
+        "x": "Lambda: os números que caem"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Limite",
+          "Valor",
+          "Consequência"
+        ],
+        "rows": [
+          [
+            "Tempo máximo",
+            "15 minutos",
+            "Processo de 40 minutos não cabe"
+          ],
+          [
+            "Memória",
+            "128 MB a 10.240 MB",
+            "CPU cresce junto com a memória"
+          ],
+          [
+            "Armazenamento em /tmp",
+            "Até 10.240 MB",
+            "Arquivo temporário grande cabe"
+          ],
+          [
+            "Carga síncrona",
+            "6 MB na requisição e na resposta",
+            "Arquivo grande vai pelo S3"
+          ],
+          [
+            "Concorrência padrão",
+            "1.000 por região, ajustável",
+            "Pico sem controle limita outras funções"
+          ]
+        ]
+      },
+      {
+        "t": "ul",
+        "x": [
+          "Concorrência reservada: garante e limita a função, sem custo extra",
+          "Concorrência provisionada: ambientes pré-inicializados contra partida a frio, com custo",
+          "Se a função tem concorrência reservada, a provisionada não pode passar dela"
+        ]
+      },
+      {
+        "t": "h",
+        "x": "API Gateway e Step Functions"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Recurso",
+          "REST API",
+          "HTTP API"
+        ],
+        "rows": [
+          [
+            "Cache de resposta",
+            "Sim",
+            "Não"
+          ],
+          [
+            "Chave de API e plano de uso por cliente",
+            "Sim",
+            "Não"
+          ],
+          [
+            "AWS WAF e endpoint privado",
+            "Sim",
+            "Não"
+          ],
+          [
+            "Autorizador JWT genérico (OIDC/OAuth 2.0)",
+            "Não; usa autorizador do Cognito ou Lambda",
+            "Sim"
+          ],
+          [
+            "Preço",
+            "Maior",
+            "Menor, com menos recursos"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Step Functions Standard dura até um ano e executa cada etapa uma vez, bom para pagamento e processo longo. Express dura até cinco minutos, é cobrado por execução e duração e serve para alto volume de eventos curtos e idempotentes."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Contêiner sem administrar servidor",
+            "ECS com Fargate"
+          ],
+          [
+            "Já usa Kubernetes e quer os mesmos manifestos",
+            "EKS"
+          ],
+          [
+            "Contêiner precisa de GPU",
+            "ECS ou EKS com nós EC2"
+          ],
+          [
+            "Processo leva 40 minutos",
+            "Fora da Lambda: tarefa no Fargate"
+          ],
+          [
+            "Partida a frio inaceitável em horário previsto",
+            "Concorrência provisionada"
+          ],
+          [
+            "Uma função não pode esgotar a concorrência das outras",
+            "Concorrência reservada"
+          ],
+          [
+            "Cache de resposta e cota por cliente na API",
+            "API Gateway REST com plano de uso"
+          ],
+          [
+            "API simples com JWT e menor custo",
+            "API Gateway HTTP API"
+          ],
+          [
+            "Fluxo de milhares de eventos curtos por segundo",
+            "Step Functions Express"
+          ],
+          [
+            "Web app em contêiner com o mínimo de configuração, conta nova",
+            "ECS Express Mode (App Runner está fechado a novos clientes)"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Concorrência reservada não reduz partida a frio: ela só separa e limita capacidade. Quem pré-aquece ambientes é a provisionada, que é cobrada. E cache no API Gateway só existe na REST API: alternativa que propõe ligar cache numa HTTP API está errada."
+      },
+      {
+        "t": "case",
+        "q": "Usuários enviam vídeos por uma API. A conversão de cada vídeo leva de 20 a 50 minutos, o volume é irregular e a equipe não quer administrar servidor. A API precisa responder em segundos. Qual arquitetura?",
+        "a": "API Gateway com uma Lambda curta que grava o pedido e inicia uma execução Standard do Step Functions, que roda a conversão como tarefa do ECS no Fargate e trata erro e nova tentativa. A Lambda sozinha não serve porque o limite é 15 minutos; EC2 sempre ligada pagaria pelo tempo ocioso; Express não serve porque dura no máximo cinco minutos."
+      }
+    ],
+    "check": [
+      "Dizer dois limites da Lambda que eliminam uma alternativa",
+      "Separar concorrência reservada de provisionada",
+      "Listar dois recursos que só a REST API tem"
+    ],
+    "src": [
+      {
+        "t": "AWS: cotas da Lambda",
+        "u": "https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html"
+      },
+      {
+        "t": "AWS: REST API ou HTTP API",
+        "u": "https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html"
+      }
+    ]
+  },
+  {
+    "id": "f-saa-custo-bd-rede",
+    "exam": "saa",
+    "dom": "d4",
+    "mins": 8,
+    "concept": "custo-banco-rede",
+    "extra": true,
+    "title": "Custo de banco de dados e de rede",
+    "lead": "Banco e rede geram as linhas da fatura que ninguém previu: E/S do Aurora, tabela grande do DynamoDB, NAT e tráfego entre zonas. A prova pede a troca que corta o custo sem perder o requisito.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Banco relacional"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Opção",
+          "Como cobra",
+          "Escolha quando"
+        ],
+        "rows": [
+          [
+            "RDS ou Aurora reservado",
+            "Compromisso de 1 ou 3 anos",
+            "Banco de produção ligado o tempo todo"
+          ],
+          [
+            "Aurora Serverless v2",
+            "Por capacidade usada, em ACU",
+            "Carga variável; mínimo de 0 ACU pausa sem uso"
+          ],
+          [
+            "Aurora Standard",
+            "Instância, armazenamento e cada E/S",
+            "E/S até 25% do gasto do Aurora"
+          ],
+          [
+            "Aurora I/O-Optimized",
+            "Sem cobrança por E/S; instância e armazenamento mais caros",
+            "E/S acima de 25% do gasto do Aurora"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Com capacidade mínima de 0 ACU, o Aurora Serverless v2 pausa depois do tempo ocioso configurado e deixa de cobrar computação, mas continua cobrando armazenamento. A retomada costuma levar cerca de 15 segundos, e pode demorar mais depois de uma pausa longa; então serve para desenvolvimento e teste, não para produção que precisa responder na hora."
+      },
+      {
+        "t": "h",
+        "x": "DynamoDB e cache"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Opção",
+          "Ganha quando",
+          "Cuidado"
+        ],
+        "rows": [
+          [
+            "Sob demanda",
+            "Tráfego imprevisível, com dias parados",
+            "Por requisição sai mais caro em carga constante"
+          ],
+          [
+            "Provisionado com dimensionamento",
+            "Tráfego previsível",
+            "Pico repentino pode sofrer limitação"
+          ],
+          [
+            "Capacidade reservada",
+            "Base provisionada estável",
+            "Só modo provisionado e classe Standard"
+          ],
+          [
+            "Classe Standard-IA",
+            "Armazenamento domina o custo",
+            "Leitura e gravação ficam mais caras"
+          ],
+          [
+            "ElastiCache reservado",
+            "Nós de cache ligados o tempo todo",
+            "Compromisso de 1 ou 3 anos"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Standard-IA guarda mais barato e cobra mais caro cada leitura e gravação, com o mesmo desempenho e a mesma durabilidade. A AWS indica a classe quando o armazenamento passa de metade do custo de throughput da tabela, como histórico de pedidos e logs antigos."
+      },
+      {
+        "t": "h",
+        "x": "Rede"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Trajeto ou recurso",
+          "Cobrança",
+          "Troca que economiza"
+        ],
+        "rows": [
+          [
+            "Gateway NAT",
+            "Por hora e por GB processado",
+            "Ponto de extremidade de gateway para S3 e DynamoDB"
+          ],
+          [
+            "Ponto de extremidade de gateway",
+            "Sem custo",
+            "Só S3 e DynamoDB, só na mesma região"
+          ],
+          [
+            "Ponto de extremidade de interface",
+            "Por hora em cada zona e por GB",
+            "Vale para outros serviços ou acesso vindo do datacenter"
+          ],
+          [
+            "Entre zonas da mesma região",
+            "Por GB, nos dois sentidos",
+            "Manter chamadas frequentes na mesma zona quando possível"
+          ],
+          [
+            "Entre regiões",
+            "Por GB",
+            "Replicar só o necessário"
+          ],
+          [
+            "VPN e Direct Connect",
+            "VPN por hora de conexão mais saída a preço de internet; Direct Connect por hora de porta e por GB de saída, mais barato",
+            "Direct Connect quando o volume de saída é alto e constante"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "CloudFront tem classes de preço. Price Class All usa todos os pontos de presença; as classes 200 e 100 deixam de fora as regiões mais caras. Usuário fora da classe continua atendido, normalmente por um ponto de presença mais distante e com latência maior. A Price Class 100 cobre Estados Unidos, México, Canadá, Europa, Israel e Turquia; a 200 exclui só América do Sul e Austrália e Nova Zelândia. Público concentrado na América do Norte e na Europa é o caso da Price Class 100."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "E/S passou de um quarto da conta do Aurora",
+            "Aurora I/O-Optimized"
+          ],
+          [
+            "Banco de teste parado à noite e no fim de semana",
+            "Aurora Serverless v2 com mínimo de 0 ACU"
+          ],
+          [
+            "Banco de produção estável por três anos",
+            "Instância reservada"
+          ],
+          [
+            "Tabela enorme de histórico raramente lida",
+            "DynamoDB classe Standard-IA"
+          ],
+          [
+            "DynamoDB provisionado estável, quer desconto",
+            "Capacidade reservada"
+          ],
+          [
+            "Instâncias privadas baixam muito do S3 pelo NAT",
+            "Ponto de extremidade de gateway"
+          ],
+          [
+            "Datacenter acessa o S3 por Direct Connect, de forma privada",
+            "Ponto de extremidade de interface do S3"
+          ],
+          [
+            "Usuários só na América do Norte e na Europa",
+            "CloudFront Price Class 100"
+          ],
+          [
+            "Terabytes de saída por mês para o datacenter",
+            "Direct Connect em vez de VPN"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Capacidade reservada do DynamoDB não combina com modo sob demanda nem com a classe Standard-IA. Alternativa que propõe mudar a tabela para sob demanda e comprar capacidade reservada para ela está errada. Outra pegadinha: ponto de extremidade de interface cobra por hora em cada zona, então ele não é a troca gratuita do NAT; a gratuita é a de gateway."
+      },
+      {
+        "t": "case",
+        "q": "Um cluster Aurora de produção tem E/S correspondendo a 40% da conta do banco. A empresa também mantém quatro bancos Aurora de desenvolvimento usados só em horário comercial. Como reduzir o custo dos dois?",
+        "a": "Produção vai para Aurora I/O-Optimized, que elimina a cobrança por E/S; com E/S acima de 25% do gasto, a instância e o armazenamento mais caros se pagam. Os de desenvolvimento viram Aurora Serverless v2 com mínimo de 0 ACU, que pausa sem conexões e cobra só o armazenamento nesse período. Reservar os de desenvolvimento pagaria pelas horas paradas."
+      }
+    ],
+    "check": [
+      "Dizer o limite de 25% que decide entre Aurora Standard e I/O-Optimized",
+      "Lembrar as duas restrições da capacidade reservada do DynamoDB",
+      "Explicar por que ponto de extremidade de interface não é gratuito"
+    ],
+    "src": [
+      {
+        "t": "AWS: configurações de armazenamento do Aurora",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.StorageReliability.html"
+      },
+      {
+        "t": "AWS: capacidade reservada do DynamoDB",
+        "u": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/reserved-capacity.html"
+      }
+    ]
+  }
+]

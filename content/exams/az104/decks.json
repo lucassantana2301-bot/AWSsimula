@@ -1,0 +1,203 @@
+[
+  {
+    "id": "dk-104-gov",
+    "exam": "az104",
+    "dom": "d1",
+    "concept": "rbac-governanca",
+    "title": "Qual controle resolve",
+    "prompt": "Classifique cada exigência pelo controle que a atende.",
+    "buckets": [
+      {
+        "k": "rbac",
+        "label": "RBAC"
+      },
+      {
+        "k": "policy",
+        "label": "Azure Policy"
+      },
+      {
+        "k": "lock",
+        "label": "Bloqueio"
+      }
+    ],
+    "items": [
+      {
+        "t": "Equipe de auditoria precisa ver tudo sem alterar nada",
+        "k": "rbac",
+        "e": "É permissão de identidade: função Leitor no escopo."
+      },
+      {
+        "t": "Ninguém pode criar recurso fora das regiões aprovadas",
+        "k": "policy",
+        "e": "Restrição de estado do recurso, efeito Deny."
+      },
+      {
+        "t": "Ninguém pode excluir a conta de armazenamento de produção",
+        "k": "lock",
+        "e": "CanNotDelete, que atinge até o Proprietário."
+      },
+      {
+        "t": "Toda máquina nova deve nascer com a marca de centro de custo",
+        "k": "policy",
+        "e": "Append ou Modify acrescenta o campo na gravação."
+      },
+      {
+        "t": "Um líder precisa poder dar acesso aos colegas sem operar recursos",
+        "k": "rbac",
+        "e": "Administrador de Acesso de Usuário."
+      },
+      {
+        "t": "A configuração do gateway de produção não pode ser alterada por ninguém",
+        "k": "lock",
+        "e": "ReadOnly impede alteração e exclusão."
+      },
+      {
+        "t": "Toda conta de armazenamento deve ter transferência segura exigida",
+        "k": "policy",
+        "e": "Regra de conformidade sobre a propriedade do recurso."
+      },
+      {
+        "t": "O time de suporte cria e exclui máquinas, mas não concede acesso",
+        "k": "rbac",
+        "e": "Função Colaborador no escopo do grupo de recursos."
+      },
+      {
+        "t": "Recursos existentes sem a marca obrigatória precisam ser corrigidos em lote",
+        "k": "policy",
+        "e": "Modify com tarefa de correção."
+      }
+    ]
+  },
+  {
+    "id": "dk-104-rede",
+    "exam": "az104",
+    "dom": "d4",
+    "concept": "rede-virtual",
+    "title": "Qual serviço de entrega de tráfego",
+    "prompt": "Classifique cada requisito pelo serviço que o atende.",
+    "buckets": [
+      {
+        "k": "lb",
+        "label": "Load Balancer"
+      },
+      {
+        "k": "agw",
+        "label": "Application Gateway"
+      },
+      {
+        "k": "afd",
+        "label": "Front Door"
+      },
+      {
+        "k": "tm",
+        "label": "Traffic Manager"
+      }
+    ],
+    "items": [
+      {
+        "t": "Roteamento por caminho de URL em uma única região",
+        "k": "agw",
+        "e": "Camada 7 regional, que lê o caminho da requisição."
+      },
+      {
+        "t": "Firewall de aplicação web acoplado ao balanceamento regional",
+        "k": "agw",
+        "e": "O WAF é oferecido junto do Application Gateway."
+      },
+      {
+        "t": "Distribuir conexões TCP entre máquinas da mesma região",
+        "k": "lb",
+        "e": "Camada 4, sem leitura de conteúdo."
+      },
+      {
+        "t": "Direcionar usuários para a região mais próxima, com cache na borda",
+        "k": "afd",
+        "e": "Camada 7 global, com rede de entrega de conteúdo."
+      },
+      {
+        "t": "Direcionar por DNS entre dois ambientes, sem encerrar a conexão",
+        "k": "tm",
+        "e": "Trabalha por resposta de DNS: ele não vê o pacote."
+      },
+      {
+        "t": "Balancear tráfego de um protocolo próprio, não HTTP",
+        "k": "lb",
+        "e": "Camada 4 atende qualquer protocolo sobre TCP ou UDP."
+      },
+      {
+        "t": "Encerrar TLS e inspecionar cabeçalho HTTP, dentro da região",
+        "k": "agw",
+        "e": "Encerramento e inspeção são camada 7 regional."
+      },
+      {
+        "t": "Failover global entre regiões com verificação de integridade por DNS",
+        "k": "tm",
+        "e": "Perfil de roteamento por prioridade no Traffic Manager."
+      }
+    ]
+  },
+  {
+    "id": "dk-104-store",
+    "exam": "az104",
+    "dom": "d2",
+    "concept": "armazenamento-acesso",
+    "title": "Como autorizar o acesso",
+    "prompt": "Classifique cada cenário pela forma de autorização mais adequada.",
+    "buckets": [
+      {
+        "k": "sas",
+        "label": "SAS"
+      },
+      {
+        "k": "entra",
+        "label": "Entra ID com função de dados"
+      },
+      {
+        "k": "rede",
+        "label": "Controle de rede"
+      }
+    ],
+    "items": [
+      {
+        "t": "Parceiro externo envia arquivos por 15 dias",
+        "k": "sas",
+        "e": "Prazo e permissão recortados em um token."
+      },
+      {
+        "t": "Função do Azure grava em blob sem segredo em configuração",
+        "k": "entra",
+        "e": "Identidade gerenciada com função de dados."
+      },
+      {
+        "t": "A conta não pode ter endereço público",
+        "k": "rede",
+        "e": "Ponto de extremidade privado."
+      },
+      {
+        "t": "Só as máquinas de uma sub-rede podem acessar a conta",
+        "k": "rede",
+        "e": "Firewall da conta com ponto de extremidade de serviço."
+      },
+      {
+        "t": "Revogar o acesso de um parceiro sem girar a chave da conta",
+        "k": "sas",
+        "e": "SAS vinculada a política de acesso armazenada."
+      },
+      {
+        "t": "Rastrear qual identidade leu cada blob",
+        "k": "entra",
+        "e": "Autorização por identidade é o que produz rastro auditável."
+      },
+      {
+        "t": "Aplicação em outra nuvem precisa ler um contêiner por um ano",
+        "k": "sas",
+        "e": "SAS de longa duração com política armazenada, para poder revogar."
+      },
+      {
+        "t": "Equipe de dados precisa ler todos os contêineres de um projeto",
+        "k": "entra",
+        "e": "Leitor de Dados do Blob no escopo da conta ou do contêiner."
+      }
+    ]
+  }
+]

@@ -1,0 +1,347 @@
+[
+  {
+    "id": "l-104-gov",
+    "exam": "az104",
+    "dom": "d1",
+    "concept": "rbac-governanca",
+    "secs": 92,
+    "title": "RBAC, Policy e bloqueio: por que o Proprietário recebe erro",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🔒",
+        "h": "Um Proprietário sem poder",
+        "p": "A cena mais comum da prova: alguém com a função máxima tenta algo e recebe erro. Se você souber de onde vem o erro, a questão se resolve em dez segundos."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏢",
+        "h": "Pense num prédio",
+        "p": "RBAC é o crachá: diz em quais portas você entra. Policy é o código de obras: ninguém, nem o dono, constrói fora da norma. Bloqueio é a fita de isolamento colada na porta: enquanto estiver ali, ninguém mexe, nem quem tem a chave mestra."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "gov104",
+        "h": "Três controles, três perguntas",
+        "p": "RBAC pergunta quem. Policy pergunta como o recurso pode ficar. Bloqueio pergunta se pode ser tocado."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "Quando o enunciado diz que o Proprietário não consegue excluir algo, a resposta nunca é RBAC. É bloqueio, ou atribuição de negação. E quando ele não consegue criar algo fora do padrão, é Azure Policy. Policy nunca apaga o que já existe: ela barra a próxima gravação e marca o resto como não conforme."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Um Proprietário não consegue excluir um grupo de recursos. O que verificar primeiro?",
+        "a": [
+          "Bloqueio no escopo",
+          "Dar a função Colaborador",
+          "Uma política com efeito Audit"
+        ],
+        "c": 0,
+        "e": "CanNotDelete ou ReadOnly, no próprio grupo ou herdado da assinatura, impede exclusão até para o Proprietário."
+      },
+      {
+        "q": "Trezentos recursos existentes estão sem a marca obrigatória. O que corrige?",
+        "a": [
+          "Policy com Modify e tarefa de correção",
+          "Policy com Deny",
+          "Bloqueio ReadOnly"
+        ],
+        "c": 0,
+        "e": "Só Modify e DeployIfNotExists aceitam tarefa de correção, que é o que alcança recurso já existente."
+      },
+      {
+        "q": "Quem precisa operar recursos sem poder conceder acesso a terceiros recebe qual função?",
+        "a": [
+          "Colaborador",
+          "Proprietário",
+          "Administrador de Acesso de Usuário"
+        ],
+        "c": 0,
+        "e": "Colaborador faz tudo menos distribuir permissão, que é exatamente a separação pedida."
+      }
+    ]
+  },
+  {
+    "id": "l-104-redund",
+    "exam": "az104",
+    "dom": "d2",
+    "concept": "armazenamento-redundancia",
+    "secs": 88,
+    "title": "Redundância de armazenamento em uma tabela",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🗄",
+        "h": "Seis siglas, duas perguntas",
+        "p": "Onde ficam as cópias, e o secundário pode ser lido. Responda as duas e o bloco de redundância fica resolvido."
+      },
+      {
+        "k": "analogia",
+        "emoji": "📦",
+        "h": "Cópia do contrato",
+        "p": "LRS é guardar três vias no mesmo armário. ZRS é guardar uma via em cada um de três prédios do mesmo bairro. GRS é guardar também numa cidade distante, mas num cofre que você só abre depois de declarar que o escritório pegou fogo. RA-GRS é o mesmo cofre, com a chave no seu bolso."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "redund104",
+        "h": "A geografia das cópias",
+        "p": "A região emparelhada é definida pela Microsoft, e a cópia até ela é assíncrona."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "Sem o prefixo RA, não há leitura do secundário em operação normal. E nenhuma opção de redundância protege contra exclusão acidental: para isso existem exclusão reversível, controle de versão e bloqueio. Trocar redundância por proteção contra erro humano é a troca errada."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Precisa ler os dados de uma segunda região, sem failover. Qual opção?",
+        "a": [
+          "RA-GRS",
+          "GRS",
+          "ZRS"
+        ],
+        "c": 0,
+        "e": "Só as opções com acesso de leitura expõem o ponto de extremidade secundário em operação normal."
+      },
+      {
+        "q": "Sobreviver à perda de um datacenter sem sair da região pede qual opção?",
+        "a": [
+          "ZRS",
+          "LRS",
+          "GRS"
+        ],
+        "c": 0,
+        "e": "ZRS distribui as três cópias em zonas distintas da mesma região."
+      },
+      {
+        "q": "Alguém apagou um blob por engano. O que teria evitado a perda?",
+        "a": [
+          "Exclusão reversível e controle de versão",
+          "Migrar de LRS para GRS",
+          "Camada de acesso fria"
+        ],
+        "c": 0,
+        "e": "Redundância cobre falha de infraestrutura, não erro humano."
+      }
+    ]
+  },
+  {
+    "id": "l-104-sla",
+    "exam": "az104",
+    "dom": "d3",
+    "concept": "vm-disponibilidade",
+    "secs": 90,
+    "title": "A escada da disponibilidade de máquinas virtuais",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🏗",
+        "h": "Três degraus e um número",
+        "p": "Toda questão que cita um número de disponibilidade exigido pelo negócio está testando a mesma escada de três degraus."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🚦",
+        "h": "Pense em rotas para o trabalho",
+        "p": "Uma máquina com disco premium é uma rota só, bem asfaltada. Conjunto de disponibilidade é duas rotas que saem do mesmo bairro: um acidente na rua não para as duas. Zonas são duas rotas que atravessam bairros diferentes: um alagamento no bairro não derruba as duas."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "sla104",
+        "h": "99,9, 99,95 e 99,99",
+        "p": "Domínio de falha é rack dentro do datacenter. Zona é datacenter inteiro."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "Não existe adicionar uma máquina já criada a um conjunto de disponibilidade, nem mudar a zona de uma máquina existente: a associação é definida na criação. Quando o enunciado diz que as máquinas já existem e o alvo é 99,95% ou 99,99%, a resposta envolve recriar. E atenção ao balanceador: o Basic não é redundante de zona, então ele reintroduz o ponto único que o desenho tentou remover."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Duas máquinas já criadas precisam de 99,99%. O que fazer?",
+        "a": [
+          "Recriar, uma em cada zona",
+          "Adicionar ao conjunto de disponibilidade",
+          "Trocar os discos para SSD Premium"
+        ],
+        "c": 0,
+        "e": "99,99% só vem de zonas, e zona não se atribui a máquina existente."
+      },
+      {
+        "q": "O dado gravado no disco D desapareceu depois de desalocar a máquina. Por quê?",
+        "a": [
+          "É o disco temporário",
+          "O disco gerenciado foi reduzido",
+          "Faltou backup do disco do sistema"
+        ],
+        "c": 0,
+        "e": "O disco temporário é armazenamento local do host e seu conteúdo não sobrevive à desalocação."
+      },
+      {
+        "q": "Máquina única precisa chegar a 99,9%. O que é exigido?",
+        "a": [
+          "Todos os discos em SSD Premium",
+          "Conjunto de disponibilidade",
+          "Duas zonas"
+        ],
+        "c": 0,
+        "e": "O acordo de máquina única exige que todos os discos sejam SSD Premium."
+      }
+    ]
+  },
+  {
+    "id": "l-104-nsg",
+    "exam": "az104",
+    "dom": "d4",
+    "concept": "rede-virtual",
+    "secs": 86,
+    "title": "NSG avalia duas vezes, e emparelhamento não é transitivo",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🛡",
+        "h": "A regra está certa e o pacote não chega",
+        "p": "Esse cenário tem duas causas possíveis, e as duas aparecem na prova de rede com frequência."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🚪",
+        "h": "Duas portarias",
+        "p": "Para entrar no andar você passa na portaria do prédio e depois na recepção da empresa. Liberação na portaria não serve de nada se a recepção barrar. Na saída você passa pela recepção primeiro e pela portaria depois."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "nsg104",
+        "h": "Sub-rede e interface, em ordem",
+        "p": "A primeira regra que casa decide, por prioridade, e a avaliação para ali."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "A outra causa de tráfego que não chega é rota, não regra: emparelhamento liga só os dois pares envolvidos e não propaga para um terceiro. A vem a B e B vem a C não faz A chegar a C. A correção é emparelhamento direto, trânsito de gateway, ou dispositivo de rede no centro com rota definida pelo usuário. Grupo de segurança nunca encaminha pacote: isso é trabalho de tabela de rotas."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "A fala com B, B fala com C, A não fala com C. Por quê?",
+        "a": [
+          "Emparelhamento não é transitivo",
+          "Falta regra no grupo de segurança de C",
+          "As redes estão em regiões diferentes"
+        ],
+        "c": 0,
+        "e": "Emparelhamento não propaga rota para um terceiro par."
+      },
+      {
+        "q": "Todo tráfego de saída deve passar por um firewall. O que configurar?",
+        "a": [
+          "Rota 0.0.0.0/0 com próximo salto no firewall",
+          "Regra de saída no grupo de segurança",
+          "Ponto de extremidade de serviço"
+        ],
+        "c": 0,
+        "e": "Encaminhar é trabalho de rota; grupo de segurança apenas permite ou nega."
+      },
+      {
+        "q": "Quantos endereços sobram em uma sub-rede /29?",
+        "a": [
+          "3",
+          "6",
+          "8"
+        ],
+        "c": 0,
+        "e": "O Azure reserva cinco endereços por sub-rede, então oito menos cinco dá três."
+      }
+    ]
+  },
+  {
+    "id": "l-104-mon",
+    "exam": "az104",
+    "dom": "d5",
+    "concept": "monitorar-recuperar",
+    "secs": 84,
+    "title": "Métrica, log e os três tipos de alerta",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "📈",
+        "h": "O log não aparece no espaço de trabalho",
+        "p": "Quase sempre é a mesma causa, e ela não tem nada a ver com permissão nem com agente."
+      },
+      {
+        "k": "analogia",
+        "emoji": "📬",
+        "h": "Medidor e diário de bordo",
+        "p": "A métrica é o medidor na parede: alguém já anota o número sozinho, de hora em hora. O log é o diário de bordo: ele existe, mas fica na gaveta do recurso até você pedir que uma cópia seja enviada para o arquivo central."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "mon104",
+        "h": "Quem chega sozinho e quem precisa de ordem",
+        "p": "A configuração de diagnóstico é por recurso e é o que encaminha o log."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "Alerta de métrica não consulta log. Se a condição só existe no texto de um log, a resposta é alerta de pesquisa de log; se é uma operação de criação, alteração ou exclusão, é alerta de log de atividades. E lembre dos 90 dias: o log de atividades só vai além disso quando exportado por configuração de diagnóstico."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Métricas aparecem, logs do recurso não chegam ao Log Analytics. O que falta?",
+        "a": [
+          "Configuração de diagnóstico no recurso",
+          "Instalar o agente no recurso de plataforma",
+          "Aumentar a retenção das métricas"
+        ],
+        "c": 0,
+        "e": "Métrica é coletada sozinha; log precisa ser encaminhado por configuração de diagnóstico."
+      },
+      {
+        "q": "Avisar quando alguém excluir um recurso pede qual alerta?",
+        "a": [
+          "De log de atividades",
+          "De métrica",
+          "De pesquisa de log no banco de métricas"
+        ],
+        "c": 0,
+        "e": "Exclusão é operação do plano de controle, registrada no log de atividades."
+      },
+      {
+        "q": "Restaurar um arquivo apagado ontem é trabalho de qual serviço?",
+        "a": [
+          "Backup do Azure",
+          "Azure Site Recovery",
+          "Azure Monitor"
+        ],
+        "c": 0,
+        "e": "Backup mantém pontos de recuperação e permite restauração granular; Site Recovery serve a desastre regional."
+      }
+    ]
+  }
+]
