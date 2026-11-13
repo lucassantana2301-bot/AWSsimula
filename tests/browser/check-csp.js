@@ -7,12 +7,17 @@ const pup=require("puppeteer-core");
 const ROOT=path.join(__dirname,"..","..");
 const cfg=JSON.parse(fs.readFileSync(path.join(ROOT,"vercel.json"),"utf8"));
 const cab=Object.fromEntries(cfg.headers.find(h=>h.source==="/(.*)").headers.map(h=>[h.key,h.value]));
-const html=fs.readFileSync(path.join(ROOT,"dist","index.html"));
+const DIST=path.join(ROOT,"dist");
+const TIPOS={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8",".map":"application/json",".json":"application/json",".svg":"image/svg+xml",".png":"image/png",".webmanifest":"application/manifest+json"};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
+/* serve dist/ inteiro com os cabeçalhos do vercel.json, como em produção */
 const srv=http.createServer((req,res)=>{
-  res.writeHead(200,Object.assign({"Content-Type":"text/html; charset=utf-8"},cab));
-  res.end(html);
+  const rel=decodeURIComponent((req.url||"/").split("?")[0]);
+  let arq=path.normalize(path.join(DIST,rel==="/"?"index.html":rel));
+  if(!arq.startsWith(DIST)||!fs.existsSync(arq)||fs.statSync(arq).isDirectory()) arq=path.join(DIST,"index.html");
+  res.writeHead(200,Object.assign({"Content-Type":TIPOS[path.extname(arq)]||"application/octet-stream"},cab));
+  res.end(fs.readFileSync(arq));
 });
 srv.listen(0,"127.0.0.1",async()=>{
   const url="http://127.0.0.1:"+srv.address().port+"/";

@@ -6,7 +6,7 @@ const errs=[], js=[];
 let antes="{}";
 const vc=new VirtualConsole();
 vc.on("jsdomError",e=>js.push("JS ERROR: "+e.message));
-const html=fs.readFileSync(require("path").join(__dirname,"..","dist","index.html"),"utf8");
+const html=fs.readFileSync(require("path").join(__dirname,"..","build","test.html"),"utf8");
 let origem=0;
 function boot(storage){
   // o storage precisa existir ANTES do script rodar, e cada boot usa uma

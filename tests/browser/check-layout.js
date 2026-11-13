@@ -6,7 +6,7 @@ const pup=require("puppeteer-core");
     const p=await b.newPage();
     const errs=[]; p.on("pageerror",e=>errs.push(e.message));
     await p.setViewport({width:w,height:h});
-    await p.goto("file://"+require("path").join(__dirname,"..","..","dist","index.html"),{waitUntil:"domcontentloaded"});
+    await p.goto(process.env.CQ_URL||"http://localhost:4173/",{waitUntil:"networkidle0"});
     await new Promise(r=>setTimeout(r,700));
     await p.click('[data-act="exam"][data-exam="az900"]');
     await new Promise(r=>setTimeout(r,400));

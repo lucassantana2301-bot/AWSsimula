@@ -21,9 +21,10 @@ const PALAVRA_QTD: Record<number, RegExp> = { 2: /\b(DUAS|DOIS)\b/, 3: /\b(TRÊS
 function parseLista<T>(schema: z.ZodType<T>, dado: unknown, onde: string, out: Problema[]): T[] {
   if (!Array.isArray(dado)) { out.push({ onde, msg: "deveria ser uma lista" }); return []; }
   const ok: T[] = [];
-  dado.forEach((item, i) => {
+  dado.forEach((item: unknown, i) => {
     const r = schema.safeParse(item);
-    const rotulo = `${onde}[${(item as { id?: string })?.id ?? i}]`;
+    const idItem = typeof item === "object" && item !== null && "id" in item ? String(item.id) : String(i);
+    const rotulo = `${onde}[${idItem}]`;
     if (r.success) ok.push(r.data);
     else for (const iss of r.error.issues) out.push({ onde: rotulo + (iss.path.length ? "." + iss.path.join(".") : ""), msg: iss.message });
   });
@@ -34,11 +35,11 @@ export function validarConteudo(raw: RawBundle): Problema[] {
   const p: Problema[] = [];
   const exams: Exam[] = parseLista(ExamSchema, raw.exams, "exams", p);
   for (const [nome, schema, dado] of [["catalogo", CatalogoSchema, raw.catalogo], ["diagrams", DiagramsSchema, raw.diagrams]] as const) {
-    const r = (schema as z.ZodType).safeParse(dado);
+    const r = schema.safeParse(dado);
     if (!r.success) for (const iss of r.error.issues) p.push({ onde: `${nome}.${iss.path.join(".")}`, msg: iss.message });
   }
   parseLista(EquivSchema, raw.equiv, "equiv", p);
-  const diagramas = new Set(Object.keys((raw.diagrams ?? {}) as object));
+  const diagramas = new Set(typeof raw.diagrams === "object" && raw.diagrams !== null ? Object.keys(raw.diagrams) : []);
   const exameIds = new Set(exams.map((e) => e.id));
   const vistos = new Map<string, string>();
   const unico = (id: string, onde: string): void => {
@@ -48,8 +49,11 @@ export function validarConteudo(raw: RawBundle): Problema[] {
 
   const todasFichas: Ficha[] = [];
   for (const [ex, c] of Object.entries(raw.porExame)) {
-    if (!exameIds.has(ex)) { p.push({ onde: `exams/${ex}`, msg: "pasta de prova sem exame correspondente" }); continue; }
-    const e = exams.find((x) => x.id === ex)!;
+    const e = exams.find((x) => x.id === ex);
+    if (!e) {
+      p.push({ onde: `exams/${ex}`, msg: "pasta de prova sem exame correspondente" });
+      continue;
+    }
     const doms = new Set(e.domains.map((d) => d.id));
     const qs: Question[] = parseLista(QuestionSchema, c.questions, `${ex}/questions`, p);
     const fs: Ficha[] = parseLista(FichaSchema, c.fichas, `${ex}/fichas`, p);

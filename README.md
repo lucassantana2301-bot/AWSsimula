@@ -4,14 +4,26 @@ Estudo para certificações Microsoft Azure e AWS, pelo guia oficial de cada exa
 
 Feito para estudar e para compartilhar: roda inteiro no navegador, sem conta e sem servidor.
 
+## Desenvolvimento
+
+Requer Node 22.
+
+```bash
+npm ci            # instala
+npm run dev       # servidor local com recarga
+npm run verify    # tudo que o CI roda: tipos, lint, formatação, conteúdo, testes, build, orçamento, navegador
+```
+
+Arquitetura e decisões: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) e [`docs/adr/`](docs/adr/). Conteúdo vive em `content/` como JSON validado por schema.
+
 ## O que tem dentro
 
-| Exame | Fichas | Questões |
-|---|---|---|
-| AZ-900 Azure Fundamentals | 10 | 44 |
-| AZ-104 Azure Administrator | 8 | 35 |
-| CLF-C02 AWS Cloud Practitioner | 12 | 52 |
-| SAA-C03 AWS Solutions Architect Associate | 10 | 40 |
+| Exame                                     | Fichas | Questões |
+| ----------------------------------------- | ------ | -------- |
+| AZ-900 Azure Fundamentals                 | 10     | 44       |
+| AZ-104 Azure Administrator                | 8      | 35       |
+| CLF-C02 AWS Cloud Practitioner            | 12     | 52       |
+| SAA-C03 AWS Solutions Architect Associate | 10     | 40       |
 
 No total: 51 fichas (cerca de 310 minutos de leitura), 26 aulas de 90 segundos, 399 questões com explicação para cada alternativa errada, 308 cartões de memorização com revisão espaçada e 25 baralhos de classificação, guia com 121 serviços AWS e 30 duelos.
 

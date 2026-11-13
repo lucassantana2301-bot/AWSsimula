@@ -1858,7 +1858,7 @@
       },
       {
         "t": "p",
-        "x": "O histórico de eventos do console é gratuito, mas guarda só eventos de gerenciamento dos últimos 90 dias, por região. Retenção longa, eventos de dados e entrega em bucket exigem criar uma trilha ou um armazenamento de dados de eventos do CloudTrail Lake."
+        "x": "O histórico de eventos do console é gratuito, mas guarda só eventos de gerenciamento dos últimos 90 dias, por região. Retenção longa, eventos de dados e entrega em bucket exigem criar uma trilha. (O CloudTrail Lake, outra opção de consulta, não aceita clientes novos desde maio de 2026.)"
       },
       {
         "t": "p",

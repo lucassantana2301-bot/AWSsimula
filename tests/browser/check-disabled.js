@@ -2,7 +2,7 @@ const pup=require("puppeteer-core");
 (async()=>{
   const b=await pup.launch({executablePath:process.env.CHROME_PATH||"/usr/bin/google-chrome",args:["--no-sandbox","--disable-dev-shm-usage"]});
   const p=await b.newPage(); await p.setViewport({width:1240,height:1000});
-  await p.goto("file://"+require("path").join(__dirname,"..","..","dist","index.html"),{waitUntil:"domcontentloaded"});
+  await p.goto(process.env.CQ_URL||"http://localhost:4173/",{waitUntil:"networkidle0"});
   await new Promise(r=>setTimeout(r,700));
   await p.click('[data-act="exam"][data-exam="az900"]');
   await new Promise(r=>setTimeout(r,400));

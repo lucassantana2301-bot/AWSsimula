@@ -19,9 +19,14 @@ describe("conteúdo", () => {
   });
 
   it("detecta gabarito quebrado (o validador não é permissivo)", () => {
-    const q = (raw.porExame["saa"]!.questions as Array<Record<string, unknown>>).find((x) => x["type"] === "single")!;
-    const quebrado = { ...raw, porExame: { ...raw.porExame, saa: { ...raw.porExame["saa"]!, questions: [{ ...q, ans: ["Z"] }] } } };
-    const msgs = validarConteudo(quebrado).map((x) => x.msg).join("\n");
+    const saa = raw.porExame["saa"];
+    if (!saa || !Array.isArray(saa.questions)) throw new Error("conteúdo do SAA ausente");
+    const q: unknown = saa.questions.find((x: unknown) => typeof x === "object" && x !== null && "type" in x && x.type === "single");
+    if (typeof q !== "object" || q === null) throw new Error("nenhuma questão single no SAA");
+    const quebrado = { ...raw, porExame: { ...raw.porExame, saa: { ...saa, questions: [{ ...q, ans: ["Z"] }] } } };
+    const msgs = validarConteudo(quebrado)
+      .map((x) => x.msg)
+      .join("\n");
     expect(msgs).toMatch(/gabarito|ans/);
   });
 });

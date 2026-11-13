@@ -1,1 +1,3565 @@
-[]
+[
+  {
+    "id": "dl-s3-ebs-efs",
+    "titulo": "S3, EBS ou EFS?",
+    "cat": "armazenamento",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três guardam dados, mas de jeitos diferentes. A pergunta que decide: o dado é um objeto acessado pela internet (S3), o disco de uma instância (EBS) ou uma pasta compartilhada por várias instâncias ao mesmo tempo (EFS)?",
+    "cols": [
+      {
+        "rot": "Amazon S3",
+        "id": "s3"
+      },
+      {
+        "rot": "Amazon EBS",
+        "id": "ebs"
+      },
+      {
+        "rot": "Amazon EFS",
+        "id": "efs"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Tipo de armazenamento",
+        "v": [
+          "Objeto (arquivo + metadados em bucket)",
+          "Bloco (disco virtual)",
+          "Arquivo (sistema de arquivos NFS)"
+        ]
+      },
+      {
+        "c": "Como acessa",
+        "v": [
+          "API/HTTPS, de qualquer lugar",
+          "Montado como disco em uma instância EC2",
+          "Montado como pasta por muitas instâncias"
+        ]
+      },
+      {
+        "c": "Quem usa ao mesmo tempo",
+        "v": [
+          "Qualquer cliente com permissão",
+          "Uma instância (exceção: Multi-Attach)",
+          "Milhares de instâncias e contêineres"
+        ]
+      },
+      {
+        "c": "Alcance",
+        "v": [
+          "Regional (várias AZs, na maioria das classes)",
+          "Uma zona de disponibilidade",
+          "Regional (ou uma AZ, se você escolher)"
+        ]
+      },
+      {
+        "c": "Escala",
+        "v": [
+          "Praticamente ilimitado",
+          "Você escolhe o tamanho do volume",
+          "Cresce e encolhe sozinho"
+        ]
+      },
+      {
+        "c": "Sistema operacional",
+        "v": [
+          "Não depende de SO",
+          "Linux e Windows",
+          "Linux (NFS); para Windows, use FSx"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "GB guardado + requisições + transferência",
+          "GB provisionado (e IOPS/vazão, se houver)",
+          "GB usado, por classe (+ vazão, conforme o modo)"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "hospedar site estático com imagens acessadas pela internet",
+        "r": 0
+      },
+      {
+        "s": "disco de inicialização (raiz) de uma instância EC2",
+        "r": 1
+      },
+      {
+        "s": "várias instâncias Linux precisam ler e gravar a mesma pasta",
+        "r": 2
+      },
+      {
+        "s": "guardar backups e logs com regras de ciclo de vida para Glacier",
+        "r": 0
+      },
+      {
+        "s": "banco de dados instalado na EC2 precisa de baixa latência em disco",
+        "r": 1
+      },
+      {
+        "s": "sistema de arquivos NFS compartilhado entre zonas de disponibilidade",
+        "r": 2
+      }
+    ],
+    "analogia": "S3 é um guarda-volumes da rodoviária: você deixa a mala e pega com o tíquete, de onde estiver. EBS é o HD do seu notebook. EFS é a pasta compartilhada da rede do escritório, que todo mundo abre ao mesmo tempo.",
+    "pegadinha": "Achar que o EBS pode ser compartilhado por várias instâncias em AZs diferentes. O volume EBS vive em uma única AZ e, em geral, se liga a uma instância por vez (o Multi-Attach existe só nos volumes io1 e io2, para até 16 instâncias Nitro na mesma AZ). Pasta compartilhada entre instâncias Linux é EFS.",
+    "src": [
+      {
+        "t": "AWS: O que é o Amazon S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon EBS",
+        "u": "https://docs.aws.amazon.com/ebs/latest/userguide/what-is-ebs.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon EFS",
+        "u": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-ec2-lambda-fargate",
+    "titulo": "EC2, Lambda ou Fargate?",
+    "cat": "computacao",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três rodam seu código. A pergunta que decide: você quer cuidar do servidor (EC2), só mandar uma função curta que roda quando há evento (Lambda) ou rodar contêineres sem administrar servidores (Fargate)?",
+    "cols": [
+      {
+        "rot": "Amazon EC2",
+        "id": "ec2"
+      },
+      {
+        "rot": "AWS Lambda",
+        "id": "lambda"
+      },
+      {
+        "rot": "AWS Fargate",
+        "id": "fargate"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que você entrega",
+        "v": [
+          "Uma máquina virtual inteira",
+          "Uma função (código + dependências)",
+          "Uma imagem de contêiner"
+        ]
+      },
+      {
+        "c": "Quem gerencia o SO",
+        "v": [
+          "Você (patches, atualizações)",
+          "AWS",
+          "AWS"
+        ]
+      },
+      {
+        "c": "Como é acionado",
+        "v": [
+          "Fica ligado até você desligar",
+          "Por evento ou requisição",
+          "Tarefa ou serviço do ECS/EKS"
+        ]
+      },
+      {
+        "c": "Duração",
+        "v": [
+          "Sem limite",
+          "Até 15 minutos por execução",
+          "Sem limite (processo longo ok)"
+        ]
+      },
+      {
+        "c": "Escala",
+        "v": [
+          "Com Auto Scaling, que você configura",
+          "Automática, por requisição",
+          "Por número de tarefas/pods"
+        ]
+      },
+      {
+        "c": "Controle do hardware",
+        "v": [
+          "Total: tipo de instância, GPU, SO",
+          "No padrão, só memória (CPU acompanha)",
+          "vCPU e memória da tarefa"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Tempo ligado da instância",
+          "Requisições + duração × memória",
+          "vCPU e memória pelo tempo de uso"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "redimensionar uma imagem sempre que ela chega a um bucket S3",
+        "r": 1
+      },
+      {
+        "s": "precisa de acesso total ao sistema operacional e software legado",
+        "r": 0
+      },
+      {
+        "s": "rodar contêineres no ECS sem provisionar nem gerenciar instâncias",
+        "r": 2
+      },
+      {
+        "s": "código roda só alguns segundos, poucas vezes por dia",
+        "r": 1
+      },
+      {
+        "s": "processo que leva horas, empacotado em contêiner, sem servidor para gerenciar",
+        "r": 2
+      },
+      {
+        "s": "instalar um agente específico no kernel e escolher o tipo de máquina",
+        "r": 0
+      }
+    ],
+    "analogia": "EC2 é ter carro próprio: você escolhe, abastece e leva na oficina. Lambda é chamar um app de corrida para um trajeto curto: paga só a viagem. Fargate é alugar uma van com motorista para levar sua carga (o contêiner) pelo tempo que precisar.",
+    "pegadinha": "Escolher Lambda para trabalho que demora mais de 15 minutos. Esse é o limite máximo de uma execução; para processo longo sem gerenciar servidor, a resposta costuma ser Fargate (ou AWS Batch). Outro erro: achar que Fargate é um orquestrador. Ele é o motor que roda tarefas do ECS ou pods do EKS.",
+    "src": [
+      {
+        "t": "AWS: O que é o AWS Lambda",
+        "u": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html"
+      },
+      {
+        "t": "AWS: Fargate no Amazon ECS",
+        "u": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon EC2",
+        "u": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-ecs-eks",
+    "titulo": "ECS ou EKS?",
+    "cat": "conteineres",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os dois orquestram contêineres (decidem onde e quantos rodam). A pergunta que decide: você precisa de Kubernetes (EKS) ou quer o jeito mais simples e integrado da própria AWS (ECS)?",
+    "cols": [
+      {
+        "rot": "Amazon ECS",
+        "id": "ecs"
+      },
+      {
+        "rot": "Amazon EKS",
+        "id": "eks"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Tecnologia",
+        "v": [
+          "Orquestrador próprio da AWS",
+          "Kubernetes gerenciado (padrão aberto)"
+        ]
+      },
+      {
+        "c": "Onde roda os contêineres",
+        "v": [
+          "EC2, Fargate ou servidor próprio (ECS Anywhere)",
+          "EC2, Fargate ou nós híbridos"
+        ]
+      },
+      {
+        "c": "Curva de aprendizado",
+        "v": [
+          "Menor: conceitos de tarefa e serviço",
+          "Maior: pods, deployments, kubectl"
+        ]
+      },
+      {
+        "c": "Portabilidade",
+        "v": [
+          "Específico da AWS",
+          "Mesmo Kubernetes de outras nuvens e on-premises"
+        ]
+      },
+      {
+        "c": "Ferramentas",
+        "v": [
+          "Console, CLI, integração nativa AWS",
+          "Ecossistema Kubernetes (Helm, kubectl)"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Orquestração sem custo; paga a computação",
+          "Taxa por cluster por hora + computação"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "a empresa já usa Kubernetes e quer levar os manifestos para a AWS",
+        "r": 1
+      },
+      {
+        "s": "orquestrar contêineres do jeito mais simples, sem aprender Kubernetes",
+        "r": 0
+      },
+      {
+        "s": "evitar a taxa por hora cobrada por cluster (plano de controle)",
+        "r": 0
+      },
+      {
+        "s": "usar Helm charts e kubectl",
+        "r": 1
+      },
+      {
+        "s": "mesma plataforma de contêineres na nuvem e no data center, com Kubernetes",
+        "r": 1
+      }
+    ],
+    "analogia": "ECS é a cozinha do restaurante com o método da casa: simples para quem trabalha lá. EKS é seguir o receituário internacional (Kubernetes): dá mais trabalho aprender, mas qualquer chef de fora já conhece.",
+    "pegadinha": "Achar que Fargate concorre com ECS e EKS. Fargate é onde os contêineres rodam (sem servidor), e funciona com os dois. A escolha ECS x EKS é sobre o orquestrador; a escolha EC2 x Fargate é sobre quem cuida das máquinas.",
+    "src": [
+      {
+        "t": "AWS: Escolher um serviço de contêiner",
+        "u": "https://docs.aws.amazon.com/decision-guides/latest/decision-guides/choosing-aws-container-service.html"
+      },
+      {
+        "t": "AWS: Preços do Amazon EKS",
+        "u": "https://aws.amazon.com/eks/pricing/"
+      }
+    ]
+  },
+  {
+    "id": "dl-sqs-sns-eventbridge",
+    "titulo": "SQS, SNS ou EventBridge?",
+    "cat": "integracao",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três levam mensagens entre partes de um sistema. A pergunta que decide: a mensagem deve esperar na fila até alguém processar (SQS), ser copiada na hora para vários assinantes (SNS) ou ser roteada por regras conforme o conteúdo do evento (EventBridge)?",
+    "cols": [
+      {
+        "rot": "Amazon SQS",
+        "id": "sqs"
+      },
+      {
+        "rot": "Amazon SNS",
+        "id": "sns"
+      },
+      {
+        "rot": "Amazon EventBridge",
+        "id": "eventbridge"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Modelo",
+        "v": [
+          "Fila (um consumidor pega cada mensagem)",
+          "Publicar/assinar (pub/sub)",
+          "Barramento de eventos com regras"
+        ]
+      },
+      {
+        "c": "Entrega",
+        "v": [
+          "Consumidor busca (polling)",
+          "Empurra para todos os assinantes",
+          "Empurra para os destinos da regra"
+        ]
+      },
+      {
+        "c": "Guarda a mensagem?",
+        "v": [
+          "Sim, até ser processada (com prazo)",
+          "Não fica para buscar depois (só reentrega)",
+          "Não por padrão (há arquivo e replay)"
+        ]
+      },
+      {
+        "c": "Filtragem",
+        "v": [
+          "Não filtra; consumidor decide",
+          "Política de filtro por assinatura",
+          "Regras por qualquer campo do evento"
+        ]
+      },
+      {
+        "c": "Fontes típicas",
+        "v": [
+          "Sua aplicação",
+          "Sua aplicação e serviços AWS",
+          "Serviços AWS, SaaS e sua aplicação"
+        ]
+      },
+      {
+        "c": "Destinos típicos",
+        "v": [
+          "Workers, Lambda",
+          "E-mail, SMS, HTTP, SQS, Lambda",
+          "Lambda, Step Functions, SQS, APIs"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Por requisição",
+          "Por publicação e entrega",
+          "Por evento publicado; eventos de serviços AWS grátis"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "desacoplar e absorver picos: pedidos esperam até o worker processar",
+        "r": 0
+      },
+      {
+        "s": "enviar a mesma notificação para e-mail, SMS e várias filas ao mesmo tempo",
+        "r": 1
+      },
+      {
+        "s": "reagir a eventos de um parceiro SaaS com regras por conteúdo",
+        "r": 2
+      },
+      {
+        "s": "agendar uma função Lambda para rodar todo dia às 8h (agendador)",
+        "r": 2
+      },
+      {
+        "s": "worker busca mensagens de uma fila FIFO, na ordem e sem duplicar",
+        "r": 0
+      },
+      {
+        "s": "enviar alerta por SMS direto para o celular da equipe de plantão",
+        "r": 1
+      }
+    ],
+    "analogia": "SQS é a fila de senhas do banco: cada senha é chamada por um caixa. SNS é o grupo de WhatsApp: mandou, todo mundo recebe. EventBridge é a central de triagem dos Correios: lê o endereço e manda cada pacote para o destino certo.",
+    "pegadinha": "Usar SNS quando o requisito é não perder mensagem se o consumidor estiver fora do ar. O SNS não guarda mensagem para buscar depois; quem guarda é o SQS. O padrão de prova \"fan-out\" combina os dois: SNS publica e várias filas SQS assinam.",
+    "src": [
+      {
+        "t": "AWS: SQS, SNS ou EventBridge?",
+        "u": "https://docs.aws.amazon.com/decision-guides/latest/sns-or-sqs-or-eventbridge/sns-or-sqs-or-eventbridge.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon SQS",
+        "u": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-cloudwatch-cloudtrail-config",
+    "titulo": "CloudWatch, CloudTrail ou Config?",
+    "cat": "gestao",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três \"vigiam\" a conta, e o nome parecido confunde. A pergunta que decide: você quer saber como o recurso está se comportando (CloudWatch), quem fez o quê (CloudTrail) ou como a configuração estava e se segue as regras (Config)?",
+    "cols": [
+      {
+        "rot": "Amazon CloudWatch",
+        "id": "cloudwatch"
+      },
+      {
+        "rot": "AWS CloudTrail",
+        "id": "cloudtrail"
+      },
+      {
+        "rot": "AWS Config",
+        "id": "config"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Pergunta que responde",
+        "v": [
+          "Como está o desempenho agora?",
+          "Quem fez qual chamada de API, e quando?",
+          "Como estava a configuração e está conforme?"
+        ]
+      },
+      {
+        "c": "O que registra",
+        "v": [
+          "Métricas, logs e alarmes",
+          "Eventos de API e de console",
+          "Estado e histórico de configuração"
+        ]
+      },
+      {
+        "c": "Ação típica",
+        "v": [
+          "Alarme dispara e escala ou avisa",
+          "Auditoria e investigação",
+          "Regra marca recurso não conforme"
+        ]
+      },
+      {
+        "c": "Exemplo",
+        "v": [
+          "CPU da EC2 passou de 80%",
+          "Usuário X apagou o bucket às 14h",
+          "Bucket ficou público; viola a regra"
+        ]
+      },
+      {
+        "c": "Ligado por padrão?",
+        "v": [
+          "Métricas básicas de muitos serviços",
+          "Histórico de eventos de gestão (90 dias)",
+          "Não; você ativa o gravador"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Métricas, logs, alarmes e painéis",
+          "1ª cópia dos eventos de gestão grátis; resto pago",
+          "Itens de configuração e avaliações"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "criar alarme quando a CPU de uma instância passar do limite",
+        "r": 0
+      },
+      {
+        "s": "descobrir qual usuário encerrou uma instância ontem",
+        "r": 1
+      },
+      {
+        "s": "ver a configuração completa que um grupo de segurança tinha há duas semanas",
+        "r": 2
+      },
+      {
+        "s": "centralizar logs da aplicação e montar painel",
+        "r": 0
+      },
+      {
+        "s": "registrar para auditoria todas as chamadas de API feitas na conta",
+        "r": 1
+      },
+      {
+        "s": "verificar continuamente se todos os volumes EBS estão criptografados",
+        "r": 2
+      }
+    ],
+    "analogia": "CloudWatch é o painel do carro (velocidade, temperatura, luz de alerta). CloudTrail é a câmera do condomínio: mostra quem entrou e o que fez. Config é a vistoria: registra como o carro estava e se está dentro das normas.",
+    "pegadinha": "Escolher CloudWatch para \"quem fez a alteração\". CloudWatch mede desempenho e guarda logs da aplicação; quem registra a identidade por trás de cada chamada de API é o CloudTrail. E quando a pergunta é \"o recurso está conforme a regra\" ou \"como estava antes\", a resposta é Config.",
+    "src": [
+      {
+        "t": "AWS: O que é o CloudWatch",
+        "u": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html"
+      },
+      {
+        "t": "AWS: O que é o CloudTrail",
+        "u": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+      },
+      {
+        "t": "AWS: O que é o AWS Config",
+        "u": "https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-sg-nacl",
+    "titulo": "Grupo de segurança ou ACL de rede?",
+    "cat": "rede",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os dois são filtros de tráfego dentro da VPC. A pergunta que decide: a proteção é na porta de cada instância (grupo de segurança) ou na entrada da sub-rede inteira, com possibilidade de bloquear um IP (ACL de rede)?",
+    "cols": [
+      {
+        "rot": "Grupo de segurança",
+        "id": "security-groups"
+      },
+      {
+        "rot": "ACL de rede",
+        "id": "nacl"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Onde atua",
+        "v": [
+          "Instância (interface de rede)",
+          "Sub-rede inteira"
+        ]
+      },
+      {
+        "c": "Estado",
+        "v": [
+          "Stateful: resposta volta sozinha",
+          "Stateless: libere ida e volta"
+        ]
+      },
+      {
+        "c": "Tipos de regra",
+        "v": [
+          "Só permitir (allow)",
+          "Permitir e negar (allow e deny)"
+        ]
+      },
+      {
+        "c": "Ordem das regras",
+        "v": [
+          "Todas avaliadas juntas",
+          "Pela numeração; a primeira que casa vale"
+        ]
+      },
+      {
+        "c": "Padrão",
+        "v": [
+          "Novo: nega entrada, libera saída",
+          "Padrão libera tudo; personalizada nega tudo"
+        ]
+      },
+      {
+        "c": "Referência a outro grupo",
+        "v": [
+          "Sim, pode citar outro grupo",
+          "Não; só blocos de IP (CIDR)"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "bloquear um endereço IP específico que está atacando a sub-rede",
+        "r": 1
+      },
+      {
+        "s": "permitir que só as instâncias do grupo web acessem o banco na porta 3306",
+        "r": 0
+      },
+      {
+        "s": "regra precisa de negar (deny) explícito",
+        "r": 1
+      },
+      {
+        "s": "tráfego de resposta liberado automaticamente sem regra de saída",
+        "r": 0
+      },
+      {
+        "s": "filtro sem estado aplicado a todas as instâncias da sub-rede",
+        "r": 1
+      }
+    ],
+    "analogia": "A ACL de rede é a portaria do condomínio: vale para todos os prédios da sub-rede e pode ter lista de barrados. O grupo de segurança é a fechadura do seu apartamento: só abre para quem você autorizou, e quem saiu volta sem pedir de novo.",
+    "pegadinha": "Tentar bloquear um IP com grupo de segurança. Grupo de segurança não tem regra de negar; para isso use ACL de rede. Outra armadilha: por ser stateless, a ACL precisa liberar também as portas efêmeras de retorno, senão a resposta não volta.",
+    "src": [
+      {
+        "t": "AWS: Comparar grupos de segurança e ACLs de rede",
+        "u": "https://docs.aws.amazon.com/vpc/latest/userguide/infrastructure-security.html"
+      },
+      {
+        "t": "AWS: ACLs de rede",
+        "u": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-rds-aurora-dynamodb",
+    "titulo": "RDS, Aurora ou DynamoDB?",
+    "cat": "banco",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três são bancos gerenciados. A pergunta que decide: os dados são relacionais com SQL (RDS ou Aurora) ou chave-valor com escala gigante e latência baixa (DynamoDB)? Entre os relacionais: precisa de mais desempenho e disponibilidade nativa (Aurora)?",
+    "cols": [
+      {
+        "rot": "Amazon RDS",
+        "id": "rds"
+      },
+      {
+        "rot": "Amazon Aurora",
+        "id": "aurora"
+      },
+      {
+        "rot": "Amazon DynamoDB",
+        "id": "dynamodb"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Modelo de dados",
+        "v": [
+          "Relacional (SQL)",
+          "Relacional (SQL)",
+          "NoSQL chave-valor e documento"
+        ]
+      },
+      {
+        "c": "Motores",
+        "v": [
+          "MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, Db2",
+          "Compatível com MySQL e PostgreSQL",
+          "Próprio da AWS"
+        ]
+      },
+      {
+        "c": "Servidor",
+        "v": [
+          "Você escolhe a instância",
+          "Instância ou Aurora Serverless",
+          "Sem servidor"
+        ]
+      },
+      {
+        "c": "Alta disponibilidade",
+        "v": [
+          "Multi-AZ (opcional)",
+          "Armazenamento com 6 cópias em 3 AZs",
+          "Dados replicados em 3 AZs"
+        ]
+      },
+      {
+        "c": "Escala de leitura",
+        "v": [
+          "Réplicas de leitura",
+          "Até 15 réplicas no mesmo volume",
+          "Automática; DAX para cache"
+        ]
+      },
+      {
+        "c": "Global",
+        "v": [
+          "Réplica entre regiões",
+          "Aurora Global Database",
+          "Tabelas globais (multirregião)"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Instância + armazenamento",
+          "Instância ou ACU + armazenamento (+ E/S no Standard)",
+          "Por leitura/escrita ou capacidade + GB"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "migrar banco Oracle ou SQL Server mantendo o mesmo motor",
+        "r": 0
+      },
+      {
+        "s": "compatível com MySQL, com 6 cópias dos dados em 3 AZs e volume que cresce sozinho",
+        "r": 1
+      },
+      {
+        "s": "carrinho de compras com milhões de acessos e latência de milissegundos",
+        "r": 2
+      },
+      {
+        "s": "esquema flexível em formato chave-valor, sem servidor",
+        "r": 2
+      },
+      {
+        "s": "PostgreSQL com até 15 réplicas de leitura compartilhando o armazenamento",
+        "r": 1
+      },
+      {
+        "s": "banco relacional gerenciado com motor MariaDB",
+        "r": 0
+      }
+    ],
+    "analogia": "RDS é alugar um apartamento padrão já mobiliado. Aurora é o mesmo apartamento num prédio de alto padrão, com gerador e elevador reserva. DynamoDB é um armário de chaves gigante: cada gaveta tem uma etiqueta e você acha qualquer coisa na hora, mas não faz cruzamento entre gavetas.",
+    "pegadinha": "Escolher DynamoDB quando o enunciado pede junções (JOIN) e consultas SQL complexas; isso é relacional. E escolher Aurora para Oracle ou SQL Server: Aurora só é compatível com MySQL e PostgreSQL.",
+    "src": [
+      {
+        "t": "AWS: O que é o Amazon RDS",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html"
+      },
+      {
+        "t": "AWS: Visão geral do Aurora",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html"
+      },
+      {
+        "t": "AWS: O que é o DynamoDB",
+        "u": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-alb-nlb-gwlb",
+    "titulo": "ALB, NLB ou GWLB?",
+    "cat": "rede",
+    "provas": [
+      "saa"
+    ],
+    "intro": "Os três são tipos do Elastic Load Balancing. A pergunta que decide: precisa olhar o conteúdo HTTP (ALB), precisa de TCP/UDP muito rápido com IP fixo (NLB) ou precisa passar o tráfego por appliances de segurança de terceiros (GWLB)?",
+    "cols": [
+      {
+        "rot": "Application Load Balancer",
+        "id": "elb"
+      },
+      {
+        "rot": "Network Load Balancer",
+        "id": "elb"
+      },
+      {
+        "rot": "Gateway Load Balancer",
+        "id": "elb"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Camada OSI",
+        "v": [
+          "Camada 7 (aplicação)",
+          "Camada 4 (transporte)",
+          "Camada 3 (rede)"
+        ]
+      },
+      {
+        "c": "Protocolos",
+        "v": [
+          "HTTP, HTTPS, gRPC, WebSocket",
+          "TCP, UDP, TLS",
+          "IP, encapsulado em GENEVE"
+        ]
+      },
+      {
+        "c": "Roteia por",
+        "v": [
+          "Caminho, host, cabeçalho, query",
+          "Porta e protocolo",
+          "Fluxo, para appliances"
+        ]
+      },
+      {
+        "c": "IP fixo",
+        "v": [
+          "Não (use nome DNS)",
+          "Sim, um IP estático por AZ",
+          "Não se aplica (usa endpoint)"
+        ]
+      },
+      {
+        "c": "Destinos",
+        "v": [
+          "Instâncias, IPs, Lambda",
+          "Instâncias, IPs, ALB",
+          "Appliances virtuais (firewalls)"
+        ]
+      },
+      {
+        "c": "Uso típico",
+        "v": [
+          "Sites e microsserviços",
+          "Jogos, IoT, latência muito baixa",
+          "Firewall e inspeção de terceiros"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Hora + LCU (unidades de capacidade)",
+          "Hora + NLCU",
+          "Hora + GLCU"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "rotear /api para um grupo e /imagens para outro",
+        "r": 0
+      },
+      {
+        "s": "cliente exige liberar no firewall um IP estático do balanceador",
+        "r": 1
+      },
+      {
+        "s": "inserir firewalls virtuais de terceiros no caminho do tráfego",
+        "r": 2
+      },
+      {
+        "s": "balancear tráfego UDP de um servidor de jogos",
+        "r": 1
+      },
+      {
+        "s": "ter uma função Lambda como destino do balanceador",
+        "r": 0
+      },
+      {
+        "s": "protocolo GENEVE na porta 6081",
+        "r": 2
+      }
+    ],
+    "analogia": "ALB é o recepcionista que lê o assunto da carta e manda para o setor certo. NLB é a esteira de triagem rápida que só olha o CEP. GWLB é o raio-x do aeroporto: todo volume passa pela inspeção antes de seguir.",
+    "pegadinha": "Escolher ALB quando o requisito é IP estático ou UDP. ALB trabalha com HTTP/HTTPS e não tem IP fixo; IP estático por AZ e UDP apontam para NLB. GWLB não é para sites: só aparece quando há appliances de segurança de terceiros.",
+    "src": [
+      {
+        "t": "AWS: Recursos do Elastic Load Balancing",
+        "u": "https://aws.amazon.com/elasticloadbalancing/features/"
+      },
+      {
+        "t": "AWS: O que é o Gateway Load Balancer",
+        "u": "https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/introduction.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-cloudfront-ga-route53",
+    "titulo": "CloudFront, Global Accelerator ou Route 53?",
+    "cat": "rede",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três melhoram o acesso de usuários do mundo todo. A pergunta que decide: quer guardar cópias do conteúdo perto do usuário (CloudFront), levar o tráfego TCP/UDP pela rede da AWS com IPs fixos (Global Accelerator) ou só traduzir nomes e escolher o destino pelo DNS (Route 53)?",
+    "cols": [
+      {
+        "rot": "Amazon CloudFront",
+        "id": "cloudfront"
+      },
+      {
+        "rot": "AWS Global Accelerator",
+        "id": "global-accelerator"
+      },
+      {
+        "rot": "Amazon Route 53",
+        "id": "route53"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que é",
+        "v": [
+          "Rede de entrega de conteúdo (CDN)",
+          "Acelerador de rede global",
+          "Serviço de DNS"
+        ]
+      },
+      {
+        "c": "Faz cache?",
+        "v": [
+          "Sim, nos pontos de presença",
+          "Não",
+          "Não (só respostas DNS)"
+        ]
+      },
+      {
+        "c": "Protocolos",
+        "v": [
+          "HTTP e HTTPS (e WebSocket)",
+          "TCP e UDP",
+          "Consultas DNS"
+        ]
+      },
+      {
+        "c": "Endereço de entrada",
+        "v": [
+          "Nome de domínio (IPs fixos só sob solicitação)",
+          "2 IPs estáticos anycast (IPv4)",
+          "Nome de domínio"
+        ]
+      },
+      {
+        "c": "Failover",
+        "v": [
+          "Grupo de origens (origin failover)",
+          "Rápido, sem depender de cache DNS",
+          "Por verificação de saúde e TTL do DNS"
+        ]
+      },
+      {
+        "c": "Uso típico",
+        "v": [
+          "Site, vídeo, arquivos estáticos",
+          "Jogos, VoIP, apps que exigem IP fixo",
+          "Domínios, roteamento por latência/geo"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Por uso (dados + requisições) ou plano mensal fixo",
+          "Taxa por hora + tráfego acelerado",
+          "Zona hospedada + consultas"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "reduzir latência de imagens e vídeos guardando cópias perto do usuário",
+        "r": 0
+      },
+      {
+        "s": "aplicação UDP global precisa de dois IPs estáticos",
+        "r": 1
+      },
+      {
+        "s": "registrar um domínio e criar registros DNS",
+        "r": 2
+      },
+      {
+        "s": "direcionar usuários do Brasil para São Paulo e da Europa para Frankfurt pelo DNS",
+        "r": 2
+      },
+      {
+        "s": "servir site estático do S3 com HTTPS e cache",
+        "r": 0
+      },
+      {
+        "s": "failover entre regiões sem esperar o cache DNS expirar",
+        "r": 1
+      }
+    ],
+    "analogia": "CloudFront é ter mercadinhos de bairro com estoque dos produtos mais vendidos. Global Accelerator é a via expressa com pedágio: o carro sai da rua comum e anda pela pista rápida até o destino. Route 53 é a lista telefônica que diz o endereço de cada nome.",
+    "pegadinha": "Escolher CloudFront para tráfego UDP ou para app que não é web e pede IP fixo. CloudFront é para HTTP/HTTPS e faz cache; TCP/UDP qualquer com 2 IPs fixos anycast aponta para Global Accelerator. E Route 53 com roteamento por latência não acelera o tráfego: só escolhe o destino na hora da consulta DNS.",
+    "src": [
+      {
+        "t": "AWS: O que é o Global Accelerator",
+        "u": "https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html"
+      },
+      {
+        "t": "AWS: O que é o CloudFront",
+        "u": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"
+      },
+      {
+        "t": "AWS: O que é o Route 53",
+        "u": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-vpn-direct-connect",
+    "titulo": "Site-to-Site VPN ou Direct Connect?",
+    "cat": "rede",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os dois ligam seu data center à AWS. A pergunta que decide: precisa de algo rápido de montar e barato, passando pela internet com criptografia (VPN), ou de um link físico dedicado, com desempenho previsível (Direct Connect)?",
+    "cols": [
+      {
+        "rot": "AWS Site-to-Site VPN",
+        "id": "vpn"
+      },
+      {
+        "rot": "AWS Direct Connect",
+        "id": "direct-connect"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Caminho",
+        "v": [
+          "Internet pública",
+          "Conexão física dedicada, fora da internet"
+        ]
+      },
+      {
+        "c": "Criptografia",
+        "v": [
+          "Sim, IPsec por padrão",
+          "Não por padrão (use MACsec ou VPN por cima)"
+        ]
+      },
+      {
+        "c": "Tempo para ativar",
+        "v": [
+          "Minutos a horas",
+          "Semanas (envolve parceiro e cabo)"
+        ]
+      },
+      {
+        "c": "Desempenho",
+        "v": [
+          "Varia com a internet",
+          "Banda e latência consistentes"
+        ]
+      },
+      {
+        "c": "Redundância",
+        "v": [
+          "2 túneis por conexão",
+          "Exige 2ª conexão ou VPN de reserva"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Hora de conexão + transferência",
+          "Hora de porta + transferência (mais barata)"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "conectar o escritório à VPC ainda hoje, com criptografia, pela internet",
+        "r": 0
+      },
+      {
+        "s": "link privado de alta banda que não passe pela internet pública",
+        "r": 1
+      },
+      {
+        "s": "conexão de reserva barata caso o link dedicado caia",
+        "r": 0
+      },
+      {
+        "s": "transferir grandes volumes todo dia com latência consistente",
+        "r": 1
+      },
+      {
+        "s": "solução de menor custo inicial para ligar a rede local à AWS",
+        "r": 0
+      }
+    ],
+    "analogia": "A VPN é um carro-forte andando pela estrada comum: o conteúdo está protegido, mas pega o trânsito. O Direct Connect é uma estrada particular até a AWS: sem trânsito, mas leva tempo para construir e não vem com carro-forte.",
+    "pegadinha": "Achar que Direct Connect é criptografado por ser privado. Ele não criptografa por padrão; se o enunciado exige criptografia, a resposta é VPN sobre o Direct Connect (ou MACsec). Outro erro: escolher Direct Connect quando a conexão é \"para amanhã\": ele leva semanas.",
+    "src": [
+      {
+        "t": "AWS: Criptografia em trânsito no Direct Connect",
+        "u": "https://docs.aws.amazon.com/directconnect/latest/UserGuide/encryption-in-transit.html"
+      },
+      {
+        "t": "AWS: O que é o Site-to-Site VPN",
+        "u": "https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-kms-hsm-secrets",
+    "titulo": "KMS, CloudHSM ou Secrets Manager?",
+    "cat": "seguranca",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três protegem coisas secretas. A pergunta que decide: você precisa de chaves de criptografia gerenciadas e integradas (KMS), de um HSM dedicado só seu, sob seu controle exclusivo (CloudHSM), ou de guardar e trocar senhas e tokens (Secrets Manager)?",
+    "cols": [
+      {
+        "rot": "AWS KMS",
+        "id": "kms"
+      },
+      {
+        "rot": "AWS CloudHSM",
+        "id": "cloudhsm"
+      },
+      {
+        "rot": "AWS Secrets Manager",
+        "id": "secrets-manager"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que guarda",
+        "v": [
+          "Chaves de criptografia",
+          "Chaves, em HSM dedicado",
+          "Senhas, tokens, chaves de API"
+        ]
+      },
+      {
+        "c": "Hardware",
+        "v": [
+          "HSMs compartilhados gerenciados pela AWS",
+          "HSM dedicado a você (single-tenant)",
+          "Usa KMS para cifrar os segredos"
+        ]
+      },
+      {
+        "c": "Quem controla as chaves",
+        "v": [
+          "AWS opera; você define políticas",
+          "Só você (AWS não acessa)",
+          "AWS opera; você define políticas"
+        ]
+      },
+      {
+        "c": "Integração",
+        "v": [
+          "Nativa com S3, EBS, RDS e outros",
+          "Via APIs padrão (PKCS#11, JCE)",
+          "RDS, Redshift, Lambda para rotação"
+        ]
+      },
+      {
+        "c": "Recurso marcante",
+        "v": [
+          "Rotação automática de chaves",
+          "Controle exclusivo do HSM",
+          "Rotação automática de segredos"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Por chave/mês + requisições",
+          "Por hora de HSM",
+          "Por segredo/mês + chamadas de API"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "criptografar volumes EBS e objetos S3 com chaves gerenciadas",
+        "r": 0
+      },
+      {
+        "s": "conformidade exige HSM dedicado em que a AWS não tem acesso às chaves",
+        "r": 1
+      },
+      {
+        "s": "trocar automaticamente a senha do banco RDS a cada 30 dias",
+        "r": 2
+      },
+      {
+        "s": "tirar a senha do banco do código-fonte da aplicação",
+        "r": 2
+      },
+      {
+        "s": "aplicação usa PKCS#11 com HSM de uso exclusivo",
+        "r": 1
+      },
+      {
+        "s": "controlar com política quem pode usar cada chave de criptografia",
+        "r": 0
+      }
+    ],
+    "analogia": "KMS é o cofre do banco: seguro, e o banco cuida dele. CloudHSM é ter um cofre só seu dentro do banco, e só você tem a combinação. Secrets Manager é o chaveiro que guarda as senhas e troca a fechadura sozinho de tempos em tempos.",
+    "pegadinha": "Escolher CloudHSM só porque pede \"FIPS 140\": os HSMs do KMS também são validados (FIPS 140-3 nível 3). CloudHSM aparece quando o requisito é HSM dedicado (single-tenant) ou controle exclusivo das chaves. E para senha com rotação automática, Secrets Manager, não KMS.",
+    "src": [
+      {
+        "t": "AWS: Visão geral do KMS",
+        "u": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html"
+      },
+      {
+        "t": "AWS: O que é o CloudHSM",
+        "u": "https://docs.aws.amazon.com/cloudhsm/latest/userguide/introduction.html"
+      },
+      {
+        "t": "AWS: O que é o Secrets Manager",
+        "u": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-waf-shield-nfw",
+    "titulo": "WAF, Shield ou Network Firewall?",
+    "cat": "seguranca",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três bloqueiam ataques. A pergunta que decide: o ataque está no conteúdo da requisição web, como injeção de SQL (WAF), é uma enxurrada de tráfego para derrubar o serviço, DDoS (Shield), ou você quer filtrar todo o tráfego que entra e sai da VPC (Network Firewall)?",
+    "cols": [
+      {
+        "rot": "AWS WAF",
+        "id": "waf"
+      },
+      {
+        "rot": "AWS Shield",
+        "id": "shield"
+      },
+      {
+        "rot": "AWS Network Firewall",
+        "id": "network-firewall"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Protege contra",
+        "v": [
+          "Ataques web: injeção SQL, XSS, bots",
+          "DDoS (negação de serviço distribuída)",
+          "Tráfego indesejado na VPC; intrusão"
+        ]
+      },
+      {
+        "c": "Camada",
+        "v": [
+          "7 (HTTP/HTTPS)",
+          "3 e 4 (Standard); 7 com Advanced + WAF",
+          "3 a 7, com estado"
+        ]
+      },
+      {
+        "c": "Onde se aplica",
+        "v": [
+          "CloudFront, ALB, API Gateway, AppSync e outros",
+          "Bordas da AWS e recursos protegidos",
+          "Sub-redes da VPC"
+        ]
+      },
+      {
+        "c": "Regras",
+        "v": [
+          "ACL web: IP, país, taxa, padrões",
+          "Automático; Advanced tem equipe SRT",
+          "Stateful/stateless, domínios, IPS"
+        ]
+      },
+      {
+        "c": "Ativação",
+        "v": [
+          "Você cria e associa",
+          "Standard já vem ativo",
+          "Você implanta endpoints na VPC"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "ACL web + regras + requisições",
+          "Standard grátis; Advanced mensal, 1 ano",
+          "Hora de endpoint + GB processado"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "bloquear injeção de SQL no formulário do site",
+        "r": 0
+      },
+      {
+        "s": "proteção contra DDoS com equipe de resposta 24/7 e proteção de custos",
+        "r": 1
+      },
+      {
+        "s": "filtrar saída da VPC por nome de domínio e inspecionar intrusões",
+        "r": 2
+      },
+      {
+        "s": "limitar requisições por IP (rate limit) na frente do ALB",
+        "r": 0
+      },
+      {
+        "s": "proteção básica contra DDoS sem custo e sem configuração",
+        "r": 1
+      },
+      {
+        "s": "firewall stateful gerenciado para todo o tráfego entre sub-redes",
+        "r": 2
+      }
+    ],
+    "analogia": "WAF é o segurança da porta que confere o que cada visitante carrega. Shield é a barreira da polícia que segura a multidão para não lotar a rua. Network Firewall é a cerca com guarita em volta do condomínio inteiro, controlando quem entra e sai.",
+    "pegadinha": "Escolher Shield para injeção de SQL ou XSS. Shield trata volume (DDoS); conteúdo malicioso da requisição é WAF. Lembre também que o Shield Standard é automático e gratuito; só o Advanced é pago, com compromisso de 1 ano.",
+    "src": [
+      {
+        "t": "AWS: WAF, Shield e Firewall Manager",
+        "u": "https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html"
+      },
+      {
+        "t": "AWS: Preços do Shield",
+        "u": "https://aws.amazon.com/shield/pricing/"
+      },
+      {
+        "t": "AWS: O que é o Network Firewall",
+        "u": "https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-guardduty-inspector-macie-detective",
+    "titulo": "GuardDuty, Inspector, Macie ou Detective?",
+    "cat": "seguranca",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os quatro são de segurança e têm nomes que não dizem nada. A pergunta que decide: quer detectar ameaças ativas (GuardDuty), achar vulnerabilidades no software (Inspector), achar dados sensíveis no S3 (Macie) ou investigar a causa de um achado (Detective)?",
+    "cols": [
+      {
+        "rot": "Amazon GuardDuty",
+        "id": "guardduty"
+      },
+      {
+        "rot": "Amazon Inspector",
+        "id": "inspector"
+      },
+      {
+        "rot": "Amazon Macie",
+        "id": "macie"
+      },
+      {
+        "rot": "Amazon Detective",
+        "id": "detective"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Pergunta que responde",
+        "v": [
+          "Tem alguém atacando agora?",
+          "Meu software tem falha conhecida?",
+          "Tem dado sensível exposto no S3?",
+          "Qual a causa e o alcance do incidente?"
+        ]
+      },
+      {
+        "c": "O que analisa",
+        "v": [
+          "CloudTrail, VPC Flow Logs, DNS e outras fontes",
+          "EC2, imagens no ECR, Lambda",
+          "Objetos e buckets do S3",
+          "Logs e achados, em grafo"
+        ]
+      },
+      {
+        "c": "Resultado",
+        "v": [
+          "Achados de ameaça",
+          "Lista de CVEs e falhas de rede",
+          "Achados de dados sensíveis (CPF, cartão)",
+          "Visualizações para investigar"
+        ]
+      },
+      {
+        "c": "Técnica",
+        "v": [
+          "Aprendizado de máquina e inteligência de ameaças",
+          "Varredura contínua de vulnerabilidades",
+          "Aprendizado de máquina e padrões",
+          "Grafo de comportamento"
+        ]
+      },
+      {
+        "c": "Agentes?",
+        "v": [
+          "Não precisa para o básico",
+          "Usa SSM; há varredura sem agente",
+          "Não",
+          "Não"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Volume de eventos e dados analisados",
+          "Por recurso/imagem avaliado",
+          "Buckets avaliados + objetos monitorados + GB inspecionado",
+          "GB de dados ingeridos"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "detectar instância se comunicando com IP de mineração de criptomoeda",
+        "r": 0
+      },
+      {
+        "s": "verificar imagens de contêiner no ECR em busca de CVEs",
+        "r": 1
+      },
+      {
+        "s": "descobrir quais buckets guardam números de cartão de crédito",
+        "r": 2
+      },
+      {
+        "s": "investigar a causa raiz de um achado do GuardDuty",
+        "r": 3
+      },
+      {
+        "s": "identificar chamadas de API vindas de IP malicioso conhecido",
+        "r": 0
+      },
+      {
+        "s": "avaliar instâncias EC2 quanto a falhas de software e portas expostas",
+        "r": 1
+      },
+      {
+        "s": "localizar dados pessoais (PII) armazenados no S3",
+        "r": 2
+      }
+    ],
+    "analogia": "GuardDuty é o alarme da casa que dispara quando alguém tenta entrar. Inspector é o eletricista que vistoria a fiação procurando defeito. Macie é quem revira as gavetas procurando documentos pessoais largados. Detective é o perito que chega depois e reconstrói o que aconteceu.",
+    "pegadinha": "Trocar GuardDuty por Inspector. GuardDuty detecta comportamento suspeito em logs (ameaça acontecendo); Inspector procura vulnerabilidades no software (porta aberta para ataque futuro). E Macie só olha dados no S3, não em bancos como RDS.",
+    "src": [
+      {
+        "t": "AWS: O que é o GuardDuty",
+        "u": "https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html"
+      },
+      {
+        "t": "AWS: O que é o Inspector",
+        "u": "https://docs.aws.amazon.com/inspector/latest/user/what-is-inspector.html"
+      },
+      {
+        "t": "AWS: O que é o Macie",
+        "u": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html"
+      },
+      {
+        "t": "AWS: O que é o Detective",
+        "u": "https://docs.aws.amazon.com/detective/latest/userguide/what-is-detective.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-iam-identidades",
+    "titulo": "Usuário, grupo, função ou política?",
+    "cat": "seguranca",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "São as peças do AWS IAM e quase todo iniciante mistura. A pergunta que decide: é alguém ou algo com credencial fixa (usuário), um jeito de organizar usuários (grupo), uma identidade que se assume por um tempo (função) ou o documento que diz o que é permitido (política)?",
+    "cols": [
+      {
+        "rot": "Usuário IAM"
+      },
+      {
+        "rot": "Grupo IAM"
+      },
+      {
+        "rot": "Função (role)"
+      },
+      {
+        "rot": "Política"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que é",
+        "v": [
+          "Identidade de uma pessoa ou app",
+          "Conjunto de usuários",
+          "Identidade assumida temporariamente",
+          "Documento JSON de permissões"
+        ]
+      },
+      {
+        "c": "Credenciais",
+        "v": [
+          "Longo prazo: senha e chaves",
+          "Não tem",
+          "Temporárias, geradas pelo STS",
+          "Não tem"
+        ]
+      },
+      {
+        "c": "Pode fazer login?",
+        "v": [
+          "Sim",
+          "Não",
+          "Não; é assumida",
+          "Não"
+        ]
+      },
+      {
+        "c": "Recebe políticas?",
+        "v": [
+          "Sim",
+          "Sim, e repassa aos membros",
+          "Sim",
+          "É a própria permissão"
+        ]
+      },
+      {
+        "c": "Quem usa",
+        "v": [
+          "Uma pessoa ou sistema específico",
+          "Equipes (ex.: Desenvolvedores)",
+          "Serviços AWS, outras contas, SSO",
+          "Anexada a usuário, grupo, função ou recurso"
+        ]
+      },
+      {
+        "c": "Boa prática",
+        "v": [
+          "Evitar; prefira Identity Center",
+          "Dar permissões pelo grupo",
+          "Preferida para apps e acesso entre contas",
+          "Menor privilégio"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "aplicação na EC2 precisa ler o S3 sem guardar chaves de acesso",
+        "r": 2
+      },
+      {
+        "s": "dar as mesmas permissões a 20 analistas de uma vez",
+        "r": 1
+      },
+      {
+        "s": "documento JSON com Effect, Action e Resource",
+        "r": 3
+      },
+      {
+        "s": "permitir que uma conta parceira acesse recursos sem criar usuários",
+        "r": 2
+      },
+      {
+        "s": "script local antigo precisa de chave de acesso de longo prazo",
+        "r": 0
+      },
+      {
+        "s": "definir que só é permitido ler um bucket específico",
+        "r": 3
+      }
+    ],
+    "analogia": "Usuário é o crachá com seu nome. Grupo é o departamento: quem entra no RH ganha as permissões do RH. Função é o crachá de visitante: você pega na portaria, usa por um tempo e devolve. Política é o regulamento que diz quais portas cada crachá abre.",
+    "pegadinha": "Criar usuário IAM e colocar chave de acesso dentro da EC2 ou do código. O certo é anexar uma função à instância: as credenciais são temporárias e trocadas sozinhas. Lembre também: grupo não é identidade que faz login nem pode conter outro grupo.",
+    "src": [
+      {
+        "t": "AWS: Identidades do IAM",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id.html"
+      },
+      {
+        "t": "AWS: Funções do IAM",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html"
+      },
+      {
+        "t": "AWS: Políticas e permissões",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-compra-ec2",
+    "titulo": "Como comprar EC2: qual opção?",
+    "cat": "custo",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "A mesma instância EC2 pode custar bem diferente conforme a forma de compra. A pergunta que decide: o uso é imprevisível (sob demanda), constante por 1 ou 3 anos (Savings Plans/Reservadas), pode ser interrompido (Spot) ou exige servidor físico só seu (Hosts dedicados)?",
+    "cols": [
+      {
+        "rot": "Sob demanda"
+      },
+      {
+        "rot": "Savings Plans / Reservadas",
+        "id": "savings-plans"
+      },
+      {
+        "rot": "Spot"
+      },
+      {
+        "rot": "Hosts dedicados"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Compromisso",
+        "v": [
+          "Nenhum",
+          "1 ou 3 anos",
+          "Nenhum",
+          "Sob demanda ou reserva"
+        ]
+      },
+      {
+        "c": "Desconto",
+        "v": [
+          "Nenhum (preço cheio)",
+          "Grande, pelo compromisso",
+          "O maior, usando capacidade ociosa",
+          "Não é o foco; paga o servidor"
+        ]
+      },
+      {
+        "c": "Pode ser interrompida?",
+        "v": [
+          "Não",
+          "Não",
+          "Sim, com aviso de 2 minutos",
+          "Não"
+        ]
+      },
+      {
+        "c": "Servidor físico",
+        "v": [
+          "Compartilhado",
+          "Compartilhado",
+          "Compartilhado",
+          "Inteiro, dedicado a você"
+        ]
+      },
+      {
+        "c": "Melhor para",
+        "v": [
+          "Testes e picos imprevisíveis",
+          "Carga estável e contínua",
+          "Lotes tolerantes a falha",
+          "Licenças por soquete/núcleo"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Por segundo ou hora de uso",
+          "Valor por hora comprometido",
+          "Preço Spot do momento",
+          "Por host, por hora"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "teste de curta duração que não pode ser interrompido",
+        "r": 0
+      },
+      {
+        "s": "banco de dados rodando 24 horas por dia pelos próximos 3 anos",
+        "r": 1
+      },
+      {
+        "s": "processamento em lote flexível que tolera interrupções, menor custo",
+        "r": 2
+      },
+      {
+        "s": "licença de software cobrada por soquete físico do servidor (BYOL)",
+        "r": 3
+      },
+      {
+        "s": "compromisso de gasto por hora que vale também para Fargate e Lambda",
+        "r": 1
+      },
+      {
+        "s": "aplicação nova sem histórico de uso e sem compromisso de prazo",
+        "r": 0
+      }
+    ],
+    "analogia": "Sob demanda é pagar a diária do hotel. Savings Plans/Reservadas é assinar contrato de aluguel de 1 ou 3 anos. Spot é o quarto de última hora com descontão, mas o hotel pode pedir de volta. Host dedicado é alugar o prédio inteiro.",
+    "pegadinha": "Escolher Spot para carga crítica que não pode parar: a AWS pode retomar a instância com aviso de 2 minutos. Outro erro: confundir Host dedicado com Instância dedicada. Só o Host mostra soquetes e núcleos físicos, o que licenças BYOL exigem.",
+    "src": [
+      {
+        "t": "AWS: Opções de compra de instâncias",
+        "u": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-purchasing-options.html"
+      },
+      {
+        "t": "AWS: Savings Plans",
+        "u": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html"
+      },
+      {
+        "t": "AWS: Aviso de interrupção Spot",
+        "u": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-instance-termination-notices.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-s3-classes",
+    "titulo": "Classe do S3: Standard, IA, Intelligent ou Deep Archive?",
+    "cat": "armazenamento",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Todas guardam objetos no mesmo S3, com a mesma durabilidade. O que muda é o preço de guardar contra o preço e o tempo de ler. A pergunta que decide: com que frequência o dado é lido, e você sabe ou não sabe esse padrão?",
+    "cols": [
+      {
+        "rot": "S3 Standard",
+        "id": "s3"
+      },
+      {
+        "rot": "S3 Standard-IA",
+        "id": "s3"
+      },
+      {
+        "rot": "S3 Intelligent-Tiering",
+        "id": "s3"
+      },
+      {
+        "rot": "S3 Glacier Deep Archive",
+        "id": "s3-glacier"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Padrão de acesso",
+        "v": [
+          "Frequente",
+          "Raro, mas precisa estar à mão",
+          "Desconhecido ou que muda",
+          "Quase nunca (menos de 1 vez por ano)"
+        ]
+      },
+      {
+        "c": "Tempo para ler",
+        "v": [
+          "Milissegundos",
+          "Milissegundos",
+          "Milissegundos nas camadas de acesso imediato",
+          "Horas (até 12 h no padrão, até 48 h em lote)"
+        ]
+      },
+      {
+        "c": "Tempo mínimo cobrado",
+        "v": [
+          "Nenhum",
+          "30 dias",
+          "Nenhum",
+          "180 dias"
+        ]
+      },
+      {
+        "c": "Taxa por GB lido",
+        "v": [
+          "Não",
+          "Sim",
+          "Não",
+          "Sim"
+        ]
+      },
+      {
+        "c": "Quem decide a camada",
+        "v": [
+          "Você",
+          "Você (ou regra de ciclo de vida)",
+          "O próprio S3, pelo uso de cada objeto",
+          "Você (ou regra de ciclo de vida)"
+        ]
+      },
+      {
+        "c": "Custo extra típico",
+        "v": [
+          "Armazenamento mais caro",
+          "Cobra mínimo de 128 KB por objeto",
+          "Taxa pequena de monitoramento por objeto",
+          "Precisa restaurar antes de ler"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "imagens de um site acessadas o dia todo",
+        "r": 0
+      },
+      {
+        "s": "padrão de acesso imprevisível e sem taxa de recuperação",
+        "r": 2
+      },
+      {
+        "s": "backup lido poucas vezes por mês, mas que precisa abrir na hora",
+        "r": 1
+      },
+      {
+        "s": "guardar registros por 10 anos por exigência legal, ao menor custo",
+        "r": 3
+      },
+      {
+        "s": "aceita esperar até 48 horas para recuperar os dados",
+        "r": 3
+      },
+      {
+        "s": "não sabe quais arquivos ainda são usados e não quer gerenciar regras",
+        "r": 2
+      }
+    ],
+    "analogia": "Standard é a geladeira da cozinha; Standard-IA é o freezer do quartinho (está lá, mas cobra para ir buscar); Intelligent-Tiering é uma diarista que reorganiza sozinha; Deep Archive é o guarda-móveis no interior: baratíssimo, mas leva horas para chegar.",
+    "pegadinha": "Escolher Standard-IA para dados apagados ou movidos em poucos dias: ele cobra no mínimo 30 dias e 128 KB por objeto, então sai mais caro que o Standard. Outro erro: achar que Deep Archive serve para leitura imediata. Ele exige restauração que leva horas.",
+    "src": [
+      {
+        "t": "AWS: Classes de armazenamento do S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+      },
+      {
+        "t": "AWS: Opções de recuperação de objetos arquivados",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/restoring-objects-retrieval-options.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-kinesis-firehose-msk",
+    "titulo": "Kinesis Data Streams, Data Firehose ou MSK?",
+    "cat": "dados",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três recebem dados em fluxo contínuo (streaming). A pergunta que decide: você precisa só entregar os dados num destino, quer escrever seus próprios consumidores em tempo real, ou já usa Apache Kafka?",
+    "cols": [
+      {
+        "rot": "Kinesis Data Streams",
+        "id": "kinesis-streams"
+      },
+      {
+        "rot": "Amazon Data Firehose",
+        "id": "data-firehose"
+      },
+      {
+        "rot": "Amazon MSK",
+        "id": "msk"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que é",
+        "v": [
+          "Fluxo de dados para seus consumidores",
+          "Entrega pronta de dados num destino",
+          "Apache Kafka gerenciado"
+        ]
+      },
+      {
+        "c": "Quem lê os dados",
+        "v": [
+          "Aplicações suas (Lambda, KCL, outras)",
+          "O próprio serviço entrega ao destino",
+          "Consumidores Kafka"
+        ]
+      },
+      {
+        "c": "Latência",
+        "v": [
+          "Tempo real",
+          "Quase tempo real (junta em lotes)",
+          "Tempo real"
+        ]
+      },
+      {
+        "c": "Guarda para reler",
+        "v": [
+          "Sim, por um período configurável",
+          "Não, só entrega",
+          "Sim, por retenção configurável"
+        ]
+      },
+      {
+        "c": "Destinos",
+        "v": [
+          "Você programa",
+          "S3, Redshift, OpenSearch, Snowflake, HTTP e outros",
+          "Seu código ou conectores do MSK Connect"
+        ]
+      },
+      {
+        "c": "Transformação",
+        "v": [
+          "No seu código",
+          "Lambda; JSON para Parquet/ORC no S3",
+          "No seu código"
+        ]
+      },
+      {
+        "c": "Esforço de operação",
+        "v": [
+          "Baixo a médio",
+          "Mínimo",
+          "Médio (conceitos do Kafka)"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "carregar logs no S3 sem escrever código de consumo",
+        "r": 1
+      },
+      {
+        "s": "vários aplicativos leem e reprocessam o mesmo fluxo com Lambda e KCL, sem Kafka",
+        "r": 0
+      },
+      {
+        "s": "migrar um cluster Apache Kafka existente sem reescrever o app",
+        "r": 2
+      },
+      {
+        "s": "converter registros para Parquet antes de gravar no S3",
+        "r": 1
+      },
+      {
+        "s": "fluxo nativo da AWS dividido em shards, lido por consumidores próprios",
+        "r": 0
+      },
+      {
+        "s": "equipe já usa tópicos e APIs do Kafka",
+        "r": 2
+      }
+    ],
+    "analogia": "Data Streams é uma esteira de fábrica: você põe funcionários para pegar as peças. Firehose é o caminhão de entregas que leva tudo direto ao depósito. MSK é a mesma esteira, mas no padrão Kafka que sua equipe já conhece.",
+    "pegadinha": "Marcar Firehose quando o enunciado pede tempo real com consumidores próprios ou reprocessar dados antigos. O Firehose agrupa em lotes e só entrega: não guarda o fluxo para releitura. E quando aparece 'Kafka' no enunciado, a resposta costuma ser MSK, não Kinesis.",
+    "src": [
+      {
+        "t": "AWS: O que é o Kinesis Data Streams",
+        "u": "https://docs.aws.amazon.com/streams/latest/dev/introduction.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon Data Firehose",
+        "u": "https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon MSK",
+        "u": "https://docs.aws.amazon.com/msk/latest/developerguide/what-is-msk.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-athena-redshift-emr",
+    "titulo": "Athena, Redshift ou EMR?",
+    "cat": "dados",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três analisam muitos dados. A pergunta que decide: você quer fazer consultas SQL de vez em quando direto nos arquivos do S3, ter um armazém de dados para relatórios frequentes, ou rodar frameworks como Spark e Hadoop?",
+    "cols": [
+      {
+        "rot": "Amazon Athena",
+        "id": "athena"
+      },
+      {
+        "rot": "Amazon Redshift",
+        "id": "redshift"
+      },
+      {
+        "rot": "Amazon EMR",
+        "id": "emr"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que é",
+        "v": [
+          "Consulta SQL sem servidor sobre o S3",
+          "Armazém de dados (data warehouse)",
+          "Plataforma de big data (Spark, Hadoop)"
+        ]
+      },
+      {
+        "c": "Onde ficam os dados",
+        "v": [
+          "No S3, onde já estão",
+          "Dentro do Redshift (e pode ler do S3)",
+          "No S3 ou no HDFS do cluster"
+        ]
+      },
+      {
+        "c": "Linguagem principal",
+        "v": [
+          "SQL",
+          "SQL",
+          "Spark, Hive, Presto e outros"
+        ]
+      },
+      {
+        "c": "Infra para gerenciar",
+        "v": [
+          "Nenhuma",
+          "Cluster provisionado ou opção sem servidor",
+          "Cluster EC2, EKS ou opção sem servidor"
+        ]
+      },
+      {
+        "c": "Uso típico",
+        "v": [
+          "Consultas avulsas em logs e arquivos",
+          "Painéis e relatórios de BI recorrentes",
+          "ETL pesado e aprendizado de máquina"
+        ]
+      },
+      {
+        "c": "Como cobra",
+        "v": [
+          "Por dados lidos na consulta",
+          "Por capacidade (nós ou uso sem servidor)",
+          "Por instâncias e tempo de uso"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "consultar logs do CloudFront no S3 com SQL sem montar servidor",
+        "r": 0
+      },
+      {
+        "s": "armazém de dados para painéis de BI usados todo dia",
+        "r": 1
+      },
+      {
+        "s": "rodar jobs Apache Spark e Hadoop gerenciados",
+        "r": 2
+      },
+      {
+        "s": "pagar apenas pelos dados lidos em cada consulta",
+        "r": 0
+      },
+      {
+        "s": "banco colunar para análises complexas de petabytes com SQL",
+        "r": 1
+      },
+      {
+        "s": "migrar um cluster Hadoop local para a AWS",
+        "r": 2
+      }
+    ],
+    "analogia": "Athena é perguntar direto ao arquivo morto sem mudar nada de lugar. Redshift é montar uma biblioteca organizada para consultas diárias. EMR é alugar uma fábrica inteira com máquinas Spark e Hadoop.",
+    "pegadinha": "Confundir Redshift com banco transacional: ele é para análise (OLAP), não para gravar pedidos de um site; isso é RDS ou Aurora. E escolher EMR ou Redshift quando o enunciado diz 'consultas ocasionais em dados já no S3, sem infraestrutura': isso é Athena.",
+    "src": [
+      {
+        "t": "AWS: O que é o Amazon Athena",
+        "u": "https://docs.aws.amazon.com/athena/latest/ug/what-is.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon Redshift",
+        "u": "https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon EMR",
+        "u": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-what-is-emr.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-ia-camadas",
+    "titulo": "Serviço de IA pronto, Bedrock ou SageMaker AI?",
+    "cat": "ia",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Tudo é 'IA na AWS', mas em camadas diferentes. A pergunta que decide: você quer uma tarefa pronta via API, quer usar modelos generativos de base (fundação) sem treiná-los, ou quer construir e treinar o seu próprio modelo? Obs.: o Bedrock não consta nas listas oficiais de serviços do CLF-C02 e do SAA-C03.",
+    "cols": [
+      {
+        "rot": "Serviço de IA pronto"
+      },
+      {
+        "rot": "Amazon Bedrock",
+        "id": "bedrock"
+      },
+      {
+        "rot": "Amazon SageMaker AI",
+        "id": "sagemaker-ai"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que entrega",
+        "v": [
+          "Uma tarefa pronta (texto, voz, imagem)",
+          "Modelos de fundação generativos via API",
+          "Ferramentas para criar e treinar modelos"
+        ]
+      },
+      {
+        "c": "Exemplos",
+        "v": [
+          "Rekognition, Transcribe, Translate, Textract",
+          "Modelos de vários fornecedores",
+          "Notebooks, treino, implantação de modelos"
+        ]
+      },
+      {
+        "c": "Precisa saber ML?",
+        "v": [
+          "Não",
+          "Pouco (prompt, ajuste, RAG)",
+          "Sim"
+        ]
+      },
+      {
+        "c": "Treina modelo do zero?",
+        "v": [
+          "Não",
+          "Não; pode personalizar modelos",
+          "Sim"
+        ]
+      },
+      {
+        "c": "Precisa de dados próprios",
+        "v": [
+          "Não para começar",
+          "Opcional (base de conhecimento)",
+          "Sim, para treinar"
+        ]
+      },
+      {
+        "c": "Controle sobre o modelo",
+        "v": [
+          "Mínimo",
+          "Médio",
+          "Total"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "extrair texto e tabelas de notas fiscais digitalizadas sem saber ML",
+        "r": 0
+      },
+      {
+        "s": "criar um chatbot generativo usando modelos de fundação de vários fornecedores",
+        "r": 1
+      },
+      {
+        "s": "cientistas de dados precisam treinar e implantar um modelo próprio",
+        "r": 2
+      },
+      {
+        "s": "converter áudio de atendimento em texto",
+        "r": 0
+      },
+      {
+        "s": "responder perguntas com base em documentos da empresa usando IA generativa",
+        "r": 1
+      },
+      {
+        "s": "ajustar hiperparâmetros e hospedar um endpoint de inferência customizado",
+        "r": 2
+      }
+    ],
+    "analogia": "Serviço pronto é comprar o pão na padaria. Bedrock é comprar a massa pronta e assar do seu jeito. SageMaker AI é montar sua própria padaria, com receita, forno e treino da equipe.",
+    "pegadinha": "Escolher SageMaker AI para uma tarefa comum que um serviço pronto já faz (ler texto de imagem, traduzir, transcrever). É esforço sem necessidade. Outro erro: marcar Amazon Kendra para busca em documentos. Ele está fechado para novos clientes desde 30/07/2026 (anunciado em 30/06/2026); a AWS indica as bases de conhecimento do Bedrock.",
+    "src": [
+      {
+        "t": "AWS: O que é o Amazon Bedrock",
+        "u": "https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html"
+      },
+      {
+        "t": "AWS: O que é o Amazon SageMaker AI",
+        "u": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html"
+      },
+      {
+        "t": "AWS: Serviços em manutenção",
+        "u": "https://docs.aws.amazon.com/general/latest/gr/maintenance_services.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-iac",
+    "titulo": "CloudFormation, CDK ou Elastic Beanstalk?",
+    "cat": "gestao",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três criam recursos para você, por isso confundem. A pergunta que decide: você quer descrever a infraestrutura em arquivo de modelo (YAML/JSON), descrevê-la em linguagem de programação, ou só subir o código do app e deixar a AWS montar o ambiente?",
+    "cols": [
+      {
+        "rot": "AWS CloudFormation",
+        "id": "cloudformation"
+      },
+      {
+        "rot": "AWS CDK",
+        "id": "cdk"
+      },
+      {
+        "rot": "AWS Elastic Beanstalk",
+        "id": "elastic-beanstalk"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que é",
+        "v": [
+          "Infraestrutura como código em modelos",
+          "Infraestrutura como código em linguagem",
+          "Plataforma para publicar aplicações web"
+        ]
+      },
+      {
+        "c": "Você escreve",
+        "v": [
+          "Modelo YAML ou JSON",
+          "TypeScript, JavaScript, Python, Java, C#, Go",
+          "Só o código do app e algumas opções"
+        ]
+      },
+      {
+        "c": "Por baixo",
+        "v": [
+          "O próprio motor de pilhas (stacks)",
+          "Gera um modelo do CloudFormation",
+          "Usa CloudFormation e EC2, ELB, Auto Scaling"
+        ]
+      },
+      {
+        "c": "Abrange",
+        "v": [
+          "Quase qualquer recurso da AWS",
+          "Quase qualquer recurso da AWS",
+          "O ambiente de uma aplicação"
+        ]
+      },
+      {
+        "c": "Controle",
+        "v": [
+          "Total, recurso a recurso",
+          "Total, com abstrações prontas",
+          "Menor; a AWS decide a estrutura"
+        ]
+      },
+      {
+        "c": "Custo do serviço",
+        "v": [
+          "Sem custo extra; paga os recursos",
+          "Sem custo extra; paga os recursos",
+          "Sem custo extra; paga os recursos"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "replicar a mesma infraestrutura em várias regiões com um modelo YAML",
+        "r": 0
+      },
+      {
+        "s": "desenvolvedores querem definir infraestrutura usando Python com laços e classes",
+        "r": 1
+      },
+      {
+        "s": "subir um app Java sem configurar servidores, balanceador e escalabilidade",
+        "r": 2
+      },
+      {
+        "s": "detectar desvio (drift) entre o modelo e os recursos reais",
+        "r": 0
+      },
+      {
+        "s": "equipe sem experiência em infraestrutura quer publicar um app web rápido",
+        "r": 2
+      },
+      {
+        "s": "usar construtos de alto nível que já aplicam boas práticas",
+        "r": 1
+      }
+    ],
+    "analogia": "CloudFormation é a planta da casa desenhada à mão. CDK é a mesma planta gerada por um programa de arquitetura. Elastic Beanstalk é a construtora: você entrega os móveis (o código) e ela levanta a casa.",
+    "pegadinha": "Achar que o CDK substitui o CloudFormation: ele gera um modelo do CloudFormation e implanta por meio dele. E marcar Beanstalk quando o enunciado pede infraestrutura como código para recursos variados; Beanstalk cuida do ambiente de um app, não da conta inteira.",
+    "src": [
+      {
+        "t": "AWS: O que é o CloudFormation",
+        "u": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html"
+      },
+      {
+        "t": "AWS: Guia do AWS CDK v2",
+        "u": "https://docs.aws.amazon.com/cdk/v2/guide/home.html"
+      },
+      {
+        "t": "AWS: O que é o Elastic Beanstalk",
+        "u": "https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-conectar-vpcs",
+    "titulo": "Emparelhamento, Transit Gateway ou PrivateLink?",
+    "cat": "rede",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três ligam redes privadas sem passar pela internet. A pergunta que decide: são poucas VPCs que precisam se falar por inteiro, muitas VPCs (e redes locais) num ponto central, ou você só quer expor um serviço específico para outra VPC?",
+    "cols": [
+      {
+        "rot": "Emparelhamento de VPC",
+        "id": "vpc-peering"
+      },
+      {
+        "rot": "AWS Transit Gateway",
+        "id": "transit-gateway"
+      },
+      {
+        "rot": "AWS PrivateLink",
+        "id": "privatelink"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Formato",
+        "v": [
+          "Ligação direta entre duas VPCs",
+          "Hub central (estrela)",
+          "Ponto de extremidade para um serviço"
+        ]
+      },
+      {
+        "c": "O que fica acessível",
+        "v": [
+          "A rede inteira da outra VPC",
+          "As redes ligadas ao hub, conforme rotas",
+          "Só o serviço exposto"
+        ]
+      },
+      {
+        "c": "Roteamento transitivo",
+        "v": [
+          "Não",
+          "Sim",
+          "Não se aplica"
+        ]
+      },
+      {
+        "c": "Faixas de IP iguais (CIDR)",
+        "v": [
+          "Não permite sobreposição",
+          "Faixas sobrepostas não se comunicam",
+          "Funciona mesmo com sobreposição"
+        ]
+      },
+      {
+        "c": "Liga redes locais (VPN, DX)",
+        "v": [
+          "Não",
+          "Sim, VPN e DX se ligam ao hub",
+          "Não; só deixa o local usar o endpoint"
+        ]
+      },
+      {
+        "c": "Escala",
+        "v": [
+          "Poucas VPCs; malha cresce rápido",
+          "Muitas VPCs e contas",
+          "Muitos consumidores de um serviço"
+        ]
+      },
+      {
+        "c": "Direção",
+        "v": [
+          "Duas vias",
+          "Conforme rotas",
+          "Consumidor inicia a conexão"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "conectar duas VPCs de baixo custo, sem equipamento intermediário",
+        "r": 0
+      },
+      {
+        "s": "centenas de VPCs e conexões VPN precisam se comunicar por um hub",
+        "r": 1
+      },
+      {
+        "s": "expor uma API a clientes em outras contas sem abrir a VPC inteira",
+        "r": 2
+      },
+      {
+        "s": "VPCs com CIDR sobreposto precisam acessar um único serviço",
+        "r": 2
+      },
+      {
+        "s": "roteamento transitivo entre várias VPCs",
+        "r": 1
+      },
+      {
+        "s": "apenas a VPC A e a VPC B precisam trocar tráfego privado",
+        "r": 0
+      }
+    ],
+    "analogia": "Emparelhamento é abrir um portão no muro entre duas casas. Transit Gateway é a rodoviária central onde todos os ônibus se encontram. PrivateLink é um balcão de atendimento: o vizinho é atendido, mas não entra na sua casa.",
+    "pegadinha": "Supor que emparelhamento é transitivo: se A fala com B e B fala com C, A não fala com C. Para isso é preciso outro emparelhamento ou Transit Gateway. E usar emparelhamento quando o enunciado diz 'expor só um serviço' ou 'CIDR sobreposto': isso é PrivateLink.",
+    "src": [
+      {
+        "t": "AWS: O que é o emparelhamento de VPC",
+        "u": "https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html"
+      },
+      {
+        "t": "AWS: O que é o Transit Gateway",
+        "u": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+      },
+      {
+        "t": "AWS: O que é o PrivateLink",
+        "u": "https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-cache",
+    "titulo": "ElastiCache, MemoryDB ou DAX?",
+    "cat": "banco",
+    "provas": [
+      "saa"
+    ],
+    "intro": "Os três guardam dados em memória para respostas rapidíssimas. A pergunta que decide: você quer um cache na frente de qualquer banco, um banco principal em memória que não pode perder dados, ou acelerar só o DynamoDB sem mudar o código?",
+    "cols": [
+      {
+        "rot": "Amazon ElastiCache",
+        "id": "elasticache"
+      },
+      {
+        "rot": "Amazon MemoryDB",
+        "id": "memorydb"
+      },
+      {
+        "rot": "DynamoDB Accelerator (DAX)"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Papel",
+        "v": [
+          "Cache na frente de um banco",
+          "Banco de dados principal em memória",
+          "Cache exclusivo do DynamoDB"
+        ]
+      },
+      {
+        "c": "Compatibilidade",
+        "v": [
+          "Valkey, Redis OSS e Memcached",
+          "Valkey e Redis OSS",
+          "API do DynamoDB"
+        ]
+      },
+      {
+        "c": "Durabilidade",
+        "v": [
+          "Cache; não é a fonte da verdade",
+          "Durável, com log em várias AZs",
+          "Cache; dado real fica no DynamoDB"
+        ]
+      },
+      {
+        "c": "Mudança no app",
+        "v": [
+          "Lógica de cache no código",
+          "Usa como banco Redis/Valkey",
+          "Troca só o cliente do SDK"
+        ]
+      },
+      {
+        "c": "Funciona com",
+        "v": [
+          "Qualquer banco ou API",
+          "Ele mesmo é o banco",
+          "Só DynamoDB"
+        ]
+      },
+      {
+        "c": "Uso típico",
+        "v": [
+          "Sessões, ranking, resultados de consultas",
+          "Dados críticos com latência de memória",
+          "Leituras repetidas no DynamoDB"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "reduzir a carga de leitura de um banco RDS com cache",
+        "r": 0
+      },
+      {
+        "s": "banco compatível com Redis que não pode perder dados gravados",
+        "r": 1
+      },
+      {
+        "s": "leituras do DynamoDB em microssegundos sem reescrever a aplicação",
+        "r": 2
+      },
+      {
+        "s": "guardar sessões de usuários com Memcached",
+        "r": 0
+      },
+      {
+        "s": "armazenamento principal em memória, durável em várias zonas",
+        "r": 1
+      },
+      {
+        "s": "tabela do DynamoDB com muitas leituras dos mesmos itens",
+        "r": 2
+      }
+    ],
+    "analogia": "ElastiCache é o bloco de anotações ao lado do telefone: rápido, mas pode sumir. MemoryDB é o caderno oficial que também é rápido de ler. DAX é o post-it colado na geladeira que só serve para a geladeira (o DynamoDB).",
+    "pegadinha": "Usar DAX para cachear RDS ou Aurora: DAX só funciona com DynamoDB. Também não ajuda leituras fortemente consistentes, que vão direto à tabela. E usar ElastiCache como banco principal quando o enunciado exige durabilidade: isso pede MemoryDB.",
+    "src": [
+      {
+        "t": "AWS: O que é o ElastiCache",
+        "u": "https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html"
+      },
+      {
+        "t": "AWS: O que é o MemoryDB",
+        "u": "https://docs.aws.amazon.com/memorydb/latest/devguide/what-is-memorydb.html"
+      },
+      {
+        "t": "AWS: DynamoDB Accelerator (DAX)",
+        "u": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-rds-multiaz-replica",
+    "titulo": "Multi-AZ, réplica de leitura ou Aurora Global?",
+    "cat": "banco",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três criam cópias do banco e por isso parecem iguais. A pergunta que decide: você quer sobreviver à queda de uma zona de disponibilidade, aliviar consultas de leitura, ou ter o banco em outras regiões com recuperação rápida?",
+    "cols": [
+      {
+        "rot": "RDS Multi-AZ",
+        "id": "rds"
+      },
+      {
+        "rot": "Réplica de leitura",
+        "id": "rds"
+      },
+      {
+        "rot": "Aurora Global Database",
+        "id": "aurora"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Objetivo principal",
+        "v": [
+          "Alta disponibilidade",
+          "Escalar leituras",
+          "Recuperação de desastre entre regiões"
+        ]
+      },
+      {
+        "c": "Onde fica a cópia",
+        "v": [
+          "Outra AZ da mesma região",
+          "Mesma região ou outra",
+          "Outras regiões"
+        ]
+      },
+      {
+        "c": "Replicação",
+        "v": [
+          "Síncrona",
+          "Assíncrona",
+          "Assíncrona, em geral abaixo de 1 segundo"
+        ]
+      },
+      {
+        "c": "A cópia aceita leitura?",
+        "v": [
+          "Não, na implantação de instância",
+          "Sim",
+          "Sim, só leitura"
+        ]
+      },
+      {
+        "c": "Se o principal cair",
+        "v": [
+          "Failover automático",
+          "Promoção manual a banco autônomo",
+          "Você aciona o failover para outra região"
+        ]
+      },
+      {
+        "c": "Mecanismo",
+        "v": [
+          "Standby gerenciado",
+          "Cópia independente por motor",
+          "Replicação no armazenamento do Aurora"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "failover automático se uma zona de disponibilidade falhar",
+        "r": 0
+      },
+      {
+        "s": "relatórios pesados estão deixando o banco principal lento",
+        "r": 1
+      },
+      {
+        "s": "banco Aurora com leituras em outro continente e recuperação regional rápida",
+        "r": 2
+      },
+      {
+        "s": "cópia síncrona em espera, sem receber leituras",
+        "r": 0
+      },
+      {
+        "s": "descarregar consultas de leitura de um RDS MySQL",
+        "r": 1
+      },
+      {
+        "s": "banco Aurora deve sobreviver à perda de uma região inteira",
+        "r": 2
+      }
+    ],
+    "analogia": "Multi-AZ é o goleiro reserva no banco: só entra se o titular se machucar. Réplica de leitura é o auxiliar que atende o público enquanto o gerente trabalha. Aurora Global é uma filial em outra cidade, pronta para virar matriz.",
+    "pegadinha": "Achar que o standby do Multi-AZ (implantação de instância) ajuda nas leituras: ele não atende tráfego. Para escalar leitura é réplica. Atenção: o 'Multi-AZ DB cluster' tem standbys legíveis; leia o enunciado. E réplica de leitura não faz failover automático.",
+    "src": [
+      {
+        "t": "AWS: Implantações Multi-AZ do RDS",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html"
+      },
+      {
+        "t": "AWS: Réplicas de leitura do RDS",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html"
+      },
+      {
+        "t": "AWS: Aurora Global Database",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-politicas",
+    "titulo": "Política do IAM, SCP, limite ou política de recurso?",
+    "cat": "seguranca",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Todas são documentos JSON de permissão, mas agem em lugares diferentes. A pergunta que decide: a regra vale para uma pessoa ou função, para contas inteiras da organização, é um teto para quem cria permissões, ou fica presa ao próprio recurso?",
+    "cols": [
+      {
+        "rot": "Política do IAM (identidade)",
+        "id": "iam"
+      },
+      {
+        "rot": "SCP do Organizations",
+        "id": "organizations"
+      },
+      {
+        "rot": "Limite de permissões"
+      },
+      {
+        "rot": "Política de recurso"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Anexada a",
+        "v": [
+          "Usuário, grupo ou função",
+          "Raiz, unidade organizacional ou conta",
+          "Usuário ou função",
+          "Recurso (bucket, fila, chave KMS)"
+        ]
+      },
+      {
+        "c": "Concede permissão?",
+        "v": [
+          "Sim",
+          "Não, só limita",
+          "Não, só limita",
+          "Sim"
+        ]
+      },
+      {
+        "c": "Alcance",
+        "v": [
+          "Aquela identidade",
+          "Todas as identidades das contas",
+          "Aquela identidade",
+          "Quem acessa aquele recurso"
+        ]
+      },
+      {
+        "c": "Tem campo Principal?",
+        "v": [
+          "Não",
+          "Não",
+          "Não",
+          "Sim"
+        ]
+      },
+      {
+        "c": "Libera outra conta?",
+        "v": [
+          "Não sozinha",
+          "Não",
+          "Não",
+          "Sim, acesso entre contas"
+        ]
+      },
+      {
+        "c": "Uso típico",
+        "v": [
+          "Dar acesso no dia a dia",
+          "Proibir regiões ou serviços na empresa",
+          "Delegar criação de funções com teto",
+          "Bucket aceitar acesso de outra conta"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "impedir que qualquer conta da organização use regiões fora do Brasil",
+        "r": 1
+      },
+      {
+        "s": "anexar ao grupo de analistas permissão de leitura no S3",
+        "r": 0
+      },
+      {
+        "s": "permitir que desenvolvedores criem funções sem ultrapassar um teto",
+        "r": 2
+      },
+      {
+        "s": "bucket deve aceitar gravação vinda de outra conta AWS",
+        "r": 3
+      },
+      {
+        "s": "regra que vale até para o usuário raiz das contas-membro",
+        "r": 1
+      },
+      {
+        "s": "política com elemento Principal anexada ao recurso",
+        "r": 3
+      }
+    ],
+    "analogia": "Política do IAM é o crachá do funcionário. SCP é o regulamento do condomínio que vale para todos os apartamentos. Limite de permissões é o teto do cartão corporativo. Política de recurso é a lista de convidados na porta do salão.",
+    "pegadinha": "Achar que SCP ou limite de permissões dão acesso. Eles só definem o máximo: sem uma política que permita, nada funciona. Outro erro: esquecer que a SCP não afeta a conta de gerenciamento da organização, só as contas-membro.",
+    "src": [
+      {
+        "t": "AWS: Políticas e permissões no IAM",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html"
+      },
+      {
+        "t": "AWS: Limites de permissões",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html"
+      },
+      {
+        "t": "AWS: Políticas de controle de serviço (SCP)",
+        "u": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-custo-ferramentas",
+    "titulo": "Calculator, Cost Explorer, Budgets ou Compute Optimizer?",
+    "cat": "custo",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Todas falam de dinheiro, mas em momentos diferentes. A pergunta que decide: você quer estimar antes de usar, entender o que já gastou, ser avisado ao passar de um limite, ou saber se as máquinas estão do tamanho certo?",
+    "cols": [
+      {
+        "rot": "AWS Pricing Calculator",
+        "id": "pricing-calculator"
+      },
+      {
+        "rot": "AWS Cost Explorer",
+        "id": "cost-explorer"
+      },
+      {
+        "rot": "AWS Budgets",
+        "id": "budgets"
+      },
+      {
+        "rot": "AWS Compute Optimizer",
+        "id": "compute-optimizer"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Momento",
+        "v": [
+          "Antes de criar recursos",
+          "Depois do gasto",
+          "Durante o mês",
+          "Com recursos em uso"
+        ]
+      },
+      {
+        "c": "Pergunta que responde",
+        "v": [
+          "Quanto vai custar?",
+          "Onde gastei e qual a tendência?",
+          "Avisa se eu passar do limite?",
+          "Estou usando o tamanho certo?"
+        ]
+      },
+      {
+        "c": "Usa dados reais da conta?",
+        "v": [
+          "Não precisa; parte do que você informa",
+          "Sim, histórico de custo e uso",
+          "Sim, custo e uso reais",
+          "Sim, métricas de uso"
+        ]
+      },
+      {
+        "c": "Resultado",
+        "v": [
+          "Estimativa exportável (CSV, PDF)",
+          "Gráficos, filtros e previsão",
+          "Alertas e ações automáticas",
+          "Recomendações de tipo e tamanho"
+        ]
+      },
+      {
+        "c": "Age sozinho?",
+        "v": [
+          "Não",
+          "Não",
+          "Pode executar ações configuradas",
+          "Não; só recomenda"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "estimar o custo de uma arquitetura antes de migrar",
+        "r": 0
+      },
+      {
+        "s": "receber e-mail quando o gasto previsto passar do valor combinado",
+        "r": 2
+      },
+      {
+        "s": "ver quais serviços mais gastaram nos últimos meses",
+        "r": 1
+      },
+      {
+        "s": "instâncias EC2 superdimensionadas segundo o uso real",
+        "r": 3
+      },
+      {
+        "s": "analisar tendência de gastos por tag de projeto",
+        "r": 1
+      },
+      {
+        "s": "recomendação de tamanho para funções Lambda e volumes EBS",
+        "r": 3
+      },
+      {
+        "s": "montar orçamento de proposta para um cliente que ainda não tem conta",
+        "r": 0
+      }
+    ],
+    "analogia": "Pricing Calculator é o orçamento do pedreiro antes da obra. Cost Explorer é o extrato do cartão. Budgets é o aviso do banco quando o limite aperta. Compute Optimizer é o consultor que diz: esse carro é grande demais para você.",
+    "pegadinha": "Confundir Budgets com Cost Explorer: Cost Explorer mostra e prevê, mas quem avisa por alerta ao passar de um limite é o Budgets. E usar Pricing Calculator para analisar gasto passado: ele estima custo futuro; o histórico real se analisa no Cost Explorer.",
+    "src": [
+      {
+        "t": "AWS: O que é o Pricing Calculator",
+        "u": "https://docs.aws.amazon.com/pricing-calculator/latest/userguide/what-is-pricing-calculator.html"
+      },
+      {
+        "t": "AWS: Cost Explorer",
+        "u": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html"
+      },
+      {
+        "t": "AWS: Gerenciar custos com o Budgets",
+        "u": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html"
+      },
+      {
+        "t": "AWS: O que é o Compute Optimizer",
+        "u": "https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-infra-global",
+    "titulo": "Região, zona de disponibilidade, Local Zone ou PoP?",
+    "cat": "computacao",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "São peças da infraestrutura global da AWS, de tamanhos diferentes. A pergunta que decide: você precisa escolher onde os dados ficam, se proteger da falha de um data center, rodar servidores perto de uma cidade, ou entregar conteúdo perto do usuário?",
+    "cols": [
+      {
+        "rot": "Região"
+      },
+      {
+        "rot": "Zona de disponibilidade (AZ)"
+      },
+      {
+        "rot": "Local Zone",
+        "id": "local-zones"
+      },
+      {
+        "rot": "Ponto de presença (PoP)"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que é",
+        "v": [
+          "Área geográfica com várias AZs",
+          "Um ou mais data centers isolados",
+          "Extensão de uma região numa cidade",
+          "Local de borda da rede da AWS"
+        ]
+      },
+      {
+        "c": "Para que serve",
+        "v": [
+          "Escolher local, leis e latência",
+          "Alta disponibilidade",
+          "Latência muito baixa para usuários locais",
+          "Cache e entrada na rede da AWS"
+        ]
+      },
+      {
+        "c": "Roda EC2?",
+        "v": [
+          "Sim, dentro das AZs",
+          "Sim",
+          "Sim, um conjunto menor de serviços",
+          "Não (só lógica de borda do CloudFront)"
+        ]
+      },
+      {
+        "c": "Serviços típicos",
+        "v": [
+          "Quase todos",
+          "Quase todos",
+          "EC2, EBS e alguns outros",
+          "CloudFront, Route 53, Global Accelerator"
+        ]
+      },
+      {
+        "c": "Isolamento",
+        "v": [
+          "Independente das outras regiões",
+          "Energia e rede próprias",
+          "Ligada à região de origem",
+          "Distribuído pelo mundo"
+        ]
+      },
+      {
+        "c": "Quantidade",
+        "v": [
+          "Dezenas",
+          "Várias por região",
+          "Dezenas de cidades",
+          "Centenas"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "dados de clientes devem ficar no país por exigência legal",
+        "r": 0
+      },
+      {
+        "s": "distribuir instâncias para sobreviver à falha de um data center",
+        "r": 1
+      },
+      {
+        "s": "edição de vídeo em tempo real perto de uma metrópole sem região próxima",
+        "r": 2
+      },
+      {
+        "s": "cachear imagens perto dos usuários com CloudFront",
+        "r": 3
+      },
+      {
+        "s": "implantar Multi-AZ para alta disponibilidade",
+        "r": 1
+      },
+      {
+        "s": "usar uma região com menor latência para usuários do Brasil",
+        "r": 0
+      }
+    ],
+    "analogia": "Região é a cidade; zona de disponibilidade é cada bairro com sua própria luz e água; Local Zone é uma loja da rede aberta num shopping de outra cidade; ponto de presença é o armário de entregas na esquina.",
+    "pegadinha": "Achar que ponto de presença serve para rodar servidores EC2: ele faz cache e encaminha tráfego (CloudFront, Route 53). Outro erro: confundir AZ com região; Multi-AZ protege contra a falha de uma zona (um ou mais data centers), não contra a perda da região inteira.",
+    "src": [
+      {
+        "t": "AWS: Infraestrutura global",
+        "u": "https://aws.amazon.com/about-aws/global-infrastructure/"
+      },
+      {
+        "t": "AWS: O que são as Local Zones",
+        "u": "https://docs.aws.amazon.com/local-zones/latest/ug/what-is-aws-local-zones.html"
+      },
+      {
+        "t": "AWS: O que é o CloudFront",
+        "u": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-efs-fsx",
+    "titulo": "EFS ou qual FSx: Windows, Lustre ou ONTAP?",
+    "cat": "armazenamento",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Todos são sistemas de arquivos compartilhados e gerenciados. A pergunta que decide: quais servidores e protocolos vão usar? Linux com NFS, Windows com SMB e Active Directory, computação de alto desempenho, ou vários protocolos juntos, como num NetApp local?",
+    "cols": [
+      {
+        "rot": "Amazon EFS",
+        "id": "efs"
+      },
+      {
+        "rot": "FSx for Windows File Server",
+        "id": "fsx"
+      },
+      {
+        "rot": "FSx for Lustre",
+        "id": "fsx"
+      },
+      {
+        "rot": "FSx for NetApp ONTAP",
+        "id": "fsx"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Protocolo",
+        "v": [
+          "NFS",
+          "SMB",
+          "Cliente Lustre",
+          "NFS, SMB, iSCSI e NVMe"
+        ]
+      },
+      {
+        "c": "Clientes típicos",
+        "v": [
+          "Linux",
+          "Windows",
+          "Linux de alto desempenho",
+          "Linux, Windows e macOS"
+        ]
+      },
+      {
+        "c": "Ponto forte",
+        "v": [
+          "Elástico, sem definir tamanho",
+          "Active Directory e permissões NTFS",
+          "Vazão altíssima, integra com S3",
+          "Snapshots, clones e replicação NetApp"
+        ]
+      },
+      {
+        "c": "Uso típico",
+        "v": [
+          "Conteúdo web, pastas de apps Linux",
+          "Compartilhamentos de rede da empresa",
+          "HPC, treino de ML, renderização",
+          "Migrar storage NetApp sem mudar nada"
+        ]
+      },
+      {
+        "c": "Capacidade",
+        "v": [
+          "Cresce e encolhe sozinho",
+          "Você escolhe",
+          "Você escolhe",
+          "Você escolhe (com camadas)"
+        ]
+      },
+      {
+        "c": "Origem da tecnologia",
+        "v": [
+          "AWS",
+          "Windows Server",
+          "Lustre (código aberto)",
+          "NetApp ONTAP"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "várias instâncias Linux compartilham arquivos via NFS sem definir capacidade",
+        "r": 0
+      },
+      {
+        "s": "servidores Windows com compartilhamento SMB integrado ao Active Directory",
+        "r": 1
+      },
+      {
+        "s": "simulação HPC lê dados do S3 com vazão muito alta",
+        "r": 2
+      },
+      {
+        "s": "migrar um NetApp local mantendo SnapMirror e acesso NFS e SMB",
+        "r": 3
+      },
+      {
+        "s": "processamento de dados de genoma em larga escala",
+        "r": 2
+      },
+      {
+        "s": "volumes em bloco (iSCSI) e compartilhamentos NFS e SMB no mesmo serviço",
+        "r": 3
+      }
+    ],
+    "analogia": "EFS é a pasta compartilhada que estica sozinha. FSx for Windows é o servidor de arquivos do escritório. FSx for Lustre é a pista de Fórmula 1 dos dados. FSx for NetApp ONTAP é trazer o seu storage NetApp de sempre para a nuvem.",
+    "pegadinha": "Escolher EFS para servidores Windows: o EFS usa NFS e é para Linux; Windows com SMB e AD pede FSx for Windows. E escolher FSx for Windows para HPC de alta vazão: isso é FSx for Lustre.",
+    "src": [
+      {
+        "t": "AWS: O que é o Amazon EFS",
+        "u": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"
+      },
+      {
+        "t": "AWS: FSx for Windows File Server",
+        "u": "https://docs.aws.amazon.com/fsx/latest/WindowsGuide/what-is.html"
+      },
+      {
+        "t": "AWS: FSx for Lustre",
+        "u": "https://docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html"
+      },
+      {
+        "t": "AWS: FSx for NetApp ONTAP",
+        "u": "https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-cognito-identity-center",
+    "titulo": "Cognito, IAM Identity Center ou usuário IAM?",
+    "cat": "seguranca",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Os três criam 'logins', por isso confundem. A pergunta que decide: quem vai entrar? Clientes do seu aplicativo, funcionários que acessam várias contas AWS, ou um caso pontual que exige credencial de longo prazo?",
+    "cols": [
+      {
+        "rot": "Amazon Cognito",
+        "id": "cognito"
+      },
+      {
+        "rot": "AWS IAM Identity Center",
+        "id": "iam-identity-center"
+      },
+      {
+        "rot": "Usuário IAM",
+        "id": "iam"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "Para quem",
+        "v": [
+          "Clientes do seu app web ou móvel",
+          "Funcionários e equipes",
+          "Pessoa ou sistema numa única conta"
+        ]
+      },
+      {
+        "c": "Acessa o quê",
+        "v": [
+          "Seu aplicativo (e AWS via credencial temporária)",
+          "Várias contas AWS e apps corporativos",
+          "Console e APIs de uma conta"
+        ]
+      },
+      {
+        "c": "Login social (Google, Apple)",
+        "v": [
+          "Sim",
+          "Não",
+          "Não"
+        ]
+      },
+      {
+        "c": "Tipo de credencial",
+        "v": [
+          "Tokens e credenciais temporárias",
+          "Credenciais temporárias",
+          "Senha e chaves de longo prazo"
+        ]
+      },
+      {
+        "c": "Integra diretório da empresa",
+        "v": [
+          "SAML e OIDC",
+          "Sim (AD, Entra ID, Okta e outros)",
+          "Não"
+        ]
+      },
+      {
+        "c": "Recomendação da AWS",
+        "v": [
+          "Padrão para usuários de apps",
+          "Padrão para acesso humano à AWS",
+          "Evitar; usar só quando necessário"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "clientes do app móvel fazem cadastro e login com Google",
+        "r": 0
+      },
+      {
+        "s": "funcionários entram uma vez e acessam várias contas da organização",
+        "r": 1
+      },
+      {
+        "s": "ferramenta de terceiros só aceita chave de acesso de longo prazo",
+        "r": 2
+      },
+      {
+        "s": "login único (SSO) com o Active Directory da empresa para a console AWS",
+        "r": 1
+      },
+      {
+        "s": "milhões de usuários finais com recuperação de senha",
+        "r": 0
+      },
+      {
+        "s": "credencial permanente para um sistema antigo que não suporta funções",
+        "r": 2
+      }
+    ],
+    "analogia": "Cognito é a portaria da loja para os clientes. IAM Identity Center é o crachá corporativo que abre todos os prédios da empresa. Usuário IAM é a chave física de uma sala só: funciona, mas perde-se fácil.",
+    "pegadinha": "Criar usuários IAM para clientes de um app ou para cada funcionário em várias contas. Para clientes é Cognito; para funcionários é IAM Identity Center. E usar Cognito para dar SSO de funcionários às contas AWS: esse é o papel do Identity Center.",
+    "src": [
+      {
+        "t": "AWS: O que é o Amazon Cognito",
+        "u": "https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html"
+      },
+      {
+        "t": "AWS: O que é o IAM Identity Center",
+        "u": "https://docs.aws.amazon.com/singlesignon/latest/userguide/what-is.html"
+      },
+      {
+        "t": "AWS: Usuários do IAM",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-transferir-dados",
+    "titulo": "DataSync, Transfer Family, Storage Gateway ou DMS?",
+    "cat": "migracao",
+    "provas": [
+      "clf",
+      "saa"
+    ],
+    "intro": "Todos levam dados para a AWS. A pergunta que decide: são arquivos para mover ou sincronizar, parceiros que enviam por SFTP, servidores locais que precisam continuar usando a nuvem como se fosse local, ou um banco de dados?",
+    "cols": [
+      {
+        "rot": "AWS DataSync",
+        "id": "datasync"
+      },
+      {
+        "rot": "AWS Transfer Family",
+        "id": "transfer-family"
+      },
+      {
+        "rot": "AWS Storage Gateway",
+        "id": "storage-gateway"
+      },
+      {
+        "rot": "AWS DMS",
+        "id": "dms"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que move",
+        "v": [
+          "Arquivos e objetos",
+          "Arquivos enviados por protocolo",
+          "Arquivos, volumes e fitas",
+          "Dados de bancos de dados"
+        ]
+      },
+      {
+        "c": "Tipo de uso",
+        "v": [
+          "Cópia ou sincronização agendada",
+          "Troca contínua com parceiros",
+          "Acesso híbrido permanente",
+          "Migração e replicação contínua"
+        ]
+      },
+      {
+        "c": "Protocolos de entrada",
+        "v": [
+          "NFS, SMB, HDFS, objetos",
+          "SFTP, FTPS, FTP, AS2",
+          "NFS, SMB, iSCSI, fita virtual",
+          "Conexão do motor de banco"
+        ]
+      },
+      {
+        "c": "Destino na AWS",
+        "v": [
+          "S3, EFS, FSx",
+          "S3 ou EFS",
+          "S3 (com cache local)",
+          "RDS, Aurora, Redshift e outros"
+        ]
+      },
+      {
+        "c": "Fica rodando no local?",
+        "v": [
+          "Agente, durante a cópia",
+          "Não",
+          "Sim, gateway com cache",
+          "Não; usa instância de replicação"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "copiar milhões de arquivos de um NAS para o S3 pela rede",
+        "r": 0
+      },
+      {
+        "s": "parceiros enviam arquivos por SFTP direto para o S3",
+        "r": 1
+      },
+      {
+        "s": "servidores locais usam compartilhamento SMB com dados guardados no S3",
+        "r": 2
+      },
+      {
+        "s": "migrar Oracle para Aurora com mínimo tempo parado",
+        "r": 3
+      },
+      {
+        "s": "substituir fitas de backup físicas por fitas virtuais",
+        "r": 2
+      },
+      {
+        "s": "replicar alterações contínuas de um banco local para a AWS",
+        "r": 3
+      },
+      {
+        "s": "endpoint FTPS gerenciado sem manter servidor",
+        "r": 1
+      }
+    ],
+    "analogia": "DataSync é o caminhão de mudança que leva as caixas. Transfer Family é a caixa de correio onde parceiros deixam envelopes. Storage Gateway é o armário no escritório com fundo falso que dá na nuvem. DMS é o tradutor que copia a agenda de um banco para outro.",
+    "pegadinha": "Usar DataSync para migrar banco de dados (é DMS) ou para acesso híbrido do dia a dia (é Storage Gateway). E marcar Snowball para mover dados offline: a família Snow não aceita novos clientes; a AWS indica DataSync para transferência online e Data Transfer Terminal para transferência física.",
+    "src": [
+      {
+        "t": "AWS: O que é o DataSync",
+        "u": "https://docs.aws.amazon.com/datasync/latest/userguide/what-is-datasync.html"
+      },
+      {
+        "t": "AWS: O que é o Transfer Family",
+        "u": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html"
+      },
+      {
+        "t": "AWS: O que é o Storage Gateway",
+        "u": "https://docs.aws.amazon.com/storagegateway/latest/userguide/WhatIsStorageGateway.html"
+      },
+      {
+        "t": "AWS: O que é o DMS",
+        "u": "https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html"
+      },
+      {
+        "t": "AWS: Snowball Edge (aviso de disponibilidade)",
+        "u": "https://docs.aws.amazon.com/snowball/latest/developer-guide/whatisedge.html"
+      }
+    ]
+  },
+  {
+    "id": "dl-backup-dr",
+    "titulo": "Backup, luz piloto, warm standby ou ativo-ativo?",
+    "cat": "gestao",
+    "provas": [
+      "saa"
+    ],
+    "intro": "São as quatro estratégias de recuperação de desastre (DR). A pergunta que decide: quanto tempo parado (RTO) e quanta perda de dados (RPO) o negócio aceita, e quanto quer pagar por isso? Quanto mais rápido, mais caro.",
+    "cols": [
+      {
+        "rot": "Backup e restauração"
+      },
+      {
+        "rot": "Luz piloto (pilot light)"
+      },
+      {
+        "rot": "Warm standby"
+      },
+      {
+        "rot": "Ativo-ativo multissite"
+      }
+    ],
+    "linhas": [
+      {
+        "c": "O que roda na região de DR",
+        "v": [
+          "Nada; só backups guardados",
+          "Dados replicados; servidores desligados",
+          "Cópia completa em escala reduzida",
+          "Produção completa atendendo usuários"
+        ]
+      },
+      {
+        "c": "Atende tráfego já?",
+        "v": [
+          "Não",
+          "Não, precisa ligar servidores",
+          "Sim, com capacidade menor",
+          "Sim, em tempo integral"
+        ]
+      },
+      {
+        "c": "Na hora do desastre",
+        "v": [
+          "Restaurar dados e recriar infra",
+          "Ligar servidores e escalar",
+          "Só escalar",
+          "Desviar o tráfego (não há failover)"
+        ]
+      },
+      {
+        "c": "RPO aproximado (dados perdidos)",
+        "v": [
+          "Horas (desde o último backup)",
+          "Baixo (dados replicados sempre)",
+          "Baixo (dados replicados sempre)",
+          "Quase zero"
+        ]
+      },
+      {
+        "c": "RTO aproximado (tempo parado)",
+        "v": [
+          "Horas",
+          "Dezenas de minutos",
+          "Minutos",
+          "Quase zero"
+        ]
+      },
+      {
+        "c": "Custo",
+        "v": [
+          "O menor",
+          "Baixo",
+          "Médio",
+          "O maior"
+        ]
+      }
+    ],
+    "sinais": [
+      {
+        "s": "menor custo possível; aceita ficar horas fora do ar",
+        "r": 0
+      },
+      {
+        "s": "banco replicado na outra região, servidores de aplicação desligados",
+        "r": 1
+      },
+      {
+        "s": "ambiente reduzido já atende tráfego e só precisa escalar",
+        "r": 2
+      },
+      {
+        "s": "as duas regiões atendem usuários o tempo todo, RTO quase zero",
+        "r": 3
+      },
+      {
+        "s": "snapshots copiados para outra região e infraestrutura recriada com IaC",
+        "r": 0
+      },
+      {
+        "s": "núcleo mínimo sempre ligado, resto ligado só no desastre",
+        "r": 1
+      }
+    ],
+    "analogia": "Backup é guardar a receita do bolo na gaveta. Luz piloto é o forno com a chama-piloto acesa, mas nada assando. Warm standby é um bolo pequeno pronto que você aumenta. Ativo-ativo é ter duas confeitarias abertas o tempo todo.",
+    "pegadinha": "Confundir luz piloto com warm standby. Na luz piloto só o essencial (dados) está ativo e ela não atende pedidos sem antes ligar servidores; o warm standby já atende com capacidade reduzida e só precisa escalar. As faixas de RTO/RPO da tabela são aproximadas, não regras fixas: dependem da frequência dos backups, da automação (IaC) e do serviço de dados usado.",
+    "src": [
+      {
+        "t": "AWS: Opções de recuperação de desastre na nuvem",
+        "u": "https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html"
+      }
+    ]
+  }
+]

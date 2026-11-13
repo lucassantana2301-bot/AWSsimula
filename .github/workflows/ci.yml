@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  qualidade:
+    name: Tipos, lint, conteúdo e testes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tipos (TypeScript estrito)
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Formatação
+        run: npm run format:check
+      - name: Conteúdo (schemas Zod) e testes de unidade
+        run: npm run test:unit
+      - name: Suítes legadas (lógica, DOM, guia)
+        run: npm run test:legacy
+      - name: Build
+        run: npm run build
+      - name: Orçamento de tamanho
+        run: npm run size
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  navegador:
+    name: Navegador (layout, acessibilidade, CSP, movimento)
+    needs: qualidade
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Testes em Chrome real
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npm run test:browser
