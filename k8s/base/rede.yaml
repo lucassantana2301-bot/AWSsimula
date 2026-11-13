@@ -1,0 +1,43 @@
+# Rede: tudo fechado por padrão, depois abre só o caminho necessário.
+# (O kind usa o kindnet, que aplica NetworkPolicy desde a v0.24.)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: nega-tudo }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+# Web aceita tráfego de fora (NodePort) e só fala com a API e o DNS
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: web }
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: web }
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - ports: [{ port: 8080, protocol: TCP }]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels: { app.kubernetes.io/name: api }
+      ports: [{ port: 3000, protocol: TCP }]
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels: { k8s-app: kube-dns }
+      ports: [{ port: 53, protocol: UDP }, { port: 53, protocol: TCP }]
+---
+# API só aceita o web e não sai para lugar nenhum
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: api }
+spec:
+  podSelector:
+    matchLabels: { app.kubernetes.io/name: api }
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels: { app.kubernetes.io/name: web }
+      ports: [{ port: 3000, protocol: TCP }]

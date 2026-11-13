@@ -3,11 +3,22 @@ import tseslint from "typescript-eslint";
 import globals from "globals";
 
 export default tseslint.config(
-  { ignores: ["dist/**", "build/**", "node_modules/**", "src/legacy/**", "scripts/migrate/**", "tests/browser/**", "tests/test-*.js"] },
+  {
+    ignores: [
+      "dist/**",
+      "build/**",
+      "build-api/**",
+      "node_modules/**",
+      "src/legacy/**",
+      "scripts/migrate/**",
+      "tests/browser/**",
+      "tests/test-*.js",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {
-    files: ["src/**/*.ts", "api/**/*.ts", "tests/unit/**/*.ts", "tests/e2e/**/*.ts", "*.config.ts"],
+    files: ["src/**/*.ts", "api/**/*.ts", "server/**/*.ts", "tests/unit/**/*.ts", "tests/e2e/**/*.ts", "*.config.ts"],
     languageOptions: {
       parserOptions: { project: "./tsconfig.json", tsconfigRootDir: import.meta.dirname },
       globals: { ...globals.browser },
@@ -19,6 +30,12 @@ export default tseslint.config(
       eqeqeq: ["error", "always"],
       "no-console": ["error", { allow: ["warn", "error"] }],
     },
+  },
+  {
+    /* servidor da API em contêiner: ambiente Node e log estruturado em stdout */
+    files: ["server/**/*.ts"],
+    languageOptions: { globals: { ...globals.node } },
+    rules: { "no-console": "off" },
   },
   {
     /* modelo do service worker: JS puro, escopo de worker; __ARQUIVOS__ vira a lista no build */

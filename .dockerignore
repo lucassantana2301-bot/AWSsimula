@@ -1,0 +1,16 @@
+# o contexto do build leva só o que a imagem usa
+node_modules
+dist
+build
+build-api
+test-results
+playwright-report
+lighthouse
+.git
+.github
+.vercel
+.env*
+*.log
+k8s
+docs
+supabase

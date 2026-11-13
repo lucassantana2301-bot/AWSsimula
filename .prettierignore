@@ -1,5 +1,6 @@
 dist
 build
+build-api
 node_modules
 content
 src/legacy

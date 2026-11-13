@@ -1,0 +1,107 @@
+name: Contêineres e Kubernetes
+
+# Só roda quando algo de contêiner ou do que vai dentro dele muda,
+# para não gastar os minutos gratuitos do GitHub Actions à toa.
+on:
+  push:
+    branches: [main]
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - compose.yaml
+      - docker/**
+      - k8s/**
+      - server/**
+      - api/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/k8s.yml
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - compose.yaml
+      - docker/**
+      - k8s/**
+      - server/**
+      - api/**
+      - package.json
+      - package-lock.json
+      - .github/workflows/k8s.yml
+  workflow_dispatch:
+
+concurrency:
+  group: k8s-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  manifests:
+    name: Manifests (kustomize + kubeconform)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Renderizar o overlay do kind
+        run: kubectl kustomize k8s/kind > render.yaml
+      - name: Validar contra o schema do Kubernetes 1.33
+        run: |
+          curl -sSL https://github.com/yannh/kubeconform/releases/download/v0.7.0/kubeconform-linux-amd64.tar.gz | tar xz
+          ./kubeconform -strict -summary -kubernetes-version 1.33.1 render.yaml
+
+  compose:
+    name: Docker Compose (build e teste de fumaça)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Subir web e api
+        run: docker compose up --build --detach --wait --wait-timeout 120
+      - name: Teste de fumaça
+        run: bash k8s/fumaca.sh http://localhost:8080
+      - name: Logs em caso de falha
+        if: failure()
+        run: docker compose logs
+      - name: Derrubar
+        if: always()
+        run: docker compose down --volumes
+
+  kind:
+    name: Kubernetes no kind (deploy, rede e atualização sem queda)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir as imagens
+        run: |
+          docker build --target api -t cloudquest-api:local .
+          docker build --target web -t cloudquest-web:local .
+      - name: Criar o cluster
+        uses: helm/kind-action@v1
+        with:
+          version: v0.29.0
+          config: k8s/kind/cluster.yaml
+          cluster_name: cloudquest
+      - name: Carregar as imagens no cluster
+        run: kind load docker-image cloudquest-api:local cloudquest-web:local --name cloudquest
+      - name: Aplicar os manifests
+        run: |
+          kubectl apply -k k8s/kind
+          kubectl -n cloudquest rollout status deploy/api --timeout=120s
+          kubectl -n cloudquest rollout status deploy/web --timeout=120s
+          kubectl -n cloudquest get pods -o wide
+      - name: Teste de fumaça pelo NodePort
+        run: bash k8s/fumaca.sh http://localhost:8080
+      - name: Rede — a API não aceita quem não é o web
+        run: bash k8s/teste-rede.sh
+      - name: Atualização sem queda (rollout com tráfego contínuo)
+        run: bash k8s/teste-rollout.sh http://localhost:8080
+      - name: Diagnóstico em caso de falha
+        if: failure()
+        run: |
+          kubectl -n cloudquest get all,networkpolicy,pdb -o wide || true
+          kubectl -n cloudquest describe pods || true
+          kubectl -n cloudquest logs -l app.kubernetes.io/part-of=cloudquest --tail=80 --prefix || true
+          kubectl get events -A --sort-by=.lastTimestamp | tail -40 || true
