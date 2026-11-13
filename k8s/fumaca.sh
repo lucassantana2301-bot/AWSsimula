@@ -9,6 +9,10 @@ erro() { printf '  ERRO %s\n' "$1"; falhas=$((falhas + 1)); }
 
 # espera o serviço responder (até 60 s)
 for _ in $(seq 1 30); do curl -fsS -o /dev/null "$BASE/healthz" && break; sleep 2; done
+# espera também a rota web → api (até 60 s). /healthz é do nginx e não passa pela API: num
+# cluster recém-criado o pod fica pronto antes de o CNI aplicar a NetworkPolicy que libera
+# web → api (o "nega-tudo" já vale), e o primeiro /api devolve 502 por alguns segundos.
+for _ in $(seq 1 30); do curl -fsS -o /dev/null "$BASE/api/r?e=saa&s=700&d=2026-01-01" && break; sleep 2; done
 
 cab=$(curl -fsS -D - -o /tmp/cq-index.html "$BASE/" | tr -d '\r')
 grep -qi '^content-security-policy:.*frame-ancestors' <<<"$cab" && ok "home com CSP" || erro "home sem CSP"

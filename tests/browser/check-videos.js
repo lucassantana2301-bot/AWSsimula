@@ -1,7 +1,7 @@
 /* Vídeos do guia: nada do YouTube carrega antes do toque, português vem
    primeiro, a duração só aparece quando conferida, e o toque cria o
    player em youtube-nocookie.com com título acessível. */
-const pup = require("puppeteer-core");
+const pup = require("./_navegador");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
   const b = await pup.launch({ executablePath: process.env.CHROME_PATH || "/usr/bin/google-chrome", args: ["--no-sandbox", "--disable-dev-shm-usage"] });

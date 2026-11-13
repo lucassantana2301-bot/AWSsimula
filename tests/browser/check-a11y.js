@@ -1,4 +1,4 @@
-const pup=require("puppeteer-core");
+const pup=require("./_navegador");
 
 /* checagens que valem em qualquer tela */
 const PER_VIEW=`(()=>{

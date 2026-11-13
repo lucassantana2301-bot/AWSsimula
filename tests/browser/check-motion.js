@@ -1,7 +1,7 @@
 /* Verifica a camada de movimento em Chrome real:
    anima só o que mudou, nada repete sem mudança, some no fim,
    respeita movimento reduzido e não deixa nó invisível. */
-const pup=require("puppeteer-core");
+const pup=require("./_navegador");
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 (async()=>{
   const b=await pup.launch({executablePath:process.env.CHROME_PATH||"/usr/bin/google-chrome",args:["--no-sandbox","--disable-dev-shm-usage"]});

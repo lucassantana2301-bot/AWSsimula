@@ -3,7 +3,7 @@
    falha: uma política restritiva demais deixaria a página em branco em
    produção sem quebrar build nenhum. */
 const http=require("http"), fs=require("fs"), path=require("path");
-const pup=require("puppeteer-core");
+const pup=require("./_navegador");
 const ROOT=path.join(__dirname,"..","..");
 const cfg=JSON.parse(fs.readFileSync(path.join(ROOT,"vercel.json"),"utf8"));
 const cab=Object.fromEntries(cfg.headers.find(h=>h.source==="/(.*)").headers.map(h=>[h.key,h.value]));

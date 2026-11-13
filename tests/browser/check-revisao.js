@@ -1,7 +1,7 @@
 /* Revisão espaçada (FSRS): conceito vencido aparece na home, a sessão
    aceita "não tenho certeza" (botão e tecla D), e a resposta grava o estado
    do FSRS com a próxima data no futuro. Estado antigo do SM-2 é migrado. */
-const pup = require("puppeteer-core");
+const pup = require("./_navegador");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
   const b = await pup.launch({ executablePath: process.env.CHROME_PATH || "/usr/bin/google-chrome", args: ["--no-sandbox", "--disable-dev-shm-usage"] });

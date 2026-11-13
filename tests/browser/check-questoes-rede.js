@@ -1,6 +1,6 @@
 /* O banco de questões chega como JSON antes do motor. Sem rede na primeira
    visita, a página mostra o problema e o "Tentar de novo" recupera. */
-const pup = require("puppeteer-core");
+const pup = require("./_navegador");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
   const b = await pup.launch({ executablePath: process.env.CHROME_PATH || "/usr/bin/google-chrome", args: ["--no-sandbox", "--disable-dev-shm-usage"] });

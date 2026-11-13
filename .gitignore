@@ -14,3 +14,9 @@ lighthouse/
 
 # fontes do cartão de resultado (/api/og)
 !api/_fontes/*
+coverage/
+reports/
+.stryker-tmp/
+
+# instantâneos da regressão visual são o "esperado" dos testes
+!tests/e2e/**/*-snapshots/*.png
