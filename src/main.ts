@@ -19,6 +19,7 @@ import {
   type NomeEvento,
 } from "./features/telemetria/telemetria";
 import { blocoApp, iniciarPwa } from "./features/pwa/pwa";
+import { blocoCalendario } from "./features/progresso/calendario";
 import indiceGuia from "../content/guia/indice.json";
 
 type Conteudo = ReturnType<typeof montarConteudo> & {
@@ -27,6 +28,7 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   citados: (textos: string[]) => string[];
   nomesGuia: Record<string, string>;
   blocoConta: () => string;
+  blocoCalendario: (dias: Record<string, number>, meta: number) => string;
   aoSalvar: () => void;
   aoNavegar: (tela: string, o?: Record<string, unknown>) => void;
   evento: (nome: NomeEvento, dados?: Record<string, unknown>) => void;
@@ -57,6 +59,7 @@ globalThis.__CQ_CONTENT = {
   citados: (textos: string[]): string[] => servicosCitados(textos, indice),
   nomesGuia: Object.fromEntries(indiceGuia.map((e) => [e.id, e.nome.replace(/\s*\(.*\)$/, "")])),
   blocoConta: () => blocoApp() + blocoConta() + blocoPrivacidade(),
+  blocoCalendario: (dias, meta) => blocoCalendario(dias, meta),
   aoSalvar: agendar,
   aoNavegar: (tela, o) => {
     const ev = eventoDaRota(tela, o);
