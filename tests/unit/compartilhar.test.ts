@@ -29,6 +29,13 @@ describe("link público do resultado", () => {
       expect(lerResultado(q(s)), s).toBeNull();
   });
 
+  it("recusa data no futuro ou antes de 2025", () => {
+    const hoje = () => Date.UTC(2026, 10, 12);
+    expect(lerResultado(q("e=saa&s=800&d=2026-11-13"), hoje)).not.toBeNull();
+    expect(lerResultado(q("e=saa&s=800&d=2026-11-20"), hoje)).toBeNull();
+    expect(lerResultado(q("e=saa&s=800&d=2024-12-31"), hoje)).toBeNull();
+  });
+
   it("monta o link e o link do LinkedIn", () => {
     const u = urlResultado("https://awssimula.vercel.app/", { exam: "clf", score: 765.4, pass: true, data: "2026-11-12" });
     expect(u).toBe("https://awssimula.vercel.app/api/r?e=clf&s=765&d=2026-11-12");

@@ -59,12 +59,15 @@ self.addEventListener("fetch", (ev) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+  /* funções da Vercel (página pública do resultado, imagem): sempre da rede */
+  if (url.pathname.startsWith("/api/")) return;
 
   if (req.mode === "navigate") {
     ev.respondWith(
       comLimite(fetch(req), 3000)
         .then((r) => {
-          if (r.ok) {
+          /* só a casca do app vira "/" no cache; outra página HTML nunca a substitui */
+          if (r.ok && (url.pathname === "/" || url.pathname === "/index.html")) {
             const copia = r.clone();
             caches.open(CACHE).then((c) => c.put("/", copia));
           }

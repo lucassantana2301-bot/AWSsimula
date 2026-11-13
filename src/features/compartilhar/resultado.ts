@@ -39,7 +39,7 @@ const EXAMES: readonly ExameInfo[] = exames.map((e) => ({
 export const exameInfo = (id: string): ExameInfo | undefined => EXAMES.find((e) => e.id === id);
 
 /** Lê e valida os parâmetros. Qualquer coisa fora do esperado vira null. */
-export function lerResultado(q: URLSearchParams): Resultado | null {
+export function lerResultado(q: URLSearchParams, agora: () => number = Date.now): Resultado | null {
   const exam = q.get("e") ?? "";
   const info = exameInfo(exam);
   if (!info) return null;
@@ -49,6 +49,10 @@ export function lerResultado(q: URLSearchParams): Resultado | null {
   if (score < 100 || score > info.scale) return null;
   const data = q.get("d") ?? "";
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data) || Number.isNaN(Date.parse(data))) return null;
+  /* data plausível: nem no futuro (1 dia de folga por fuso) nem antes do app
+     existir. Limita as combinações que alguém pode gerar para fugir do cache. */
+  const ms = Date.parse(`${data}T00:00:00Z`);
+  if (ms > agora() + 864e5 || ms < Date.UTC(2025, 0, 1)) return null;
   /* aprovado é derivado da nota, não do parâmetro: o link não mente sobre o corte */
   return { exam, score, pass: score >= info.pass, data };
 }
