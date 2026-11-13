@@ -4242,5 +4242,240 @@
         "u": "https://learn.microsoft.com/azure/service-health/overview"
       }
     ]
+  },
+  {
+    "id": "az-d1-25",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "escalabilidade"
+    ],
+    "case": "Uma loja virtual roda em duas máquinas virtuais iguais. Na Black Friday o tráfego quadruplica por algumas horas. A equipe quer atender o pico sem tirar o site do ar e voltar ao tamanho normal depois.",
+    "stem": "Que tipo de dimensionamento atende melhor esse pedido?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Escalar horizontalmente, adicionando mais máquinas iguais no pico e removendo depois"
+      },
+      {
+        "k": "B",
+        "t": "Escalar verticalmente, trocando as duas máquinas por um tamanho com mais CPU e memória"
+      },
+      {
+        "k": "C",
+        "t": "Comprar capacidade fixa para o pico e mantê-la o ano inteiro"
+      },
+      {
+        "k": "D",
+        "t": "Mover o site para outra região com mais capacidade disponível"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Escala horizontal muda a quantidade de recursos: entram máquinas no pico e saem quando a demanda cai, sem parar as que já estão atendendo. É o par natural da elasticidade.",
+      "B": "Escala vertical muda a capacidade de cada recurso. Além de ter teto, trocar o tamanho de uma VM costuma exigir reinicialização, o que derruba o atendimento naquela máquina.",
+      "C": "Capacidade fixa dimensionada para o pico desperdiça dinheiro no resto do ano, o oposto do modelo de consumo da nuvem.",
+      "D": "Trocar de região não resolve pico de demanda e ainda muda latência e residência dos dados."
+    },
+    "src": [
+      {
+        "t": "Alta disponibilidade e escalabilidade na nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-benefits-use-cloud-services/2-high-availability-scalability-cloud"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-26",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "rto-rpo"
+    ],
+    "case": "O plano de continuidade de um sistema de pedidos diz: \"em um desastre, podemos perder no máximo 15 minutos de pedidos, e o sistema precisa voltar a funcionar em até 4 horas\".",
+    "stem": "Como esses dois números se chamam, nessa ordem?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "RPO de 15 minutos e RTO de 4 horas"
+      },
+      {
+        "k": "B",
+        "t": "RTO de 15 minutos e RPO de 4 horas"
+      },
+      {
+        "k": "C",
+        "t": "SLA de 15 minutos e RPO de 4 horas"
+      },
+      {
+        "k": "D",
+        "t": "RTO de 15 minutos e SLA de 4 horas"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "RPO é a perda de dados máxima aceitável, medida em tempo (15 minutos de pedidos). RTO é o tempo máximo que o sistema pode ficar fora do ar depois do incidente (4 horas).",
+      "B": "Inverte os conceitos: tempo para voltar é RTO, e quantidade de dados que se pode perder é RPO.",
+      "C": "SLA é o compromisso de disponibilidade do provedor, não a perda de dados aceita pela empresa.",
+      "D": "Começa trocando RPO por RTO e ainda chama o tempo de recuperação de SLA."
+    },
+    "src": [
+      {
+        "t": "Definir metas de confiabilidade (RTO e RPO)",
+        "u": "https://learn.microsoft.com/azure/well-architected/reliability/metrics"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-37",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 90,
+    "tags": [
+      "identidade"
+    ],
+    "case": "Depois de um vazamento, a diretoria pediu que a segurança siga o modelo Confiança Zero (Zero Trust). Um gerente afirma que basta \"confiar em quem já está na rede interna\".",
+    "stem": "Quais são princípios do modelo Confiança Zero? Escolha os TRÊS.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Verificar explicitamente cada acesso, com todos os sinais disponíveis"
+      },
+      {
+        "k": "B",
+        "t": "Usar o acesso com privilégio mínimo"
+      },
+      {
+        "k": "C",
+        "t": "Presumir que a violação já aconteceu"
+      },
+      {
+        "k": "D",
+        "t": "Confiar em dispositivos que estejam dentro do perímetro da rede corporativa"
+      },
+      {
+        "k": "E",
+        "t": "Dar acesso administrativo permanente a quem precisa dele com frequência"
+      }
+    ],
+    "ans": [
+      "A",
+      "B",
+      "C"
+    ],
+    "why": {
+      "ok": "Os três princípios são verificar explicitamente (identidade, local, dispositivo, risco), privilégio mínimo (acesso na medida e no tempo certos) e presumir violação (segmentar e limitar o alcance de um invasor).",
+      "D": "É justamente o modelo de perímetro que a Confiança Zero abandona: estar na rede interna não prova nada.",
+      "E": "Privilégio permanente contraria o privilégio mínimo; o recomendado é acesso sob demanda e por tempo limitado."
+    },
+    "src": [
+      {
+        "t": "Modelo Zero Trust",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/7-describe-zero-trust-model"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-38",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "storage"
+    ],
+    "case": "Uma conta de armazenamento usa LRS. Um estagiário apagou por engano uma pasta com os contratos do mês. O gerente diz: \"tranquilo, o Azure guarda várias cópias, é só pegar uma delas\".",
+    "stem": "O gerente está certo?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Não: as réplicas recebem a exclusão ao mesmo tempo; para recuperar é preciso exclusão reversível, versionamento ou backup"
+      },
+      {
+        "k": "B",
+        "t": "Sim: o LRS mantém cópias anteriores por 30 dias para esse tipo de caso"
+      },
+      {
+        "k": "C",
+        "t": "Sim, desde que a conta seja mudada para GRS antes de pedir a cópia"
+      },
+      {
+        "k": "D",
+        "t": "Não, porque o LRS guarda uma cópia só"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Redundância protege contra falha de hardware, não contra operações que alteram os dados: exclusões e sobrescritas valem para todas as réplicas de uma vez. Quem protege contra erro humano é exclusão reversível, versionamento ou backup.",
+      "B": "O LRS não guarda versões antigas; ele só mantém o estado atual replicado dentro de um datacenter.",
+      "C": "Mudar a redundância também replica o estado atual, que já não tem a pasta. Isso vale para qualquer opção de redundância.",
+      "D": "O LRS replica os dados dentro de um único datacenter da região; o problema não é falta de cópia, é que todas refletem a exclusão."
+    },
+    "src": [
+      {
+        "t": "Redundância do Armazenamento do Azure",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-redundancy"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-31",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "policy"
+    ],
+    "case": "A equipe de governança quer saber quantas contas de armazenamento aceitam tráfego sem HTTPS. Antes de bloquear qualquer coisa, ela quer só um relatório de conformidade, sem atrapalhar implantações em andamento.",
+    "stem": "Qual configuração do Azure Policy atende agora?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma política com efeito Audit, que marca os recursos não conformes sem bloquear a criação"
+      },
+      {
+        "k": "B",
+        "t": "Uma política com efeito Deny, que recusa a criação de contas sem HTTPS"
+      },
+      {
+        "k": "C",
+        "t": "Um bloqueio ReadOnly nas assinaturas"
+      },
+      {
+        "k": "D",
+        "t": "Uma atribuição de função Leitor para a equipe de governança"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Audit avalia e registra a não conformidade, deixando a requisição seguir. É o passo comum antes de endurecer a regra para Deny.",
+      "B": "Deny bloqueia a requisição, exatamente o que a equipe quer evitar neste momento.",
+      "C": "Bloqueio ReadOnly impede qualquer alteração e não gera relatório de conformidade.",
+      "D": "A função Leitor dá acesso para ver recursos, mas não avalia regra nenhuma nem produz relatório de conformidade."
+    },
+    "src": [
+      {
+        "t": "Efeitos do Azure Policy",
+        "u": "https://learn.microsoft.com/azure/governance/policy/concepts/effects"
+      }
+    ]
   }
 ]
