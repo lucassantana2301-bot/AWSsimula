@@ -113,7 +113,8 @@ function viewServ(){
   if(!glidos()[s.id]){ glidos()[s.id]=Date.now(); save(); }
   const ds=duelosDe(s.id);
   return `<div class="stack-lg">
-    <button class="btn ghost sm" data-act="guia" style="align-self:flex-start">← Guia de serviços</button>
+    ${V.from==="study"&&SES?`<button class="btn ghost sm" data-act="study-back" style="align-self:flex-start">← Voltar à questão</button>`
+      :`<button class="btn ghost sm" data-act="guia" style="align-self:flex-start">← Guia de serviços</button>`}
     <section>
       <p class="t-xs dim mono">${esc(gcatNome(s.cat))}</p>
       <h1 class="t-xl" style="margin-top:2px">${esc(s.nome)}</h1>
@@ -242,7 +243,8 @@ function viewGQ(){
 function guiaAct(a,b){
   if(a==="guia"){ go("guia"); return true; }
   if(a==="guia-retry"){ GUIA_ERRO=false; render(); return true; }
-  if(a==="gserv"){ go("serv",{id:b.dataset.id}); return true; }
+  if(a==="gserv"){ go("serv",{id:b.dataset.id,from:V.name==="study"||(V.name==="serv"&&V.from==="study")?"study":undefined}); return true; }
+  if(a==="study-back"){ if(SES) go("study"); else go("home"); return true; }
   if(a==="gduelo"){ go("duelo",{id:b.dataset.id,dres:{}}); return true; }
   if(a==="gprova"){ V.gp=b.dataset.p;
     document.querySelectorAll('[data-act="gprova"]').forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
@@ -531,15 +533,20 @@ function unlock(id){
   save();
 }
 
-/* ---------- repetição espaçada (SM-2 enxuto) ---------- */
+/* ---------- repetição espaçada: FSRS-5 (src/features/srs/fsrs.ts) ----------
+   nota: 1 errei, 2 acertei com dúvida, 3 acertei. Estado antigo do SM-2
+   (ease/intv) é convertido na primeira revisão, sem perder a data. */
+const F=C.fsrs;
+if(!F) throw new Error("módulo FSRS não carregado antes do motor");
 function cs(id){ if(!S.concepts[id]) S.concepts[id]={ease:2.5,reps:0,intv:0,due:0,prof:.3,n:0}; return S.concepts[id]; }
-function schedule(id,ok){
-  const c=cs(id), q=ok?4:1;
-  if(q<3){ c.reps=0; c.intv=1; c.ease=Math.max(1.3,c.ease-.2); }
-  else{ c.reps++; c.intv=c.reps===1?1:c.reps===2?3:Math.min(21,Math.round(c.intv*c.ease)); c.ease=Math.max(1.3,c.ease+.02); }
-  c.due=Date.now()+c.intv*864e5; c.n++;
+function schedule(id,ok,nota){
+  const c=cs(id), agora=Date.now();
+  const g=nota||(ok?F.Nota.acertei:F.Nota.errei);
+  const antes=(typeof c.s==="number"&&typeof c.last==="number")?{s:c.s,d:c.d,ultima:c.last}:F.deSm2(c);
+  const m=F.revisar(antes,g,agora);
+  c.s=m.s; c.d=m.d; c.last=m.ultima; c.due=F.proximaRevisao(m); c.intv=F.intervaloDias(m.s); c.n++;
   const k=Math.max(.18,.5-c.n*.04);
-  c.prof=Math.min(1,Math.max(0,c.prof+k*((ok?1:0)-c.prof)));
+  c.prof=Math.min(1,Math.max(0,c.prof+k*((ok?(g===F.Nota.duvida?.7:1):0)-c.prof)));
   save();
 }
 const isDue=id=>{ const c=S.concepts[id]; return !c||c.due<=Date.now(); };
@@ -782,6 +789,13 @@ function viewHome(){
           <button class="btn fill sm" data-act="simresume">Retomar</button>
         </div>
       </div></section>`:""}
+
+    ${(()=>{ const n=dueConcepts(null).length; return n?`<section class="sheet tight" style="border-color:var(--go)">
+      <div class="spread">
+        <div><h3 class="t-md">Revisão de hoje</h3>
+        <p class="t-sm dim" style="margin-top:2px">${n} ${n===1?"conceito está":"conceitos estão"} no ponto de esquecer. Revisar agora fixa por mais tempo.</p></div>
+        <button class="btn go sm" data-act="review-go">Revisar ${n}</button>
+      </div></section>`:""; })()}
 
     ${d?`<section class="sheet tight">
       <div class="spread">
@@ -1231,6 +1245,7 @@ function closeFicha(fallbackExam){
   const from=V.from, ex=V.exam||fallbackExam;
   RD=null;
   if(from==="review") return go("review");
+  if(from==="study"&&SES) return go("study");
   if(ex) return go("exam",{exam:ex});
   return go("home");
 }
@@ -1344,10 +1359,10 @@ function viewStudy(){
       ${S.combo>1?`<span class="tag fl mono">${S.combo} seguidas</span>`:""}
     </div>
     <div class="sheet">${qHtml(q,SES.shown,SES.sel)}</div>
-    ${SES.shown?verdictHtml(q,SES.sel):""}
+    ${SES.shown?verdictHtml(q,SES.sel):`<button class="btn sm ghost duv" data-act="qduv" aria-pressed="${!!SES.duv}" style="align-self:flex-start">${SES.duv?"✓ ":""}Não tenho certeza</button>`}
     <button class="btn wide ${SES.shown?(aw?"aw":"az"):"go"}" data-act="${SES.shown?"qnext":"qcheck"}">
       ${SES.shown?(SES.i===SES.qs.length-1?"Ver resultado":"Próxima questão"):"Confirmar resposta"}</button>
-    <p class="t-xs dim2" style="text-align:center">Teclado: 1 a 9 escolhem, Enter confirma e avança.</p>
+    <p class="t-xs dim2" style="text-align:center">Teclado: 1 a 9 escolhem, D marca dúvida, Enter confirma e avança.</p>
   </div>`;
 }
 function qHtml(q,shown,sel){
@@ -1401,8 +1416,19 @@ function verdictHtml(q,sel){
     ? `<p class="why">${esc(q.why.ok)}</p><div class="wrongs">${q.opts.filter(o=>!q.ans.includes(o.k)).map(o=>
         `<div class="wrong"><b>${o.k}</b><span>${esc(q.why[o.k]||"")}</span></div>`).join("")}</div>`
     : `<p class="why">${esc(q.e||"Veja o retorno item a item acima.")}</p>`;
+  /* do erro para o estudo: só na sessão, que tem como voltar para a questão */
+  let estude="";
+  if(V.name==="study"&&SES&&typeof C.citados==="function"){
+    const certas=(q.opts||[]).filter(o=>(q.ans||[]).includes(o.k)).map(o=>o.t).join(" ");
+    const ids=isAws(q.exam)?C.citados([(q.why&&q.why.ok)||q.e||"",certas,q.stem]):[];
+    const ficha=FICHAS.find(f=>f.exam===q.exam&&f.concept&&(q.tags||[]).includes(f.concept));
+    const nomes=C.nomesGuia||{};
+    if(ids.length||ficha) estude=`<div class="estude"><span class="t-xs dim">Para estudar:</span>
+      ${ficha?`<button class="btn sm ghost" data-act="ficha" data-ficha="${ficha.id}" data-exam="${ficha.exam}">Ficha: ${esc(ficha.title)}</button>`:""}
+      ${ids.map(id=>`<button class="btn sm ghost" data-act="gserv" data-id="${id}">Guia: ${esc(nomes[id]||id)}</button>`).join("")}</div>`;
+  }
   return `<div class="verdict ${ok?"ok":"no"}" role="status" aria-live="polite">
-    <h4>${ok?"Correto":"Resposta errada"}</h4>${why}
+    <h4>${ok?"Correto":"Resposta errada"}</h4>${why}${estude}
     ${q.src?`<p class="t-xs dim2" style="margin:12px 0 5px">Confira na fonte oficial</p>
     <div class="srcs">${q.src.map(s=>`<a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a>`).join("")}</div>`:""}
   </div>`;
@@ -2304,12 +2330,15 @@ document.addEventListener("click",ev=>{
       addXp(2,"tentativa");
     }
     if(SES.daily) S.dailyDone=dayKey();
-    (q.tags||[]).forEach(t=>schedule(t,ok));
+    /* acerto com dúvida volta antes: chute certo não é conhecimento */
+    const nota=ok?(SES.duv?F.Nota.duvida:F.Nota.acertei):F.Nota.errei;
+    (q.tags||[]).forEach(t=>schedule(t,ok,nota));
     S.seen[q.id]={ok,n:((S.seen[q.id]&&S.seen[q.id].n)||0)+1,lastTs:Date.now()};
     S.answered++; if(S.answered>=50) unlock("q50");
     save(); return render();
   }
-  if(a==="qnext"){ SES.i++; SES.sel=initSel(SES.qs[SES.i]); SES.shown=false; clearTimers(); return render(); }
+  if(a==="qduv"){ if(SES&&!SES.shown){ SES.duv=!SES.duv; render(); } return; }
+  if(a==="qnext"){ SES.i++; SES.sel=initSel(SES.qs[SES.i]); SES.shown=false; SES.duv=false; clearTimers(); return render(); }
 
   /* simulado */
   if(a==="simstart"){
@@ -2500,6 +2529,7 @@ document.addEventListener("keydown",ev=>{
   }
   if(V.name==="study"&&SES){
     if(/^[1-9]$/.test(k)&&!SES.shown){ if(pickIndex(+k-1)) ev.preventDefault(); return; }
+    if((k==="d"||k==="D")&&!SES.shown){ ev.preventDefault(); SES.duv=!SES.duv; render(); return; }
     if(k==="Enter"){
       ev.preventDefault();
       const btn=document.querySelector('[data-act="qcheck"],[data-act="qnext"]');
