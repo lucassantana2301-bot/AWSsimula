@@ -10,6 +10,7 @@
  *   atravessa o atributo data-*).
  */
 import type { Video, Videos } from "../../content/schema";
+import { html, url, type Html } from "../../lib/html";
 
 const ID_YT = /^[A-Za-z0-9_-]{11}$/;
 const ORIGEM_PLAYER = "https://www.youtube-nocookie.com";
@@ -26,33 +27,30 @@ export function videosDe(servicoId: string): readonly Video[] {
   return porServico[servicoId] ?? [];
 }
 
-const esc = (s: string): string =>
-  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
-
-function cartao(v: Video): string {
-  if (!ID_YT.test(v.yt)) return "";
+function cartao(v: Video): Html | false {
+  if (!ID_YT.test(v.yt)) return false;
   const lingua = NOME_LINGUA[v.lang];
   /* duração só aparece quando foi conferida (o schema garante 1–6) */
-  const meta = [v.canal, v.min === undefined ? null : `${String(v.min)} min`].filter((x): x is string => x !== null);
-  return `<div class="gv-card">
+  const meta = [v.canal, v.min === undefined ? null : `${String(v.min)} min`].filter((x): x is string => x !== null).join(" · ");
+  return html`<div class="gv-card">
     <button type="button" class="gv-play" data-gv-play="${v.yt}">
       <span class="gv-ico" aria-hidden="true"></span>
-      <span class="gv-t"><span class="sr-only">Assistir: </span>${esc(v.titulo)}</span>
-      <span class="gv-m"><span class="gv-lang ${v.lang}"><span aria-hidden="true">${v.lang.toUpperCase()}</span><span class="sr-only"> em ${lingua}</span></span> ${esc(meta.join(" · "))}</span>
+      <span class="gv-t"><span class="sr-only">Assistir: </span>${v.titulo}</span>
+      <span class="gv-m"><span class="gv-lang ${v.lang}"><span aria-hidden="true">${v.lang.toUpperCase()}</span><span class="sr-only"> em ${lingua}</span></span> ${meta}</span>
     </button>
-    <a class="gv-yt t-xs" href="https://www.youtube.com/watch?v=${v.yt}" target="_blank" rel="noopener noreferrer">Abrir no YouTube</a>
+    <a class="gv-yt t-xs" href="${url(`https://www.youtube.com/watch?v=${v.yt}`)}" target="_blank" rel="noopener noreferrer">Abrir no YouTube</a>
   </div>`;
 }
 
-/** HTML da seção "Assista" de um serviço; string vazia quando não há vídeo. */
-export function blocoVideos(servicoId: string): string {
+/** Seção "Assista" de um serviço; vazia quando não há vídeo. */
+export function blocoVideos(servicoId: string): Html | false {
   const vs = videosDe(servicoId);
-  if (vs.length === 0) return "";
+  if (vs.length === 0) return false;
   const soIngles = vs.every((v) => v.lang === "en");
-  return `<section class="stack gv" aria-labelledby="gv-h">
+  return html`<section class="stack gv" aria-labelledby="gv-h">
     <div class="hd"><h2 id="gv-h">Assista</h2></div>
-    <div class="gv-grid">${vs.map(cartao).join("")}</div>
-    <p class="t-xs dim2">Vídeos oficiais da AWS no YouTube.${soIngles ? " Ainda não achamos versão oficial em português; ative as legendas automáticas se precisar." : ""} O player só carrega quando você toca.</p>
+    <div class="gv-grid">${vs.map(cartao)}</div>
+    <p class="t-xs dim2">Vídeos oficiais da AWS no YouTube.${soIngles && " Ainda não achamos versão oficial em português; ative as legendas automáticas se precisar."} O player só carrega quando você toca.</p>
   </section>`;
 }
 

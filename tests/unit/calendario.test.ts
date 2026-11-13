@@ -23,7 +23,7 @@ describe("calendário de estudo", () => {
   });
 
   it("resumo conta dias estudados e metas batidas; ignora valor inválido", () => {
-    const h = blocoCalendario({ "2026-11-12": 120, "2026-11-10": 30, "2026-11-11": Number.NaN, "2025-01-01": 999 }, 100, hoje);
+    const h = blocoCalendario({ "2026-11-12": 120, "2026-11-10": 30, "2026-11-11": Number.NaN, "2025-01-01": 999 }, 100, hoje).texto;
     expect(h).toContain("2 dias de estudo, 1 com a meta de 100 XP batida");
     expect(h).toContain('title="12 nov: 120 XP"');
     expect(h).toContain('role="img"');
