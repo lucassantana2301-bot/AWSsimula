@@ -43,6 +43,12 @@ srv.listen(0,"127.0.0.1",async()=>{
   /* exportar progresso usa blob: no download */
   await p.click('[data-act="me"]'); await sleep(300);
   await p.evaluate(()=>{ const x=document.querySelector('[data-act="export"]'); if(x) x.click(); }); await sleep(300);
+  /* guia: fetch() do JSON sob demanda (connect-src) e player do vídeo (frame-src) */
+  await p.click('[data-act="guia"]'); await sleep(900);
+  await p.click('[data-act="gserv"][data-id="s3"]'); await sleep(400);
+  if(!(await p.$("button[data-gv-play]"))) prob.push("serviço s3 sem vídeo sob a CSP");
+  else { await p.click("button[data-gv-play]"); await sleep(500);
+    if(!(await p.$('.gv-frame iframe[src^="https://www.youtube-nocookie.com/embed/"]'))) prob.push("player do vídeo não foi criado"); }
   const vio=await p.evaluate(()=>window.__csp||[]);
   vio.forEach(v=>prob.push("CSP: "+v));
   const app=await p.evaluate(()=>document.getElementById("app").textContent.length);

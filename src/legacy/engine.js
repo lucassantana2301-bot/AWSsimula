@@ -128,6 +128,7 @@ function viewServ(){
       <section class="sheet"><h2 class="t-sm">Quando usar</h2><ul class="gs-ul">${s.usa.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>
       <section class="sheet"><h2 class="t-sm">Quando não usar</h2><ul class="gs-ul no">${s.nao.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>
     </div>
+    ${typeof C.blocoVideos==="function"?C.blocoVideos(s.id):""}
     <section class="stack">
       <div class="hd"><h2>Não confunda com</h2></div>
       ${s.confunde.map(c=>{ const o=gserv(c.id); return `<button class="gs-conf" data-act="gserv" data-id="${c.id}">
