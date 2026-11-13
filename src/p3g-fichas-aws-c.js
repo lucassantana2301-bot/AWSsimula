@@ -301,7 +301,7 @@ const FICHAS_SAA_C = [
       ["Dados","GetObject e PutObject no S3, Invoke na Lambda","Não: precisa ligar por tipo de recurso, com cobrança extra"],
       ["Insights","Taxa anormal de chamadas ou de erros","Não: precisa ligar, com cobrança extra"]
     ]},
-    {t:"p", x:"O histórico de eventos do console é gratuito, mas guarda só eventos de gerenciamento dos últimos 90 dias, por região. Retenção longa, eventos de dados e entrega em bucket exigem criar uma trilha ou um armazenamento de dados de eventos do CloudTrail Lake."},
+    {t:"p", x:"O histórico de eventos do console é gratuito, mas guarda só eventos de gerenciamento dos últimos 90 dias, por região. Retenção longa, eventos de dados e entrega em bucket exigem criar uma trilha. (O CloudTrail Lake, outra opção de consulta, não aceita clientes novos desde maio de 2026.)"},
     {t:"p", x:"Trilha organizacional é criada na conta de gerenciamento do Organizations, ou numa conta de administrador delegado, e grava os eventos de todas as contas num único bucket. Conta nova que entra na organização passa a ser registrada automaticamente, e as contas-membro enxergam a trilha mas não conseguem desligar nem alterar."},
     {t:"p", x:"A validação de integridade do log faz o CloudTrail gerar, a cada hora, um arquivo de resumo com o hash SHA-256 de cada arquivo entregue, assinado com chave privada e encadeado ao resumo anterior. Com ele se prova que um log foi alterado, apagado ou está intacto. Para impedir a exclusão, e não só detectá-la, some a isso o bloqueio de objeto no bucket de logs."},
     {t:"h", x:"AWS Config: avaliar e corrigir"},

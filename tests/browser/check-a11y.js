@@ -87,10 +87,14 @@ const CONTRAST=`(()=>{
       sk.forEach(x=>probs.push(x));
     }
 
-    const telas=[["home","início"],["trilha","trilha"],["cat","catálogo"],["review","treinar"],["chall","desafios"],["me","perfil"]];
-    for(const [act,nome] of telas){
-      await p.click('[data-act="'+act+'"]');
-      await new Promise(r=>setTimeout(r,320));
+    /* cada tela é uma sequência de cliques a partir da anterior */
+    const telas=[[['[data-act="home"]'],"início"],[['[data-act="trilha"]'],"trilha"],[['[data-act="cat"]'],"catálogo"],
+      [['[data-act="review"]'],"treinar"],[['[data-act="chall"]'],"desafios"],[['[data-act="me"]'],"perfil"],
+      [['[data-act="guia"]'],"guia"],[['[data-act="gserv"][data-id="cloudtrail"]'],"serviço do guia"],
+      [['[data-act="guia"]','[data-act="gduelo"][data-id="dl-sg-nacl"]','[data-act="gdu-pick"][data-i="0"][data-k="1"]'],"duelo respondido"],
+      [['[data-act="guia"]','[data-act="gq-start"]','[data-act="gq-pick"][data-k="0"]'],"treino do guia"]];
+    for(const [cliques,nome] of telas){
+      for(const sel of cliques){ await p.click(sel); await new Promise(r=>setTimeout(r,320)); }
       const r1=await p.evaluate(PER_VIEW);
       r1.forEach(x=>probs.push("["+w+"px "+nome+"] "+x));
       for(const tema of ["light","dark"]){
@@ -105,6 +109,6 @@ const CONTRAST=`(()=>{
   }
   await b.close();
   const u=[...new Set(probs)];
-  console.log(u.length?"PROBLEMAS DE ACESSIBILIDADE ("+u.length+"):\n  "+u.join("\n  "):"OK: acessibilidade básica em ordem nas 6 telas, 2 larguras e 2 temas");
+  console.log(u.length?"PROBLEMAS DE ACESSIBILIDADE ("+u.length+"):\n  "+u.join("\n  "):"OK: acessibilidade básica em ordem nas "+10+" telas, 2 larguras e 2 temas");
   process.exit(u.length?1:0);
 })();

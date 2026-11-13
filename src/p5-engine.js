@@ -28,7 +28,7 @@ const ACHS=[
 /* ---------- estado ---------- */
 const KEY="cloudquest.v2";
 const DEF=()=>({v:2,xp:0,todayXp:0,streak:0,lastDay:null,shields:1,lives:MAX_LIVES,livesTs:Date.now(),
-  goal:2,concepts:{},seen:{},fichas:{},lessons:{},bosses:{},sims:[],ach:{},dates:{},sim:null,cards:{},theme:"auto",decks:{},sprints:[],challenges:[],
+  goal:2,concepts:{},seen:{},fichas:{},guia:{},lessons:{},bosses:{},sims:[],ach:{},dates:{},sim:null,cards:{},theme:"auto",decks:{},sprints:[],challenges:[],
   meta:"admin",certs:{},catProv:"all",catGroup:"trilha",
   weekXp:0,weekKey:null,combo:0,bestCombo:0,dailyDone:null,dayKeyCur:null,answered:0});
 let S=DEF();
@@ -282,6 +282,10 @@ function render(){
     case "sim":     body=viewSim(); break;
     case "simres":  body=viewSimRes(); break;
     case "compare": body=viewCompare(); break;
+    case "guia":    body=viewGuia(); break;
+    case "serv":    body=viewServ(); break;
+    case "duelo":   body=viewDuelo(); break;
+    case "gq":      body=viewGQ(); break;
     case "trilha":  body=viewTrilha(); break;
     case "cat":     body=viewCat(); break;
     case "me":      body=viewMe(); break;
@@ -291,12 +295,13 @@ function render(){
   motion();
   if(V.name==="sim") afterSim();
   if(V.name==="exam") requestAnimationFrame(animateRuler);
+  if(V.name==="guia"&&V.gq) guiaFiltra();
 }
 
 function shell(body){
   const goal=GOALS[S.goal], pct=Math.min(100,Math.round(S.todayXp/goal*100));
-  const tabs=[["home","Exames"],["trilha","Trilha"],["review","Treinar"],["chall","Desafios"],["me","Perfil"]];
-  const cur=n=>V.name===n||(n==="home"&&["exam","study","sim","simres"].includes(V.name))||(n==="trilha"&&V.name==="cat");
+  const tabs=[["home","Exames"],["trilha","Trilha"],["guia","Guia"],["review","Treinar"],["chall","Desafios"],["me","Perfil"]];
+  const cur=n=>V.name===n||(n==="home"&&["exam","study","sim","simres"].includes(V.name))||(n==="trilha"&&V.name==="cat")||(n==="guia"&&["serv","duelo","gq"].includes(V.name));
   const due=dueConcepts(null).length;
   const inst=(k,v,cls)=>`<span class="inst ${cls||""}"><span class="k">${k}</span><span class="v">${v}</span></span>`;
   return `
@@ -1755,6 +1760,7 @@ document.addEventListener("click",ev=>{
 
   if(a==="home")    return go("home");
   if(a==="compare") return go("compare");
+  if(guiaAct(a,b)) return;
   if(a==="me")      return go("me");
   if(a==="exam")    return go("exam",{exam:b.dataset.exam||V.exam});
   if(a==="soon")    return toast("Ainda não liberado nesta versão","no");
@@ -1972,6 +1978,7 @@ document.addEventListener("click",ev=>{
 });
 
 /* campos que mudam por "change", não por clique */
+document.addEventListener("input",ev=>{ if(ev.target&&ev.target.id==="gsearch") guiaFiltra(); });
 document.addEventListener("change",ev=>{
   const t=ev.target;
   if(t&&t.id==="examdate"){

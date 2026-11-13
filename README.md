@@ -13,7 +13,7 @@ Feito para estudar e para compartilhar: roda inteiro no navegador, sem conta e s
 | CLF-C02 AWS Cloud Practitioner | 12 | 52 |
 | SAA-C03 AWS Solutions Architect Associate | 10 | 40 |
 
-No total: 51 fichas (cerca de 310 minutos de leitura), 26 aulas de 90 segundos, 399 questões com explicação para cada alternativa errada, 308 cartões de memorização com revisão espaçada e 25 baralhos de classificação.
+No total: 51 fichas (cerca de 310 minutos de leitura), 26 aulas de 90 segundos, 399 questões com explicação para cada alternativa errada, 308 cartões de memorização com revisão espaçada e 25 baralhos de classificação, guia com 121 serviços AWS e 30 duelos.
 
 A **trilha de carreira** mapeia 29 certificações das duas nuvens em sete objetivos — administrar, arquitetar, DevOps, segurança, dados, IA e desenvolvimento — com pré-requisito, horas de estudo, custo e validade de cada etapa. Só 4 delas têm conteúdo aqui; as outras servem para planejar.
 
