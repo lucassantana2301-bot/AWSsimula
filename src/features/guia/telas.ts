@@ -231,7 +231,9 @@ function telaServico(): Html {
   const voltar =
     V.from === "study" && m().emSessaoDeEstudo()
       ? html`<button class="btn ghost sm" data-act="study-back" style="align-self:flex-start">← Voltar à questão</button>`
-      : html`<button class="btn ghost sm" data-act="guia" style="align-self:flex-start">← Guia de serviços</button>`;
+      : V.from === "simres"
+        ? html`<button class="btn ghost sm" data-act="res-back" style="align-self:flex-start">← Voltar ao gabarito</button>`
+        : html`<button class="btn ghost sm" data-act="guia" style="align-self:flex-start">← Guia de serviços</button>`;
   return html`<div class="stack-lg">
     ${voltar}
     <section>
@@ -433,8 +435,10 @@ export function acaoDoGuia(a: string, alvo: HTMLElement): boolean {
       return true;
     case "gserv": {
       const veioDoEstudo = V.name === "study" || (V.name === "serv" && V.from === "study");
+      const veioDoGabarito = V.name === "simres" || (V.name === "serv" && V.from === "simres");
       const o: Partial<Rota> = { id: alvo.dataset["id"] ?? "" };
       if (veioDoEstudo) o.from = "study";
+      else if (veioDoGabarito) o.from = "simres";
       mg.ir("serv", o);
       return true;
     }

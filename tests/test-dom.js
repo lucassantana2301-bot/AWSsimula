@@ -37,6 +37,9 @@ function readFicha(sel,i){            // abre, rola até o fim e marca como estu
 try{
   /* ---------- início ---------- */
   has("Estude pelo guia do exame","home não renderizou");
+  /* item 35: primeira visita mostra os 3 passos */
+  has("Comece em 3 passos","primeira visita sem o roteiro");
+  if(!n('[data-act="onb-prova"]')) errs.push("FALHOU: roteiro sem botões de prova");
   has("AZ-900"); has("CLF-C02"); has("AZ-104");
   if(n(".exam")<3) errs.push("FALHOU: poucos cartões de exame");
   if(n(".exam .band")<3) errs.push("FALHOU: cartão sem blocos de domínio");
@@ -283,6 +286,53 @@ const espera=ms=>new Promise(r=>setTimeout(r,ms));
     w.dispatchEvent(new w.StorageEvent("storage",{key:"cloudquest.v2",newValue:JSON.stringify(outra)}));
     click('[data-act="goal"]',1);   /* qualquer ação que salva */
     if(state().xp<900) errs.push("FALHOU: progresso da outra aba se perdeu ("+state().xp+")");
+
+    /* ---------- itens 29 a 34, 46, 48 ---------- */
+    click('[data-act="home"]');
+    no("Comece em 3 passos","roteiro de primeira visita apareceu com progresso");
+    click('[data-act="exam"][data-exam="saa"]');
+    /* 48: com data marcada aparece o plano */
+    const dt=d.getElementById("examdate"); const futura=new Date(Date.now()+40*864e5).toISOString().slice(0,10);
+    dt.value=futura; dt.dispatchEvent(new w.Event("change",{bubbles:true}));
+    if(!n("#plano .plano")) errs.push("FALHOU: plano até a prova não apareceu com a data");
+    /* 46: adaptativo */
+    const ad=d.querySelector('[data-act="simstart"][data-modo="adaptativo"]');
+    if(!ad) errs.push("FALHOU: sem botão do simulado adaptativo");
+    else{
+      ad.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+      if(!d.querySelector(".sim-bar")) ad.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+      has("adaptativo","simulado adaptativo não abriu");
+      /* 32: modo foco esconde as abas pelo atributo da tela */
+      if(d.body.dataset.tela!=="sim") errs.push("FALHOU: corpo sem data-tela=sim no simulado");
+      if(!n('[data-act="simpausa"]')) errs.push("FALHOU: sem saída do simulado no modo foco");
+      /* 29: anúncio da questão para leitor de tela */
+      await espera(150);
+      const an=d.getElementById("anuncio");
+      if(!an||!/Questão \d+ de \d+/.test(an.textContent)) errs.push("FALHOU: questão não foi anunciada ("+(an&&an.textContent)+")");
+      /* 33: A+ muda a escala */
+      const antesZ=d.documentElement.style.getPropertyValue("--q-zoom");
+      const mais=d.querySelector('.q-zoom [data-d="1"]');
+      if(mais){ mais.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+        if(d.documentElement.style.getPropertyValue("--q-zoom")===antesZ) errs.push("FALHOU: A+ não mudou o tamanho do texto"); }
+      else errs.push("FALHOU: questão sem A+");
+
+      /* 31: sair da página no meio pede confirmação */
+      const ev=new w.Event("beforeunload",{cancelable:true});
+      w.dispatchEvent(ev);
+      if(!ev.defaultPrevented) errs.push("FALHOU: sair no meio do simulado não pediu confirmação");
+      /* 34: gabarito leva à ficha e volta */
+      click('[data-act="simreview"]'); click('[data-act="simfinish"]'); click('[data-act="simfinish"]');
+      has("Gabarito comentado","simulado adaptativo não chegou ao gabarito");
+      const fichaBtn=d.querySelector('.gab-i [data-act="ficha"]');
+      if(!fichaBtn) errs.push("FALHOU: gabarito sem atalho para a ficha");
+      else{
+        const alvo=fichaBtn.closest(".gab-i").id;
+        fichaBtn.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+        click('[data-act="rclose"]');
+        has("Gabarito comentado","fechar a ficha não voltou ao gabarito");
+        if(!d.getElementById(alvo)) errs.push("FALHOU: voltou ao gabarito sem a mesma questão");
+      }
+    }
   }catch(e){ errs.push("EXCEÇÃO (QA): "+e.message+"\n"+String(e.stack).split("\n").slice(0,3).join("\n")); }
   errs.push(...js);
   if(errs.length){ console.log(errs.join("\n")); console.log("\n*** "+errs.length+" PROBLEMA(S) ***"); process.exit(1); }
