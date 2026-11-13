@@ -9,3 +9,6 @@ build/
 !public/icons/*.png
 test-results/
 playwright-report/
+
+# fontes do cartão de resultado (/api/og)
+!api/_fontes/*

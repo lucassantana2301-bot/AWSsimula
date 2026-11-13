@@ -1719,6 +1719,7 @@ function viewSimRes(){
 
     <div class="row" style="justify-content:center">
       <button class="btn fill" data-act="share-result">Baixar cartão do resultado</button>
+      ${typeof C.compartilharResultado==="function"?`<button class="btn" data-act="share-linkedin">Compartilhar no LinkedIn</button>`:""}
       <button class="btn ${aw?"aw":"az"}" data-act="simstart" data-exam="${r.exam}">Novo simulado</button>
       <button class="btn" data-act="exam" data-exam="${r.exam}">Voltar à trilha</button>
     </div>
@@ -2451,6 +2452,7 @@ document.addEventListener("click",ev=>{
     return startChall(c);
   }
   if(a==="share-result"){ shareResult(); return; }
+  if(a==="share-linkedin"){ const r=V.res; if(r&&typeof C.compartilharResultado==="function") C.compartilharResultado({exam:r.exam,score:r.score,pass:r.pass,data:dayKey(new Date(r.ts||Date.now()))}); return; }
   if(a==="card-flip"){ CARD.flip=true; FX.flip=true; return render(); }
   if(a==="card-ok"||a==="card-no"){
     const c=CARD.list[CARD.i], ok=a==="card-ok";

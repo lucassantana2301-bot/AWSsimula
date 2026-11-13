@@ -7,7 +7,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {
-    files: ["src/**/*.ts", "tests/unit/**/*.ts", "*.config.ts"],
+    files: ["src/**/*.ts", "api/**/*.ts", "tests/unit/**/*.ts", "*.config.ts"],
     languageOptions: {
       parserOptions: { project: "./tsconfig.json", tsconfigRootDir: import.meta.dirname },
       globals: { ...globals.browser },

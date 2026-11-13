@@ -20,6 +20,7 @@ import {
 } from "./features/telemetria/telemetria";
 import { blocoApp, iniciarPwa } from "./features/pwa/pwa";
 import { blocoCalendario } from "./features/progresso/calendario";
+import { urlLinkedIn, urlResultado, type Resultado } from "./features/compartilhar/resultado";
 import indiceGuia from "../content/guia/indice.json";
 
 type Conteudo = ReturnType<typeof montarConteudo> & {
@@ -32,6 +33,7 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   aoSalvar: () => void;
   aoNavegar: (tela: string, o?: Record<string, unknown>) => void;
   evento: (nome: NomeEvento, dados?: Record<string, unknown>) => void;
+  compartilharResultado: (r: Resultado) => void;
 };
 
 declare global {
@@ -66,6 +68,15 @@ globalThis.__CQ_CONTENT = {
     if (ev) registrarEvento(ev.nome, ev.dados);
   },
   evento: registrarEvento,
+  /* abre o LinkedIn com o link público do resultado e copia o link */
+  compartilharResultado: (r) => {
+    const link = urlResultado(location.origin, r);
+    window.open(urlLinkedIn(link), "_blank", "noopener,noreferrer");
+    navigator.clipboard.writeText(link).then(
+      () => globalThis.__CQ_MOTOR?.toast("Link do resultado copiado", "ok"),
+      () => undefined,
+    );
+  },
 };
 instalarVideos();
 
