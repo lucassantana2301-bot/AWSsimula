@@ -774,8 +774,47 @@ body[data-tela="sim"] .rail-tabs,body[data-tela="sim"] .rail-inst,body[data-tela
 :root[data-contraste="alto"]{--ink2:var(--ink);--ink3:var(--ink);--rule:var(--ink2);--rule2:var(--ink)}
 :root[data-contraste="alto"] .opt,:root[data-contraste="alto"] .yn,:root[data-contraste="alto"] .ord{border-width:2px}
 /* 35: primeira visita */
-.onb{border-left:4px solid var(--az)}
-.onb-passos{margin:10px 0 8px;padding-left:20px;display:grid;gap:8px;font-size:14px}
+/* ---------- orientação: próximo passo, boas-vindas, glossário, dicas ---------- */
+.passo{--acc:var(--az);--acc-s:var(--az-s);background:var(--sheet);border:1px solid var(--rule2);border-left:5px solid var(--acc);
+  border-radius:3px;padding:16px 16px 14px;display:grid;gap:6px}
+.passo.aw{--acc:var(--aw);--acc-s:var(--aw-s)}
+.passo-topo{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--ink3)}
+.passo-rot b{color:var(--acc)}
+.passo-onde{font-size:11px}
+.passo h2{max-width:34ch;text-wrap:balance}
+.passo-pe{display:flex;align-items:center;gap:14px;margin-top:6px}
+.passo-trilha{flex:1;height:6px;background:var(--sunk);border-radius:3px;overflow:hidden}
+.passo-trilha i{display:block;height:100%;background:var(--acc);transition:width .5s var(--e-out)}
+.passo-btn{padding:11px 18px;font-size:14.5px}
+@media(max-width:520px){.passo-pe{flex-direction:column-reverse;align-items:stretch}.passo-btn{width:100%}}
+
+.bv{border-left:5px solid var(--ink);display:grid;gap:10px}
+.bv-pontos{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.bv-pontos li{width:28px;height:5px;border-radius:3px;background:var(--sunk)}
+.bv-pontos li[data-s="feito"]{background:var(--go)} .bv-pontos li[data-s="agora"]{background:var(--ink)}
+.bv-provas,.bv-metas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.bv-prova,.bv-meta{display:grid;gap:4px;justify-items:start;text-align:left;padding:12px;border:1px solid var(--rule2);
+  border-radius:3px;background:var(--sheet);color:var(--ink);font:inherit;cursor:pointer}
+.bv-prova:hover,.bv-meta:hover{border-color:var(--ink)}
+.bv-prova.az:hover{border-color:var(--az)} .bv-prova.aw:hover{border-color:var(--aw)}
+.bv-data{display:grid;gap:4px;max-width:220px}
+.bv-data input{font:inherit;padding:8px 10px;border:1px solid var(--rule2);border-radius:2px;background:var(--sheet);color:var(--ink)}
+
+.inst-ajuda{width:30px;border-left:1px solid var(--rule);font:700 15px/1 var(--fm);color:var(--ink2);background:none}
+.inst-ajuda:hover,.inst-ajuda[aria-expanded="true"]{color:var(--ink);background:var(--sheet2)}
+.glossario{max-width:1000px;margin:12px auto 0;padding:14px 16px;background:var(--sheet);border:1px solid var(--rule2);border-radius:3px}
+.glossario dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;margin:10px 0 0;font-size:13.5px}
+.glossario dt{font-weight:700}
+.glossario dd{margin:0;color:var(--ink2)}
+@media(max-width:520px){.glossario{margin:8px}.glossario dl{grid-template-columns:1fr}.glossario dd{margin-bottom:6px}}
+
+.dica{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;padding:10px 12px;
+  border:1px dashed var(--rule2);border-radius:3px;background:var(--sheet2)}
+.dica p{max-width:70ch}
+
+.dom-mini{padding-bottom:10px}
+.dom-mini-l{margin-top:4px;gap:10px}
+.dom-fechar{position:absolute;right:8px;top:30px}
 /* 48: plano até a prova */
 .plano{margin-top:9px;padding:9px 11px;background:var(--sheet2);border:1px solid var(--rule);border-radius:2px}
 .plano-marcos{margin:6px 0 0;padding-left:18px;display:grid;gap:3px;font-size:13px}

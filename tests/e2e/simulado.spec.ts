@@ -10,6 +10,8 @@ const CHAVE = "cloudquest.v2";
 async function abrirProva(page: Page, exame = "saa"): Promise<void> {
   await page.goto("/");
   await page.locator("#app").waitFor();
+  /* primeira visita: pula as boas-vindas (testadas no axe e em test-dom) */
+  await page.locator('[data-act="onb-pular"]').click();
   await page.locator(`[data-act="exam"][data-exam="${exame}"]`).first().click();
   await expect(page.locator('[data-act="simstart"]').first()).toBeVisible();
 }

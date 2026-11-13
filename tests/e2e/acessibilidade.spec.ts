@@ -15,13 +15,49 @@ const clicar = async (p: Page, seletor: string): Promise<void> => {
   await p.waitForTimeout(350);
 };
 
+const pular = async (p: Page): Promise<void> => {
+  await p.locator('[data-act="onb-pular"]').click();
+};
+
 const TELAS: Tela[] = [
-  { nome: "início", abrir: async () => {} },
-  { nome: "trilha", abrir: (p) => clicar(p, '[data-act="trilha"]') },
-  { nome: "prova SAA", abrir: (p) => clicar(p, '[data-act="exam"][data-exam="saa"]') },
+  { nome: "boas-vindas (passo 1)", abrir: async () => {} },
+  {
+    nome: "boas-vindas (passo 2, data)",
+    abrir: (p) => clicar(p, '[data-act="bv-prova"][data-exam="clf"]'),
+  },
+  {
+    nome: "boas-vindas (passo 3, meta)",
+    abrir: async (p) => {
+      await clicar(p, '[data-act="bv-prova"][data-exam="clf"]');
+      await clicar(p, '[data-act="bv-semdata"]');
+    },
+  },
+  { nome: "início (próximo passo e dica)", abrir: pular },
+  {
+    nome: "glossário aberto",
+    abrir: async (p) => {
+      await pular(p);
+      await clicar(p, '[data-act="glossario"]');
+    },
+  },
+  {
+    nome: "trilha",
+    abrir: async (p) => {
+      await pular(p);
+      await clicar(p, '[data-act="trilha"]');
+    },
+  },
+  {
+    nome: "prova SAA",
+    abrir: async (p) => {
+      await pular(p);
+      await clicar(p, '[data-act="exam"][data-exam="saa"]');
+    },
+  },
   {
     nome: "guia",
     abrir: async (p) => {
+      await pular(p);
       await clicar(p, '[data-act="guia"]');
       await p.locator(".gs-card").first().waitFor();
     },
@@ -29,6 +65,7 @@ const TELAS: Tela[] = [
   {
     nome: "serviço do guia (S3, com vídeos)",
     abrir: async (p) => {
+      await pular(p);
       await clicar(p, '[data-act="guia"]');
       await clicar(p, '[data-act="gserv"][data-id="s3"]');
     },
@@ -36,6 +73,7 @@ const TELAS: Tela[] = [
   {
     nome: "simulado (questão com riscar)",
     abrir: async (p) => {
+      await pular(p);
       await clicar(p, '[data-act="exam"][data-exam="saa"]');
       await clicar(p, '[data-act="simstart"]');
       /* o sorteio pode começar por "sim ou não"/"ordenar", que não têm o que riscar */
@@ -46,22 +84,42 @@ const TELAS: Tela[] = [
   {
     nome: "simulado (revisão antes da entrega)",
     abrir: async (p) => {
+      await pular(p);
       await clicar(p, '[data-act="exam"][data-exam="saa"]');
       await clicar(p, '[data-act="simstart"]');
       await clicar(p, '[data-act="simflag"]');
       await clicar(p, '[data-act="simreview"]');
     },
   },
-  { nome: "treinar", abrir: (p) => clicar(p, '[data-act="review"]') },
-  { nome: "desafios", abrir: (p) => clicar(p, '[data-act="chall"]') },
+  {
+    nome: "treinar",
+    abrir: async (p) => {
+      await pular(p);
+      await clicar(p, '[data-act="review"]');
+    },
+  },
+  {
+    nome: "desafios",
+    abrir: async (p) => {
+      await pular(p);
+      await clicar(p, '[data-act="chall"]');
+    },
+  },
   {
     nome: "AWS × Azure",
     abrir: async (p) => {
+      await pular(p);
       await clicar(p, '[data-act="review"]');
       await clicar(p, '[data-act="compare"]');
     },
   },
-  { nome: "perfil (conta, calendário, privacidade)", abrir: (p) => clicar(p, '[data-act="me"]') },
+  {
+    nome: "perfil (conta, calendário, privacidade)",
+    abrir: async (p) => {
+      await pular(p);
+      await clicar(p, '[data-act="me"]');
+    },
+  },
 ];
 
 for (const tema of ["light", "dark"] as const) {

@@ -20,6 +20,7 @@ async function preparar(page: Page): Promise<void> {
   await page.locator("#app").waitFor();
   await page.evaluate(() => document.fonts.ready);
 }
+const pular = (page: Page): Promise<void> => page.locator('[data-act="onb-pular"]').click();
 
 async function estabilizar(page: Page): Promise<void> {
   await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))));
@@ -31,14 +32,22 @@ for (const tema of ["light", "dark"] as const) {
   test.describe(`visual, tema ${tema === "light" ? "claro" : "escuro"}`, () => {
     test.use({ colorScheme: tema, viewport: { width: 1280, height: 900 } });
 
+    test("boas-vindas", async ({ page }) => {
+      await preparar(page);
+      await estabilizar(page);
+      await expect(page).toHaveScreenshot(`boas-vindas-${tema}.png`, opcoes);
+    });
+
     test("início", async ({ page }) => {
       await preparar(page);
+      await pular(page);
       await estabilizar(page);
       await expect(page).toHaveScreenshot(`inicio-${tema}.png`, opcoes);
     });
 
     test("prova SAA", async ({ page }) => {
       await preparar(page);
+      await pular(page);
       await page.locator('[data-act="exam"][data-exam="saa"]').first().click();
       await estabilizar(page);
       await expect(page).toHaveScreenshot(`prova-saa-${tema}.png`, opcoes);
@@ -46,6 +55,7 @@ for (const tema of ["light", "dark"] as const) {
 
     test("questão do simulado", async ({ page }) => {
       await preparar(page);
+      await pular(page);
       await page.locator('[data-act="exam"][data-exam="saa"]').first().click();
       await page.locator('[data-act="simstart"]').first().click();
       await estabilizar(page);

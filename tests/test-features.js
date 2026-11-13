@@ -51,6 +51,7 @@ try{
 
   /* ---------- gera erros para alimentar a fila ---------- */
   click('[data-act="home"]');
+  click('[data-act="onb-pular"]');                 /* primeira visita: pula as boas-vindas */
   click('[data-act="exam"][data-exam="az900"]');
   readAllFichas();
   if(!n('[data-act="study"]')) throw new Error("prática não liberou após ler as fichas");
@@ -198,6 +199,7 @@ try{
 
   /* ---------- simulado: tamanho e persistência ---------- */
   dom=boot(null); w=dom.window; d=w.document; w.scrollTo=()=>{};
+  click('[data-act="onb-pular"]');
   click('[data-act="exam"][data-exam="clf"]');
   click('[data-act="simstart"]');
   const nq=n(".qnav button");
@@ -225,6 +227,7 @@ try{
 
   /* ---------- data da prova ---------- */
   dom=boot(null); w=dom.window; d=w.document; w.scrollTo=()=>{};
+  click('[data-act="onb-pular"]');
   click('[data-act="exam"][data-exam="az900"]');
   has("Defina a data","sem texto inicial de data da prova");
   const inp=d.getElementById("examdate");

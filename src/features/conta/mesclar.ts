@@ -103,6 +103,9 @@ export function mesclar(local: Estado, remoto: Estado): Estado {
   out["concepts"] = porChave(local["concepts"], remoto["concepts"], conceito);
   out["seen"] = porChave(local["seen"], remoto["seen"], vista);
   for (const k of ["fichas", "lessons", "bosses", "guia"]) out[k] = porChave(local[k], remoto[k], concluido);
+  /* dicas vistas: uma vez vista num aparelho, não volta no outro. Estado antigo sem o campo
+     continua sem ele (mesclar(a, a) = a). */
+  if (ehMapa(local["dicas"]) || ehMapa(remoto["dicas"])) out["dicas"] = porChave(local["dicas"], remoto["dicas"], concluido);
   out["ach"] = porChave(local["ach"], remoto["ach"], conquista);
   /* XP por dia: o mesmo dia estudado em dois aparelhos fica com o maior */
   out["dias"] = porChave(local["dias"], remoto["dias"], (x, y) => Math.max(num(x), num(y)));

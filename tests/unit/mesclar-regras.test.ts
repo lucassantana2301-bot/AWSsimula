@@ -76,6 +76,9 @@ describe("mesclar: mapas por chave", () => {
     expect(m({ lessons: { x: 50 } }, { lessons: { x: 20 } })["lessons"]).toEqual({ x: 50 });
     expect(m({ guia: { x: false } }, { guia: { x: true } })["guia"]).toEqual({ x: true });
   });
+  it("dicas vistas em qualquer aparelho continuam vistas", () => {
+    expect(m({ dicas: { home: 1 } }, { dicas: { exam: 1 } })["dicas"]).toEqual({ home: 1, exam: 1 });
+  });
   it("conquista: a primeira data de desbloqueio", () => {
     expect(m({ ach: { a: 100, b: true } }, { ach: { a: 50, b: 0 } })["ach"]).toEqual({ a: 50, b: true });
     expect(m({ ach: { a: 0 } }, { ach: { a: true } })["ach"]).toEqual({ a: true });
