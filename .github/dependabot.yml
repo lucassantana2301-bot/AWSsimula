@@ -17,10 +17,9 @@ updates:
       producao:
         dependency-type: production
         update-types: [minor, patch]
-    # Majors que já têm PR próprio planejado (ESLint 10, TypeScript 7)
+    # TypeScript 7 (compilador nativo) ainda não tem a API que o typescript-eslint usa
+    # (peer: typescript <6.1). Liberar quando o typescript-eslint suportar.
     ignore:
-      - dependency-name: eslint
-        update-types: [version-update:semver-major]
       - dependency-name: typescript
         update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
