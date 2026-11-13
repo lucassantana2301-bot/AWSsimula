@@ -274,6 +274,10 @@ setTimeout(()=>{
   }catch(e){ errs.push("EXCEÇÃO fase 2: "+e.message); }
   setTimeout(()=>{
     try{
+      /* a importação mostra uma prévia e só troca o progresso depois de confirmar */
+      const ok=w.document.querySelector('[data-act="imp-ok"]');
+      if(!ok) errs.push("FALHOU: importação não mostrou a confirmação");
+      else ok.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
       const s=JSON.parse(w.localStorage.getItem("cloudquest.v2")||"{}");
       if(s.xp!==4321) errs.push("FALHOU: importação não aplicou o estado do arquivo (xp="+s.xp+")");
     }catch(e){ errs.push("FALHOU: estado ilegível após importar"); }

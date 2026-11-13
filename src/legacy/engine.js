@@ -17,6 +17,8 @@ const CATALOGO = C.catalogo.certs, CATALOG_SYNCED = C.catalogo.synced, METAS = C
    Aqui fica só o contrato: o módulo recebe acesso à rota, navegação,
    render, XP e progresso, e devolve as telas e trata as ações.
    ============================================================ */
+const PROG=C.progresso;
+if(!PROG) throw new Error("módulo de progresso não carregado antes do motor");
 const SIMM=C.simulado;
 if(!SIMM) throw new Error("módulo do simulado não carregado antes do motor");
 const GUIA_MOD=C.guiaTelas;
@@ -260,24 +262,52 @@ function applyTheme(){
   if(S.theme==="dark"||S.theme==="light") r.setAttribute("data-theme",S.theme);
   else r.removeAttribute("data-theme");
 }
+/* armazenamento do navegador, ou null quando bloqueado (modo privado restrito, iframe) */
+const ARMAZ=(()=>{ try{ return window.localStorage; }catch(e){ return null; } })();
+let AVISO_LEITURA=null, ULTIMO_AVISO_COTA=0, PERSIST_PEDIDO=false;
 function load(){
-  try{ const r=localStorage.getItem(KEY); if(r){ const p=JSON.parse(r); if(p&&p.v===2) S=Object.assign(DEF(),p); } }
-  catch(e){ /* navegador sem storage ou dado corrompido: começa do zero */ }
+  let bruto=null;
+  try{ bruto=ARMAZ?ARMAZ.getItem(KEY):null; }catch(e){ bruto=null; }
+  const l=PROG.interpretar(bruto);
+  if(l.estado) S=Object.assign(DEF(),l.estado);
+  else if(l.problema&&bruto){
+    /* nunca jogar fora: guarda a cópia antes que o próximo save sobrescreva */
+    const k=ARMAZ&&PROG.guardarBackup(ARMAZ,bruto);
+    AVISO_LEITURA=k?"Não consegui ler o progresso salvo. Guardei uma cópia: veja Perfil → Dados."
+      :"Não consegui ler o progresso salvo nem guardar uma cópia. Exporte o que tiver antes de continuar.";
+  }
   rollDay(); rollWeek(); regenLives(); applyTheme();
 }
 function save(){
   S.upd=Date.now();
-  try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){ /* cota cheia: segue sem salvar */ }
+  const r=PROG.salvar(ARMAZ,S);
+  if(r!=="ok"&&Date.now()-ULTIMO_AVISO_COTA>6e4){
+    ULTIMO_AVISO_COTA=Date.now();
+    toast(r==="cota"?"Sem espaço para salvar no navegador. Exporte o progresso ou entre na conta.":"Este navegador não deixa salvar. Exporte o progresso para não perder.","no");
+  }
+  /* pede para o navegador não apagar os dados do site (uma vez, depois que há progresso) */
+  if(r==="ok"&&!PERSIST_PEDIDO&&S.xp>0){ PERSIST_PEDIDO=true; PROG.persistir(); }
   if(typeof C.aoSalvar==="function") C.aoSalvar();
 }
 /* troca o estado inteiro vindo da conta (src/features/conta): não marca edição nova */
 function substituirEstado(novo){
-  if(!novo||typeof novo!=="object") return;
+  /* estado ruim na nuvem não pode quebrar o app em todos os aparelhos */
+  if(!PROG.valido(novo)){ toast("O progresso da conta veio em formato inválido. Mantive o deste aparelho.","no"); return; }
   S=Object.assign(DEF(),novo);
   rollDay(); rollWeek(); regenLives(); applyTheme();
-  try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){}
+  PROG.salvar(ARMAZ,S);
   render();
 }
+/* outra aba salvou: junta sem regredir nada (mesma regra da conta) e redesenha */
+window.addEventListener("storage",ev=>{
+  if(ev.key!==KEY||!ev.newValue) return;
+  const l=PROG.interpretar(ev.newValue);
+  if(!l.estado) return;
+  S=Object.assign(DEF(),PROG.mesclar(S,l.estado));
+  rollDay(); rollWeek(); regenLives(); applyTheme();
+  /* sessão ou simulado em andamento nesta aba continuam onde estão */
+  if(!SES&&!(SIM&&!SIM.done)) render();
+});
 
 /* chave local, para a virada do dia seguir o fuso de quem estuda */
 function dayKey(d){ d=d||new Date(); const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4); return z.toISOString().slice(0,10); }
@@ -1848,10 +1878,22 @@ function viewCompare(){
 }
 
 /* ---------------- progresso ---------------- */
+let IMPORT_PENDENTE=null;
+function previaImport(){
+  if(!IMPORT_PENDENTE) return "";
+  const r=IMPORT_PENDENTE.resumo, d=r.atualizado?new Date(r.atualizado).toLocaleString("pt-BR"):"data desconhecida";
+  return `<section class="sheet imp-previa" role="alertdialog" aria-labelledby="imp-h" aria-describedby="imp-d">
+    <h2 class="t-md" id="imp-h">Substituir o progresso deste aparelho?</h2>
+    <p class="t-sm" id="imp-d" style="margin-top:6px">O arquivo tem <b>${r.xp} XP</b>, <b>${r.simulados}</b> simulado${r.simulados===1?"":"s"} e <b>${r.questoes}</b> questões vistas, salvo em ${esc(d)}.
+      Agora você tem ${S.xp} XP. O progresso atual fica guardado como cópia de segurança.</p>
+    <div class="row" style="margin-top:10px"><button class="btn" data-act="imp-no">Cancelar</button><button class="btn fill" data-act="imp-ok">Substituir</button></div>
+  </section>`;
+}
 function viewMe(){
   const goal=GOALS[S.goal], last=S.sims.slice(0,5);
   const fr=FICHAS.filter(f=>S.fichas[f.id]).length;
   return `<div class="stack-lg">
+    ${previaImport()}
     <section><h1 class="t-xl">Seu progresso</h1></section>
     ${typeof C.blocoCalendario==="function"?C.blocoCalendario(S.dias||{},GOALS[S.goal]||100):""}
     ${typeof C.blocoConta==="function"?C.blocoConta():""}
@@ -1895,7 +1937,10 @@ function viewMe(){
 
     <section class="sheet">
       <h2 class="t-md" style="margin-bottom:7px">Dados</h2>
-      <p class="t-sm dim">Todo o progresso fica no armazenamento local deste navegador. Nada é enviado para servidor e nada identifica você.</p>
+      <p class="t-sm dim">O progresso fica neste navegador. Ele só vai para a nuvem se você entrar na conta. As estatísticas anônimas estão explicadas em Privacidade.</p>
+      ${(()=>{ const n=ARMAZ?PROG.backups(ARMAZ).length:0;
+        return n?`<div class="spread" style="margin-top:9px"><span class="t-xs dim">${n} cópia${n>1?"s":""} de segurança guardada${n>1?"s":""} (a mais recente primeiro)</span>
+          <button class="btn sm" data-act="backup-baixar">Baixar a mais recente</button></div>`:""; })()}
       <div class="row" style="margin-top:11px">
         <button class="btn sm" data-act="export">Exportar para arquivo</button>
         <button class="btn sm" data-act="copy">Copiar progresso</button>
@@ -2277,9 +2322,26 @@ document.addEventListener("click",ev=>{
   }
   if(a==="noop") return;
   if(a==="reset"){
-    if(!twoStep("reset","Isso apaga tudo e não dá para desfazer. Toque de novo para confirmar.")) return;
-    try{ localStorage.removeItem(KEY); }catch(e){}
-    S=DEF(); save(); toast("Progresso apagado"); return go("home");
+    if(!twoStep("reset","Isso apaga o progresso deste aparelho. Toque de novo para confirmar (uma cópia fica guardada).")) return;
+    if(ARMAZ) PROG.guardarBackup(ARMAZ,JSON.stringify(S));
+    try{ ARMAZ&&ARMAZ.removeItem(KEY); }catch(e){}
+    S=DEF(); save(); toast("Progresso apagado. Uma cópia ficou em Perfil → Dados."); return go("home");
+  }
+  if(a==="imp-ok"){
+    if(!IMPORT_PENDENTE) return;
+    if(ARMAZ) PROG.guardarBackup(ARMAZ,JSON.stringify(S));
+    S=Object.assign(DEF(),IMPORT_PENDENTE.estado); IMPORT_PENDENTE=null;
+    rollDay(); rollWeek(); regenLives(); applyTheme();
+    save(); toast("Progresso importado. O anterior ficou guardado como cópia.","ok"); return go("me");
+  }
+  if(a==="imp-no"){ IMPORT_PENDENTE=null; toast("Importação cancelada"); return render(); }
+  if(a==="backup-baixar"){
+    const k=ARMAZ&&PROG.backups(ARMAZ)[0], bruto=k&&ARMAZ.getItem(k);
+    if(!bruto) return toast("Nenhuma cópia guardada","no");
+    const url=URL.createObjectURL(new Blob([bruto],{type:"application/json"}));
+    const el=document.createElement("a"); el.href=url; el.download="cloudquest-copia-"+k.slice(-13)+".json";
+    document.body.appendChild(el); el.click(); el.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+    return;
   }
 });
 
@@ -2296,16 +2358,18 @@ document.addEventListener("change",ev=>{
     return;
   }
   if(t&&t.id==="impfile"&&t.files&&t.files[0]){
+    const arq=t.files[0];
+    t.value="";   /* sem isso, escolher o mesmo arquivo de novo não dispara "change" */
+    if(arq.size>PROG.LIMITE_IMPORT) return toast("Arquivo grande demais para ser um progresso do CloudQuest","no");
     const fr=new FileReader();
     fr.onload=()=>{
-      try{
-        const p=JSON.parse(String(fr.result));
-        if(!p||p.v!==2||typeof p.xp!=="number") return toast("Arquivo não parece um progresso do CloudQuest","no");
-        S=Object.assign(DEF(),p); save(); toast("Progresso importado","ok"); go("me");
-      }catch(err){ toast("Não consegui ler esse arquivo","no"); }
+      const r=PROG.lerImportacao(String(fr.result));
+      if(!r.ok) return toast(r.erro,"no");
+      /* nada é trocado ainda: a prévia pede confirmação */
+      IMPORT_PENDENTE=r; go("me"); window.scrollTo(0,0);
     };
     fr.onerror=()=>toast("Não consegui ler esse arquivo","no");
-    fr.readAsText(t.files[0]);
+    fr.readAsText(arq);
   }
 });
 
@@ -2408,6 +2472,7 @@ load();
 /* um link de desafio abre direto na tela de desafios */
 if(parseChall(location.hash)) V={name:"chall",hash:location.hash};
 render();
+if(AVISO_LEITURA) setTimeout(()=>toast(AVISO_LEITURA,"no"),400);
 window.addEventListener("hashchange",()=>{ if(parseChall(location.hash)) go("chall",{hash:location.hash}); });
 
 /* Contrato com os módulos tipados (src/main.ts): estado, troca de estado

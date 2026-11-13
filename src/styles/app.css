@@ -759,3 +759,5 @@ span.gdu-col{cursor:default;text-decoration:none}
   .spread{flex-wrap:wrap}
   .hd{flex-wrap:wrap;gap:3px 9px}
 }
+/* prévia da importação: confirmação antes de trocar o progresso */
+.imp-previa{border-left:4px solid var(--fl);background:var(--fl-s)}

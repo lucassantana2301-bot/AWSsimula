@@ -46,4 +46,7 @@ const tag = '<script type="module" src="/src/main.ts"></script>';
 if (!pagina.includes(tag)) throw new Error("index.html sem a tag de entrada esperada");
 const script = readFileSync(join(ROOT, "build", "all.js"), "utf8");
 if (/<\/script/i.test(script)) throw new Error("conteúdo contém </script");
-writeFileSync(join(ROOT, "build", "test.html"), pagina.replace(tag, `<script>\n${script}\n</script>`));
+writeFileSync(
+  join(ROOT, "build", "test.html"),
+  pagina.replace(tag, () => `<script>\n${script}\n</script>`) /* função: "$&" no código não vira padrão de substituição */,
+);

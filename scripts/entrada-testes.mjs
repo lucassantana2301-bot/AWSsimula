@@ -16,6 +16,16 @@ import {
   rotuloModo,
   telaRevisao,
 } from "../src/features/simulado/simulado";
+import {
+  LIMITE_IMPORT,
+  guardarBackup,
+  interpretar,
+  lerImportacao,
+  listarBackups,
+  salvarEstado,
+  validarEstado,
+} from "../src/features/progresso/armazenamento";
+import { mesclar } from "../src/features/conta/mesclar";
 import { leuAsDuasNuvens, telaComparar } from "../src/features/comparar/comparar";
 import { acaoDoGuia, filtrarGuia, ligarGuia, telaDoGuia } from "../src/features/guia/telas";
 
@@ -37,4 +47,17 @@ C.simulado = {
   motivoValido,
   revisao: (r) => telaRevisao(r).texto,
   reportar: (id, ja) => blocoReportar(id, ja).texto,
+};
+C.progresso = {
+  interpretar,
+  guardarBackup,
+  backups: listarBackups,
+  salvar: salvarEstado,
+  valido: validarEstado,
+  lerImportacao,
+  LIMITE_IMPORT,
+  mesclar,
+  persistir: () => {
+    /* sem navegador nos testes de JSDOM */
+  },
 };
