@@ -1,6 +1,6 @@
 /* PWA: manifest válido com ícones; service worker controla a página; sem
    internet o app abre de novo e até o guia (baixado sob demanda) funciona. */
-const pup = require("puppeteer-core");
+const pup = require("./_navegador");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
   const b = await pup.launch({ executablePath: process.env.CHROME_PATH || "/usr/bin/google-chrome", args: ["--no-sandbox", "--disable-dev-shm-usage"] });

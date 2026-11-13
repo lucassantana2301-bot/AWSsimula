@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "_comentario": "Teste de mutação (auditoria de QA, item 12). Só nos módulos puros onde um bug muda nota, agenda ou progresso. Roda semanalmente (.github/workflows/mutacao.yml), não em todo PR, para poupar minutos de CI.",
+  "testRunner": "vitest",
+  "vitest": { "configFile": "vitest.config.ts" },
+  "checkers": [],
+  "mutate": [
+    "src/features/simulado/simulado.ts",
+    "src/features/srs/fsrs.ts",
+    "src/features/conta/mesclar.ts",
+    "src/features/progresso/armazenamento.ts",
+    "src/features/progresso/plano.ts",
+    "src/lib/html.ts"
+  ],
+  "coverageAnalysis": "perTest",
+  "reporters": ["clear-text", "progress", "html", "json"],
+  "htmlReporter": { "fileName": "reports/mutation/index.html" },
+  "jsonReporter": { "fileName": "reports/mutation/mutation.json" },
+  "thresholds": { "high": 85, "low": 70, "break": 60 },
+  "timeoutMS": 20000,
+  "concurrency": 2,
+  "tempDirName": ".stryker-tmp"
+}

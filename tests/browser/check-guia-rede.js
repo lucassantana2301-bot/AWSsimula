@@ -1,6 +1,6 @@
 /* O guia é baixado sob demanda. Sem rede, a aba precisa explicar o problema
    e se recuperar no "Tentar de novo", sem travar nem mostrar tela vazia. */
-const pup = require("puppeteer-core");
+const pup = require("./_navegador");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
   const b = await pup.launch({ executablePath: process.env.CHROME_PATH || "/usr/bin/google-chrome", args: ["--no-sandbox", "--disable-dev-shm-usage"] });

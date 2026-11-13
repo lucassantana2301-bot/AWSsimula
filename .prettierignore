@@ -9,3 +9,8 @@ tests/browser
 tests/test-*.js
 scripts/migrate
 index.html
+coverage
+reports
+playwright-report
+test-results
+.stryker-tmp

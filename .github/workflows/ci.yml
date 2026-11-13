@@ -24,14 +24,16 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Vulnerabilidades em dependências de produção
+        run: npm run audit:prod
       - name: Tipos (TypeScript estrito)
         run: npm run typecheck
       - name: Lint
         run: npm run lint
       - name: Formatação
         run: npm run format:check
-      - name: Conteúdo (schemas Zod) e testes de unidade
-        run: npm run test:unit
+      - name: Conteúdo, testes de unidade e de propriedade, com cobertura mínima
+        run: npm run test:coverage
       - name: Suítes legadas (lógica, DOM, guia)
         run: npm run test:legacy
       - name: Build
@@ -66,16 +68,21 @@ jobs:
         env:
           CHROME_PATH: /usr/bin/google-chrome
         run: npm run test:browser
-      - name: Acessibilidade WCAG 2.1 AA (Playwright + axe-core)
+      - name: Firefox e WebKit do Playwright
+        run: npx playwright install --with-deps firefox webkit
+      - name: Playwright (axe WCAG 2.1 AA, simulado em Chrome/Firefox/WebKit, regressão visual)
         env:
           CHROME_PATH: /usr/bin/google-chrome
+          PW_TODOS: "1"
           CI: "1"
         run: npm run test:e2e
       - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: test-results
+          path: |
+            test-results
+            playwright-report
           retention-days: 7
 
   lighthouse:

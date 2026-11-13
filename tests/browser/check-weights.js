@@ -1,4 +1,4 @@
-const pup=require("puppeteer-core");
+const pup=require("./_navegador");
 (async()=>{
   const b=await pup.launch({executablePath:process.env.CHROME_PATH||"/usr/bin/google-chrome",args:["--no-sandbox","--disable-dev-shm-usage"]});
   const p=await b.newPage(); await p.setViewport({width:1240,height:1000});

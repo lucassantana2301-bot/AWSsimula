@@ -5,7 +5,7 @@
    4. "Juntar" grava a mescla com a versão lida (escrita otimista) e o
       aparelho fica com o melhor dos dois. */
 const fs = require("fs"), path = require("path");
-const pup = require("puppeteer-core");
+const pup = require("./_navegador");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const manifesto = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "..", "dist", ".vite", "manifest.json"), "utf8"));
 const chunkSupabase = Object.entries(manifesto).find(([k]) => k.includes("@supabase/supabase-js"))?.[1]?.file;
