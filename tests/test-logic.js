@@ -97,7 +97,11 @@ for(const e of ACT){
   const saa=ex0("saa"), clf=ex0("clf");
   ok(fullReady("saa")&&fullSpec("saa").q===65&&fullSpec("saa").min===130,"SAA: prova completa deveria ser 65 questões em 130 min");
   ok(fullReady("clf")&&fullSpec("clf").q===65,"CLF: prova completa indisponível");
-  ok(fullSpec("az900")===null,"AZ-900 tem faixa de questões (40-60): não deveria ter prova completa fixa");
+  /* prova com faixa (40-60): o app usa fullQ fixo, com o tempo oficial */
+  ok(fullReady("az900")&&fullSpec("az900").q===50&&fullSpec("az900").min===45,"AZ-900: prova completa deveria ser 50 questões em 45 min");
+  ok(fullReady("az104")&&fullSpec("az104").q===50&&fullSpec("az104").min===100,"AZ-104: prova completa deveria ser 50 questões em 100 min");
+  const az=pickSim("az900",50);
+  ok(az.length===50&&new Set(az.map(q=>q.id)).size===50,"prova completa do AZ-900 com tamanho errado ou repetição");
   const full=pickSim("saa",65);
   ok(full.length===65&&new Set(full.map(q=>q.id)).size===65,"prova completa do SAA com tamanho errado ou repetição");
   for(const d of saa.domains){

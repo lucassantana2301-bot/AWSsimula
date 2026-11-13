@@ -543,6 +543,27 @@ span.gdu-col{cursor:default;text-decoration:none}
 .opt[data-res="bad"]{border-color:var(--no);border-left-color:var(--no);background:var(--no-s)}
 .opt[data-res="bad"] .k{background:var(--no);border-color:var(--no);color:var(--on-accent)}
 .opt[data-res="miss"]{border-left-color:var(--go);border-left-style:dashed}
+/* riscar alternativa no simulado (como na Pearson VUE): risco + cor ink3, sem opacidade */
+.opt-w{display:flex;gap:4px;align-items:stretch}
+.opt-w .opt{flex:1}
+.risc{flex:none;width:36px;border:1px solid var(--rule2);border-radius:2px;background:var(--sheet);color:var(--ink3);font-size:13px}
+.risc:hover{background:var(--sheet2);color:var(--ink)}
+.risc[aria-pressed="true"]{background:var(--sheet2);color:var(--ink);border-color:var(--ink2)}
+.opt[data-risc="1"]>span:last-child{text-decoration:line-through;text-decoration-thickness:1.5px;color:var(--ink3)}
+/* revisão antes da entrega */
+.rev-n{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.rev-n>div{display:flex;flex-direction:column;gap:2px;padding:9px 10px;border:1px solid var(--rule);border-radius:2px;background:var(--sheet)}
+.rev-n b{font-size:20px}
+.rev-n>[data-st="no"]{border-left:3px solid var(--no)}
+.rev-n>[data-st="fl"]{border-left:3px solid var(--fl)}
+.rev-leg .k{display:inline-block;width:11px;height:11px;border:1px solid var(--rule2);border-radius:2px;vertical-align:-1px;margin-left:8px}
+.rev-leg .k:first-child{margin-left:0}
+.rev-leg .k.ans{border-color:var(--az)}
+.rev-leg .k.flag{border-color:var(--fl);background:var(--fl-s)}
+.sim-modos{margin-top:12px;padding-top:10px;border-top:1px solid var(--rule)}
+.sim-modos select{font:inherit;font-size:13px;padding:6px 9px;border:1px solid var(--rule2);border-radius:2px;background:var(--sheet);color:var(--ink);max-width:100%;flex:1;min-width:0}
+.reportar{margin-top:10px}
+.reportar summary{cursor:pointer}
 .yn{display:flex;gap:11px;align-items:flex-start;padding:10px 12px;background:var(--sheet);
   border:1px solid var(--rule2);border-left-width:3px;border-radius:2px;font-size:14px;line-height:1.45}
 .yn .tx{flex:1;min-width:0}

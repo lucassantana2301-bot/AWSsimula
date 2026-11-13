@@ -20,7 +20,9 @@ export const ExamSchema = z.object({
   id, provider: z.enum(["azure", "aws"]), code: texto(3), version: texto(1), name: texto(3), level: texto(3),
   status: z.enum(["active", "soon", "retired"]), pass: z.number().int().positive(), scale: z.number().int().positive(),
   simQ: z.number().int().positive(), simMin: z.number().int().positive(), realQ: texto(1),
-  realMin: z.number().int().positive(), price: texto(1), note: texto(1), domains: z.array(DomainSchema).min(2),
+  realMin: z.number().int().positive(),
+  /* prova com faixa ("40-60"): quantidade fixa da prova completa do app */
+  fullQ: z.number().int().positive().optional(), price: texto(1), note: texto(1), domains: z.array(DomainSchema).min(2),
 });
 export const CertSchema = z.object({
   id, prov: z.enum(["azure", "aws"]), code: texto(2), nome: texto(3), nivel: texto(3), foco: texto(3), horas: texto(1),

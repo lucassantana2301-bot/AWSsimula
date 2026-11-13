@@ -9,6 +9,22 @@ import { blocoVideos, definirVideos, instalarVideos } from "./features/guia/vide
 import * as fsrs from "./features/srs/fsrs";
 import { montarIndice, servicosCitados, type EntradaIndice } from "./features/guia/citados";
 import { acaoDoGuia, filtrarGuia, ligarGuia, telaDoGuia } from "./features/guia/telas";
+import {
+  blocoReportar,
+  completaDisponivel,
+  contaParaProntidao,
+  errosDoBanco,
+  especCompleta,
+  minutosProporcionais,
+  montarErros,
+  montarPorDominio,
+  montarSimulado,
+  motivoValido,
+  notaEscalonada,
+  rotuloModo,
+  telaRevisao,
+  type EstadoRevisao,
+} from "./features/simulado/simulado";
 import { leuAsDuasNuvens, telaComparar } from "./features/comparar/comparar";
 import type { Equiv } from "./content/schema";
 import { agendar, blocoConta, iniciarConta, type Motor } from "./features/conta/conta";
@@ -34,6 +50,23 @@ interface GuiaTelas {
   filtrar: typeof filtrarGuia;
 }
 
+/** Contrato do simulado com o motor legado: funções puras e HTML já em texto. */
+interface MotorSimulado {
+  montar: typeof montarSimulado;
+  montarPorDominio: typeof montarPorDominio;
+  montarErros: typeof montarErros;
+  erros: typeof errosDoBanco;
+  minutos: typeof minutosProporcionais;
+  especCompleta: typeof especCompleta;
+  completaDisponivel: typeof completaDisponivel;
+  nota: typeof notaEscalonada;
+  rotulo: typeof rotuloModo;
+  contaParaProntidao: typeof contaParaProntidao;
+  motivoValido: typeof motivoValido;
+  revisao: (r: EstadoRevisao) => string;
+  reportar: (id: string, ja: boolean) => string;
+}
+
 type Conteudo = ReturnType<typeof montarConteudo> & {
   blocoVideos: (servicoId: string) => string;
   fsrs: typeof fsrs;
@@ -43,8 +76,9 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   blocoCalendario: (dias: Record<string, number>, meta: number) => string;
   aoSalvar: () => void;
   aoNavegar: (tela: string, o?: Record<string, unknown>) => void;
-  evento: (nome: NomeEvento, dados?: Record<string, unknown>) => void;
+  evento: (nome: NomeEvento, dados?: Record<string, unknown>) => boolean;
   guiaTelas: GuiaTelas;
+  simulado: MotorSimulado;
   comparar: {
     tela: (equiv: readonly Equiv[]) => string;
     leuAsDuasNuvens: typeof leuAsDuasNuvens;
@@ -116,6 +150,22 @@ globalThis.__CQ_CONTENT = {
     if (ev) registrarEvento(ev.nome, ev.dados);
   },
   evento: registrarEvento,
+  /* simulado: montagem, nota, revisão e reporte (fase 3) */
+  simulado: {
+    montar: montarSimulado,
+    montarPorDominio,
+    montarErros,
+    erros: errosDoBanco,
+    minutos: minutosProporcionais,
+    especCompleta,
+    completaDisponivel,
+    nota: notaEscalonada,
+    rotulo: rotuloModo,
+    contaParaProntidao,
+    motivoValido,
+    revisao: (r) => telaRevisao(r).texto,
+    reportar: (id, ja) => blocoReportar(id, ja).texto,
+  },
   /* mapa AWS × Azure (fase 3) */
   comparar: { tela: (equiv) => telaComparar(equiv).texto, leuAsDuasNuvens },
   /* guia de serviços: telas e ações fora do motor (fase 3) */
