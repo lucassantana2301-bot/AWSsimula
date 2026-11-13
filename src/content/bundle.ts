@@ -1,15 +1,15 @@
 /**
  * Monta o pacote de conteúdo que o motor recebe.
  * Fase 1: tudo em import estático (mesmo comportamento de antes).
- * Fase 2 troca por import() por prova, sem mudar a forma do pacote.
+ * Fase 2: o guia sai do pacote inicial e é baixado sob demanda (ver carregarGuia).
  */
 import exams from "../../content/exams.json";
 import catalogo from "../../content/catalogo.json";
 import equiv from "../../content/equiv.json";
 import diagrams from "../../content/diagrams.json";
 import shared from "../../content/shared/lessons.json";
-import servicos from "../../content/guia/servicos.json";
-import duelos from "../../content/guia/duelos.json";
+import servicosUrl from "../../content/guia/servicos.json?url";
+import duelosUrl from "../../content/guia/duelos.json?url";
 import type { Catalogo, Deck, Duelo, Equiv, Exam, Ficha, Lesson, Question, Servico } from "./schema";
 
 /**
@@ -30,9 +30,36 @@ const juntar = <T>(arquivo: string): T[] =>
     .filter(([p]) => p.endsWith(`/${arquivo}.json`))
     .flatMap(([, m]) => validado<T[]>(m.default));
 
+export interface Guia {
+  GUIA: Servico[];
+  DUELOS: Duelo[];
+}
+
+/*
+ * O guia (~100 KB comprimidos) sai como JSON com hash no nome e só é baixado
+ * quando a aba Guia abre. Usa fetch() e não import(): o navegador guarda a
+ * falha de um import() dinâmico para aquela URL, e o "Tentar de novo" nunca
+ * funcionaria depois de uma queda de rede. fetch() não tem esse cache.
+ */
+
+async function baixarJson(url: string, sinal: AbortSignal): Promise<unknown> {
+  const resp = await fetch(url, { signal: sinal, credentials: "same-origin" });
+  if (!resp.ok) throw new Error(`Falha ao baixar ${url}: HTTP ${String(resp.status)}`);
+  return resp.json() as Promise<unknown>;
+}
+
+/** Baixa o guia. Rejeita em falha de rede, HTTP != 2xx ou depois de `limiteMs`. */
+export async function carregarGuia(limiteMs = 15_000): Promise<Guia> {
+  const sinal = AbortSignal.timeout(limiteMs);
+  const [servicos, duelos] = await Promise.all([baixarJson(servicosUrl, sinal), baixarJson(duelosUrl, sinal)]);
+  if (!Array.isArray(servicos) || !Array.isArray(duelos)) throw new Error("Guia em formato inesperado");
+  return { GUIA: validado<Servico[]>(servicos), DUELOS: validado<Duelo[]>(duelos) };
+}
+
 export interface ContentBundle {
   EXAMS: Exam[]; QUESTIONS: Question[]; FICHAS: Ficha[]; LESSONS: Lesson[]; DECKS: Deck[];
   DIAGRAMS: Record<string, string>; EQUIV: Equiv[]; GUIA: Servico[]; DUELOS: Duelo[]; catalogo: Catalogo;
+  carregarGuia: () => Promise<Guia>;
 }
 
 /* ordem das provas = ordem do catálogo (a trilha e os testes dependem dela) */
@@ -50,8 +77,9 @@ export function montarConteudo(): ContentBundle {
     DECKS: porOrdem(juntar<Deck>("decks")),
     DIAGRAMS: validado<Record<string, string>>(diagrams),
     EQUIV: validado<Equiv[]>(equiv),
-    GUIA: validado<Servico[]>(servicos),
-    DUELOS: validado<Duelo[]>(duelos),
+    GUIA: [],
+    DUELOS: [],
     catalogo: validado<Catalogo>(catalogo),
+    carregarGuia,
   };
 }

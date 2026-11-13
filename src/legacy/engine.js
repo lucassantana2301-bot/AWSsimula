@@ -27,6 +27,20 @@ const GCATS=[
   ["rede","Rede e entrega"],["seguranca","Segurança e identidade"],["gestao","Gestão e monitoramento"],
   ["custo","Custo e cobrança"],["dados","Análise de dados"],["ia","IA e machine learning"],["usuario","Usuário final e IoT"]];
 const gcatNome=c=>(GCATS.find(x=>x[0]===c)||[c,c])[1];
+/* O guia (~100 KB comprimidos) só é baixado quando a aba Guia é aberta.
+   C.carregarGuia vem de src/main.ts; nos testes em Node o guia já vem pronto. */
+let GUIA_OK=GUIA.length>0, GUIA_P=null, GUIA_ERRO=false;
+function guiaPronto(){
+  if(GUIA_OK) return true;
+  if(!GUIA_P&&!GUIA_ERRO&&typeof C.carregarGuia==="function"){
+    GUIA_P=C.carregarGuia().then(g=>{ GUIA.push(...g.GUIA); DUELOS.push(...g.DUELOS); GUIA_OK=true; render(); })
+      .catch(()=>{ GUIA_P=null; GUIA_ERRO=true; toast("Não deu para carregar o guia. Confira a conexão e tente de novo.","no"); render(); });
+  }
+  return false;
+}
+const guiaCarregando=()=>`<div class="stack-lg"><h1 class="t-xl">Guia de serviços AWS</h1>
+  <p class="t-md dim" role="status" aria-live="polite">${GUIA_P?"Carregando o guia…":"O guia não carregou."}</p>
+  ${GUIA_P?"":`<button class="btn fill sm" data-act="guia-retry" style="align-self:flex-start">Tentar de novo</button>`}</div>`;
 const gserv=id=>GUIA.find(s=>s.id===id);
 const gduelo=id=>DUELOS.find(d=>d.id===id);
 const semAcento=t=>String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
@@ -36,6 +50,7 @@ const gprovas=p=>(p||[]).map(x=>`<span class="tag aw mono">${x==="clf"?"CLF":"SA
 const duelosDe=id=>DUELOS.filter(d=>d.cols.some(c=>c.id===id));
 
 function viewGuia(){
+  if(!guiaPronto()) return guiaCarregando();
   const lidos=Object.keys(glidos()).filter(id=>gserv(id)).length;
   const porCat=GCATS.map(([c,n])=>[c,n,GUIA.filter(s=>s.cat===c)]).filter(x=>x[2].length);
   return `<div class="stack-lg">
@@ -92,6 +107,7 @@ function guiaFiltra(){
 }
 
 function viewServ(){
+  if(!guiaPronto()) return guiaCarregando();
   const s=gserv(V.id);
   if(!s) return viewGuia();
   if(!glidos()[s.id]){ glidos()[s.id]=Date.now(); save(); }
@@ -127,6 +143,7 @@ function viewServ(){
 }
 
 function viewDuelo(){
+  if(!guiaPronto()) return guiaCarregando();
   const d=gduelo(V.id);
   if(!d) return viewGuia();
   const resp=V.dres||{}, n=d.cols.length;
@@ -185,6 +202,7 @@ function gqMonta(n){
   return shuffle(qs).slice(0,n);
 }
 function viewGQ(){
+  if(!guiaPronto()) return guiaCarregando();
   const G=V.gq2;
   if(!G) return viewGuia();
   const q=G.list[G.i];
@@ -222,6 +240,7 @@ function viewGQ(){
 /* ações do guia; devolve true se tratou */
 function guiaAct(a,b){
   if(a==="guia"){ go("guia"); return true; }
+  if(a==="guia-retry"){ GUIA_ERRO=false; render(); return true; }
   if(a==="gserv"){ go("serv",{id:b.dataset.id}); return true; }
   if(a==="gduelo"){ go("duelo",{id:b.dataset.id,dres:{}}); return true; }
   if(a==="gprova"){ V.gp=b.dataset.p;
