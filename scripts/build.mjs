@@ -20,7 +20,7 @@ const PARTES = [
   "p4f-questions-saa.js", "p4g-questions-saa-b.js",
   "p4h-questions-az104c.js", "p4i-questions-saa-c.js", "p4j-questions-aws-d.js", "p4k-questions-saa-max.js", "p4l-questions-aws-e.js",
   "p6-decks.js", "p2b-catalog-az104.js", "p2c-catalog-saa.js", "p6b-decks-aws.js",
-  "p7-catalogo.js", "p8-motion.js", "p5-engine.js"
+  "p7-catalogo.js", "p8-motion.js", "p4m-guia-dados.js", "p5a-guia.js", "p5-engine.js"
 ];
 
 function ler(nome) {

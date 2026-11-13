@@ -7,7 +7,7 @@
   "engines": { "node": ">=18" },
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node tests/test-logic.js && node tests/test-questoes.js && node tests/test-perimetro.js && node tests/test-dom.js && node tests/test-features.js",
+    "test": "node tests/test-logic.js && node tests/test-questoes.js && node tests/test-guia.js && node tests/test-perimetro.js && node tests/test-dom.js && node tests/test-features.js",
     "test:browser": "node tests/browser/check-layout.js && node tests/browser/check-a11y.js && node tests/browser/check-disabled.js && node tests/browser/check-weights.js && node tests/browser/check-motion.js && node tests/browser/check-csp.js",
     "verify": "npm run build && npm test && npm run test:browser",
     "vercel-build": "npm run build && npm test"
