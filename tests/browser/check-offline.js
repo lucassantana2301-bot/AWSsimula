@@ -15,7 +15,13 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const l = document.querySelector('link[rel="manifest"]');
     if (!l) return null;
     const m = await (await fetch(l.href)).json();
-    const icones = await Promise.all(m.icons.map(async (i) => ({ ...i, ok: (await fetch(i.src)).ok })));
+    /* o servidor devolve index.html (200) para arquivo que não existe: confere o tipo */
+    const icones = await Promise.all(
+      m.icons.map(async (i) => {
+        const r = await fetch(i.src);
+        return { ...i, ok: r.ok && (r.headers.get("content-type") || "").startsWith(i.type || "image/") };
+      }),
+    );
     return { ...m, icons: icones };
   });
   if (!man) prob.push("sem <link rel=manifest>");
