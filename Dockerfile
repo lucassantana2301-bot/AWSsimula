@@ -4,8 +4,10 @@
 #   docker build --target api -t cloudquest-api .
 # Tudo roda como usuário sem privilégio e com sistema de arquivos só leitura.
 
-ARG NODE_IMAGE=node:22-alpine
-ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.27-alpine
+# Fixadas por digest: a tag pode ser repontada (foi o que aconteceu com o trivy-action em
+# 03/2026); o digest não. O Dependabot (ecossistema docker) abre PR quando sai um novo.
+ARG NODE_IMAGE=node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.27-alpine@sha256:65e3e85dbaed8ba248841d9d58a899b6197106c23cb0ff1a132b7bfe0547e4c0
 
 # ---------- dependências (cache separado do código) ----------
 FROM ${NODE_IMAGE} AS deps

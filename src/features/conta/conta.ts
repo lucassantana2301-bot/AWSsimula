@@ -60,7 +60,32 @@ export interface Painel {
   servicos_top: { id: string; n: number }[];
   /* opcional: só existe depois da migração 20261113040000 */
   reportadas?: { id: string; motivo: string | null; n: number }[];
+  /* opcional: só existe depois da migração 20261113050000 (painel_vitais) */
+  vitais?: VitaisPainel;
   erros: { mensagem: string; n: number; ultimo: string; versao: string }[];
+}
+
+export type MetricaVital = "lcp" | "inp" | "cls";
+export type VitaisPainel = Partial<Record<MetricaVital, { p75: number; bom: number; n: number }>>;
+
+/** Valida o JSON de painel_vitais: só as três métricas, só números finitos. */
+export function lerVitaisPainel(x: unknown): VitaisPainel | undefined {
+  if (!x || typeof x !== "object" || Array.isArray(x)) return undefined;
+  const out: VitaisPainel = {};
+  for (const m of ["lcp", "inp", "cls"] as const) {
+    const v = (x as Record<string, unknown>)[m];
+    if (!v || typeof v !== "object") continue;
+    const { p75, bom, n } = v as Record<string, unknown>;
+    if ([p75, bom, n].every((y) => typeof y === "number" && Number.isFinite(y)))
+      out[m] = { p75: p75 as number, bom: bom as number, n: n as number };
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+/** "1.8 s" para LCP e INP grandes, "96 ms" para os pequenos, "0.04" para CLS. */
+export function formatarVital(m: MetricaVital, v: number): string {
+  if (m === "cls") return v.toFixed(2);
+  return v >= 1000 ? `${(v / 1000).toFixed(1)} s` : `${String(Math.round(v))} ms`;
 }
 
 /* ---------- utilitários puros ---------- */
@@ -232,6 +257,12 @@ async function carregarPainel(c: SupabaseClient): Promise<void> {
   const dado: unknown = r.data;
   if (!r.error && dado && typeof dado === "object") {
     painel = dado as Painel; // forma garantida pela função SQL versionada em supabase/migrations
+    /* função opcional: sem a migração dos vitais, o painel segue sem a seção */
+    const v = await c.rpc("painel_vitais", { p_dias: 7 }).then(
+      (x) => (x.error ? undefined : lerVitaisPainel(x.data)),
+      () => undefined,
+    );
+    if (v) painel = { ...painel, vitais: v };
     motor?.render();
   }
 }
@@ -248,6 +279,13 @@ export function htmlPainel(p: Painel): Html {
     ${sims.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Simulados</h3>${sims.map(([k, v]) => linha(`${k.toUpperCase()}: média ${String(v.media)}`, `${String(v.aprovados)}/${String(v.n)} aprovados`))}`}
     ${p.servicos_top.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Serviços mais abertos no guia</h3>${p.servicos_top.map((x) => linha(x.id, x.n))}`}
     ${p.reportadas && p.reportadas.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Questões reportadas</h3>${p.reportadas.map((x) => linha(`${x.id} · ${x.motivo ?? "sem motivo"}`, x.n))}`}
+    ${
+      p.vitais &&
+      html`<h3 class="t-sm" style="margin-top:6px">Desempenho real (p75, Web Vitals)</h3>${(["lcp", "inp", "cls"] as const).map((m) => {
+        const v = p.vitais?.[m];
+        return v && linha(`${m.toUpperCase()} · ${String(v.bom)}% bom · ${String(v.n)} sessões`, formatarVital(m, v.p75));
+      })}`
+    }
     <h3 class="t-sm" style="margin-top:6px">Erros</h3>
     ${
       p.erros.length > 0

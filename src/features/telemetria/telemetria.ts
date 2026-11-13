@@ -27,6 +27,7 @@ export const NOMES_EVENTO = [
   "login",
   "instalou_pwa",
   "questao_reportada",
+  "web_vitais",
 ] as const;
 export type NomeEvento = (typeof NOMES_EVENTO)[number];
 export type DadosEvento = Record<string, string | number | boolean>;

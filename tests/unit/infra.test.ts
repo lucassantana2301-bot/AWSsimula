@@ -83,13 +83,38 @@ describe("imagens e nginx", () => {
     expect(df).toMatch(/nginx-unprivileged:\d/);
     expect(df).toMatch(/node:\d+-alpine/);
     expect(df).not.toMatch(/:latest/);
+    /* toda imagem base fixada por digest */
+    const bases = [...df.matchAll(/^ARG \w+_IMAGE=(\S+)$/gm)].map((m) => m[1] ?? "");
+    expect(bases.length).toBeGreaterThanOrEqual(2);
+    for (const b of bases) expect(b).toMatch(/@sha256:[0-9a-f]{64}$/);
+  });
+  it("nenhum workflow usa ação do Trivy por tag", () => {
+    for (const w of ["ci.yml", "k8s.yml", "mutacao.yml"])
+      expect(ler(`.github/workflows/${w}`)).not.toMatch(/aquasecurity\/(trivy|setup-trivy)-?action@|setup-trivy@/);
   });
   it("nginx manda os mesmos cabeçalhos de segurança do vercel.json", () => {
     const vercel = JSON.parse(ler("vercel.json")) as { headers: { source: string; headers: { key: string; value: string }[] }[] };
     const globais = vercel.headers.find((h) => h.source === "/(.*)")?.headers ?? [];
     const conf = ler("docker/nginx/seguranca.conf");
     expect(globais.length).toBeGreaterThan(3);
-    for (const { key, value } of globais) expect(conf).toContain(`add_header ${key} "${value}" always;`);
+    /* única diferença aceita: o contêiner não recebe relatórios de CSP (a API dele é só GET/HEAD) */
+    for (const { key, value } of globais) {
+      if (key === "Reporting-Endpoints") continue;
+      const semRelatorio = value.replace(/; report-uri \/api\/csp; report-to csp$/, "");
+      expect(conf).toContain(`add_header ${key} "${semRelatorio}" always;`);
+    }
+    expect(conf).not.toMatch(/report-uri|report-to|Reporting-Endpoints/);
+  });
+  it("Vercel manda relatórios de CSP para /api/csp nos dois formatos", () => {
+    const vercel = JSON.parse(ler("vercel.json")) as {
+      headers: { source: string; headers: { key: string; value: string }[] }[];
+      functions: Record<string, unknown>;
+    };
+    const globais = vercel.headers.find((h) => h.source === "/(.*)")?.headers ?? [];
+    const csp = globais.find((h) => h.key === "Content-Security-Policy")?.value ?? "";
+    expect(csp).toMatch(/; report-uri \/api\/csp; report-to csp$/);
+    expect(globais.find((h) => h.key === "Reporting-Endpoints")?.value).toBe('csp="/api/csp"');
+    expect(vercel.functions["api/csp.ts"]).toBeDefined();
   });
   it("toda location com add_header inclui os cabeçalhos de segurança", () => {
     const t = ler("docker/nginx/default.conf.template");

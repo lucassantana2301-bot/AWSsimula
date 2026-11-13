@@ -50,6 +50,7 @@ import {
   telemetriaLigada,
   type NomeEvento,
 } from "./features/telemetria/telemetria";
+import { observarVitais } from "./features/telemetria/vitais";
 import { blocoApp, iniciarPwa } from "./features/pwa/pwa";
 import { blocoCalendario } from "./features/progresso/calendario";
 import { type Html } from "./lib/html";
@@ -123,6 +124,7 @@ declare global {
 
 /* erros desde o primeiro instante, inclusive os do carregamento do motor */
 instalarTelemetria(() => globalThis.__CQ_MOTOR?.tela() ?? "inicio");
+observarVitais((dados) => registrarEvento("web_vitais", dados));
 
 /** O motor legado ainda monta HTML com strings: a conversão acontece só aqui. */
 const paraMotor = (h: Html | false): string => (h ? h.texto : "");
