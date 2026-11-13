@@ -9,7 +9,9 @@ import { gzipSync } from "node:zlib";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(ROOT, "dist");
-const ORCAMENTO_KB = { js: 340, css: 15, fontes: 70 };
+const ORCAMENTO_KB = { js: 200, css: 15, fontes: 70, dados: 260 };
+/* JSON baixado antes do motor (src/main.ts espera): conta como abertura */
+const DADOS_NA_ABERTURA = /^questions-.*\.json$/;
 /* módulos importados dinamicamente, mas na abertura: contam como iniciais */
 const NA_ABERTURA = ["src/legacy/engine.js"];
 
@@ -54,13 +56,16 @@ for (const [, m] of Object.entries(manifesto))
     soma.fontes += readFileSync(join(DIST, m.file)).length;
   }
 
+soma.dados = 0;
+for (const f of readdirSync(join(DIST, "assets")).filter((n) => DADOS_NA_ABERTURA.test(n))) soma.dados += gz(join("assets", f));
+
 let falhou = false;
-for (const tipo of ["js", "css", "fontes"]) {
+for (const tipo of ["js", "css", "fontes", "dados"]) {
   const kb = Math.round(soma[tipo] / 1024);
   const ok = kb <= ORCAMENTO_KB[tipo];
   if (!ok) falhou = true;
   console.log(
-    `${ok ? "OK " : "ACIMA"} abertura ${tipo.padEnd(6)} ${String(kb).padStart(4)} KB${tipo === "fontes" ? " (woff2)" : " gzip"} (teto ${ORCAMENTO_KB[tipo]} KB)`,
+    `${ok ? "OK " : "ACIMA"} abertura ${tipo.padEnd(6)} ${String(kb).padStart(4)} KB${tipo === "fontes" ? " (woff2)" : tipo === "dados" ? " gzip (JSON das questões)" : " gzip"} (teto ${ORCAMENTO_KB[tipo]} KB)`,
   );
 }
 const sobDemanda = Object.values(manifesto).filter(
@@ -68,6 +73,6 @@ const sobDemanda = Object.values(manifesto).filter(
 );
 for (const m of sobDemanda) console.log(`    sob demanda: ${m.src ?? m.file} ${Math.round(gz(m.file) / 1024)} KB gzip`);
 /* dados baixados por fetch() (guia): JSON com hash em assets/ */
-for (const f of readdirSync(join(DIST, "assets")).filter((n) => n.endsWith(".json")))
+for (const f of readdirSync(join(DIST, "assets")).filter((n) => n.endsWith(".json") && !DADOS_NA_ABERTURA.test(n)))
   console.log(`    sob demanda: assets/${f} ${Math.round(gz(join("assets", f)) / 1024)} KB gzip`);
 process.exit(falhou ? 1 : 0);

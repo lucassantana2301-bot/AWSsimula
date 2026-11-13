@@ -1060,8 +1060,8 @@
             "Quanto vai custar uma arquitetura que ainda não existe"
           ],
           [
-            "Calculadora de TCO",
-            "Quanto custa hoje o datacenter próprio comparado ao Azure, incluindo energia, espaço e equipe"
+            "Caso de negócio do Azure Migrate",
+            "Quanto custa hoje o datacenter próprio comparado ao Azure (TCO), incluindo energia, espaço e equipe. Substituiu a antiga calculadora de TCO, aposentada."
           ],
           [
             "Microsoft Cost Management",
@@ -1126,7 +1126,7 @@
       },
       {
         "t": "trap",
-        "x": "Spot nunca é a resposta para carga que não pode cair, por mais barato que seja. E Cost Management não serve para projetar uma migração que ainda não existe: isso é Calculadora de Preços ou de TCO."
+        "x": "Spot nunca é a resposta para carga que não pode cair, por mais barato que seja. E Cost Management não serve para projetar uma migração que ainda não existe: isso é Calculadora de Preços ou caso de negócio do Azure Migrate."
       },
       {
         "t": "case",

@@ -2,6 +2,9 @@
  * Monta o pacote de conteúdo que o motor recebe.
  * Fase 1: tudo em import estático (mesmo comportamento de antes).
  * Fase 2: o guia sai do pacote inicial e é baixado sob demanda (ver carregarGuia).
+ * Fase 3: o banco de questões sai do JavaScript e vira JSON baixado na abertura
+ * (carregarQuestoes): JSON é mais barato de interpretar que JS e fica em cache
+ * separado do código, então uma mudança de código não invalida as questões.
  */
 import exams from "../../content/exams.json";
 import catalogo from "../../content/catalogo.json";
@@ -24,8 +27,12 @@ function validado<T>(dado: unknown): T {
   return dado as T;
 }
 
-/* import.meta.glob junta as pastas de cada prova sem listar uma a uma */
-const porExame = import.meta.glob<{ default: unknown[] }>("../../content/exams/*/*.json", { eager: true });
+/* import.meta.glob junta as pastas de cada prova sem listar uma a uma.
+   As questões ficam de fora do JS: viram arquivos JSON com hash no nome. */
+const porExame = import.meta.glob<{ default: unknown[] }>(["../../content/exams/*/*.json", "!../../content/exams/*/questions.json"], {
+  eager: true,
+});
+const urlsQuestoes = import.meta.glob<string>("../../content/exams/*/questions.json", { eager: true, query: "?url", import: "default" });
 const juntar = <T>(arquivo: string): T[] =>
   Object.entries(porExame)
     .filter(([p]) => p.endsWith(`/${arquivo}.json`))
@@ -73,10 +80,23 @@ const ordem = EXAMES.map((e) => e.id);
 const porOrdem = <T extends { exam: string }>(xs: T[]): T[] =>
   [...xs].sort((a, b) => ordem.indexOf(a.exam) - ordem.indexOf(b.exam));
 
-export function montarConteudo(): ContentBundle {
+/** Baixa as questões de todas as provas em paralelo (com timeout e checagem de HTTP). */
+export async function carregarQuestoes(limiteMs = 20_000): Promise<Question[]> {
+  const sinal = AbortSignal.timeout(limiteMs);
+  const listas = await Promise.all(
+    Object.values(urlsQuestoes).map(async (u) => {
+      const dado = await baixarJson(u, sinal);
+      if (!Array.isArray(dado)) throw new Error(`Questões em formato inesperado: ${u}`);
+      return validado<Question[]>(dado);
+    }),
+  );
+  return porOrdem(listas.flat());
+}
+
+export function montarConteudo(questoes: Question[]): ContentBundle {
   return {
     EXAMS: EXAMES,
-    QUESTIONS: porOrdem(juntar<Question>("questions")),
+    QUESTIONS: questoes,
     FICHAS: porOrdem(juntar<Ficha>("fichas")),
     LESSONS: [...porOrdem(juntar<Lesson>("lessons")), ...validado<Lesson[]>(shared)],
     DECKS: porOrdem(juntar<Deck>("decks")),

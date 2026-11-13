@@ -25,8 +25,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   let achou = false;
   for (let i = 0; i < 8 && !achou; i++) {
     /* a revisão mistura tipos por conceito: responde conforme o tipo */
-    const linhasSimNao = await p.$$('[data-act="qyn"][data-v="1"]');
-    if (linhasSimNao.length) for (const bt of linhasSimNao) { await bt.click(); await sleep(40); }
+    /* cada clique re-renderiza: busca o botão de novo pelo índice, nunca reaproveita o handle */
+    const linhasSimNao = await p.$$eval('[data-act="qyn"][data-v="1"]', (bs) => bs.map((b) => b.getAttribute("data-i")));
+    if (linhasSimNao.length) for (const i of linhasSimNao) { await p.click(`[data-act="qyn"][data-v="1"][data-i="${i}"]`); await sleep(40); }
     else { await p.keyboard.press("1"); await sleep(80); }
     await p.click('[data-act="qcheck"]'); await sleep(300);
     if (!(await p.$(".verdict"))) { prob.push("questão não aceitou resposta (tipo não tratado no teste)"); break; }

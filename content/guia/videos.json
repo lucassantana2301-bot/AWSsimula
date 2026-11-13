@@ -722,5 +722,119 @@
       "canal": "Amazon Web Services",
       "lang": "en"
     }
+  ],
+  "ecs": [
+    {
+      "yt": "FnFvpIsBrog",
+      "titulo": "Introduction to Amazon Elastic Container Service (ECS) | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "eks": [
+    {
+      "yt": "fSpsC_M9iWc",
+      "titulo": "Amazon EKS Explained | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "redshift": [
+    {
+      "yt": "7vVmZhc4DS8",
+      "titulo": "Amazon Redshift Serverless Explained in 90 Seconds | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "bedrock": [
+    {
+      "yt": "_vdK5PgcNvc",
+      "titulo": "Introducing Amazon Bedrock | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "privatelink": [
+    {
+      "yt": "_mHLkFeTuFo",
+      "titulo": "AWS PrivateLink",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "trusted-advisor": [
+    {
+      "yt": "uEIrFbesvP8",
+      "titulo": "AWS Trusted Advisor | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "budgets": [
+    {
+      "yt": "5vYEVQzoMeM",
+      "titulo": "AWS Cost Optimisation Series: AWS Budgets | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "ecr": [
+    {
+      "yt": "GtbTmvMcKRg",
+      "titulo": "Amazon Elastic Container Registry (Amazon ECR) Explained | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "lightsail": [
+    {
+      "yt": "wzhTAwRbdXw",
+      "titulo": "Introducing Amazon Lightsail",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "taMlabDBO58",
+      "titulo": "Amazon Lightsail: The Easiest Way to Get Started on AWS",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "dms": [
+    {
+      "yt": "lOqySgvxUfI",
+      "titulo": "AWS Data Migration Service | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "zb4GcjEdl8U",
+      "titulo": "AWS Database Migration Service (DMS)",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "storage-gateway": [
+    {
+      "yt": "DPyc0q4MYsM",
+      "titulo": "Introducing AWS Storage Gateway",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "XXQNXwx8nfE",
+      "titulo": "AWS Storage Gateway",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "amplify": [
+    {
+      "yt": "BCXdLx6xHmc",
+      "titulo": "Intro to AWS Amplify | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
   ]
 }
