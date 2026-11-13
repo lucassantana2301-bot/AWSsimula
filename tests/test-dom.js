@@ -231,13 +231,16 @@ try{
   has("Fichas estudadas","progresso sem contagem de fichas");
   has("Conquistas");
   has("Últimos simulados","simulado fora do histórico");
-  has("armazenamento local","faltou aviso de privacidade");
+  has("O progresso fica neste navegador","faltou aviso de privacidade");
   click('[data-act="goal"]',2);
   if(state().goal!==3) errs.push("FALHOU: meta diária não salvou");
   click('[data-act="reset"]');
   if((state().xp||0)===0) errs.push("FALHOU: reset apagou no primeiro toque");
   click('[data-act="reset"]');
   if(state().xp!==0) errs.push("FALHOU: reset não funcionou no segundo toque");
+  /* item 1 da auditoria: apagar guarda cópia de segurança */
+  const copias=()=>Object.keys(w.localStorage).filter(k=>k.startsWith("cloudquest.backup."));
+  if(copias().length<1) errs.push("FALHOU: apagar o progresso não guardou cópia");
   has("Estude pelo guia do exame","não voltou ao início após o reset");
   click('[data-act="exam"][data-exam="clf"]');
   has("Cloud Practitioner","trilha da AWS não abriu");
@@ -245,6 +248,43 @@ try{
   if(n('[data-act="study"]')) errs.push("FALHOU: prática da AWS aberta sem ler fichas");
 }catch(e){ errs.push("EXCEÇÃO: "+e.message+"\n"+String(e.stack).split("\n").slice(0,3).join("\n")); }
 
-errs.push(...js);
-if(errs.length){ console.log(errs.join("\n")); console.log("\n*** "+errs.length+" PROBLEMA(S) ***"); process.exit(1); }
-console.log("*** FLUXOS: OK ***"); process.exit(0);
+/* ---------- auditoria de QA: importação com prévia, abas e leitura segura ---------- */
+const espera=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+  try{
+    click('[data-act="me"]');
+    const antes=state().xp||0;
+    const inp=d.getElementById("impfile");
+    const escolhe=conteudo=>{
+      const arquivo=new w.File([conteudo],"progresso.json",{type:"application/json"});
+      Object.defineProperty(inp,"files",{value:[arquivo],configurable:true});
+      inp.dispatchEvent(new w.Event("change",{bubbles:true}));
+    };
+    /* arquivo inválido: recusado, nada muda */
+    escolhe(JSON.stringify({v:2,xp:"<img src=x onerror=alert(1)>"}));
+    await espera(50);
+    if(n(".imp-previa")) errs.push("FALHOU: arquivo inválido abriu a prévia");
+    if((state().xp||0)!==antes) errs.push("FALHOU: arquivo inválido mudou o progresso");
+    /* arquivo válido: prévia primeiro, nada trocado ainda */
+    escolhe(JSON.stringify({v:2,xp:777,sims:[],seen:{"az-d1-01":{ok:true}}}));
+    await espera(50);
+    if(!n(".imp-previa")) errs.push("FALHOU: importação não mostrou a prévia");
+    has("777 XP","prévia sem o XP do arquivo");
+    if((state().xp||0)!==antes) errs.push("FALHOU: importação trocou o progresso antes de confirmar");
+    if(inp.value!=="") errs.push("FALHOU: o campo de arquivo não foi limpo");
+    const copiasAntes=Object.keys(w.localStorage).filter(k=>k.startsWith("cloudquest.backup.")).length;
+    click('[data-act="imp-ok"]');
+    if(state().xp!==777) errs.push("FALHOU: confirmar não importou");
+    const copiasDepois=Object.keys(w.localStorage).filter(k=>k.startsWith("cloudquest.backup.")).length;
+    if(copiasDepois<=Math.min(copiasAntes,2)) errs.push("FALHOU: importar não guardou cópia do progresso anterior");
+    if(n(".imp-previa")) errs.push("FALHOU: prévia continuou na tela");
+    /* outra aba salvou: junta sem regredir (xp maior vence) */
+    const outra={...state(),xp:900,upd:Date.now()+1000};
+    w.dispatchEvent(new w.StorageEvent("storage",{key:"cloudquest.v2",newValue:JSON.stringify(outra)}));
+    click('[data-act="goal"]',1);   /* qualquer ação que salva */
+    if(state().xp<900) errs.push("FALHOU: progresso da outra aba se perdeu ("+state().xp+")");
+  }catch(e){ errs.push("EXCEÇÃO (QA): "+e.message+"\n"+String(e.stack).split("\n").slice(0,3).join("\n")); }
+  errs.push(...js);
+  if(errs.length){ console.log(errs.join("\n")); console.log("\n*** "+errs.length+" PROBLEMA(S) ***"); process.exit(1); }
+  console.log("*** FLUXOS: OK ***"); process.exit(0);
+})();

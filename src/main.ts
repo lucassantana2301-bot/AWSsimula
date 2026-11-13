@@ -25,9 +25,20 @@ import {
   telaRevisao,
   type EstadoRevisao,
 } from "./features/simulado/simulado";
+import {
+  LIMITE_IMPORT,
+  guardarBackup,
+  interpretar,
+  lerImportacao,
+  listarBackups,
+  pedirPersistencia,
+  salvarEstado,
+  validarEstado,
+} from "./features/progresso/armazenamento";
 import { leuAsDuasNuvens, telaComparar } from "./features/comparar/comparar";
 import type { Equiv } from "./content/schema";
 import { agendar, blocoConta, iniciarConta, type Motor } from "./features/conta/conta";
+import { mesclar } from "./features/conta/mesclar";
 import {
   blocoPrivacidade,
   definirTelemetria,
@@ -48,6 +59,19 @@ interface GuiaTelas {
   tela: (nome: string) => string;
   acao: typeof acaoDoGuia;
   filtrar: typeof filtrarGuia;
+}
+
+/** Contrato do armazenamento do progresso com o motor legado. */
+interface MotorProgresso {
+  interpretar: typeof interpretar;
+  guardarBackup: typeof guardarBackup;
+  backups: typeof listarBackups;
+  salvar: typeof salvarEstado;
+  valido: typeof validarEstado;
+  lerImportacao: typeof lerImportacao;
+  LIMITE_IMPORT: number;
+  mesclar: typeof mesclar;
+  persistir: () => void;
 }
 
 /** Contrato do simulado com o motor legado: funções puras e HTML já em texto. */
@@ -79,6 +103,7 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   evento: (nome: NomeEvento, dados?: Record<string, unknown>) => boolean;
   guiaTelas: GuiaTelas;
   simulado: MotorSimulado;
+  progresso: MotorProgresso;
   comparar: {
     tela: (equiv: readonly Equiv[]) => string;
     leuAsDuasNuvens: typeof leuAsDuasNuvens;
@@ -150,6 +175,20 @@ globalThis.__CQ_CONTENT = {
     if (ev) registrarEvento(ev.nome, ev.dados);
   },
   evento: registrarEvento,
+  /* progresso: leitura segura, backup, importação e abas (auditoria de QA) */
+  progresso: {
+    interpretar,
+    guardarBackup,
+    backups: listarBackups,
+    salvar: salvarEstado,
+    valido: validarEstado,
+    lerImportacao,
+    LIMITE_IMPORT,
+    mesclar,
+    persistir: () => {
+      void pedirPersistencia(navigator);
+    },
+  },
   /* simulado: montagem, nota, revisão e reporte (fase 3) */
   simulado: {
     montar: montarSimulado,
