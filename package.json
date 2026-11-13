@@ -5,7 +5,7 @@
   "description": "Estudo para certificações Azure e AWS: fichas, aulas curtas, simulados e trilha de carreira.",
   "type": "commonjs",
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "vite",
@@ -27,7 +27,8 @@
     "test:coverage": "vitest run --coverage",
     "test:mutation": "stryker run",
     "audit:prod": "npm audit --omit=dev --audit-level=moderate",
-    "test:visual": "playwright test --project=visual"
+    "test:visual": "playwright test --project=visual",
+    "test:vercel": "node scripts/verificar-funcoes-vercel.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
