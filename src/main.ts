@@ -9,6 +9,8 @@ import { blocoVideos, definirVideos, instalarVideos } from "./features/guia/vide
 import * as fsrs from "./features/srs/fsrs";
 import { montarIndice, servicosCitados, type EntradaIndice } from "./features/guia/citados";
 import { acaoDoGuia, filtrarGuia, ligarGuia, telaDoGuia } from "./features/guia/telas";
+import { leuAsDuasNuvens, telaComparar } from "./features/comparar/comparar";
+import type { Equiv } from "./content/schema";
 import { agendar, blocoConta, iniciarConta, type Motor } from "./features/conta/conta";
 import {
   blocoPrivacidade,
@@ -43,6 +45,10 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   aoNavegar: (tela: string, o?: Record<string, unknown>) => void;
   evento: (nome: NomeEvento, dados?: Record<string, unknown>) => void;
   guiaTelas: GuiaTelas;
+  comparar: {
+    tela: (equiv: readonly Equiv[]) => string;
+    leuAsDuasNuvens: typeof leuAsDuasNuvens;
+  };
   compartilharResultado: (r: Resultado) => void;
 };
 
@@ -110,6 +116,8 @@ globalThis.__CQ_CONTENT = {
     if (ev) registrarEvento(ev.nome, ev.dados);
   },
   evento: registrarEvento,
+  /* mapa AWS × Azure (fase 3) */
+  comparar: { tela: (equiv) => telaComparar(equiv).texto, leuAsDuasNuvens },
   /* guia de serviços: telas e ações fora do motor (fase 3) */
   guiaTelas: { ligar: ligarGuia, tela: (nome) => telaDoGuia(nome).texto, acao: acaoDoGuia, filtrar: filtrarGuia },
   /* abre o LinkedIn com o link público do resultado e copia o link */

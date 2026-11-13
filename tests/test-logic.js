@@ -9,7 +9,7 @@ global.window={scrollTo(){},addEventListener(){},location:global.location};
 global.navigator={};
 global.setInterval=()=>0; global.clearInterval=()=>{}; global.setTimeout=()=>0; global.clearTimeout=()=>{};
 global.requestAnimationFrame=()=>0;
-eval(require("fs").readFileSync(require("path").join(__dirname,"..","build","all.js"),"utf8")+"\n;Object.assign(global,{DECKS,CARDS,buildChall,parseChall,FICHAS,FICHAS_AZ,FICHAS_AWS,QUESTIONS,EXAMS,LESSONS,EQUIV,DIAGRAMS,S,grade,prep,pick,pickSim,predict,schedule,fullSpec,fullReady,prontidao,prontidaoHtml,cs,domProf,qHtml,verdictHtml,blockHtml,fichasOf,lessonsOf,contentDone,domOpen,ex0,daily,DEF,viewFicha,shell,CATALOGO,METAS,cat0,coverage,viewTrilha,viewCat,NIVEIS,PROVIDERS,pick,qPool,pickSim});");
+eval(require("fs").readFileSync(require("path").join(__dirname,"..","build","all.js"),"utf8")+"\n;Object.assign(global,{DECKS,CARDS,buildChall,parseChall,FICHAS,QUESTIONS,EXAMS,LESSONS,EQUIV,DIAGRAMS,S,grade,prep,pick,pickSim,predict,schedule,fullSpec,fullReady,prontidao,prontidaoHtml,cs,domProf,qHtml,verdictHtml,blockHtml,fichasOf,lessonsOf,contentDone,domOpen,ex0,daily,DEF,viewFicha,shell,CATALOGO,METAS,cat0,coverage,viewTrilha,viewCat,NIVEIS,PROVIDERS,pick,qPool,pickSim});");
 
 let f=0; const ok=(c,m)=>{ if(!c){ console.log("FALHOU: "+m); f++; } };
 const ACT=EXAMS.filter(e=>e.status==="active");

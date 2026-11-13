@@ -35,6 +35,13 @@ const TELAS: Tela[] = [
   },
   { nome: "treinar", abrir: (p) => clicar(p, '[data-act="review"]') },
   { nome: "desafios", abrir: (p) => clicar(p, '[data-act="chall"]') },
+  {
+    nome: "AWS × Azure",
+    abrir: async (p) => {
+      await clicar(p, '[data-act="review"]');
+      await clicar(p, '[data-act="compare"]');
+    },
+  },
   { nome: "perfil (conta, calendário, privacidade)", abrir: (p) => clicar(p, '[data-act="me"]') },
 ];
 

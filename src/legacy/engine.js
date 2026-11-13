@@ -11,8 +11,6 @@ const C = globalThis.__CQ_CONTENT;
 if (!C) throw new Error("conteúdo não carregado antes do motor");
 const { QUESTIONS, FICHAS, LESSONS, DIAGRAMS, EQUIV, EXAMS, DECKS, GUIA, DUELOS } = C;
 const CATALOGO = C.catalogo.certs, CATALOG_SYNCED = C.catalogo.synced, METAS = C.catalogo.metas, PROVIDERS = C.catalogo.providers;
-const FICHAS_AZ = FICHAS.filter((f) => f.exam === "az900");
-const FICHAS_AWS = FICHAS.filter((f) => f.exam === "clf");
 
 /* ============================================================
    GUIA DE SERVIÇOS AWS: saiu do motor (src/features/guia/telas.ts).
@@ -1805,20 +1803,8 @@ function viewChall(){
 
 /* ---------------- comparativo ---------------- */
 function viewCompare(){
-  const az=FICHAS_AZ.some(f=>S.fichas[f.id]), aw=FICHAS_AWS.some(f=>S.fichas[f.id]);
-  if(az&&aw) unlock("bothclouds");
-  return `<div class="stack-lg">
-    <section>
-      <h1 class="t-xl">O mesmo conceito nas duas nuvens</h1>
-      <p class="t-md dim" style="margin-top:7px;max-width:64ch">Se você já sabe uma, aprende a outra pelo mapa. A linha menor de cada par é onde elas divergem, que é justamente o que a prova cobra.</p>
-    </section>
-    <div class="stack">${EQUIV.map(x=>`<div class="eq">
-      <div class="s l"><b>${esc(x.az)}</b><span>${esc(x.c)}</span></div>
-      <div class="mid" aria-hidden="true"></div>
-      <div class="s r"><b>${esc(x.aw)}</b><span>${esc(x.n)}</span></div>
-    </div>`).join("")}</div>
-    <div class="note">Equivalente não quer dizer idêntico: limites, protocolos e garantias mudam entre as nuvens. Confirme na documentação oficial antes de assumir paridade.</div>
-  </div>`;
+  if(C.comparar.leuAsDuasNuvens(FICHAS,S.fichas)) unlock("bothclouds");
+  return C.comparar.tela(EQUIV);
 }
 
 /* ---------------- progresso ---------------- */
