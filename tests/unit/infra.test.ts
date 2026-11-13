@@ -89,10 +89,21 @@ describe("imagens e nginx", () => {
     for (const b of bases) expect(b).toMatch(/@sha256:[0-9a-f]{64}$/);
   });
   it("imagem da API não leva npm/npx/corepack (só o node roda em produção)", () => {
-    const api = ler("Dockerfile").split(/^FROM /m).find((b) => /AS api\s*$/m.test(b.split("\n")[0] ?? "")) ?? "";
+    const api =
+      ler("Dockerfile")
+        .split(/^FROM /m)
+        .find((b) => /AS api\s*$/m.test(b.split("\n")[0] ?? "")) ?? "";
     expect(api).toMatch(/rm -rf \/usr\/local\/lib\/node_modules\/npm/);
     expect(api).toMatch(/\/usr\/local\/bin\/npx/);
     expect(api).not.toMatch(/^RUN npm /m);
+  });
+  it("imagem web termina sem root, mesmo depois do apk upgrade", () => {
+    const web =
+      ler("Dockerfile")
+        .split(/^FROM /m)
+        .find((b) => /AS web\s*$/m.test(b.split("\n")[0] ?? "")) ?? "";
+    const usuarios = [...web.matchAll(/^USER (\S+)$/gm)].map((m) => m[1]);
+    expect(usuarios.at(-1)).toBe("101");
   });
   it("nenhum workflow usa ação do Trivy por tag", () => {
     for (const w of ["ci.yml", "k8s.yml", "mutacao.yml"])

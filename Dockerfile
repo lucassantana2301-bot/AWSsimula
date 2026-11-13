@@ -49,6 +49,11 @@ CMD ["node", "server.mjs"]
 
 # ---------- imagem do site ----------
 FROM ${NGINX_IMAGE} AS web
+# Correções de segurança do Alpine sobre a base fixada (o Trivy barrou 68 CVEs HIGH/CRITICAL em
+# libssl3, libcrypto3, c-ares…). Precisa de root só para o apk; o nginx volta a rodar como 101.
+USER root
+RUN apk upgrade --no-cache && rm -rf /var/cache/apk/*
+USER 101
 ENV API_UPSTREAM=http://api:3000
 # só ${API_UPSTREAM} é substituído; as variáveis do nginx ($uri) ficam intactas
 ENV NGINX_ENVSUBST_FILTER=API_UPSTREAM
