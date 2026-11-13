@@ -7,7 +7,10 @@
    - setViewport, emulateMediaFeatures, setOfflineMode,
      setBypassServiceWorker, evaluateOnNewDocument;
    - setRequestInterception + on("request") com abort/continue/respond;
-   - goto com waitUntil "networkidle0"/"networkidle2". */
+   - goto com waitUntil "networkidle0"/"networkidle2";
+   - depois de goto/reload, pula as boas-vindas da primeira visita ("Já sei
+     usar"): estas suítes testam o app de quem já começou. As boas-vindas têm
+     testes próprios em tests/test-dom.js e no axe de tests/e2e. */
 const { chromium } = require("@playwright/test");
 
 const traduzEspera = (o) => {
@@ -15,6 +18,17 @@ const traduzEspera = (o) => {
   const w = o.waitUntil === "networkidle0" || o.waitUntil === "networkidle2" ? "networkidle" : o.waitUntil;
   return { ...o, waitUntil: w };
 };
+
+/* o app desenha #app de forma síncrona no carregamento; sem o botão, nada a fazer */
+async function pularBoasVindas(page) {
+  try {
+    await page.locator("#app").waitFor({ timeout: 5000 });
+    const b = page.locator('[data-act="onb-pular"]');
+    if (await b.count()) await b.first().click();
+  } catch {
+    /* página sem o app (offline proposital, CSP): o próprio teste decide */
+  }
+}
 
 /* requisição no formato do Puppeteer, resolvida uma vez só */
 function pedido(route) {
@@ -98,7 +112,16 @@ function embrulhar(navegador, pageInicial, contextoInicial) {
       interceptar = !!b;
       await ligarRota();
     },
-    goto: (url, o) => atual.page.goto(url, traduzEspera(o)),
+    goto: async (url, o) => {
+      const r = await atual.page.goto(url, traduzEspera(o));
+      await pularBoasVindas(atual.page);
+      return r;
+    },
+    reload: async (o) => {
+      const r = await atual.page.reload(traduzEspera(o));
+      await pularBoasVindas(atual.page);
+      return r;
+    },
     on: (ev, h) => {
       if (ev === "request" && interceptar) {
         ouvintes.push(h);

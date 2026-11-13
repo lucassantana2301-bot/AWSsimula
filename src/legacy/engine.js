@@ -251,7 +251,7 @@ const ACHS=[
 /* ---------- estado ---------- */
 const KEY="cloudquest.v2";
 const ESCALAS=[1,1.12,1.25,1.4];
-const DEF=()=>({v:2,fonte:0,contraste:false,onb:0,xp:0,todayXp:0,streak:0,lastDay:null,shields:1,lives:MAX_LIVES,livesTs:Date.now(),
+const DEF=()=>({v:2,fonte:0,contraste:false,onb:0,foco:null,dicas:{},xp:0,todayXp:0,streak:0,lastDay:null,shields:1,lives:MAX_LIVES,livesTs:Date.now(),
   goal:2,concepts:{},seen:{},fichas:{},guia:{},lessons:{},bosses:{},sims:[],ach:{},dates:{},sim:null,cards:{},theme:"auto",decks:{},sprints:[],challenges:[],
   meta:"admin",certs:{},catProv:"all",catGroup:"trilha",
   weekXp:0,weekKey:null,combo:0,bestCombo:0,dailyDone:null,dayKeyCur:null,answered:0,dias:{}});
@@ -517,6 +517,10 @@ function toast(msg,cls){
 }
 
 /* ---------- estado de navegação ---------- */
+/* orientação (src/features/orientacao): boas-vindas em 3 passos, glossário aberto,
+   domínios que o aluno expandiu na tela da prova */
+const ORI=C.orientacao;
+let BV={passo:1,exam:null}, GLOSS=false, ABERTOS=new Set();
 let V={name:"home"}, SES=null, SIM=null, PL=null, RD=null, CARD=null, DK=null, SP=null, timers=[];
 const clearTimers=()=>{ timers.forEach(t=>{clearTimeout(t);clearInterval(t);}); timers=[]; };
 function go(name,o){
@@ -600,10 +604,37 @@ function shell(body){
       `<button data-act="${n}" aria-current="${cur(n)}">${t}${n==="review"&&due?' <b class="badge">'+due+'</b>':""}</button>`).join("")}</nav>
     <div class="rail-inst">
       ${inst("xp",S.xp)}${inst("dias",S.streak,"hot")}${inst("energia",S.lives+"/"+MAX_LIVES,"life")}
+      <button class="inst-ajuda" data-act="glossario" aria-expanded="${GLOSS}" aria-controls="glossario" aria-label="O que é cada número e termo do app">?</button>
     </div>
   </header>
   <div class="daybar" title="Meta do dia: ${S.todayXp} de ${goal} XP"><i style="width:${pct}%"></i></div>
-  <div class="canvas" id="main" tabindex="-1">${body}</div>`;
+  ${GLOSS?ORI.glossario():""}
+  <div class="canvas" id="main" tabindex="-1">${V.name==="home"&&mostraBoasVindas()?"":ORI.dica(V.name,S.dicas||{})}${body}</div>`;
+}
+
+/* ---------------- orientação ---------------- */
+const respostasDom=(exam,dom)=>qPool(exam,dom).reduce((a,q)=>a+((S.seen[q.id]&&S.seen[q.id].n)||0),0);
+function retrato(exam){
+  const e=ex0(exam), sims=S.sims.filter(r=>r.exam===exam);
+  return {exam,codigo:e.code,corte:e.pass,
+    dominios:e.domains.map((d,i)=>({id:d.id,nome:d.name,aberto:domOpen(exam,i),chefeVencido:!!S.bosses[exam+":"+d.id],
+      fichas:fichasBase(exam,d.id).filter(f=>!S.fichas[f.id]).map(f=>({id:f.id,titulo:f.title,duracao:f.mins+" min"})),
+      aulas:lessonsOf(exam,d.id).filter(l=>!S.lessons[l.id]).map(l=>({id:l.id,titulo:l.title,duracao:l.secs+" s"})),
+      prof:domProf(exam,d.id),respostas:respostasDom(exam,d.id)})),
+    revisaoVencida:dueConcepts(null).length,simEmAndamento:!!(S.sim&&S.sim.end>Date.now()),
+    temCompleta:fullReady(exam),erradas:SIMM.erros(qPool(exam),S.seen).length,ultimoSim:sims.length?sims[0].score:null};
+}
+/* prova em foco: a escolhida nas boas-vindas ou a última aberta; senão a primeira ativa */
+function provaFoco(){
+  const ativas=EXAMS.filter(e=>e.status==="active");
+  return (S.foco&&ativas.find(e=>e.id===S.foco))?S.foco:(ativas[0]&&ativas[0].id);
+}
+const mostraBoasVindas=()=>!S.onb&&!S.xp&&!S.sim;
+function passoHtml(exam,naHome){
+  const r=retrato(exam);
+  /* na home, o simulado em andamento tem cartão próprio (com descartar) */
+  if(naHome) r.simEmAndamento=false;
+  return ORI.passo(r,isAws(exam),naHome?ex0(exam).code:undefined).html;
 }
 
 /* ---------------- início ---------------- */
@@ -612,21 +643,8 @@ function viewHome(){
   const d=daily();
   return `
   <div class="stack-lg">
-    <section>
-      <h1 class="t-2xl" style="max-width:19ch">Estude pelo guia do exame, não por vídeo solto.</h1>
-      <p class="t-md dim" style="margin-top:10px;max-width:62ch">Cada domínio é uma fronteira com quatro etapas ligadas em sequência: ficha, aula, prática e chefe. A prática só abre quando o conteúdo do domínio tiver sido lido.</p>
-    </section>
-
-    ${!S.onb&&!S.xp&&!S.sim?`<section class="sheet onb" aria-labelledby="onb-h">
-      <h2 class="t-md" id="onb-h">Comece em 3 passos</h2>
-      <ol class="onb-passos">
-        <li><b>Escolha a prova</b><div class="row" style="gap:6px;margin-top:6px">${act.map(e=>
-          `<button class="btn sm ${isAws(e.id)?"aw":"az"}" data-act="onb-prova" data-exam="${e.id}">${e.code}</button>`).join("")}</div></li>
-        <li><b>Marque a data da prova</b> na tela dela: o app monta o plano dia a dia.</li>
-        <li><b>Defina a meta diária</b> no Perfil e volte todo dia para a revisão.</li>
-      </ol>
-      <button class="btn sm ghost" data-act="onb-pular">Já sei usar, esconder</button>
-    </section>`:""}
+    <h1 class="sr-only">CloudQuest: estude pelo guia do exame</h1>
+    ${mostraBoasVindas()?ORI.boasVindas(BV.passo,act.map(e=>({id:e.id,codigo:e.code,nome:e.name,aws:isAws(e.id),nivel:e.level})),BV.exam,GOALS):""}
 
     ${S.sim&&S.sim.end>Date.now()?`<section class="sheet tight" style="border-color:var(--fl)">
       <div class="spread">
@@ -638,14 +656,9 @@ function viewHome(){
         </div>
       </div></section>`:""}
 
-    ${(()=>{ const n=dueConcepts(null).length; return n?`<section class="sheet tight" style="border-color:var(--go)">
-      <div class="spread">
-        <div><h2 class="t-md">Revisão de hoje</h2>
-        <p class="t-sm dim" style="margin-top:2px">${n} ${n===1?"conceito está":"conceitos estão"} no ponto de esquecer. Revisar agora fixa por mais tempo.</p></div>
-        <button class="btn go sm" data-act="review-go">Revisar ${n}</button>
-      </div></section>`:""; })()}
+    ${!mostraBoasVindas()&&!(S.sim&&S.sim.end>Date.now())?passoHtml(provaFoco(),true):""}
 
-    ${d?`<section class="sheet tight">
+    ${d&&!mostraBoasVindas()&&S.xp>0?`<section class="sheet tight">
       <div class="spread">
         <div><h2 class="t-md">Desafio do dia</h2>
         <p class="t-sm dim" style="margin-top:2px">Um cenário difícil, sorteado. ${S.dailyDone===dayKey()?"Você já fez o de hoje.":"Vale 25 XP."}</p></div>
@@ -653,8 +666,8 @@ function viewHome(){
           ${S.dailyDone===dayKey()?"Concluído":"Começar"}</button>
       </div></section>`:""}
 
-    <section>
-      <div class="hd"><h2>Em estudo</h2><span class="n">largura de cada bloco = peso do domínio</span></div>
+    ${mostraBoasVindas()?"":`<section>
+      <div class="hd"><h2>Suas provas</h2><span class="n">toque numa prova para ver a trilha dela</span></div>
       <div class="exams">${act.map(examCard).join("")}</div>
     </section>
 
@@ -667,7 +680,7 @@ function viewHome(){
         <button class="btn fill sm" data-act="trilha">Abrir a trilha</button>
         <button class="btn sm" data-act="cat">Ver o catálogo inteiro</button>
       </div>
-    </section>
+    </section>`}
 
     <section class="stack">
       <div class="note"><b>O catálogo é mantido à mão, revisado em ${CATALOG_SYNCED}.</b> Microsoft e AWS aposentam exames e trocam versões com frequência: em 2026 saíram AZ-204, AZ-500, AI-900, AI-102, DP-100, MS-900 e o ML Specialty da AWS, e entraram credenciais novas de IA. Antes de marcar prova, confirme código, versão, peso de domínio e nota de corte em <a href="https://learn.microsoft.com/credentials/" target="_blank" rel="noopener">learn.microsoft.com/credentials</a> e <a href="https://aws.amazon.com/certification/" target="_blank" rel="noopener">aws.amazon.com/certification</a>.</div>
@@ -919,6 +932,13 @@ function viewExam(){
       <p class="t-sm dim" style="margin-top:5px">${e.realQ} questões em ${e.realMin} minutos na prova real. Corte ${e.pass} de ${e.scale}. Inscrição ${e.price}.</p>
     </section>
 
+    ${passoHtml(V.exam,false)}
+
+    <section class="stack">
+      <div class="hd"><h2>Trilha</h2><span class="n">${e.domains.length} domínios, um de cada vez</span></div>
+      ${e.domains.map((d,i)=>domBlock(d,i,aw)).join("")}
+    </section>
+
     <section class="sheet">
       <div class="hd"><h2>Prontidão estimada</h2>
         <span class="n">${pr.ready?"margem de "+pr.ci+" pontos":"aparece com 12 respostas"}</span></div>
@@ -964,12 +984,12 @@ function viewExam(){
     <section class="sheet tight">
       <div class="spread">
         <div style="max-width:46ch">
-          <h2 class="t-sm">Simulado</h2>
+          <h2 class="t-sm">Simulado: para quando terminar a trilha</h2>
           <p class="t-xs dim" style="margin-top:2px">Curto: ${e.simQ} questões em ${e.simMin} min.${fullReady(V.exam)?` Prova completa: ${fullSpec(V.exam).q} questões em ${fullSpec(V.exam).min} min, como a real.`:""} Na proporção dos domínios, priorizando questões que você ainda não viu. Sem retorno durante a prova.${sims.length?" Último: "+sims[0].score+" pontos"+(sims[0].full?" (completa)":"")+".":""}</p>
         </div>
         <div class="row" style="gap:6px">
           <button class="btn sm" data-act="simstart" data-exam="${V.exam}">Curto</button>
-          ${fullReady(V.exam)?`<button class="btn fill sm" data-act="simstart" data-modo="completo" data-exam="${V.exam}">Prova completa</button>`:""}
+          ${fullReady(V.exam)?`<button class="btn sm" data-act="simstart" data-modo="completo" data-exam="${V.exam}">Prova completa</button>`:""}
         </div>
       </div>
       <div class="sim-modos">
@@ -987,16 +1007,6 @@ function viewExam(){
     </section>
     ${prontidaoHtml(V.exam)}
 
-    <section class="stack">
-      <div class="hd"><h2>Trilha</h2><span class="n">${e.domains.length} domínios em sequência</span></div>
-      ${e.domains.map((d,i)=>domBlock(d,i,aw)).join("")}
-      <div class="legend">
-        <span class="lg"><i class="m done"></i>concluído</span>
-        <span class="lg"><i class="m now"></i>liberado</span>
-        <span class="lg"><i class="m lock"></i>bloqueado</span>
-        <span class="lg" style="margin-left:auto">domínio seguinte abre ao vencer o chefe</span>
-      </div>
-    </section>
   </div>`;
 }
 function domBlock(d,i,aw){
@@ -1010,9 +1020,22 @@ function domBlock(d,i,aw){
       <div class="node-b"><span class="node-meta">${meta}</span>${inner}</div></div>`;
   const conn='<span class="conn" aria-hidden="true"></span>';
   const lock=!open;
+  const e=ex0(exam), atual=e.domains.findIndex((x,j)=>domOpen(exam,j)&&!S.bosses[exam+":"+x.id]);
+  if(i!==atual&&!ABERTOS.has(d.id)){
+    const anterior=i>0?"D"+i:"";
+    return `<article class="bd dom-mini ${aw?"aw":""}" data-k="dom:${d.id}" data-s="${lock?"lock":"done"}" id="d-${d.id}">
+      <span class="bd-tab"><span class="ix">D${i+1}</span><span class="nm">${esc(d.name)}</span></span>
+      <span class="bd-w">${d.w} da prova</span>
+      <div class="spread dom-mini-l">
+        <span class="t-sm ${lock?"dim":""}">${lock?"Abre quando você vencer o chefe do "+anterior+".":bossDone?"Concluído: chefe vencido.":"Liberado."}</span>
+        <button class="btn sm ghost" data-act="dom-abrir" data-dom="${d.id}" aria-expanded="false">${lock?"Ver o conteúdo":"Rever"}</button>
+      </div>
+    </article>`;
+  }
   return `<article class="bd ${aw?"aw":""}" data-k="dom:${d.id}" data-s="${lock?"lock":bossDone?"done":"open"}" id="d-${d.id}">
     <span class="bd-tab"><span class="ix">D${i+1}</span><span class="nm">${esc(d.name)}</span></span>
     <span class="bd-w">${d.w} da prova</span>
+    ${ABERTOS.has(d.id)&&i!==atual?`<button class="btn sm ghost dom-fechar" data-act="dom-abrir" data-dom="${d.id}" aria-expanded="true">Recolher</button>`:""}
     <div class="flow">
       ${node("wide",st(ready,open),"Conteúdo",fr+"/"+fs.length+" fichas · "+mins+" min",
         lock?`<p class="node-p">Vença o chefe do domínio anterior.</p>`
@@ -2159,7 +2182,28 @@ document.addEventListener("click",ev=>{
   if(a==="gserv"&&V.name==="simres"){ const g=b.closest(".gab-i"); RES_VOLTA={v:V,alvo:g&&g.id}; }
   if(GUIA_MOD.acao(a,b)) return;
   if(a==="me")      return go("me");
-  if(a==="exam")    return go("exam",{exam:b.dataset.exam||V.exam});
+  if(a==="exam"){   const ex=b.dataset.exam||V.exam; if(ex!==V.exam) ABERTOS=new Set(); if(ex&&S.foco!==ex){ S.foco=ex; save(); } return go("exam",{exam:ex}); }
+  if(a==="glossario"){ GLOSS=!GLOSS; render(); const h=document.getElementById(GLOSS?"gl-h":"main"); if(h&&h.focus){ if(GLOSS) h.setAttribute("tabindex","-1"); h.focus(); } return; }
+  if(a==="dica-ok"){ S.dicas=Object.assign({},S.dicas,{[b.dataset.tela]:1}); save(); return render(); }
+  if(a==="dom-abrir"){ const id=b.dataset.dom; if(ABERTOS.has(id)) ABERTOS.delete(id); else ABERTOS.add(id); render(); const el=document.getElementById("d-"+id); if(el&&el.scrollIntoView) el.scrollIntoView({block:"nearest"}); return; }
+  if(a==="bv-prova"){ BV={passo:2,exam:b.dataset.exam}; return render(); }
+  if(a==="bv-voltar"){ BV.passo=Math.max(1,BV.passo-1); return render(); }
+  if(a==="bv-semdata"){ BV.passo=3; return render(); }
+  if(a==="bv-data"){
+    const v=(document.getElementById("bv-data")||{}).value||"";
+    const dias=daysTo(v);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(v)||dias===null||dias<0) return toast("Escolha uma data de hoje em diante","no");
+    S.dates[BV.exam]=v; save(); BV.passo=3; return render();
+  }
+  if(a==="bv-meta"){
+    const g=+b.dataset.v, ex=BV.exam;
+    if(GOALS[g]) S.goal=g;
+    S.onb=1; S.foco=ex; save();
+    const e=ex0(ex), f=e&&fichasBase(ex,e.domains[0].id).find(x=>!S.fichas[x.id]);
+    BV={passo:1,exam:null};
+    toast("Tudo pronto. Comece pela primeira ficha.","ok");
+    return f?go("ficha",{ficha:f.id,exam:ex,from:"exam"}):go("exam",{exam:ex});
+  }
   if(a==="soon")    return toast("Ainda não liberado nesta versão","no");
   if(a==="trilha")  return go("trilha");
   if(a==="cat")     return go("cat");
@@ -2174,6 +2218,7 @@ document.addEventListener("click",ev=>{
     save(); return render();
   }
   if(a==="jump"){
+    if(!ABERTOS.has(b.dataset.dom)){ ABERTOS.add(b.dataset.dom); render(); }
     const el=document.getElementById("d-"+b.dataset.dom);
     if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
     return;
@@ -2197,7 +2242,7 @@ document.addEventListener("click",ev=>{
   }
 
   /* aula */
-  if(a==="aula"){ PL=null; return go("aula",{aula:b.dataset.aula,exam:V.exam,from:V.name}); }
+  if(a==="aula"){ PL=null; return go("aula",{aula:b.dataset.aula,exam:b.dataset.exam||V.exam,from:V.name}); }
   if(a==="aclose"){ PL=null; return V.exam?go("exam",{exam:V.exam}):go("home"); }
   if(a==="anext")  return aNext();
   if(a==="aprev"){ if(PL.i>0){ PL.i--; PL.quiz=0; } clearTimers(); return render(); }
@@ -2298,7 +2343,6 @@ document.addEventListener("click",ev=>{
   }
   if(a==="contraste"){ S.contraste=!S.contraste; save(); return render(); }
   if(a==="onb-pular"){ S.onb=1; save(); return render(); }
-  if(a==="onb-prova"){ S.onb=1; save(); return go("exam",{exam:b.dataset.exam}); }
   if(a==="res-back"){
     if(!RES_VOLTA) return go("home");
     V=RES_VOLTA.v; const alvo=RES_VOLTA.alvo; RES_VOLTA=null; render();

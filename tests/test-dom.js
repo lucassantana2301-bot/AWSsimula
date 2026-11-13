@@ -36,10 +36,38 @@ function readFicha(sel,i){            // abre, rola até o fim e marca como estu
 
 try{
   /* ---------- início ---------- */
-  has("Estude pelo guia do exame","home não renderizou");
-  /* item 35: primeira visita mostra os 3 passos */
-  has("Comece em 3 passos","primeira visita sem o roteiro");
-  if(!n('[data-act="onb-prova"]')) errs.push("FALHOU: roteiro sem botões de prova");
+  /* primeira visita: boas-vindas em 3 passos (prova, data, meta) e cai na primeira ficha */
+  has("Para qual prova você vai estudar?","primeira visita sem as boas-vindas");
+  if(n('[data-act="bv-prova"]')<4) errs.push("FALHOU: boas-vindas sem as 4 provas");
+  no("Suas provas","lista de provas apareceu junto das boas-vindas");
+  no("Desafio do dia","desafio do dia apareceu para quem nem começou");
+  click('[data-act="bv-prova"][data-exam="az900"]');
+  has("Já tem data para a prova AZ-900?","passo 2 sem a prova escolhida");
+  click('[data-act="bv-data"]');                      /* sem data: avisa e não avança */
+  has("Já tem data para a prova","avançou sem data válida");
+  click('[data-act="bv-voltar"]');
+  has("Para qual prova você vai estudar?","voltar não retornou ao passo 1");
+  click('[data-act="bv-prova"][data-exam="az900"]');
+  click('[data-act="bv-semdata"]');
+  has("Quanto tempo por dia?","passo 3 não apareceu");
+  click('[data-act="bv-meta"][data-v="3"]');
+  if(state().onb!==1||state().foco!=="az900"||state().goal!==3) errs.push("FALHOU: boas-vindas não gravou prova, meta e conclusão: "+JSON.stringify({onb:state().onb,foco:state().foco,goal:state().goal}));
+  if(!d.getElementById("rbody")) errs.push("FALHOU: boas-vindas não abriu a primeira ficha");
+  click('[data-act="rclose"]');
+  click('[data-act="home"]');
+  /* depois: próximo passo da prova escolhida no topo, dica da tela, glossário */
+  has("Próximo passo","home sem o cartão de próximo passo");
+  if(!n('.passo [data-act="ficha"][data-exam="az900"]')) errs.push("FALHOU: próximo passo não aponta a ficha do AZ-900");
+  has("Siga o cartão","dica da home não apareceu");
+  click('[data-act="dica-ok"][data-tela="home"]');
+  no("Siga o cartão","dica continuou depois de Entendi");
+  if(!state().dicas||!state().dicas.home) errs.push("FALHOU: dica vista não foi gravada");
+  click('[data-act="glossario"]');
+  if(!d.getElementById("glossario")) errs.push("FALHOU: glossário não abriu");
+  if(!/Energia/.test(d.getElementById("glossario").textContent)) errs.push("FALHOU: glossário sem a energia");
+  click('[data-act="glossario"]');
+  if(d.getElementById("glossario")) errs.push("FALHOU: glossário não fechou");
+  has("Suas provas","home sem a lista de provas");
   has("AZ-900"); has("CLF-C02"); has("AZ-104");
   if(n(".exam")<3) errs.push("FALHOU: poucos cartões de exame");
   if(n(".exam .band")<3) errs.push("FALHOU: cartão sem blocos de domínio");
@@ -88,7 +116,7 @@ try{
   has("Objetivo de carreira","etiqueta de trilha não abriu a trilha");
   click('[data-act="cat"]');
   click('[data-act="home"]');
-  has("Estude pelo guia do exame","não voltou para a home");
+  has("Suas provas","não voltou para a home");
   has("conteúdo original","faltou o aviso de conteúdo original");
   has("sem vínculo com a Microsoft","faltou o aviso de independência");
 
@@ -99,8 +127,17 @@ try{
   if(n(".canvas .bands .band")!==3) errs.push("FALHOU: esperava 3 blocos de peso no AZ-900, achei "+n(".canvas .bands .band"));
   if(n(".dl-cut")!==1) errs.push("FALHOU: linha de cota sem marca de corte");
   if(n("article.bd")!==3) errs.push("FALHOU: esperava 3 fronteiras de domínio, achei "+n("article.bd"));
-  if(n("article.bd .conn")!==9) errs.push("FALHOU: conectores faltando entre as etapas, achei "+n("article.bd .conn"));
-  if(!n(".legend")) errs.push("FALHOU: diagrama sem legenda");
+  /* só o domínio atual fica aberto (4 etapas, 3 conectores); os outros viram uma linha */
+  if(n("article.bd .conn")!==3) errs.push("FALHOU: domínio atual sem os 3 conectores, achei "+n("article.bd .conn"));
+  if(n("article.dom-mini")!==2) errs.push("FALHOU: domínios bloqueados deveriam vir recolhidos, achei "+n("article.dom-mini"));
+  has("Abre quando você vencer o chefe do D1","domínio recolhido sem dizer como abre");
+  /* recolhido abre e fecha sob demanda */
+  click('[data-act="dom-abrir"]');
+  if(n("article.dom-mini")!==1) errs.push("FALHOU: Ver o conteúdo não expandiu o domínio");
+  click('.dom-fechar');
+  if(n("article.dom-mini")!==2) errs.push("FALHOU: Recolher não fechou o domínio");
+  /* próximo passo na prova aponta a primeira ficha do domínio 1 */
+  has("Domínio 1 de 3 · etapa 1 de 4","próximo passo sem a posição na trilha");
   // largura das faixas = peso declarado
   const flexes=all(".canvas .bands .band").map(b=>b.style.flex);
   if(!flexes.every(x=>parseFloat(x)>0)) errs.push("FALHOU: faixa sem largura proporcional ao peso");
@@ -114,7 +151,7 @@ try{
   if(!n('.node[data-s="lock"]')) errs.push("FALHOU: nenhum nó marcado como bloqueado");
 
   /* ---------- ler as fichas do domínio 1 ---------- */
-  const nFichas=n('[data-act="ficha"]');
+  const nFichas=n('.lst-i[data-act="ficha"]');
   if(nFichas<2) errs.push("FALHOU: domínio 1 com menos de 2 fichas");
   for(let i=0;i<nFichas;i++){
     readFicha('[data-act="ficha"][data-done="0"]',0);   // sempre a próxima ainda não estudada
@@ -244,8 +281,12 @@ try{
   /* item 1 da auditoria: apagar guarda cópia de segurança */
   const copias=()=>Object.keys(w.localStorage).filter(k=>k.startsWith("cloudquest.backup."));
   if(copias().length<1) errs.push("FALHOU: apagar o progresso não guardou cópia");
-  has("Estude pelo guia do exame","não voltou ao início após o reset");
+  has("Para qual prova você vai estudar?","não voltou às boas-vindas após o reset");
+  click('[data-act="onb-pular"]');                    /* "Já sei usar" pula direto para o início */
+  has("Suas provas","pular as boas-vindas não mostrou as provas");
+  has("Próximo passo","pular as boas-vindas não mostrou o próximo passo");
   click('[data-act="exam"][data-exam="clf"]');
+  if(state().foco!=="clf") errs.push("FALHOU: abrir uma prova não a tornou a prova em foco");
   has("Cloud Practitioner","trilha da AWS não abriu");
   if(n(".canvas .bands .band")!==4) errs.push("FALHOU: esperava 4 faixas no CLF-C02");
   if(n('[data-act="study"]')) errs.push("FALHOU: prática da AWS aberta sem ler fichas");
@@ -289,7 +330,7 @@ const espera=ms=>new Promise(r=>setTimeout(r,ms));
 
     /* ---------- itens 29 a 34, 46, 48 ---------- */
     click('[data-act="home"]');
-    no("Comece em 3 passos","roteiro de primeira visita apareceu com progresso");
+    no("Para qual prova você vai estudar?","boas-vindas apareceram com progresso");
     click('[data-act="exam"][data-exam="saa"]');
     /* 48: com data marcada aparece o plano */
     const dt=d.getElementById("examdate"); const futura=new Date(Date.now()+40*864e5).toISOString().slice(0,10);

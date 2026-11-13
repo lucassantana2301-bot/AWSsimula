@@ -38,6 +38,17 @@ import {
 } from "./features/progresso/armazenamento";
 import { blocoPlano, montarPlano, type EntradaPlano } from "./features/progresso/plano";
 import { leuAsDuasNuvens, telaComparar } from "./features/comparar/comparar";
+import {
+  blocoBoasVindas,
+  blocoDica,
+  blocoGlossario,
+  blocoProximoPasso,
+  proximoPasso,
+  type OpcaoProva,
+  type PassoBoasVindas,
+  type RetratoProva,
+  type TipoPasso,
+} from "./features/orientacao/orientacao";
 import type { Equiv } from "./content/schema";
 import { agendar, blocoConta, iniciarConta, type Motor } from "./features/conta/conta";
 import { mesclar } from "./features/conta/mesclar";
@@ -78,6 +89,19 @@ interface MotorProgresso {
 }
 
 /** Contrato do simulado com o motor legado: funções puras e HTML já em texto. */
+/** Próximo passo, boas-vindas, glossário e dicas (orientação de quem chega). */
+interface MotorOrientacao {
+  passo: (r: RetratoProva, aws: boolean, prova?: string) => { tipo: TipoPasso; html: string };
+  boasVindas: (
+    passo: PassoBoasVindas,
+    provas: readonly OpcaoProva[],
+    escolhida: string | null,
+    metas: Readonly<Record<number, number>>,
+  ) => string;
+  glossario: () => string;
+  dica: (tela: string, vistas: Readonly<Record<string, unknown>>) => string;
+}
+
 interface MotorSimulado {
   montar: typeof montarSimulado;
   montarPorDominio: typeof montarPorDominio;
@@ -108,6 +132,7 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   guiaTelas: GuiaTelas;
   simulado: MotorSimulado;
   plano: (e: EntradaPlano) => string;
+  orientacao: MotorOrientacao;
   progresso: MotorProgresso;
   comparar: {
     tela: (equiv: readonly Equiv[]) => string;
@@ -199,6 +224,16 @@ globalThis.__CQ_CONTENT = {
   plano: (e) => {
     const b = blocoPlano(montarPlano(e));
     return b ? b.texto : "";
+  },
+  /* orientação de quem chega: próximo passo, boas-vindas, glossário e dicas */
+  orientacao: {
+    passo: (r, aws, prova) => {
+      const p = proximoPasso(r);
+      return { tipo: p.tipo, html: blocoProximoPasso(p, aws, prova).texto };
+    },
+    boasVindas: (passo, provas, escolhida, metas) => blocoBoasVindas(passo, provas, escolhida, metas).texto,
+    glossario: () => blocoGlossario().texto,
+    dica: (tela, vistas) => blocoDica(tela, vistas)?.texto ?? "",
   },
   /* simulado: montagem, nota, revisão e reporte (fase 3) */
   simulado: {
