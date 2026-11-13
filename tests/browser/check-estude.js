@@ -24,8 +24,12 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
   let achou = false;
   for (let i = 0; i < 8 && !achou; i++) {
-    await p.keyboard.press("1"); await sleep(80);
+    /* a revisão mistura tipos por conceito: responde conforme o tipo */
+    const linhasSimNao = await p.$$('[data-act="qyn"][data-v="1"]');
+    if (linhasSimNao.length) for (const bt of linhasSimNao) { await bt.click(); await sleep(40); }
+    else { await p.keyboard.press("1"); await sleep(80); }
     await p.click('[data-act="qcheck"]'); await sleep(300);
+    if (!(await p.$(".verdict"))) { prob.push("questão não aceitou resposta (tipo não tratado no teste)"); break; }
     if (await p.$('.estude [data-act="gserv"]')) { achou = true; break; }
     const prox = await p.$('[data-act="qnext"]'); if (!prox) break;
     await prox.click(); await sleep(300);
