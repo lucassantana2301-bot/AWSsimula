@@ -1,0 +1,776 @@
+[
+  {
+    "id": "dk-resp",
+    "exam": "clf",
+    "dom": "d2",
+    "concept": "shared-responsibility",
+    "title": "De quem é a responsabilidade?",
+    "prompt": "No modelo de responsabilidade compartilhada, quem responde por cada item?",
+    "buckets": [
+      {
+        "k": "c",
+        "label": "Cliente"
+      },
+      {
+        "k": "p",
+        "label": "Provedor"
+      }
+    ],
+    "items": [
+      {
+        "t": "Aplicar correções de segurança no sistema operacional de uma instância EC2",
+        "k": "c",
+        "e": "Em IaaS o SO convidado é do cliente."
+      },
+      {
+        "t": "Aplicar patch no motor do banco no Amazon RDS",
+        "k": "p",
+        "e": "Serviço gerenciado: o provedor cuida de SO e engine."
+      },
+      {
+        "t": "Definir quem pode ler um bucket do S3",
+        "k": "c",
+        "e": "Configuração de acesso é sempre do cliente."
+      },
+      {
+        "t": "Segurança física do datacenter",
+        "k": "p",
+        "e": "Predio, energia e hardware são sempre do provedor."
+      },
+      {
+        "t": "Descarte seguro de discos ao fim da vida útil",
+        "k": "p",
+        "e": "Mídia física é do provedor."
+      },
+      {
+        "t": "Decidir se um dado sensível será criptografado em repouso",
+        "k": "c",
+        "e": "A ferramenta é do provedor; a decisão é do cliente."
+      },
+      {
+        "t": "Criar usuários do banco de dados e definir senhas fortes",
+        "k": "c",
+        "e": "Identidades dentro do serviço são do cliente."
+      },
+      {
+        "t": "Manter o hipervisor que isola as máquinas virtuais",
+        "k": "p",
+        "e": "Virtualização é do provedor."
+      },
+      {
+        "t": "Classificar quais documentos são confidenciais",
+        "k": "c",
+        "e": "Classificação de dados nunca sai do cliente, nem em SaaS."
+      },
+      {
+        "t": "Corrigir uma falha de lógica de autorização na sua aplicação",
+        "k": "c",
+        "e": "Código da aplicação é do cliente."
+      },
+      {
+        "t": "Garantir a disponibilidade da rede física entre zonas",
+        "k": "p",
+        "e": "Infraestrutura de rede é do provedor."
+      },
+      {
+        "t": "Configurar o grupo de segurança que libera a porta do banco",
+        "k": "c",
+        "e": "Regras de rede do seu ambiente são do cliente."
+      }
+    ]
+  },
+  {
+    "id": "dk-awssec",
+    "exam": "clf",
+    "dom": "d2",
+    "concept": "seguranca-servicos",
+    "title": "Qual serviço de segurança?",
+    "prompt": "Cada necessidade abaixo é resolvida por qual serviço da AWS?",
+    "buckets": [
+      {
+        "k": "t",
+        "label": "CloudTrail"
+      },
+      {
+        "k": "g",
+        "label": "GuardDuty"
+      },
+      {
+        "k": "m",
+        "label": "Macie"
+      },
+      {
+        "k": "c",
+        "label": "Config"
+      }
+    ],
+    "items": [
+      {
+        "t": "Saber quem chamou qual API e quando",
+        "k": "t",
+        "e": "CloudTrail registra chamadas de API."
+      },
+      {
+        "t": "Descobrir dados pessoais guardados num bucket",
+        "k": "m",
+        "e": "Macie classifica dado sensível no S3."
+      },
+      {
+        "t": "Alertar quando uma instância fala com endereço associado a mineração",
+        "k": "g",
+        "e": "GuardDuty detecta comportamento malicioso."
+      },
+      {
+        "t": "Verificar se todos os volumes estão criptografados e avisar quando um sair do padrão",
+        "k": "c",
+        "e": "Config avalia configuração contra regras."
+      },
+      {
+        "t": "Reconstruir a sequência de ações de um usuário que apagou um recurso",
+        "k": "t",
+        "e": "Trilha de auditoria: CloudTrail."
+      },
+      {
+        "t": "Detectar tentativa de varredura de portas vinda de fora",
+        "k": "g",
+        "e": "Detecção de ameaça: GuardDuty."
+      },
+      {
+        "t": "Manter histórico de como um recurso estava configurado no mês passado",
+        "k": "c",
+        "e": "Config guarda a linha do tempo de configuração."
+      },
+      {
+        "t": "Encontrar números de documento guardados por engano em arquivos",
+        "k": "m",
+        "e": "Descoberta de dado sensível no S3 é com o Macie."
+      },
+      {
+        "t": "Saber de qual endereço IP partiu uma chamada administrativa",
+        "k": "t",
+        "e": "O evento do CloudTrail guarda origem, identidade e horário."
+      },
+      {
+        "t": "Receber alerta de credencial possivelmente comprometida em uso",
+        "k": "g",
+        "e": "GuardDuty analisa sinais e aponta uso anômalo."
+      },
+      {
+        "t": "Provar ao auditor que a regra de retenção está aplicada em todos os buckets",
+        "k": "c",
+        "e": "Conformidade de configuração: Config."
+      },
+      {
+        "t": "Identificar qual bucket tem o maior volume de dado sensível",
+        "k": "m",
+        "e": "O Macie classifica e resume o achado por bucket."
+      }
+    ]
+  },
+  {
+    "id": "dk-msg",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "sqs-sns-eb",
+    "title": "Fila, pub/sub ou streaming?",
+    "prompt": "Qual serviço de integração resolve cada caso?",
+    "buckets": [
+      {
+        "k": "q",
+        "label": "SQS"
+      },
+      {
+        "k": "n",
+        "label": "SNS"
+      },
+      {
+        "k": "k",
+        "label": "Kinesis"
+      }
+    ],
+    "items": [
+      {
+        "t": "Absorver um pico de dez vezes sem perder pedido",
+        "k": "q",
+        "e": "A fila guarda e o consumidor processa no seu ritmo."
+      },
+      {
+        "t": "Avisar três sistemas diferentes ao mesmo tempo sobre o mesmo evento",
+        "k": "n",
+        "e": "Fan-out: um publica, vários recebem."
+      },
+      {
+        "t": "Preservar a ordem dos eventos de cada sensor",
+        "k": "k",
+        "e": "Ordem dentro do shard: streaming."
+      },
+      {
+        "t": "Permitir que dois times releiam os dados dos últimos dias",
+        "k": "k",
+        "e": "Retenção e releitura só existem no streaming."
+      },
+      {
+        "t": "Desacoplar o site do processamento lento de pedidos",
+        "k": "q",
+        "e": "Fila é o desacoplador clássico."
+      },
+      {
+        "t": "Enviar a mesma notificação para e-mail, SMS e uma função",
+        "k": "n",
+        "e": "Vários tipos de inscrito: SNS."
+      },
+      {
+        "t": "Garantir que cada mensagem seja processada por um único consumidor",
+        "k": "q",
+        "e": "Modelo de fila."
+      },
+      {
+        "t": "Analisar cliques em tempo real, com várias aplicações lendo o mesmo fluxo",
+        "k": "k",
+        "e": "Consumidores independentes sobre o mesmo fluxo: Kinesis."
+      },
+      {
+        "t": "Publicar um alerta para quem quiser se inscrever depois",
+        "k": "n",
+        "e": "Tópico de publicação e assinatura."
+      }
+    ]
+  },
+  {
+    "id": "dk-store",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "s3-classes",
+    "title": "Onde guardar este dado?",
+    "prompt": "Escolha o serviço de armazenamento adequado a cada caso.",
+    "buckets": [
+      {
+        "k": "s",
+        "label": "S3"
+      },
+      {
+        "k": "e",
+        "label": "EBS"
+      },
+      {
+        "k": "f",
+        "label": "EFS"
+      },
+      {
+        "k": "i",
+        "label": "Instance store"
+      }
+    ],
+    "items": [
+      {
+        "t": "Disco do sistema operacional de uma instância",
+        "k": "e",
+        "e": "Bloco anexado a uma instância: EBS."
+      },
+      {
+        "t": "Sistema de arquivos lido e gravado por várias instâncias Linux ao mesmo tempo",
+        "k": "f",
+        "e": "NFS compartilhado: EFS."
+      },
+      {
+        "t": "Imagens e vídeos servidos por uma aplicação web",
+        "k": "s",
+        "e": "Objetos acessados por API: S3."
+      },
+      {
+        "t": "Cache temporário que pode sumir quando a instância for encerrada",
+        "k": "i",
+        "e": "Instance store é efêmero e muito rápido."
+      },
+      {
+        "t": "Backup de longo prazo com resgate em horas",
+        "k": "s",
+        "e": "Classes Glacier dentro do S3."
+      },
+      {
+        "t": "Volume que precisa sobreviver ao encerramento da instância",
+        "k": "e",
+        "e": "EBS persiste; instance store não."
+      },
+      {
+        "t": "Diretório compartilhado para um grupo de Auto Scaling",
+        "k": "f",
+        "e": "EFS, porque muitas instâncias montam ao mesmo tempo."
+      },
+      {
+        "t": "Arquivos estáticos de um site, servidos por CDN",
+        "k": "s",
+        "e": "S3 com CloudFront na frente."
+      },
+      {
+        "t": "Área de trabalho temporária de um processamento, perdida sem problema",
+        "k": "i",
+        "e": "Caso de uso do instance store."
+      }
+    ]
+  },
+  {
+    "id": "dk-aw-caf",
+    "exam": "clf",
+    "dom": "d1",
+    "concept": "migracao-caf",
+    "title": "Qual perspectiva do AWS CAF?",
+    "prompt": "No AWS Cloud Adoption Framework, a qual perspectiva pertence cada preocupação?",
+    "buckets": [
+      {
+        "k": "n",
+        "label": "Negócio"
+      },
+      {
+        "k": "p",
+        "label": "Pessoas"
+      },
+      {
+        "k": "g",
+        "label": "Governança"
+      },
+      {
+        "k": "s",
+        "label": "Segurança"
+      }
+    ],
+    "items": [
+      {
+        "t": "Definir metas de negócio de longo prazo que a nuvem deve acelerar",
+        "k": "n",
+        "e": "Gestão de estratégia, que liga a nuvem a metas e resultados de negócio, é da perspectiva de Negócio."
+      },
+      {
+        "t": "Usar dados na nuvem para criar uma nova fonte de receita",
+        "k": "n",
+        "e": "Monetização de dados é uma capacidade da perspectiva de Negócio."
+      },
+      {
+        "t": "Usar a nuvem para testar ideias de novos produtos e experiências do cliente",
+        "k": "n",
+        "e": "Gestão de inovação, que cria produtos e experiências novos com a nuvem, é da perspectiva de Negócio."
+      },
+      {
+        "t": "Criar um plano de treinamento para a equipe aprender a usar a nuvem",
+        "k": "p",
+        "e": "Fluência em nuvem e capacitação da equipe são da perspectiva de Pessoas."
+      },
+      {
+        "t": "Redesenhar a estrutura dos times para trabalhar no modelo de nuvem",
+        "k": "p",
+        "e": "Desenho organizacional é uma capacidade da perspectiva de Pessoas."
+      },
+      {
+        "t": "Reduzir a resistência dos funcionários à mudança de cultura",
+        "k": "p",
+        "e": "Evolução da cultura e aceleração da mudança pertencem à perspectiva de Pessoas."
+      },
+      {
+        "t": "Controlar e prever os gastos com nuvem de cada área da empresa",
+        "k": "g",
+        "e": "Gestão financeira da nuvem é uma capacidade da perspectiva de Governança."
+      },
+      {
+        "t": "Medir se os benefícios prometidos pela migração estão aparecendo",
+        "k": "g",
+        "e": "Gestão de benefícios fica na perspectiva de Governança."
+      },
+      {
+        "t": "Coordenar prazo, custo e esforço das várias iniciativas de migração",
+        "k": "g",
+        "e": "Gestão de programas e projetos, que alinha cronograma, custo e benefícios das iniciativas, é da perspectiva de Governança."
+      },
+      {
+        "t": "Definir quem pode acessar quais recursos e com quais permissões",
+        "k": "s",
+        "e": "Gerenciamento de identidade e acesso é uma capacidade da perspectiva de Segurança."
+      },
+      {
+        "t": "Garantir que dados sensíveis fiquem criptografados em repouso e em trânsito",
+        "k": "s",
+        "e": "Proteção de dados é capacidade da perspectiva de Segurança, que tem o CISO entre os responsáveis."
+      },
+      {
+        "t": "Detectar atividade maliciosa nas contas da nuvem",
+        "k": "s",
+        "e": "Detecção de ameaças é uma capacidade da perspectiva de Segurança."
+      }
+    ],
+    "src": [
+      {
+        "t": "AWS: Overview of the AWS CAF - Foundational capabilities",
+        "u": "https://docs.aws.amazon.com/whitepapers/latest/overview-aws-cloud-adoption-framework/foundational-capabilities.html"
+      }
+    ]
+  },
+  {
+    "id": "dk-aw-migrar",
+    "exam": "clf",
+    "dom": "d1",
+    "concept": "migracao-caf",
+    "title": "Qual estratégia de migração (7 Rs)?",
+    "prompt": "Classifique cada decisão pela estratégia de migração que ela representa.",
+    "buckets": [
+      {
+        "k": "h",
+        "label": "Rehost (lift and shift)"
+      },
+      {
+        "k": "p",
+        "label": "Replatform"
+      },
+      {
+        "k": "f",
+        "label": "Refactor"
+      },
+      {
+        "k": "r",
+        "label": "Retire"
+      }
+    ],
+    "items": [
+      {
+        "t": "Copiar um servidor para uma instância EC2 sem mudar nada na aplicação",
+        "k": "h",
+        "e": "Mover sem nenhuma alteração na aplicação é Rehost, o lift and shift."
+      },
+      {
+        "t": "Migrar centenas de VMs como estão, com prazo curto para sair do datacenter",
+        "k": "h",
+        "e": "Mover em massa sem alterar as aplicações é Rehost, a forma mais rápida."
+      },
+      {
+        "t": "Levar a aplicação para a AWS sem mexer no código e otimizar depois",
+        "k": "h",
+        "e": "Mover primeiro, sem mudanças, e modernizar só depois é Rehost."
+      },
+      {
+        "t": "Manter a aplicação, mas trocar o banco instalado na VM pelo Amazon RDS",
+        "k": "p",
+        "e": "Pequena otimização sem mudar a arquitetura é Replatform (lift, tinker and shift)."
+      },
+      {
+        "t": "Mover a aplicação e trocar o servidor web próprio por um serviço gerenciado",
+        "k": "p",
+        "e": "Ajuste pontual para aproveitar a nuvem, sem reescrever o código, é Replatform."
+      },
+      {
+        "t": "Reescrever um sistema monolítico como microsserviços com AWS Lambda",
+        "k": "f",
+        "e": "Mudar a arquitetura para usar recursos nativos da nuvem é Refactor."
+      },
+      {
+        "t": "Redesenhar a aplicação para escalar sozinha com serviços sem servidor",
+        "k": "f",
+        "e": "Reescrever a arquitetura para ganhar agilidade e escala é Refactor."
+      },
+      {
+        "t": "Recriar o sistema com filas e eventos para separar seus componentes",
+        "k": "f",
+        "e": "Alterar a arquitetura para um modelo nativo da nuvem é Refactor."
+      },
+      {
+        "t": "Desligar um sistema antigo que ninguém usa há dois anos",
+        "k": "r",
+        "e": "Desativar o que não tem mais uso é Retire."
+      },
+      {
+        "t": "Arquivar os dados de um sistema substituído e desligar seus servidores",
+        "k": "r",
+        "e": "Descomissionar ou arquivar uma aplicação é Retire."
+      },
+      {
+        "t": "Descobrir no inventário uma aplicação duplicada e eliminá-la",
+        "k": "r",
+        "e": "Eliminar aplicações redundantes em vez de migrar é Retire."
+      }
+    ],
+    "src": [
+      {
+        "t": "AWS: Migration strategies (7 Rs)",
+        "u": "https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html"
+      }
+    ]
+  },
+  {
+    "id": "dk-aw-ia",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "ia-ml-aws",
+    "title": "Serviço pronto, Bedrock ou SageMaker AI?",
+    "prompt": "Para cada necessidade, qual é a opção de IA mais adequada na AWS?",
+    "buckets": [
+      {
+        "k": "s",
+        "label": "Serviço de IA pronto"
+      },
+      {
+        "k": "b",
+        "label": "Amazon Bedrock"
+      },
+      {
+        "k": "m",
+        "label": "Amazon SageMaker AI"
+      }
+    ],
+    "items": [
+      {
+        "t": "Converter gravações de atendimento em texto, sem treinar modelo",
+        "k": "s",
+        "e": "Fala para texto por API pronta é o Amazon Transcribe, um serviço de IA pronto."
+      },
+      {
+        "t": "Extrair campos de notas fiscais digitalizadas",
+        "k": "s",
+        "e": "Extrair texto e campos de documentos é tarefa do Amazon Textract, serviço pronto."
+      },
+      {
+        "t": "Traduzir descrições de produtos do português para o inglês",
+        "k": "s",
+        "e": "Tradução por API é o Amazon Translate, sem nenhum modelo para gerenciar."
+      },
+      {
+        "t": "Identificar objetos e rostos em fotos enviadas pelos usuários",
+        "k": "s",
+        "e": "Análise de imagem pronta é o Amazon Rekognition, serviço de IA pronto."
+      },
+      {
+        "t": "Criar um chatbot que gera respostas com um modelo de fundação, sem gerenciar servidores",
+        "k": "b",
+        "e": "Acesso sem servidor a modelos de fundação para IA generativa é o Amazon Bedrock."
+      },
+      {
+        "t": "Responder perguntas com base nos documentos internos da empresa (RAG)",
+        "k": "b",
+        "e": "RAG sobre dados próprios é feito com as Knowledge Bases do Amazon Bedrock."
+      },
+      {
+        "t": "Testar modelos de fundação de vários fornecedores pela mesma API, sem servidor",
+        "k": "b",
+        "e": "O Bedrock oferece modelos de diversos fornecedores por uma API única e sem servidor. No SageMaker AI seria preciso implantar cada modelo em endpoint."
+      },
+      {
+        "t": "Bloquear temas proibidos nas respostas de um assistente generativo",
+        "k": "b",
+        "e": "Filtros de conteúdo para IA generativa são as Guardrails do Amazon Bedrock."
+      },
+      {
+        "t": "Cientistas de dados treinando do zero um modelo de previsão de churn",
+        "k": "m",
+        "e": "Construir e treinar o próprio modelo de ML é o papel do Amazon SageMaker AI."
+      },
+      {
+        "t": "Usar notebooks Jupyter gerenciados para preparar dados e experimentar",
+        "k": "m",
+        "e": "Ambiente de desenvolvimento de ML com notebooks faz parte do SageMaker AI."
+      },
+      {
+        "t": "Implantar o próprio modelo de previsão (XGBoost) em um endpoint de inferência",
+        "k": "m",
+        "e": "Hospedar modelos de ML próprios em endpoints é recurso do SageMaker AI. A importação de modelos do Bedrock aceita só certas arquiteturas de modelo de fundação."
+      },
+      {
+        "t": "Controlar a infraestrutura de treinamento para equilibrar custo e latência",
+        "k": "m",
+        "e": "Quando é preciso controle da camada de infraestrutura, a escolha é o SageMaker AI."
+      }
+    ],
+    "src": [
+      {
+        "t": "AWS: Amazon Bedrock or Amazon SageMaker AI?",
+        "u": "https://docs.aws.amazon.com/decision-guides/latest/bedrock-or-sagemaker/bedrock-or-sagemaker.html"
+      }
+    ]
+  },
+  {
+    "id": "dk-aw-monitora",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "implantacao-operacao",
+    "title": "CloudWatch, CloudTrail, Config ou X-Ray?",
+    "prompt": "Qual serviço responde a cada pergunta?",
+    "buckets": [
+      {
+        "k": "w",
+        "label": "Amazon CloudWatch"
+      },
+      {
+        "k": "t",
+        "label": "AWS CloudTrail"
+      },
+      {
+        "k": "c",
+        "label": "AWS Config"
+      },
+      {
+        "k": "x",
+        "label": "AWS X-Ray"
+      }
+    ],
+    "items": [
+      {
+        "t": "A CPU desta instância EC2 passou de 80% na última hora?",
+        "k": "w",
+        "e": "Métricas de desempenho dos recursos são coletadas pelo CloudWatch."
+      },
+      {
+        "t": "Como receber um alarme quando a fila de erros da aplicação crescer?",
+        "k": "w",
+        "e": "Alarmes sobre métricas são um recurso do CloudWatch."
+      },
+      {
+        "t": "Onde centralizar e pesquisar os logs gerados pela aplicação?",
+        "k": "w",
+        "e": "Logs de aplicação ficam no CloudWatch Logs."
+      },
+      {
+        "t": "Qual usuário do IAM chamou a API que excluiu este bucket?",
+        "k": "t",
+        "e": "O registro de quem fez cada chamada de API é do CloudTrail."
+      },
+      {
+        "t": "De qual endereço IP partiu o login no console de ontem à noite?",
+        "k": "t",
+        "e": "Eventos de login e chamadas de API, com IP de origem, ficam no CloudTrail."
+      },
+      {
+        "t": "Quais ações foram feitas com as credenciais do usuário raiz este mês?",
+        "k": "t",
+        "e": "Auditar ações de uma identidade nas APIs da AWS é tarefa do CloudTrail."
+      },
+      {
+        "t": "Como estava configurado este grupo de segurança na semana passada?",
+        "k": "c",
+        "e": "O histórico de configuração dos recursos é registrado pelo AWS Config."
+      },
+      {
+        "t": "Todos os volumes EBS da conta estão criptografados, conforme a regra?",
+        "k": "c",
+        "e": "Avaliar a conformidade dos recursos com regras é a função do AWS Config."
+      },
+      {
+        "t": "Quais recursos estão ligados a esta VPC e o que mudou neles?",
+        "k": "c",
+        "e": "Inventário, relações e mudanças de configuração ficam no AWS Config."
+      },
+      {
+        "t": "Em qual microsserviço uma requisição lenta passa mais tempo?",
+        "k": "x",
+        "e": "Rastrear a requisição de ponta a ponta entre serviços é o papel do X-Ray, cujos rastreamentos também aparecem no console do CloudWatch."
+      },
+      {
+        "t": "Qual chamada interna gera os erros vistos por um cliente específico?",
+        "k": "x",
+        "e": "O X-Ray segue cada requisição e mostra onde ocorreu o erro."
+      },
+      {
+        "t": "Como ver o mapa de dependências entre os serviços da aplicação?",
+        "k": "x",
+        "e": "O mapa de serviços montado a partir de rastreamentos é do X-Ray."
+      }
+    ],
+    "src": [
+      {
+        "t": "AWS: What is AWS Config?",
+        "u": "https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html"
+      },
+      {
+        "t": "AWS: What is AWS CloudTrail?",
+        "u": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+      }
+    ]
+  },
+  {
+    "id": "dk-aw-custo",
+    "exam": "clf",
+    "dom": "d4",
+    "concept": "custo-ferramentas",
+    "title": "Qual ferramenta de custo usar?",
+    "prompt": "Escolha a ferramenta que atende cada necessidade.",
+    "buckets": [
+      {
+        "k": "p",
+        "label": "AWS Pricing Calculator"
+      },
+      {
+        "k": "e",
+        "label": "AWS Cost Explorer"
+      },
+      {
+        "k": "b",
+        "label": "AWS Budgets"
+      },
+      {
+        "k": "t",
+        "label": "AWS Trusted Advisor"
+      }
+    ],
+    "items": [
+      {
+        "t": "Estimar o custo mensal de uma arquitetura antes de criar qualquer recurso",
+        "k": "p",
+        "e": "Estimativa antes de usar, sem conta com histórico, é a Pricing Calculator."
+      },
+      {
+        "t": "Montar uma proposta de preço para o cliente comparar com o datacenter atual",
+        "k": "p",
+        "e": "Simular o custo de uma solução planejada é o papel da Pricing Calculator."
+      },
+      {
+        "t": "Ver em gráfico quanto cada serviço custou nos últimos seis meses",
+        "k": "e",
+        "e": "Analisar o gasto histórico por serviço é a função do Cost Explorer (que também traz recomendações de rightsizing)."
+      },
+      {
+        "t": "Filtrar os gastos do mês passado pela tag de centro de custo",
+        "k": "e",
+        "e": "Explorar custos passados com filtros e agrupamentos é tarefa do Cost Explorer."
+      },
+      {
+        "t": "Descobrir em qual dia do mês os gastos com EC2 deram um salto",
+        "k": "e",
+        "e": "Investigar a tendência de custo já ocorrido se faz no Cost Explorer."
+      },
+      {
+        "t": "Receber um e-mail quando o gasto do mês passar de US$ 500",
+        "k": "b",
+        "e": "Alertas por limite de gasto definido por você são do AWS Budgets."
+      },
+      {
+        "t": "Avisar o time quando o uso de Savings Plans ficar abaixo da meta",
+        "k": "b",
+        "e": "O Budgets também acompanha uso e cobertura de Savings Plans e reservas."
+      },
+      {
+        "t": "Definir um teto de gastos por projeto e ser avisado ao se aproximar",
+        "k": "b",
+        "e": "Teto planejado com notificação é a função do AWS Budgets."
+      },
+      {
+        "t": "Verificar se algum grupo de segurança deixa portas abertas para a internet",
+        "k": "t",
+        "e": "É uma checagem de segurança do Trusted Advisor, disponível até no plano Basic (com atualização manual)."
+      },
+      {
+        "t": "Saber se a conta está perto de alguma cota de serviço",
+        "k": "t",
+        "e": "Limites de serviço são uma categoria do Trusted Advisor, liberada por inteiro em todos os planos de suporte."
+      },
+      {
+        "t": "Receber checagens de boas práticas de segurança, cotas e tolerância a falhas",
+        "k": "t",
+        "e": "Essas categorias são do Trusted Advisor. Todas as checagens exigem plano Business Support+ ou superior; no Basic há só uma seleção."
+      }
+    ],
+    "src": [
+      {
+        "t": "AWS: Analyzing your costs with AWS Cost Explorer",
+        "u": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html"
+      },
+      {
+        "t": "AWS: AWS Trusted Advisor",
+        "u": "https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html"
+      }
+    ]
+  }
+]

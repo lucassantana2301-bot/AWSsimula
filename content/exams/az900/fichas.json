@@ -1,0 +1,1258 @@
+[
+  {
+    "id": "f-az-elastic",
+    "exam": "az900",
+    "dom": "d1",
+    "mins": 4,
+    "concept": "elasticidade",
+    "title": "Elasticidade, escalabilidade e agilidade",
+    "lead": "Três palavras que parecem sinônimo e não são. O exame troca uma pela outra de propósito, e quem não separa perde ponto fácil logo no primeiro domínio.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "O que cada uma significa"
+      },
+      {
+        "t": "p",
+        "x": "Escalabilidade é a capacidade de crescer. Elasticidade é crescer e encolher sozinho, acompanhando a demanda. Agilidade é a velocidade com que você consegue provisionar algo novo — criar um ambiente de teste em minutos em vez de esperar a compra de um servidor."
+      },
+      {
+        "t": "p",
+        "x": "A confusão acontece porque toda nuvem tem as três. O que o enunciado pede é que você identifique qual característica resolve o problema descrito."
+      },
+      {
+        "t": "h",
+        "x": "Vertical e horizontal"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Tipo",
+          "O que faz",
+          "Limite prático"
+        ],
+        "rows": [
+          [
+            "Vertical (scale up)",
+            "Aumenta a máquina: mais CPU e memória na mesma instância",
+            "Teto do maior tamanho disponível; costuma exigir reinício"
+          ],
+          [
+            "Horizontal (scale out)",
+            "Soma mais instâncias atrás de um balanceador",
+            "Exige que a aplicação funcione sem estado local"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Dimensionamento automático no Azure é horizontal: conjuntos de dimensionamento de máquinas virtuais e o plano do App Service adicionam e removem instâncias por regra de métrica ou agenda."
+      },
+      {
+        "t": "h",
+        "x": "Disponibilidade não é a mesma coisa"
+      },
+      {
+        "t": "p",
+        "x": "Alta disponibilidade é continuar atendendo quando algo falha. Recuperação de desastre é retomar depois de um evento que derruba a região inteira. Tolerância a falhas é o nível mais estrito: componentes redundantes, sem interrupção perceptível. Nenhuma das três fala de acompanhar demanda."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Aumenta e diminui automaticamente por métrica",
+            "Elasticidade"
+          ],
+          [
+            "Suporta crescer conforme o negócio cresce",
+            "Escalabilidade"
+          ],
+          [
+            "Ambiente novo em minutos, para testar uma ideia",
+            "Agilidade"
+          ],
+          [
+            "Continua no ar quando um componente cai",
+            "Alta disponibilidade"
+          ],
+          [
+            "Volta a operar depois de desastre regional",
+            "Recuperação de desastre"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Dimensionar automaticamente não resolve latência de usuário distante. Se o problema é distância geográfica, a resposta é entrega de conteúdo ou presença em outra região, não mais instâncias."
+      },
+      {
+        "t": "case",
+        "q": "Uma loja virtual dobra o tráfego na Black Friday e cai pela metade em fevereiro. A diretoria não tem verba de investimento, só custeio mensal. Qual característica resolve os dois problemas?",
+        "a": "Despesa operacional com precificação por consumo. A classificação do gasto resolve a verba, e pagar pelo que usou resolve a sazonalidade. Repare que o enunciado tem dois requisitos: a alternativa certa precisa cobrir ambos. Questões de nível alto quase sempre escondem um segundo requisito na segunda metade do texto."
+      }
+    ],
+    "check": [
+      "Explicar a diferença entre elasticidade e escalabilidade sem usar a palavra automático duas vezes",
+      "Dizer quando escalar vertical é inviável",
+      "Separar alta disponibilidade de recuperação de desastre"
+    ],
+    "src": [
+      {
+        "t": "Microsoft Learn: conceitos de nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-cloud-compute/"
+      }
+    ]
+  },
+  {
+    "id": "f-az-models",
+    "exam": "az900",
+    "dom": "d1",
+    "mins": 5,
+    "concept": "modelos-nuvem",
+    "title": "Modelos de nuvem, tipos de serviço e o custo",
+    "lead": "Onde a carga roda e quanto da pilha você administra. É daqui que saem as questões de CapEx e OpEx e a maioria das pegadinhas de responsabilidade.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Modelos de implantação"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Modelo",
+          "Onde roda",
+          "Quando é a resposta"
+        ],
+        "rows": [
+          [
+            "Pública",
+            "Infraestrutura do provedor, compartilhada",
+            "Escala, sem investimento inicial, sem exigência de local físico"
+          ],
+          [
+            "Privada",
+            "Infraestrutura dedicada, sua ou hospedada",
+            "Controle total exigido por norma ou contrato"
+          ],
+          [
+            "Híbrida",
+            "Parte pública, parte local, integradas",
+            "Exigência legal prende um dado no prédio, mas o resto precisa de escala"
+          ],
+          [
+            "Multinuvem",
+            "Dois ou mais provedores públicos",
+            "Evitar dependência de um fornecedor ou usar serviço específico de cada um"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Tipos de serviço"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Tipo",
+          "Você administra",
+          "Exemplos no Azure"
+        ],
+        "rows": [
+          [
+            "IaaS",
+            "Sistema operacional, runtime, aplicação, dados",
+            "Máquinas virtuais, redes virtuais, discos"
+          ],
+          [
+            "PaaS",
+            "Aplicação e dados",
+            "App Service, Azure SQL Database, Functions"
+          ],
+          [
+            "SaaS",
+            "Só os dados, os usuários e a configuração",
+            "Microsoft 365, Dynamics 365"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "CapEx e OpEx"
+      },
+      {
+        "t": "p",
+        "x": "CapEx é investimento: você compra o ativo, imobiliza e deprecia ao longo dos anos. OpEx é custeio: você paga pelo uso, mês a mês, e lança como despesa corrente. Migrar para nuvem pública converte CapEx em OpEx, e esse é o argumento financeiro que o exame cobra."
+      },
+      {
+        "t": "p",
+        "x": "Precificação por consumo é a consequência prática: você paga por hora de computação, por gigabyte armazenado, por transação. Sem uso, sem fatura. Isso é o que permite acompanhar carga sazonal sem desperdício."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Sem verba de investimento, só orçamento mensal",
+            "Modelo de despesa operacional"
+          ],
+          [
+            "Dado precisa ficar fisicamente no prédio, mas o resto vai para a nuvem",
+            "Híbrida"
+          ],
+          [
+            "Não quer administrar sistema operacional nem patch",
+            "PaaS"
+          ],
+          [
+            "Precisa de controle total do sistema operacional",
+            "IaaS"
+          ],
+          [
+            "Software pronto, só configurar e usar",
+            "SaaS"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Criptografia não substitui exigência de localização. Se a norma diz que o dado tem de estar dentro do prédio, nenhuma alternativa que mantenha o dado na nuvem pública atende, por mais protegida que esteja."
+      },
+      {
+        "t": "case",
+        "q": "Um hospital quer o portal do paciente na nuvem para ganhar escala, mas a lei exige que os registros clínicos originais fiquem em servidores dentro do hospital.",
+        "a": "Nuvem híbrida. Parte da carga vai para a pública e parte permanece local, sob controle direto. A alternativa com nuvem privada sozinha falha no primeiro requisito, que é escala. A alternativa com criptografia falha porque o requisito é de localização, não de confidencialidade."
+      }
+    ],
+    "check": [
+      "Classificar um serviço em IaaS, PaaS ou SaaS pela fronteira de administração",
+      "Justificar híbrida em vez de privada",
+      "Explicar CapEx e OpEx para alguém de finanças"
+    ],
+    "src": [
+      {
+        "t": "Microsoft Learn: tipos de serviço",
+        "u": "https://learn.microsoft.com/training/modules/describe-cloud-service-types/"
+      }
+    ]
+  },
+  {
+    "id": "f-az-shared",
+    "exam": "az900",
+    "dom": "d1",
+    "mins": 4,
+    "concept": "shared-responsibility",
+    "title": "Responsabilidade compartilhada",
+    "lead": "A linha entre você e a Microsoft se move conforme o serviço. O que nunca se move é a parte de baixo e a parte de cima: hardware é sempre deles, dados e identidades são sempre seus.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "A linha que se move"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Camada",
+          "IaaS",
+          "PaaS",
+          "SaaS"
+        ],
+        "rows": [
+          [
+            "Datacenter, rede física, hardware",
+            "Microsoft",
+            "Microsoft",
+            "Microsoft"
+          ],
+          [
+            "Hipervisor e host",
+            "Microsoft",
+            "Microsoft",
+            "Microsoft"
+          ],
+          [
+            "Sistema operacional convidado",
+            "Cliente",
+            "Microsoft",
+            "Microsoft"
+          ],
+          [
+            "Runtime e middleware",
+            "Cliente",
+            "Microsoft",
+            "Microsoft"
+          ],
+          [
+            "Aplicação",
+            "Cliente",
+            "Cliente",
+            "Microsoft"
+          ],
+          [
+            "Configuração de rede e acesso",
+            "Cliente",
+            "Cliente",
+            "Cliente"
+          ],
+          [
+            "Identidades e contas",
+            "Cliente",
+            "Cliente",
+            "Cliente"
+          ],
+          [
+            "Dados e classificação",
+            "Cliente",
+            "Cliente",
+            "Cliente"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "As três linhas de baixo nunca mudam"
+      },
+      {
+        "t": "p",
+        "x": "Informação e dados, dispositivos e contas e identidades permanecem com o cliente em qualquer modelo. Essa é a frase que resolve metade das questões do tema: não importa se é IaaS, PaaS ou SaaS, classificar e proteger o dado é sempre seu."
+      },
+      {
+        "t": "p",
+        "x": "Da mesma forma, segurança física, hosts físicos e rede física são sempre da Microsoft. O que varia é o miolo: sistema operacional, rede e aplicação."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Patch do sistema operacional em máquina virtual",
+            "Cliente"
+          ],
+          [
+            "Patch do sistema operacional sob um App Service",
+            "Microsoft"
+          ],
+          [
+            "Classificação de dado sensível no Microsoft 365",
+            "Cliente"
+          ],
+          [
+            "Descarte seguro de disco no datacenter",
+            "Microsoft"
+          ],
+          [
+            "Quem tem permissão de leitura num contêiner",
+            "Cliente"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "A pegadinha mais comum afirma que em SaaS a responsabilidade por dados passa para a Microsoft. Nunca passa. Outra pegadinha é dizer que em PaaS o cliente aplica patch do sistema operacional: em PaaS a plataforma é gerenciada."
+      },
+      {
+        "t": "case",
+        "q": "Um contêiner de armazenamento ficou público por configuração errada e vazou documentos. De quem é a responsabilidade?",
+        "a": "Do cliente. Configuração de acesso é responsabilidade do cliente em todos os modelos. A Microsoft fornece as ferramentas de controle, inclusive alertas do Defender for Cloud, mas quem decide o nível de acesso é quem configurou."
+      }
+    ],
+    "check": [
+      "Dizer de cor as três camadas que nunca saem do cliente",
+      "Apontar quem aplica patch em IaaS e em PaaS",
+      "Responder quem responde por um recurso exposto por engano"
+    ],
+    "src": [
+      {
+        "t": "Responsabilidade compartilhada",
+        "u": "https://learn.microsoft.com/azure/security/fundamentals/shared-responsibility"
+      }
+    ]
+  },
+  {
+    "id": "f-az-region",
+    "exam": "az900",
+    "dom": "d2",
+    "mins": 5,
+    "concept": "region-az-pair",
+    "title": "Região, zona, par de região e a hierarquia de recursos",
+    "lead": "Geografia e hierarquia são a base do domínio mais pesado do AZ-900. Quase toda questão de disponibilidade começa decidindo qual desses níveis o enunciado está atacando.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "A escala de proteção"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Nível",
+          "Protege de",
+          "Custo e complexidade"
+        ],
+        "rows": [
+          [
+            "Conjunto de disponibilidade",
+            "Falha de rack e manutenção dentro de um datacenter",
+            "Baixo"
+          ],
+          [
+            "Zonas de disponibilidade",
+            "Queda de um datacenter inteiro na região",
+            "Médio: exige réplicas em zonas distintas"
+          ],
+          [
+            "Par de região",
+            "Desastre que atinge a região inteira",
+            "Alto: exige replicação e plano de failover"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Zonas são datacenters fisicamente separados dentro da mesma região, com energia, refrigeração e rede independentes. O par de região fica a centenas ou milhares de quilômetros. Brazil South tem como par o South Central US."
+      },
+      {
+        "t": "p",
+        "x": "Atualizações planejadas da plataforma não são aplicadas nas duas regiões de um par ao mesmo tempo, justamente para que você nunca perca as duas de uma vez."
+      },
+      {
+        "t": "h",
+        "x": "Hierarquia de escopo"
+      },
+      {
+        "t": "p",
+        "x": "Do mais amplo para o mais específico: grupo de gerenciamento, assinatura, grupo de recursos, recurso. Política e permissão atribuídas em cima são herdadas para baixo."
+      },
+      {
+        "t": "table",
+        "head": [
+          "Afirmação",
+          "Verdadeiro?"
+        ],
+        "rows": [
+          [
+            "Um grupo de recursos pode conter recursos de regiões diferentes",
+            "Sim. A região do grupo guarda só os metadados"
+          ],
+          [
+            "Um recurso pode pertencer a dois grupos ao mesmo tempo",
+            "Não. Pertence a exatamente um"
+          ],
+          [
+            "Excluir o grupo exclui tudo dentro dele",
+            "Sim, em cascata"
+          ],
+          [
+            "Grupos de recursos podem ser aninhados",
+            "Não. Hierarquia acima da assinatura é com grupos de gerenciamento"
+          ],
+          [
+            "Tags são herdadas do grupo para os recursos",
+            "Não, a menos que uma política force"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Zonas não protegem contra desastre regional. Se o enunciado fala em perder a região inteira, nenhuma arquitetura confinada a uma região atende, por mais zonas que use."
+      },
+      {
+        "t": "case",
+        "q": "Uma aplicação roda em três máquinas virtuais, uma em cada zona de Brazil South. A diretoria pergunta se isso sobrevive a um desastre que destrua a região.",
+        "a": "Não sobrevive. Zonas cobrem queda de datacenter, não perda da região. A resposta correta envolve presença em outra região, normalmente a emparelhada, com replicação de dados e processo de failover. Cuidado com a alternativa que diz que o Azure replica máquinas virtuais entre regiões automaticamente: não replica. Replicação entre regiões existe para certos tipos de armazenamento e por meio do Azure Site Recovery, e precisa ser configurada."
+      }
+    ],
+    "check": [
+      "Dizer qual nível protege de qual tipo de falha",
+      "Explicar por que o grupo de recursos não é limite de região",
+      "Citar a ordem dos quatro escopos"
+    ],
+    "src": [
+      {
+        "t": "Zonas de disponibilidade",
+        "u": "https://learn.microsoft.com/azure/reliability/availability-zones-overview"
+      },
+      {
+        "t": "Azure Resource Manager",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
+      }
+    ]
+  },
+  {
+    "id": "f-az-compute",
+    "exam": "az900",
+    "dom": "d2",
+    "mins": 5,
+    "concept": "compute-az",
+    "title": "Computação: VM, App Service, Functions, contêineres",
+    "lead": "A questão sempre descreve um perfil de carga e um nível de esforço operacional aceitável. Quem casa os dois acerta.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Comparando as opções"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "O que é",
+          "Quando é a resposta"
+        ],
+        "rows": [
+          [
+            "Máquinas virtuais",
+            "IaaS. Você administra o sistema operacional",
+            "Precisa de controle total, software legado, migração sem alteração"
+          ],
+          [
+            "Conjuntos de dimensionamento",
+            "Grupo de máquinas idênticas com escala automática",
+            "Carga variável que ainda precisa de máquina virtual"
+          ],
+          [
+            "App Service",
+            "PaaS para aplicações web e APIs",
+            "Publicar site ou API sem administrar sistema operacional, com slots e certificado"
+          ],
+          [
+            "Azure Functions",
+            "Execução por evento, sem servidor",
+            "Trecho curto disparado por evento, carga intermitente"
+          ],
+          [
+            "Container Instances",
+            "Contêiner avulso, sem orquestração",
+            "Tarefa isolada ou job rápido em contêiner"
+          ],
+          [
+            "Container Apps",
+            "Contêineres gerenciados com escala",
+            "Microsserviços sem querer administrar Kubernetes"
+          ],
+          [
+            "Kubernetes Service",
+            "Orquestração completa",
+            "Muitos microsserviços, equipe que domina Kubernetes"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Desktop e híbrido"
+      },
+      {
+        "t": "p",
+        "x": "Azure Virtual Desktop entrega áreas de trabalho e aplicações Windows pela rede, com sessões compartilhadas. Azure Arc traz servidores e clusters de fora do Azure para serem administrados pelas mesmas ferramentas."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Slots de implantação, domínio próprio, sem administrar sistema operacional",
+            "App Service"
+          ],
+          [
+            "Dispara a cada mensagem na fila, dura segundos",
+            "Functions"
+          ],
+          [
+            "Software antigo que exige versão específica de sistema operacional",
+            "Máquina virtual"
+          ],
+          [
+            "Dezenas de microsserviços com orquestração",
+            "Kubernetes Service"
+          ],
+          [
+            "Equipe pequena, uma API só, tráfego constante",
+            "App Service"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Functions no plano de consumo brilha em carga intermitente. Com tráfego constante o dia inteiro, a vantagem econômica desaparece e a resposta costuma ser App Service. E Kubernetes raramente é a resposta para uma equipe pequena com um único serviço: o exame cobra o menor esforço operacional."
+      },
+      {
+        "t": "case",
+        "q": "Equipe de três pessoas, uma API em .NET, precisa de slots para testar antes de publicar, domínio próprio com certificado, tráfego constante o dia inteiro, nenhum outro microsserviço planejado.",
+        "a": "App Service. Ele entrega slots, domínio e certificado de forma nativa, sem administrar sistema operacional. Kubernetes resolveria, mas traria nós, upgrades de cluster e rede de contêiner para três pessoas e um serviço: esforço maior sem necessidade."
+      }
+    ],
+    "check": [
+      "Escolher entre App Service e Functions pelo perfil de carga",
+      "Dizer quando máquina virtual ainda é a resposta certa",
+      "Diferenciar Container Instances de Kubernetes Service"
+    ],
+    "src": [
+      {
+        "t": "Azure App Service",
+        "u": "https://learn.microsoft.com/azure/app-service/overview"
+      }
+    ]
+  },
+  {
+    "id": "f-az-storage",
+    "exam": "az900",
+    "dom": "d2",
+    "mins": 6,
+    "concept": "blob-tiers",
+    "title": "Armazenamento: Blob, camadas, Files, discos e redundância",
+    "lead": "Custo de armazenamento é o tema favorito do domínio dois. A regra que resolve quase tudo: quanto mais frio, mais barato guardar e mais caro e lento ler.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Serviços de armazenamento"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "O que é",
+          "Caso típico"
+        ],
+        "rows": [
+          [
+            "Blob",
+            "Objetos acessados por API",
+            "Imagens, vídeos, backup, data lake"
+          ],
+          [
+            "Files",
+            "Compartilhamento SMB e NFS, com caminho de rede",
+            "Substituir um servidor de arquivos, montado por vários servidores"
+          ],
+          [
+            "Managed Disks",
+            "Disco de bloco anexado a uma máquina virtual",
+            "Disco do sistema e de dados de uma máquina"
+          ],
+          [
+            "Queue",
+            "Fila simples de mensagens",
+            "Desacoplar componentes"
+          ],
+          [
+            "Table",
+            "Chave e atributo, NoSQL simples",
+            "Catálogo leve sem relacionamento"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Camadas de acesso do Blob"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Camada",
+          "Permanência mínima",
+          "Acesso",
+          "Perfil"
+        ],
+        "rows": [
+          [
+            "Hot",
+            "Nenhuma",
+            "Imediato",
+            "Leitura frequente; armazenar custa mais, ler custa menos"
+          ],
+          [
+            "Cool",
+            "30 dias",
+            "Imediato",
+            "Acesso ocasional"
+          ],
+          [
+            "Cold",
+            "90 dias",
+            "Imediato",
+            "Acesso raro, mas que precisa abrir na hora"
+          ],
+          [
+            "Archive",
+            "180 dias",
+            "Offline, exige reidratação em horas",
+            "Retenção legal, consulta rara e tolerante a espera"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Sair da camada antes do mínimo gera taxa de exclusão antecipada. Por isso mover tudo para a camada mais fria nem sempre reduz a conta."
+      },
+      {
+        "t": "h",
+        "x": "Redundância"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Sigla",
+          "Onde ficam as cópias"
+        ],
+        "rows": [
+          [
+            "LRS",
+            "Três cópias em um único datacenter"
+          ],
+          [
+            "ZRS",
+            "Cópias distribuídas entre zonas da mesma região"
+          ],
+          [
+            "GRS",
+            "LRS na região primária mais cópia na região emparelhada"
+          ],
+          [
+            "GZRS",
+            "ZRS na primária mais cópia na emparelhada"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Mover muitos dados"
+      },
+      {
+        "t": "p",
+        "x": "AzCopy e Storage Explorer transferem pela rede. Azure Data Box envia um dispositivo físico pelo correio, e é a resposta quando o volume é de dezenas ou centenas de terabytes e o link não dá conta. Azure File Sync sincroniza um servidor local com o Azure Files e serve como cache, não como carga inicial gigante."
+      },
+      {
+        "t": "trap",
+        "x": "Se o enunciado exige leitura em segundos, Archive está eliminado, por mais barato que seja. Reidratação de prioridade alta ainda leva minutos a uma hora, não segundos. E Blob não fala SMB nativamente: compartilhamento por caminho de rede é Azure Files."
+      },
+      {
+        "t": "case",
+        "q": "Laudos médicos guardados por dez anos, consulta raríssima, mas quando o paciente pede o laudo tem de abrir em segundos, no mesmo atendimento. Menor custo de armazenamento.",
+        "a": "Cold. É a camada online mais barata e o mínimo de 90 dias não atrapalha numa retenção de dez anos. Archive seria mais barato, mas é offline. Hot atenderia o desempenho e perderia o requisito de menor custo."
+      }
+    ],
+    "check": [
+      "Ordenar as quatro camadas por custo de armazenamento",
+      "Dizer qual redundância sobrevive à perda de uma região",
+      "Escolher entre AzCopy e Data Box pelo volume e pela banda"
+    ],
+    "src": [
+      {
+        "t": "Camadas de acesso do Blob",
+        "u": "https://learn.microsoft.com/azure/storage/blobs/access-tiers-overview"
+      },
+      {
+        "t": "Redundância do armazenamento",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-redundancy"
+      }
+    ]
+  },
+  {
+    "id": "f-az-identity",
+    "exam": "az900",
+    "dom": "d2",
+    "mins": 5,
+    "concept": "entra-vs-adds",
+    "title": "Identidade: Entra ID, AD DS, MFA e acesso condicional",
+    "lead": "O erro caro aqui é tratar o Microsoft Entra ID como se fosse um controlador de domínio. São coisas diferentes, com protocolos diferentes.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "A diferença central"
+      },
+      {
+        "t": "table",
+        "head": [
+          "",
+          "Microsoft Entra ID",
+          "AD DS / Entra Domain Services"
+        ],
+        "rows": [
+          [
+            "O que é",
+            "Provedor de identidade em nuvem",
+            "Serviço de diretório e domínio"
+          ],
+          [
+            "Protocolos",
+            "OAuth 2.0, OpenID Connect, SAML",
+            "Kerberos, LDAP, NTLM"
+          ],
+          [
+            "Estrutura",
+            "Plano, baseado em locatário",
+            "Floresta, domínio, unidade organizacional"
+          ],
+          [
+            "Política de dispositivo",
+            "Via Intune",
+            "Group Policy"
+          ],
+          [
+            "Caso típico",
+            "Login em SaaS, aplicação moderna, MFA",
+            "Aplicação legada que precisa ingressar no domínio"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Entra ID não é a sua floresta do Active Directory na nuvem, mesmo com sincronização. São diretórios distintos que podem ser mantidos em sincronia pelo Entra Connect."
+      },
+      {
+        "t": "h",
+        "x": "Autenticação e autorização"
+      },
+      {
+        "t": "p",
+        "x": "Autenticação prova quem você é. Autorização define o que você pode fazer. O exame gosta de separar as duas: MFA é autenticação, RBAC é autorização."
+      },
+      {
+        "t": "h",
+        "x": "Recursos que caem na prova"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Recurso",
+          "Para que serve"
+        ],
+        "rows": [
+          [
+            "MFA",
+            "Segundo fator: algo que você sabe, tem ou é"
+          ],
+          [
+            "Acesso condicional",
+            "Avalia usuário, dispositivo, local e risco e decide conceder, bloquear ou exigir MFA"
+          ],
+          [
+            "SSO",
+            "Uma autenticação dá acesso a várias aplicações"
+          ],
+          [
+            "Sem senha",
+            "Windows Hello, chave de segurança, app autenticador"
+          ],
+          [
+            "Identidade gerenciada",
+            "Identidade do próprio recurso do Azure, sem segredo no código"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "LDAP, Kerberos, Group Policy, ingresso em domínio",
+            "AD DS ou Entra Domain Services"
+          ],
+          [
+            "Bloquear login fora do país ou de dispositivo não conforme",
+            "Acesso condicional"
+          ],
+          [
+            "Aplicação do Azure precisa acessar outro serviço sem segredo",
+            "Identidade gerenciada"
+          ],
+          [
+            "Login único em SaaS com segundo fator",
+            "Entra ID com MFA"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Aparecendo LDAP ou Kerberos no enunciado, a resposta não é Entra ID puro. E lembre que Entra ID é identidade, não permissão sobre recurso do Azure: quem concede permissão é o RBAC."
+      },
+      {
+        "t": "case",
+        "q": "Uma empresa quer reduzir o uso de senha em aplicações SaaS e aplicar políticas de acesso baseadas em risco. Quais dois recursos do Entra ID atendem?",
+        "a": "MFA e acesso condicional. Group Policy pertence ao AD DS e não ao Entra ID. Bloqueio de recurso é governança de recurso do Azure, não autenticação de usuário."
+      }
+    ],
+    "check": [
+      "Listar três protocolos que o Entra ID não fala",
+      "Separar autenticação de autorização num exemplo",
+      "Explicar o que o acesso condicional avalia"
+    ],
+    "src": [
+      {
+        "t": "Entra ID e AD DS",
+        "u": "https://learn.microsoft.com/entra/fundamentals/compare"
+      },
+      {
+        "t": "Acesso condicional",
+        "u": "https://learn.microsoft.com/entra/identity/conditional-access/overview"
+      }
+    ]
+  },
+  {
+    "id": "f-az-govern",
+    "exam": "az900",
+    "dom": "d3",
+    "mins": 6,
+    "concept": "rbac-policy-lock",
+    "title": "Governança: RBAC, Azure Policy, bloqueios e tags",
+    "lead": "Três mecanismos que o exame troca de lugar com frequência. Cada um responde uma pergunta diferente: quem, o quê, e não mexa.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Qual pergunta cada um responde"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Mecanismo",
+          "Pergunta",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "RBAC",
+            "Quem pode fazer o quê",
+            "Suporte recebe a função Leitor"
+          ],
+          [
+            "Azure Policy",
+            "O que pode existir",
+            "Só criar recursos em Brazil South; exigir tag de centro de custo"
+          ],
+          [
+            "Bloqueio de recurso",
+            "Isto não pode ser alterado nem excluído",
+            "CanNotDelete no banco de produção"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Funções internas mais cobradas"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Função",
+          "Pode"
+        ],
+        "rows": [
+          [
+            "Leitor",
+            "Ver, não alterar"
+          ],
+          [
+            "Colaborador",
+            "Criar e alterar, mas não conceder permissão a outros"
+          ],
+          [
+            "Proprietário",
+            "Tudo, inclusive conceder permissão"
+          ],
+          [
+            "Administrador de Acesso de Usuário",
+            "Gerenciar permissões sem administrar o recurso"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "RBAC é cumulativo e herdado pelo escopo: atribuição no grupo de gerenciamento vale para tudo abaixo. Negação explícita existe, mas é recurso específico e não é o caminho padrão do exame."
+      },
+      {
+        "t": "h",
+        "x": "Os dois tipos de bloqueio"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Tipo",
+          "Impede"
+        ],
+        "rows": [
+          [
+            "CanNotDelete",
+            "Excluir. Leitura e alteração continuam permitidas"
+          ],
+          [
+            "ReadOnly",
+            "Qualquer operação de escrita, inclusive iniciar ou parar uma máquina virtual"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O bloqueio vale acima do RBAC: nem o Proprietário exclui um recurso bloqueado sem remover o bloqueio antes."
+      },
+      {
+        "t": "h",
+        "x": "Tags"
+      },
+      {
+        "t": "p",
+        "x": "Tags são pares de nome e valor usados para rateio e organização. Elas não são herdadas do grupo de recursos nem da assinatura. Para que sejam aplicadas automaticamente, é preciso uma política com efeito de modificação. O Cost Management agrupa e filtra custo por tag, e é por isso que a disciplina de marcação importa."
+      },
+      {
+        "t": "trap",
+        "x": "ReadOnly é mais restritivo do que parece: bloqueia iniciar e parar máquina virtual, porque essas operações são escrita. Muita gente aplica ReadOnly achando que só impede exclusão."
+      },
+      {
+        "t": "case",
+        "q": "Ninguém deve criar recurso fora de Brazil South; o suporte deve apenas visualizar; o banco de produção não pode ser excluído nem pelo administrador da assinatura.",
+        "a": "Azure Policy, RBAC e bloqueio de recurso, nessa ordem. RBAC não sabe o que é região: ele concede ações a identidades, não avalia propriedade do recurso. E Policy pode negar criação, mas o controle contra exclusão acidental de quem já tem permissão é o bloqueio."
+      }
+    ],
+    "check": [
+      "Dizer qual dos três resolve cada um dos três pedidos clássicos",
+      "Explicar por que ReadOnly impede iniciar uma máquina virtual",
+      "Responder se tag é herdada"
+    ],
+    "src": [
+      {
+        "t": "Azure Policy",
+        "u": "https://learn.microsoft.com/azure/governance/policy/overview"
+      },
+      {
+        "t": "Bloquear recursos",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/lock-resources"
+      },
+      {
+        "t": "Marcar recursos",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/tag-resources"
+      }
+    ]
+  },
+  {
+    "id": "f-az-cost",
+    "exam": "az900",
+    "dom": "d3",
+    "mins": 5,
+    "concept": "custo-az",
+    "title": "Custo: calculadoras, reservas e benefício híbrido",
+    "lead": "Quatro ferramentas parecidas que fazem coisas diferentes, e três formas de pagar computação. O enunciado sempre dá a pista no perfil da carga.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Qual ferramenta para qual pergunta"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Ferramenta",
+          "Responde"
+        ],
+        "rows": [
+          [
+            "Calculadora de Preços",
+            "Quanto vai custar uma arquitetura que ainda não existe"
+          ],
+          [
+            "Calculadora de TCO",
+            "Quanto custa hoje o datacenter próprio comparado ao Azure, incluindo energia, espaço e equipe"
+          ],
+          [
+            "Microsoft Cost Management",
+            "Quanto já gastei, por serviço e por tag, e alerta de orçamento"
+          ],
+          [
+            "Azure Advisor",
+            "Onde há recurso ocioso ou subdimensionado, além de segurança e confiabilidade"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Formas de pagar computação"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Modelo",
+          "Compromisso",
+          "Desconto",
+          "Quando"
+        ],
+        "rows": [
+          [
+            "Sob demanda",
+            "Nenhum",
+            "Nenhum",
+            "Carga imprevisível ou de curta duração"
+          ],
+          [
+            "Reserva de 1 ou 3 anos",
+            "Capacidade reservada",
+            "Alto",
+            "Carga estável e previsível, tamanho e região definidos"
+          ],
+          [
+            "Spot",
+            "Nenhum, mas pode ser removida",
+            "Muito alto",
+            "Lote tolerante a interrupção"
+          ],
+          [
+            "Benefício Híbrido",
+            "Usa licença própria com Software Assurance",
+            "Remove o custo da licença",
+            "Já tem licença Windows Server ou SQL Server"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Reserva e Benefício Híbrido se somam: você reserva a capacidade e ainda aproveita a licença que já pagou."
+      },
+      {
+        "t": "h",
+        "x": "Outros fatores de custo"
+      },
+      {
+        "t": "p",
+        "x": "Entrada de dados no Azure normalmente não é cobrada; saída costuma ser. Tipo de recurso, região, camada de serviço e largura de banda afetam a fatura. Marcação com tags e orçamentos com alerta são os instrumentos de controle citados no exame."
+      },
+      {
+        "t": "trap",
+        "x": "Spot nunca é a resposta para carga que não pode cair, por mais barato que seja. E Cost Management não serve para projetar uma migração que ainda não existe: isso é Calculadora de Preços ou de TCO."
+      },
+      {
+        "t": "case",
+        "q": "Trinta máquinas Windows rodando o dia inteiro pelos próximos três anos, tamanho e região estáveis, e a empresa já tem licenças com Software Assurance.",
+        "a": "Reserva de três anos somada ao Benefício Híbrido. Os dois descontos se acumulam. Spot cai porque a carga roda 24 horas. Reserva de um ano desconta menos e descartar as licenças existentes joga dinheiro fora."
+      }
+    ],
+    "check": [
+      "Dizer qual calculadora compara com on-premises",
+      "Escolher entre reserva, spot e sob demanda pelo perfil da carga",
+      "Explicar o que o Benefício Híbrido aproveita"
+    ],
+    "src": [
+      {
+        "t": "Reservas do Azure",
+        "u": "https://learn.microsoft.com/azure/cost-management-billing/reservations/save-compute-costs-reservations"
+      },
+      {
+        "t": "Cost Management",
+        "u": "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management"
+      }
+    ]
+  },
+  {
+    "id": "f-az-monitor",
+    "exam": "az900",
+    "dom": "d3",
+    "mins": 4,
+    "concept": "monitor-az",
+    "title": "Monitoramento e segurança: Monitor, Service Health, Defender",
+    "lead": "Quatro serviços com nomes parecidos. A pergunta que separa: o problema é meu, da plataforma, ou é uma ameaça?",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Quem responde o quê"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Responde"
+        ],
+        "rows": [
+          [
+            "Azure Monitor",
+            "Como estão as métricas e os logs dos meus recursos"
+          ],
+          [
+            "Azure Service Health",
+            "Existe incidente ou manutenção da plataforma afetando as minhas assinaturas"
+          ],
+          [
+            "Azure Advisor",
+            "O que eu deveria melhorar em custo, segurança, confiabilidade, excelência operacional e desempenho"
+          ],
+          [
+            "Defender for Cloud",
+            "Qual é a minha postura de segurança e há ameaça ativa nos recursos"
+          ],
+          [
+            "Microsoft Sentinel",
+            "Correlacionar eventos de várias fontes e responder a incidente, como um SIEM"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Dentro do Azure Monitor ficam o Log Analytics, que consulta logs, e o Application Insights, que instrumenta a aplicação. Alertas e painéis saem daí."
+      },
+      {
+        "t": "h",
+        "x": "Confiabilidade e SLA"
+      },
+      {
+        "t": "p",
+        "x": "O contrato de nível de serviço descreve o compromisso de disponibilidade e o crédito devido quando ele não é cumprido. Arquiteturas com mais redundância recebem compromisso maior, e serviços gratuitos ou em versão prévia normalmente não têm SLA."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Usuários reclamam de lentidão e quero saber se é incidente da Microsoft",
+            "Service Health"
+          ],
+          [
+            "Quero gráfico de CPU e consulta de log",
+            "Azure Monitor"
+          ],
+          [
+            "Quero recomendação de economia",
+            "Advisor"
+          ],
+          [
+            "Quero pontuação de postura de segurança",
+            "Defender for Cloud"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Azure Monitor mostra que a latência subiu, mas não informa se a Microsoft declarou incidente. Essa distinção é exatamente o que a questão cobra."
+      },
+      {
+        "t": "case",
+        "q": "Um analista precisa descobrir se a lentidão foi causada por incidente da plataforma que afeta as assinaturas da empresa na região usada.",
+        "a": "Azure Service Health. Ele filtra incidentes, manutenções e avisos pelos recursos e regiões das suas assinaturas. Monitor mostraria o sintoma, não a causa declarada."
+      }
+    ],
+    "check": [
+      "Separar Monitor de Service Health numa frase",
+      "Dizer as categorias do Advisor",
+      "Explicar o que um SLA garante e o que não garante"
+    ],
+    "src": [
+      {
+        "t": "Azure Service Health",
+        "u": "https://learn.microsoft.com/azure/service-health/overview"
+      },
+      {
+        "t": "Azure Monitor",
+        "u": "https://learn.microsoft.com/azure/azure-monitor/overview"
+      }
+    ]
+  }
+]

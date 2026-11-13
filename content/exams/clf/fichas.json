@@ -1,0 +1,2701 @@
+[
+  {
+    "id": "f-aw-wa",
+    "exam": "clf",
+    "dom": "d1",
+    "mins": 5,
+    "concept": "well-architected",
+    "title": "Well-Architected, benefícios e as estratégias de migração",
+    "lead": "O primeiro domínio é conceitual, mas tem duas listas que caem direto: os pilares do Well-Architected e as estratégias de migração.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Os seis pilares"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Pilar",
+          "Pergunta que ele faz"
+        ],
+        "rows": [
+          [
+            "Excelência operacional",
+            "Consigo operar, observar e melhorar continuamente? Tenho runbook e métrica?"
+          ],
+          [
+            "Segurança",
+            "Protejo identidade, dados e detecto incidente?"
+          ],
+          [
+            "Confiabilidade",
+            "A carga se recupera de falha e escala para atender a demanda?"
+          ],
+          [
+            "Eficiência de desempenho",
+            "Escolhi e dimensionei os recursos certos?"
+          ],
+          [
+            "Otimização de custos",
+            "Pago só pelo que preciso e consigo atribuir o gasto?"
+          ],
+          [
+            "Sustentabilidade",
+            "Reduzo o impacto ambiental da carga?"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "As estratégias de migração"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Estratégia",
+          "O que é",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Rehost",
+            "Mover sem alterar, lift and shift",
+            "Servidor físico vira instância EC2"
+          ],
+          [
+            "Replatform",
+            "Mover trocando um componente por serviço gerenciado",
+            "Banco autogerenciado vira Amazon RDS"
+          ],
+          [
+            "Repurchase",
+            "Trocar o produto por um SaaS",
+            "CRM próprio vira assinatura de SaaS"
+          ],
+          [
+            "Refactor",
+            "Reescrever como aplicação nativa de nuvem",
+            "Monólito vira funções e filas"
+          ],
+          [
+            "Retire",
+            "Desligar o que não é mais usado",
+            "Sistema sem usuário há dois anos"
+          ],
+          [
+            "Retain",
+            "Manter onde está, por ora",
+            "Sistema que será substituído no ano que vem"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Benefícios citados pela AWS"
+      },
+      {
+        "t": "p",
+        "x": "Trocar investimento por despesa variável, parar de dimensionar para o pico, ganhar velocidade e agilidade, deixar de gastar com operação de datacenter, aproveitar economias de escala e ir global em minutos."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Sem reescrever, mas tirando a administração do banco da equipe",
+            "Replatform"
+          ],
+          [
+            "Prazo curto, nada pode mudar na aplicação",
+            "Rehost"
+          ],
+          [
+            "Sem métrica de negócio e sem runbook",
+            "Falha de excelência operacional"
+          ],
+          [
+            "Gasto não atribuído por equipe",
+            "Falha de otimização de custos"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Refactor é a estratégia mais cara e demorada. Se o enunciado dá prazo curto e proíbe reescrever, refactor está eliminado mesmo quando parece a solução mais elegante."
+      },
+      {
+        "t": "case",
+        "q": "ERP em servidores físicos com MySQL autogerenciado. Sair do datacenter em quatro meses, sem reescrever, mas tirando da equipe o trabalho de administrar o banco.",
+        "a": "Replatform. A aplicação vai para EC2 sem alteração e o MySQL vira RDS. Rehost puro deixaria o banco autogerenciado e falharia no segundo requisito, que está na segunda metade do enunciado."
+      }
+    ],
+    "check": [
+      "Citar os seis pilares",
+      "Diferenciar rehost de replatform com um exemplo",
+      "Dizer qual pilar cobre runbook e observabilidade"
+    ],
+    "src": [
+      {
+        "t": "AWS Well-Architected",
+        "u": "https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"
+      },
+      {
+        "t": "Estratégias de migração",
+        "u": "https://docs.aws.amazon.com/prescriptive-guidance/latest/large-migration-guide/migration-strategies.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-global",
+    "exam": "clf",
+    "dom": "d1",
+    "mins": 4,
+    "concept": "infra-global",
+    "title": "Infraestrutura global: região, zona, edge e Local Zone",
+    "lead": "Quatro camadas com funções diferentes. Confundir ponto de presença com região é o erro mais comum do domínio.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "As camadas"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Camada",
+          "O que é",
+          "Resolve"
+        ],
+        "rows": [
+          [
+            "Região",
+            "Área geográfica com várias zonas",
+            "Onde o dado reside, latência regional, conformidade"
+          ],
+          [
+            "Zona de disponibilidade",
+            "Um ou mais datacenters isolados dentro da região",
+            "Alta disponibilidade dentro da região"
+          ],
+          [
+            "Ponto de presença (edge)",
+            "Cache do CloudFront e borda do Route 53",
+            "Latência de entrega de conteúdo ao usuário final"
+          ],
+          [
+            "Local Zone",
+            "Computação e armazenamento perto de uma grande cidade",
+            "Latência de milissegundo para aplicação, não só conteúdo"
+          ],
+          [
+            "Outposts",
+            "Hardware da AWS dentro do seu datacenter",
+            "Exigência de permanecer no local"
+          ],
+          [
+            "Wavelength",
+            "Infraestrutura dentro da rede de operadora móvel",
+            "Aplicação de latência ultrabaixa em 5G"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Como escolher uma região"
+      },
+      {
+        "t": "p",
+        "x": "Quatro fatores: conformidade e soberania de dados, proximidade dos usuários, disponibilidade do serviço naquela região e preço, que varia entre regiões."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Usuário distante reclamando de download lento de arquivo estático",
+            "CloudFront com pontos de presença"
+          ],
+          [
+            "Sobreviver à queda de um datacenter",
+            "Distribuir entre várias zonas"
+          ],
+          [
+            "Sobreviver à perda da região inteira",
+            "Arquitetura em mais de uma região"
+          ],
+          [
+            "Latência de milissegundo para jogo ou streaming numa cidade específica",
+            "Local Zone"
+          ],
+          [
+            "Regulação exige o dado dentro do país",
+            "Escolher a região local"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Ponto de presença não executa a sua aplicação: ele guarda cópia de conteúdo. Se a alternativa sugere rodar a aplicação no edge para resolver latência de processamento, desconfie."
+      },
+      {
+        "t": "case",
+        "q": "Usuários na América do Sul reclamam de lentidão ao baixar imagens e vídeos de um bucket em us-east-1. O conteúdo é estático e igual para todos.",
+        "a": "CloudFront usando pontos de presença. O problema é distância de rede para conteúdo repetido, e cache na borda resolve. Adicionar zona não aproxima nada do usuário, e Auto Scaling resolve falta de capacidade, que não é o caso."
+      }
+    ],
+    "check": [
+      "Dizer a diferença entre edge location e Local Zone",
+      "Listar os quatro fatores de escolha de região",
+      "Explicar por que mais zonas não resolve latência global"
+    ],
+    "src": [
+      {
+        "t": "Infraestrutura global da AWS",
+        "u": "https://aws.amazon.com/about-aws/global-infrastructure/"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-shared",
+    "exam": "clf",
+    "dom": "d2",
+    "mins": 4,
+    "concept": "shared-responsibility",
+    "title": "Responsabilidade compartilhada",
+    "lead": "A AWS resume em duas frases: segurança DA nuvem é dela, segurança NA nuvem é sua. O exame cobra onde exatamente fica a linha em cada serviço.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "A divisão"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Lado",
+          "Cobre"
+        ],
+        "rows": [
+          [
+            "AWS: segurança da nuvem",
+            "Datacenter, energia, rede física, hardware, virtualização, descarte de mídia, e o software dos serviços gerenciados"
+          ],
+          [
+            "Cliente: segurança na nuvem",
+            "Dados, classificação, identidades e permissões, configuração de rede e de serviço, criptografia, patch do que você administra"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Onde a linha fica em cada serviço"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "AWS cuida de",
+          "Você cuida de"
+        ],
+        "rows": [
+          [
+            "EC2",
+            "Hipervisor, host, rede física",
+            "Sistema operacional convidado, patch, firewall, aplicação, dados"
+          ],
+          [
+            "RDS",
+            "Sistema operacional, patch do motor, backup automático",
+            "Usuários do banco, grupos de segurança, criptografia, dados"
+          ],
+          [
+            "S3",
+            "Durabilidade, infraestrutura",
+            "Política do bucket, bloqueio de acesso público, criptografia, dados"
+          ],
+          [
+            "Lambda",
+            "Sistema operacional e runtime",
+            "Código, permissões da função, dados"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Patch do sistema operacional em EC2",
+            "Cliente"
+          ],
+          [
+            "Patch do motor de banco no RDS",
+            "AWS"
+          ],
+          [
+            "Bucket exposto por configuração errada",
+            "Cliente"
+          ],
+          [
+            "Descarte seguro de disco físico",
+            "AWS"
+          ],
+          [
+            "Decidir criptografar dado sensível em repouso",
+            "Cliente"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Gerenciado não significa seguro por padrão. No RDS a AWS aplica patch, mas quem cria usuário fraco, deixa o grupo de segurança aberto ou não ativa criptografia é você."
+      },
+      {
+        "t": "case",
+        "q": "Quem é responsável por configurar corretamente as permissões de um bucket S3?",
+        "a": "O cliente. Configuração de acesso é sempre do cliente, em qualquer modelo. A AWS fornece Block Public Access, políticas e o IAM Access Analyzer, mas a decisão é de quem configura."
+      }
+    ],
+    "check": [
+      "Dizer a diferença entre segurança da nuvem e na nuvem",
+      "Apontar quem aplica patch em EC2 e em RDS",
+      "Responder de quem é a culpa por um bucket público"
+    ],
+    "src": [
+      {
+        "t": "Modelo de responsabilidade compartilhada",
+        "u": "https://aws.amazon.com/compliance/shared-responsibility-model/"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-iam",
+    "exam": "clf",
+    "dom": "d2",
+    "mins": 6,
+    "concept": "iam-role-ec2",
+    "title": "IAM: usuários, funções, políticas e segredos",
+    "lead": "Quando uma aplicação da AWS precisa falar com outro serviço da AWS, a resposta é quase sempre função. Quando é segredo de sistema externo, a resposta muda.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Os componentes"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Componente",
+          "O que é"
+        ],
+        "rows": [
+          [
+            "Usuário raiz",
+            "Identidade criada com a conta. Acesso total e irrestrito"
+          ],
+          [
+            "Usuário do IAM",
+            "Identidade de pessoa ou sistema, com credencial de longo prazo"
+          ],
+          [
+            "Grupo",
+            "Conjunto de usuários que recebe políticas em bloco"
+          ],
+          [
+            "Função (role)",
+            "Identidade assumida temporariamente, sem credencial fixa"
+          ],
+          [
+            "Política",
+            "Documento JSON que permite ou nega ações sobre recursos"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Boas práticas que o exame cobra"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Prática",
+          "Por quê"
+        ],
+        "rows": [
+          [
+            "MFA no usuário raiz e guardá-lo fora do uso diário",
+            "É a identidade com poder total e não pode ser restringida por política"
+          ],
+          [
+            "Privilégio mínimo",
+            "Conceder só a ação necessária sobre o recurso necessário"
+          ],
+          [
+            "Função em vez de chave de acesso",
+            "Credencial temporária, rotacionada pela AWS, sem segredo no código"
+          ],
+          [
+            "Uma identidade por pessoa",
+            "Usuário compartilhado destrói a auditoria do CloudTrail"
+          ],
+          [
+            "Política de senha e rotação",
+            "Reduz risco de credencial antiga e fraca"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Onde guardar segredo"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Para quê"
+        ],
+        "rows": [
+          [
+            "KMS",
+            "Gerenciar chaves de criptografia, integrado aos serviços da AWS"
+          ],
+          [
+            "CloudHSM",
+            "Módulo de hardware dedicado, quando você precisa de controle exclusivo da chave"
+          ],
+          [
+            "Secrets Manager",
+            "Segredo de aplicação, como senha de banco, com rotação automática integrada"
+          ],
+          [
+            "Parameter Store",
+            "Parâmetros de configuração, inclusive seguros; no nível padrão não rotaciona sozinho"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Organizations e SCP"
+      },
+      {
+        "t": "p",
+        "x": "A Service Control Policy define o teto de permissão de uma conta dentro do AWS Organizations. Ela não concede nada: apenas limita o que o IAM daquela conta pode permitir. É assim que se bloqueia uma região inteira para todas as equipes."
+      },
+      {
+        "t": "trap",
+        "x": "Se a alternativa fala em gravar chave de acesso no código, na imagem da instância, em variável de ambiente ou em user data, descarte. E função não guarda senha de sistema de terceiro: isso é Secrets Manager."
+      },
+      {
+        "t": "case",
+        "q": "Guardar a senha de um banco de terceiro, trocada a cada 30 dias, sem alterar código, buscada por chamada de API no momento do uso.",
+        "a": "Secrets Manager. A rotação automática integrada é o diferencial. KMS gerencia chave, não senha. Parameter Store no nível padrão exigiria construir a rotação. CloudHSM é hardware dedicado para chave criptográfica, mais caro e com outra finalidade."
+      }
+    ],
+    "check": [
+      "Explicar por que função é melhor que chave de acesso",
+      "Dizer o que a SCP faz e o que ela não faz",
+      "Escolher entre KMS, Secrets Manager e Parameter Store"
+    ],
+    "src": [
+      {
+        "t": "Boas práticas de IAM",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+      },
+      {
+        "t": "Secrets Manager",
+        "u": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-netsec",
+    "exam": "clf",
+    "dom": "d2",
+    "mins": 5,
+    "concept": "sg-vs-nacl",
+    "title": "Segurança de rede: Security Group, NACL, WAF e Shield",
+    "lead": "Stateful contra stateless é a dupla mais cobrada da AWS. E há um detalhe que decide a questão sozinho: Security Group não tem regra de negação.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Security Group e Network ACL"
+      },
+      {
+        "t": "table",
+        "head": [
+          "",
+          "Security Group",
+          "Network ACL"
+        ],
+        "rows": [
+          [
+            "Atua em",
+            "Instância, na interface de rede",
+            "Sub-rede inteira"
+          ],
+          [
+            "Estado",
+            "Stateful: a resposta volta sozinha",
+            "Stateless: precisa liberar entrada e saída"
+          ],
+          [
+            "Regras",
+            "Só permissão",
+            "Permissão e negação"
+          ],
+          [
+            "Avaliação",
+            "Todas as regras, união das permissões",
+            "Por número, da menor para a maior, para na primeira que casar"
+          ],
+          [
+            "Padrão",
+            "Nega tudo na entrada, permite tudo na saída",
+            "A padrão permite tudo; uma criada por você nega tudo"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Ao usar NACL, lembre das portas efêmeras: se você libera a entrada na 443 mas não libera a faixa efêmera na saída, a resposta não volta."
+      },
+      {
+        "t": "h",
+        "x": "Proteção de aplicação"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Cobre"
+        ],
+        "rows": [
+          [
+            "Shield Standard",
+            "Proteção DDoS de camada de rede e transporte, automática e sem custo adicional"
+          ],
+          [
+            "Shield Advanced",
+            "Proteção ampliada, proteção financeira contra escalada de custo e acesso ao time de resposta da AWS"
+          ],
+          [
+            "WAF",
+            "Regras sobre requisição HTTP: injeção de SQL, cross-site scripting, limite de taxa, filtro por país"
+          ],
+          [
+            "Firewall Manager",
+            "Aplica regras de WAF e de grupo de segurança em várias contas de uma vez"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Bloquear um IP específico que está atacando",
+            "Network ACL"
+          ],
+          [
+            "Liberar a porta da aplicação para a internet",
+            "Security Group"
+          ],
+          [
+            "Injeção de SQL nas requisições",
+            "WAF"
+          ],
+          [
+            "Ataque volumétrico e precisa de time de resposta da AWS",
+            "Shield Advanced"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Não existe deny em Security Group. Qualquer alternativa que diga para criar regra de negação em grupo de segurança está errada por definição."
+      },
+      {
+        "t": "case",
+        "q": "Durante um ataque, a equipe identificou um único IP gerando milhares de requisições e precisa bloqueá-lo no nível da sub-rede, mantendo o resto liberado.",
+        "a": "Network ACL com regra de negação para aquele IP. É o único controle de rede da VPC capaz de negar uma origem específica. IAM controla chamada de API, não tráfego de entrada, e mexer em rota quebraria conectividade legítima."
+      }
+    ],
+    "check": [
+      "Explicar stateful e stateless com o exemplo da porta 443",
+      "Dizer por que SG não bloqueia um IP",
+      "Separar WAF de Shield"
+    ],
+    "src": [
+      {
+        "t": "Security groups",
+        "u": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html"
+      },
+      {
+        "t": "Network ACLs",
+        "u": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-secsvcs",
+    "exam": "clf",
+    "dom": "d2",
+    "mins": 5,
+    "concept": "seguranca-servicos",
+    "title": "Serviços de segurança: quem faz o quê",
+    "lead": "Seis ou sete nomes parecidos que o exame embaralha numa única questão. A saída é decorar o verbo de cada um.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Um verbo para cada serviço"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Verbo",
+          "Responde"
+        ],
+        "rows": [
+          [
+            "CloudTrail",
+            "Registra",
+            "Quem chamou qual API, quando e de onde"
+          ],
+          [
+            "CloudWatch",
+            "Mede",
+            "Métrica, log e alarme dos recursos"
+          ],
+          [
+            "AWS Config",
+            "Compara",
+            "Como o recurso está configurado e se está conforme a regra"
+          ],
+          [
+            "GuardDuty",
+            "Detecta",
+            "Há atividade maliciosa ou comportamento anômalo"
+          ],
+          [
+            "Inspector",
+            "Varre",
+            "Há vulnerabilidade conhecida em EC2, contêiner ou função"
+          ],
+          [
+            "Macie",
+            "Classifica",
+            "Há dado pessoal ou sensível nos buckets"
+          ],
+          [
+            "Detective",
+            "Investiga",
+            "Qual foi a cadeia de eventos por trás do alerta"
+          ],
+          [
+            "Security Hub",
+            "Agrega",
+            "Visão única dos achados de vários serviços. O original hoje se chama Security Hub CSPM"
+          ],
+          [
+            "Artifact",
+            "Entrega",
+            "Relatórios de conformidade como SOC e PCI, para o auditor"
+          ],
+          [
+            "IAM Access Analyzer",
+            "Revela",
+            "Qual recurso está acessível de fora da conta"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "A diferença entre CloudTrail e CloudWatch é a mais cobrada: CloudTrail é auditoria de chamada de API, CloudWatch é métrica e log operacional."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Quem apagou aquele recurso e quando",
+            "CloudTrail"
+          ],
+          [
+            "Instância conversando com destino associado a mineração",
+            "GuardDuty"
+          ],
+          [
+            "Descobrir dado pessoal em bucket",
+            "Macie"
+          ],
+          [
+            "Baixar relatório SOC 2 para o auditor",
+            "Artifact"
+          ],
+          [
+            "Verificar se todos os volumes estão criptografados",
+            "AWS Config"
+          ],
+          [
+            "CPU acima de 80% por dez minutos",
+            "CloudWatch"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Inspector procura vulnerabilidade de software, não dado sensível. Config avalia configuração, não distribui relatório de auditoria. Security Hub agrega achados, mas quem detecta a ameaça é o GuardDuty."
+      },
+      {
+        "t": "case",
+        "q": "A equipe precisa de quatro coisas: saber quem chamou qual API; descobrir se algum bucket tem dado pessoal; ser alertada quando uma instância falar com endereço associado a mineração; e baixar o relatório SOC 2.",
+        "a": "CloudTrail, Macie, GuardDuty e Artifact, nessa ordem. Questões assim são de eliminação: basta ter certeza de dois verbos para derrubar três alternativas."
+      }
+    ],
+    "check": [
+      "Dizer o verbo de cada serviço sem olhar",
+      "Separar CloudTrail de CloudWatch",
+      "Saber onde o auditor busca o relatório de conformidade"
+    ],
+    "src": [
+      {
+        "t": "CloudTrail",
+        "u": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+      },
+      {
+        "t": "GuardDuty",
+        "u": "https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html"
+      },
+      {
+        "t": "Macie",
+        "u": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-compute",
+    "exam": "clf",
+    "dom": "d3",
+    "mins": 5,
+    "concept": "compute-aws",
+    "title": "Computação: EC2, Lambda, Fargate e balanceadores",
+    "lead": "O enunciado sempre descreve duração da execução, previsibilidade da carga e quanto a equipe quer administrar. Esses três dados escolhem o serviço.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "As opções"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Perfil",
+          "Quando é a resposta"
+        ],
+        "rows": [
+          [
+            "EC2",
+            "Máquina virtual que você administra",
+            "Controle do sistema operacional, software legado, carga constante"
+          ],
+          [
+            "Lambda",
+            "Função por evento, execução curta",
+            "Carga irregular, disparo por evento, sem servidor para administrar"
+          ],
+          [
+            "Fargate",
+            "Contêiner sem administrar servidor",
+            "Já usa contêiner e não quer cuidar de nó"
+          ],
+          [
+            "ECS e EKS",
+            "Orquestração de contêiner",
+            "Muitos contêineres, com ou sem Kubernetes"
+          ],
+          [
+            "Batch",
+            "Lote com fila e dependências",
+            "Processamento em lote longo"
+          ],
+          [
+            "Elastic Beanstalk",
+            "Publicação de aplicação com infraestrutura montada para você",
+            "Subir aplicação rápido sem desenhar a infraestrutura"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Escala e balanceamento"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Recurso",
+          "Função"
+        ],
+        "rows": [
+          [
+            "Auto Scaling",
+            "Adiciona e remove instâncias por métrica, agenda ou previsão"
+          ],
+          [
+            "Application Load Balancer",
+            "Camada 7: roteia por caminho, host e cabeçalho HTTP"
+          ],
+          [
+            "Network Load Balancer",
+            "Camada 4: TCP e UDP, IP estático, latência muito baixa"
+          ],
+          [
+            "Gateway Load Balancer",
+            "Insere appliances de inspeção no caminho do tráfego"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Rotear /api e /imagens para grupos diferentes",
+            "Application Load Balancer"
+          ],
+          [
+            "Milhões de conexões TCP com latência mínima e IP fixo",
+            "Network Load Balancer"
+          ],
+          [
+            "Oito segundos por execução, volume de zero a cinco mil em minutos",
+            "Lambda"
+          ],
+          [
+            "Carga constante 24 horas com controle do sistema operacional",
+            "EC2"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Escalar verticalmente, isto é, trocar por uma instância maior, não é a resposta quando o enunciado fala em tolerar falha ou absorver pico. Nesses casos a resposta é horizontal com Auto Scaling atrás de um balanceador."
+      },
+      {
+        "t": "case",
+        "q": "Uma rotina converte imagens assim que chegam no S3. Cada execução leva cerca de oito segundos e o volume é irregular: às vezes zero por hora, às vezes cinco mil em poucos minutos.",
+        "a": "Lambda acionado por evento do S3. Execução curta, orientada a evento e volume irregular é o caso natural. Reserva pressupõe uso constante e pagaria capacidade parada. Batch é para lote longo com dependências, não para milhares de tarefas de oito segundos."
+      }
+    ],
+    "check": [
+      "Escolher entre ALB e NLB por camada e por requisito",
+      "Dizer quando Lambda deixa de ser vantajoso",
+      "Explicar a diferença entre escalar vertical e horizontal"
+    ],
+    "src": [
+      {
+        "t": "AWS Lambda",
+        "u": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html"
+      },
+      {
+        "t": "Elastic Load Balancing",
+        "u": "https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-storage",
+    "exam": "clf",
+    "dom": "d3",
+    "mins": 6,
+    "concept": "s3-classes",
+    "title": "Armazenamento: S3, EBS, EFS e instance store",
+    "lead": "Duas perguntas resolvem quase tudo: o dado precisa sobreviver ao fim da instância, e quantas máquinas precisam acessá-lo ao mesmo tempo?",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Escolhendo o tipo"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Tipo",
+          "Acesso simultâneo",
+          "Sobrevive ao fim da instância"
+        ],
+        "rows": [
+          [
+            "S3",
+            "Objeto, via API",
+            "Ilimitado",
+            "Sim"
+          ],
+          [
+            "EBS",
+            "Bloco, anexado à instância",
+            "Em geral uma instância por vez, preso a uma zona",
+            "Sim"
+          ],
+          [
+            "EFS",
+            "Arquivo NFS para Linux",
+            "Muitas instâncias, várias zonas",
+            "Sim"
+          ],
+          [
+            "FSx",
+            "Arquivo para Windows ou Lustre",
+            "Muitas instâncias",
+            "Sim"
+          ],
+          [
+            "Instance store",
+            "Bloco local, efêmero",
+            "Só a própria instância",
+            "Não. Some ao parar ou encerrar"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Classes do S3"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Classe",
+          "Acesso",
+          "Zonas",
+          "Observação"
+        ],
+        "rows": [
+          [
+            "Standard",
+            "Imediato",
+            "Três ou mais",
+            "Padrão, acesso frequente"
+          ],
+          [
+            "Intelligent-Tiering",
+            "Imediato",
+            "Três ou mais",
+            "Move sozinho entre camadas, sem taxa de recuperação"
+          ],
+          [
+            "Standard-IA",
+            "Imediato",
+            "Três ou mais",
+            "Mínimo de 30 dias e taxa por recuperação"
+          ],
+          [
+            "One Zone-IA",
+            "Imediato",
+            "Uma só",
+            "Mais barato; se a zona cai, o dado fica indisponível"
+          ],
+          [
+            "Glacier Instant Retrieval",
+            "Milissegundos",
+            "Três ou mais",
+            "Arquivo que ainda precisa abrir na hora"
+          ],
+          [
+            "Glacier Flexible Retrieval",
+            "Minutos a horas",
+            "Três ou mais",
+            "Arquivamento com resgate planejado"
+          ],
+          [
+            "Glacier Deep Archive",
+            "Horas",
+            "Três ou mais",
+            "O mais barato para guardar, retenção longa"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "A durabilidade é praticamente a mesma em todas as classes. O que muda é disponibilidade, tempo de acesso, número de zonas e preço. Regras de ciclo de vida movem objetos entre classes automaticamente."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Padrão de acesso desconhecido ou variável",
+            "Intelligent-Tiering"
+          ],
+          [
+            "Dado que pode ser gerado de novo, menor custo",
+            "One Zone-IA"
+          ],
+          [
+            "Várias instâncias Linux lendo e gravando o mesmo sistema de arquivos",
+            "EFS"
+          ],
+          [
+            "Dado precisa sobreviver ao encerramento da instância",
+            "Não pode ser instance store"
+          ],
+          [
+            "Retenção de sete anos, resgate pode levar horas",
+            "Glacier Deep Archive"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "One Zone-IA cai sempre que o enunciado diz que o dado não pode ser perdido: ele vive em uma única zona. E EBS não é sistema de arquivos compartilhado de uso geral para um grupo de Auto Scaling."
+      },
+      {
+        "t": "case",
+        "q": "Três instâncias de um grupo de Auto Scaling precisam ler e gravar no mesmo sistema de arquivos ao mesmo tempo, e os dados devem sobreviver ao encerramento de qualquer uma. Sistema Linux.",
+        "a": "EFS. É NFS gerenciado, elástico, acessível por muitas instâncias em várias zonas, independente do ciclo de vida delas. Instance store é efêmero e some. EBS é por instância e preso a uma zona."
+      }
+    ],
+    "check": [
+      "Dizer qual classe tem uma única zona",
+      "Explicar quando instance store é inaceitável",
+      "Escolher entre EFS e EBS pelo acesso simultâneo"
+    ],
+    "src": [
+      {
+        "t": "Classes do S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html"
+      },
+      {
+        "t": "Amazon EFS",
+        "u": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-db",
+    "exam": "clf",
+    "dom": "d3",
+    "mins": 5,
+    "concept": "bancos-aws",
+    "title": "Bancos de dados: RDS, Aurora, DynamoDB, Redshift",
+    "lead": "A primeira pergunta é se a carga é transacional ou analítica. A segunda é se o modelo é relacional. Com essas duas o campo fecha.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "O catálogo"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Modelo",
+          "Caso típico"
+        ],
+        "rows": [
+          [
+            "RDS",
+            "Relacional gerenciado: MySQL, PostgreSQL, MariaDB, Oracle, SQL Server",
+            "Migrar banco relacional existente sem reescrever"
+          ],
+          [
+            "Aurora",
+            "Relacional compatível com MySQL e PostgreSQL",
+            "Alta disponibilidade e desempenho com compatibilidade relacional"
+          ],
+          [
+            "DynamoDB",
+            "NoSQL de chave e valor, sem servidor",
+            "Leitura por chave em milissegundos com tráfego muito variável"
+          ],
+          [
+            "Redshift",
+            "Data warehouse colunar",
+            "Consulta analítica varrendo bilhões de linhas históricas"
+          ],
+          [
+            "ElastiCache",
+            "Cache em memória: Valkey, Redis OSS ou Memcached",
+            "Reduzir latência de leitura repetida e aliviar o banco"
+          ],
+          [
+            "DocumentDB",
+            "Documentos",
+            "Carga compatível com MongoDB"
+          ],
+          [
+            "Neptune",
+            "Grafo",
+            "Relacionamento entre entidades, recomendação, fraude"
+          ],
+          [
+            "Athena",
+            "Consulta SQL sobre dados no S3",
+            "Análise sob demanda sem carregar em warehouse"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Transacional e analítico"
+      },
+      {
+        "t": "p",
+        "x": "OLTP é transação: muitas operações pequenas, leitura e escrita por chave ou por linha. OLAP é análise: poucas consultas, cada uma varrendo muito dado. Aurora e RDS são OLTP. Redshift é OLAP. Trocar um pelo outro é erro de arquitetura, e o exame cobra isso."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Leitura por chave em milissegundos, tráfego imprevisível",
+            "DynamoDB"
+          ],
+          [
+            "Relatório varrendo bilhões de linhas",
+            "Redshift"
+          ],
+          [
+            "Compatível com PostgreSQL, com réplicas de leitura",
+            "Aurora ou RDS"
+          ],
+          [
+            "Aliviar leitura repetida do banco",
+            "ElastiCache"
+          ],
+          [
+            "SQL direto sobre arquivos no S3",
+            "Athena"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "ElastiCache não é banco primário: é cache. E DynamoDB não é relacional, então nunca atende a requisito de compatibilidade com PostgreSQL ou MySQL."
+      },
+      {
+        "t": "case",
+        "q": "Três necessidades: catálogo de produtos com leitura por chave em milissegundos e tráfego variável; relatórios que varrem bilhões de linhas históricas; e um relacional compatível com PostgreSQL com alta disponibilidade.",
+        "a": "DynamoDB, Redshift e Aurora. A troca clássica é inverter Aurora e Redshift: Aurora é transacional, Redshift é analítico."
+      }
+    ],
+    "check": [
+      "Separar OLTP de OLAP em uma frase",
+      "Dizer qual serviço não é banco primário",
+      "Escolher entre DynamoDB e RDS pelo modelo de dado"
+    ],
+    "src": [
+      {
+        "t": "Amazon DynamoDB",
+        "u": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html"
+      },
+      {
+        "t": "Amazon Redshift",
+        "u": "https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-net",
+    "exam": "clf",
+    "dom": "d3",
+    "mins": 6,
+    "concept": "rede-aws",
+    "title": "Rede: VPC, sub-redes, conectividade e entrega de conteúdo",
+    "lead": "Sub-rede pública e privada, quem fala com a internet e como o datacenter se conecta. É o bloco com mais componentes do domínio três.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Dentro da VPC"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Componente",
+          "Função"
+        ],
+        "rows": [
+          [
+            "VPC",
+            "Rede virtual isolada, com faixa de IP própria"
+          ],
+          [
+            "Sub-rede",
+            "Fatia da VPC dentro de uma zona de disponibilidade"
+          ],
+          [
+            "Internet Gateway",
+            "Anexado à VPC; é o que torna uma sub-rede pública"
+          ],
+          [
+            "NAT Gateway",
+            "Fica na sub-rede pública e permite saída da sub-rede privada, sem aceitar entrada"
+          ],
+          [
+            "Tabela de rotas",
+            "Define para onde o tráfego de cada sub-rede vai"
+          ],
+          [
+            "VPC Endpoint",
+            "Acesso privado a serviços da AWS sem passar pela internet"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Sub-rede privada com NAT Gateway é o padrão para instâncias que precisam baixar atualização mas não podem receber conexão de fora. Para alta disponibilidade, um NAT Gateway por zona."
+      },
+      {
+        "t": "h",
+        "x": "Conectando com o mundo e com o datacenter"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Função"
+        ],
+        "rows": [
+          [
+            "Site-to-Site VPN",
+            "Túnel criptografado pela internet. Rápido de montar, latência variável"
+          ],
+          [
+            "Direct Connect",
+            "Link privado dedicado, não passa pela internet pública. Latência previsível"
+          ],
+          [
+            "Transit Gateway",
+            "Hub que interliga muitas VPCs e conexões locais, com roteamento transitivo"
+          ],
+          [
+            "VPC Peering",
+            "Liga duas VPCs. Não é transitivo: a malha cresce rápido"
+          ],
+          [
+            "PrivateLink",
+            "Expõe um serviço de forma privada para outra VPC"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Entrega de conteúdo e DNS"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Função"
+        ],
+        "rows": [
+          [
+            "CloudFront",
+            "Rede de distribuição de conteúdo com cache na borda"
+          ],
+          [
+            "Route 53",
+            "DNS com políticas: simples, ponderada, latência, failover, geolocalização, resposta múltipla"
+          ],
+          [
+            "Global Accelerator",
+            "IP anycast que entra na rede da AWS perto do usuário, para tráfego não HTTP"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Instância privada precisa baixar atualização, sem receber conexão",
+            "NAT Gateway"
+          ],
+          [
+            "Banda dedicada e nada pela internet pública",
+            "Direct Connect"
+          ],
+          [
+            "Vinte e cinco VPCs e ninguém administra mais as rotas",
+            "Transit Gateway"
+          ],
+          [
+            "Mandar o usuário para a região mais rápida e cair para a outra se falhar",
+            "Route 53 por latência com verificação de integridade"
+          ],
+          [
+            "Reduzir custo de transferência de arquivo baixado muitas vezes",
+            "CloudFront"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "VPC Peering não é transitivo: se A fala com B e B fala com C, A não fala com C. Enunciado com muitas VPCs e malha ingovernável pede Transit Gateway. E não existe VPC Endpoint para a internet em geral, só para serviços da AWS."
+      },
+      {
+        "t": "case",
+        "q": "A fatura cresceu sem aumento de computação. O maior item é transferência de saída para a internet, de arquivos grandes baixados repetidamente pelos mesmos usuários a partir de um bucket.",
+        "a": "Colocar o CloudFront na frente do bucket. O conteúdo repetido passa a sair do cache na borda, reduzindo requisições e transferência do S3. Mover para Standard-IA reduziria o custo de armazenar e aumentaria o de recuperar, podendo piorar. Versionamento aumenta o armazenamento e não toca na transferência."
+      }
+    ],
+    "check": [
+      "Explicar a diferença entre Internet Gateway e NAT Gateway",
+      "Dizer por que peering não resolve malha grande",
+      "Citar três políticas de roteamento do Route 53"
+    ],
+    "src": [
+      {
+        "t": "NAT Gateway",
+        "u": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html"
+      },
+      {
+        "t": "Transit Gateway",
+        "u": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+      },
+      {
+        "t": "Políticas do Route 53",
+        "u": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-msg",
+    "exam": "clf",
+    "dom": "d3",
+    "mins": 5,
+    "concept": "sqs-sns-eb",
+    "title": "Integração: SQS, SNS, EventBridge e Kinesis",
+    "lead": "Quatro serviços de mensagem com propósitos distintos. Duas palavras no enunciado decidem: ordem e releitura.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "O que cada um faz"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Modelo",
+          "Resolve"
+        ],
+        "rows": [
+          [
+            "SQS",
+            "Fila; o consumidor puxa a mensagem",
+            "Desacoplar e absorver pico sem perder pedido"
+          ],
+          [
+            "SNS",
+            "Publicação e assinatura; empurra para os inscritos",
+            "Um evento que precisa chegar a vários destinos"
+          ],
+          [
+            "EventBridge",
+            "Barramento com regras que leem o conteúdo",
+            "Rotear evento de serviços da AWS e de SaaS; agendar execução"
+          ],
+          [
+            "Kinesis Data Streams",
+            "Fluxo ordenado com retenção",
+            "Ordem por chave e releitura do histórico por vários consumidores"
+          ],
+          [
+            "Step Functions",
+            "Orquestração de passos",
+            "Fluxo com estados, condições e repetição"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O padrão clássico é SNS publicando para várias filas SQS: o fan-out ganha durabilidade, porque cada consumidor tem a própria fila."
+      },
+      {
+        "t": "h",
+        "x": "Fila padrão e FIFO"
+      },
+      {
+        "t": "table",
+        "head": [
+          "",
+          "Padrão",
+          "FIFO"
+        ],
+        "rows": [
+          [
+            "Ordem",
+            "Melhor esforço",
+            "Preservada dentro do grupo"
+          ],
+          [
+            "Entrega",
+            "Ao menos uma vez, pode duplicar",
+            "Exatamente uma vez no processamento"
+          ],
+          [
+            "Vazão",
+            "Muito alta",
+            "Menor"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Pico de dez vezes e nada pode se perder",
+            "SQS"
+          ],
+          [
+            "Três sistemas avisados ao mesmo tempo",
+            "SNS"
+          ],
+          [
+            "Reagir a evento de SaaS filtrando por conteúdo",
+            "EventBridge"
+          ],
+          [
+            "Preservar ordem e reler os últimos dias",
+            "Kinesis Data Streams"
+          ],
+          [
+            "Executar algo todo dia às 3h",
+            "EventBridge com regra agendada"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Fila consome e remove a mensagem. Se o enunciado pede que dois times processem o mesmo fluxo de forma independente e possam reprocessar o histórico, nenhuma fila atende, nem a FIFO: a resposta é Kinesis."
+      },
+      {
+        "t": "case",
+        "q": "Telemetria de sensores. A ordem dos eventos de cada sensor precisa ser preservada, dois times processam o mesmo fluxo de forma independente e ambos podem reler os últimos dias para recalcular métricas.",
+        "a": "Kinesis Data Streams. Retenção, ordem dentro do shard e vários consumidores independentes. FIFO resolveria a ordem, mas continua sendo fila: a mensagem é consumida e some."
+      }
+    ],
+    "check": [
+      "Dizer quando fila não serve",
+      "Explicar o padrão SNS para várias filas",
+      "Diferenciar fila padrão de FIFO"
+    ],
+    "src": [
+      {
+        "t": "Amazon SQS",
+        "u": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html"
+      },
+      {
+        "t": "Kinesis Data Streams",
+        "u": "https://docs.aws.amazon.com/streams/latest/dev/introduction.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-cost",
+    "exam": "clf",
+    "dom": "d4",
+    "mins": 6,
+    "concept": "pricing-models",
+    "title": "Preços, cobrança e suporte",
+    "lead": "Domínio pequeno, doze por cento da prova, mas com as questões mais decoráveis. Vale a pena fechar este bloco.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Formas de pagar computação"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Modelo",
+          "Compromisso",
+          "Desconto",
+          "Quando"
+        ],
+        "rows": [
+          [
+            "Sob demanda",
+            "Nenhum",
+            "Nenhum",
+            "Carga imprevisível ou de curta duração"
+          ],
+          [
+            "Savings Plans",
+            "Gasto por hora, 1 ou 3 anos",
+            "Alto",
+            "Carga estável; flexível entre família, região, EC2, Fargate e Lambda"
+          ],
+          [
+            "Reserved Instances",
+            "Instância específica, 1 ou 3 anos",
+            "Alto",
+            "Carga estável com tipo e região definidos"
+          ],
+          [
+            "Spot",
+            "Nenhum; pode ser interrompida com aviso curto",
+            "Muito alto",
+            "Lote tolerante a interrupção"
+          ],
+          [
+            "Hosts dedicados",
+            "Servidor físico para você",
+            "Variável",
+            "Exigência de licença ou conformidade"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Reserva é compromisso de faturamento, não garantia de capacidade: garantir capacidade exige reserva zonal ou Capacity Reservation."
+      },
+      {
+        "t": "h",
+        "x": "Ferramentas de custo"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Ferramenta",
+          "Responde"
+        ],
+        "rows": [
+          [
+            "AWS Pricing Calculator",
+            "Quanto vai custar algo que ainda não existe"
+          ],
+          [
+            "Cost Explorer",
+            "Quanto já gastei, por serviço e por período, com projeção"
+          ],
+          [
+            "AWS Budgets",
+            "Avisar ou agir quando o gasto passar de um valor"
+          ],
+          [
+            "Cost and Usage Report",
+            "Dados detalhados de cobrança, linha a linha, para análise; hoje criado pelo AWS Data Exports"
+          ],
+          [
+            "Trusted Advisor",
+            "Recomendação em custo, desempenho, segurança, tolerância a falhas, limites de serviço e excelência operacional"
+          ],
+          [
+            "Compute Optimizer",
+            "Qual instância está superdimensionada"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Organizations e nível gratuito"
+      },
+      {
+        "t": "p",
+        "x": "O AWS Organizations consolida a fatura de várias contas, soma o consumo para efeito de faixa de desconto por volume, permite compartilhar reservas e Savings Plans e aplica SCPs. Contas criadas desde 15/07/2025 recebem até US$ 200 em créditos e podem usar o plano gratuito por até seis meses; as ofertas sempre gratuitas, com cota mensal, continuam valendo. Contas anteriores seguem no modelo antigo, com três formatos que a prova ainda cita: sempre gratuito, gratuito por doze meses a partir da criação da conta e testes de curta duração."
+      },
+      {
+        "t": "h",
+        "x": "Planos de suporte"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Plano",
+          "Inclui"
+        ],
+        "rows": [
+          [
+            "Basic",
+            "Atendimento de conta e cobrança, documentação, re:Post, AWS Health e verificações principais do Trusted Advisor. Sem suporte técnico"
+          ],
+          [
+            "Business Support+",
+            "A partir de US$ 29 por mês por conta. Assistência com IA, engenheiros 24 horas por telefone, chat e web, até 30 minutos para sistema crítico fora do ar, Trusted Advisor completo e suporte a software de terceiros"
+          ],
+          [
+            "Enterprise",
+            "Mínimo de US$ 5.000 por mês. Tudo do Business Support+, mais gerente técnico de conta (TAM) designado, até 15 minutos para sistema crítico, revisões de Well-Architected, concierge de cobrança e AWS Security Incident Response"
+          ],
+          [
+            "Unified Operations",
+            "Nível mais alto: TAM e engenheiro especialista designados, até 5 minutos para sistema crítico, revisões de cargas críticas e runbooks personalizados"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Até 2026 existiam também Developer, Business e Enterprise On-Ramp. Eles serão descontinuados em 01/01/2027: Developer e Business migram para o Business Support+ e o Enterprise On-Ramp passa para o Enterprise. Como a prova pode ainda citar os nomes antigos, lembre a equivalência: Business era o plano com suporte 24 horas sem TAM, e Enterprise sempre foi o do TAM designado e dos 15 minutos."
+      },
+      {
+        "t": "trap",
+        "x": "Spot nunca é a resposta para carga de produção que não pode cair. E se o enunciado valoriza liberdade de trocar de família ou migrar para Fargate e Lambda, prefira Savings Plans a reserva padrão."
+      },
+      {
+        "t": "case",
+        "q": "Doze contas, uma por equipe. A diretoria quer fatura única, aproveitar faixa de desconto somando o consumo de todas e impedir que qualquer equipe use regiões fora da América do Sul.",
+        "a": "AWS Organizations com cobrança consolidada e Service Control Policies. Grupo de segurança filtra tráfego e não restringe região. Budgets alerta, mas não consolida fatura. Control Tower é construído sobre o Organizations e não o substitui."
+      }
+    ],
+    "check": [
+      "Dizer a diferença entre Savings Plans e Reserved Instances",
+      "Dizer o que mudou no nível gratuito em julho de 2025",
+      "Saber qual plano tem gerente técnico designado"
+    ],
+    "src": [
+      {
+        "t": "Savings Plans",
+        "u": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html"
+      },
+      {
+        "t": "Planos de suporte",
+        "u": "https://aws.amazon.com/premiumsupport/plans/"
+      },
+      {
+        "t": "Fim do Developer, Business e Enterprise On-Ramp",
+        "u": "https://docs.aws.amazon.com/awssupport/latest/user/support-plans-eos.html"
+      },
+      {
+        "t": "AWS Organizations",
+        "u": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-migracao",
+    "exam": "clf",
+    "dom": "d1",
+    "mins": 7,
+    "concept": "migracao-caf",
+    "extra": true,
+    "title": "Adoção da nuvem: CAF, economia e ferramentas de migração",
+    "lead": "O domínio 1 cobra três coisas sobre migração: as seis perspectivas do Cloud Adoption Framework, por que a conta da nuvem fecha (TCO, capex e opex) e qual ferramenta move cada tipo de coisa.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "As seis perspectivas do AWS CAF"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Perspectiva",
+          "Grupo",
+          "Cuida de",
+          "Quem costuma liderar"
+        ],
+        "rows": [
+          [
+            "Negócio",
+            "Negócio",
+            "Garantir que o investimento em nuvem gere resultado de negócio",
+            "CEO, CFO, COO"
+          ],
+          [
+            "Pessoas",
+            "Negócio",
+            "Cultura, estrutura organizacional, liderança e capacitação da equipe",
+            "RH, CIO, líderes de área"
+          ],
+          [
+            "Governança",
+            "Negócio",
+            "Orquestrar as iniciativas, medir o benefício e reduzir o risco da transformação",
+            "CIO, CFO, gerentes de programa e portfólio"
+          ],
+          [
+            "Plataforma",
+            "Técnica",
+            "Construir a plataforma de nuvem, definir arquitetura e modernizar cargas",
+            "CTO, arquitetos de solução"
+          ],
+          [
+            "Segurança",
+            "Técnica",
+            "Confidencialidade, integridade e disponibilidade de dados e cargas",
+            "CISO, auditoria interna, arquitetos de segurança"
+          ],
+          [
+            "Operações",
+            "Técnica",
+            "Entregar e manter os serviços no nível que o negócio precisa",
+            "Operações de TI, SRE, gestão de serviços"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "A prova costuma descrever uma preocupação e perguntar qual perspectiva cuida dela. A jornada do CAF tem quatro fases: Envision (visualizar oportunidades), Align (alinhar lacunas e dependências), Launch (lançar pilotos em produção) e Scale (escalar). Os benefícios que a AWS associa ao CAF são reduzir risco de negócio, melhorar o desempenho ESG, aumentar a receita e aumentar a eficiência operacional."
+      },
+      {
+        "t": "h",
+        "x": "Economia da nuvem"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Conceito",
+          "O que significa",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Capex",
+            "Investimento antecipado em ativo próprio",
+            "Comprar servidores dimensionados para o pico dos próximos cinco anos"
+          ],
+          [
+            "Opex",
+            "Despesa variável, paga conforme o uso",
+            "Fatura mensal de horas de EC2 e GB no S3"
+          ],
+          [
+            "TCO",
+            "Custo total de possuir e operar, somando o direto e o indireto",
+            "Hardware, energia, refrigeração, espaço, licenças, equipe e renovação"
+          ],
+          [
+            "Custo indireto",
+            "O que não aparece na nota fiscal do servidor",
+            "Horas da equipe trocando disco, aplicando patch e cuidando do datacenter"
+          ],
+          [
+            "Licenciamento",
+            "Trazer licença própria ou pagar licença incluída",
+            "BYOL em Hosts Dedicados ou instância com Windows incluso"
+          ],
+          [
+            "Economia de escala",
+            "A AWS compra em volume enorme e cobra menos por unidade",
+            "Preço por GB menor do que o de um datacenter pequeno"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Comparar só o preço do servidor com o preço da instância é a conta errada. Um TCO honesto inclui o custo indireto e o desperdício de capacidade ociosa. O Migration Evaluator monta esse caso de negócio sem custo: analisa o ambiente atual e estima quanto ele custaria na AWS, incluindo opções de licença."
+      },
+      {
+        "t": "h",
+        "x": "Qual ferramenta move o quê"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Ferramenta",
+          "Move",
+          "Como",
+          "Quando escolher"
+        ],
+        "rows": [
+          [
+            "Application Migration Service",
+            "Servidores inteiros (Windows e Linux), físicos, virtuais ou de outra nuvem",
+            "Agente replica os discos em bloco de forma contínua; o corte tem parada mínima",
+            "Rehost (levar como está) de muitos servidores com pouca parada"
+          ],
+          [
+            "Database Migration Service (DMS)",
+            "Dados de banco",
+            "Carga inicial e replicação contínua das mudanças, com a origem em uso",
+            "Banco com parada mínima, mesmo motor ou motor diferente"
+          ],
+          [
+            "DMS Schema Conversion ou AWS SCT",
+            "Esquema e código do banco",
+            "Converte tabelas, views, procedures e gatilhos para o motor de destino",
+            "Troca de motor, como Oracle para Aurora PostgreSQL"
+          ],
+          [
+            "DataSync",
+            "Arquivos e objetos (NFS, SMB, HDFS, outra nuvem)",
+            "Online, pela internet ou Direct Connect, com verificação de integridade",
+            "Há rede suficiente; cópia única ou recorrente"
+          ],
+          [
+            "Família Snow (fechada a novos pedidos)",
+            "Dados em massa, offline",
+            "Dispositivo físico enviado ao cliente e devolvido à AWS",
+            "Na prova: rede lenta ou inexistente para o volume. Hoje: Data Transfer Terminal ou parceiros"
+          ],
+          [
+            "Migration Hub (fechado a novos clientes)",
+            "Nada; ele acompanha",
+            "Painel único do andamento de várias ferramentas",
+            "Na prova: visão central do progresso. Hoje: AWS Transform"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Prova e mundo real estão diferentes aqui. Desde 7 de novembro de 2025, o Migration Hub não aceita novos clientes (o sucessor é o AWS Transform) e a AWS não oferece mais dispositivos Snow para novos pedidos (as alternativas são o DataSync, online, e o AWS Data Transfer Terminal ou parceiros, offline). Quem já usa continua usando. O Application Discovery Service, que inventaria servidores locais, também fechou para novos clientes em outubro de 2025. Os três continuam na lista de serviços do CLF-C02: se a questão pedir, responda com o papel clássico de cada um."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Preocupação com treinar a equipe e mudar a cultura",
+            "CAF, perspectiva Pessoas"
+          ],
+          [
+            "Medir benefício e controlar o risco do programa de nuvem",
+            "CAF, perspectiva Governança"
+          ],
+          [
+            "Garantir que a nuvem gere resultado para o negócio, visão do CFO e do CEO",
+            "CAF, perspectiva Negócio"
+          ],
+          [
+            "Energia, refrigeração e equipe do datacenter na comparação",
+            "TCO com custos indiretos"
+          ],
+          [
+            "Parar de comprar hardware antecipado e pagar pelo uso",
+            "Trocar capex por opex"
+          ],
+          [
+            "Servidores inteiros para EC2 com parada mínima no corte",
+            "Application Migration Service"
+          ],
+          [
+            "Banco precisa continuar em uso durante a migração",
+            "DMS com replicação contínua"
+          ],
+          [
+            "Oracle para PostgreSQL, procedures precisam ser traduzidas",
+            "DMS Schema Conversion ou SCT, depois DMS"
+          ],
+          [
+            "Milhões de arquivos de um NAS, link de rede bom",
+            "DataSync"
+          ],
+          [
+            "Centenas de TB, rede lenta, envio físico dos dados",
+            "Na prova: família Snow (hoje fechada a novos pedidos)"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Trocar de motor de banco exige duas peças: a conversão de esquema traduz a estrutura e o código, e o DMS move os dados. Responder só DMS numa migração heterogênea deixa procedures sem tradução. E o Migration Hub não move nada: ele só acompanha o que as outras ferramentas fazem."
+      },
+      {
+        "t": "case",
+        "q": "O contrato do datacenter vence em seis semanas. Há 60 servidores de aplicação Linux e Windows, um banco Oracle que deve virar Aurora PostgreSQL sem parar as vendas e 40 TB de arquivos num NAS com link de 10 Gbps. Quais ferramentas usar?",
+        "a": "Application Migration Service para os 60 servidores, porque replica os discos continuamente e o corte leva minutos. DMS Schema Conversion (ou SCT) para traduzir o esquema e as procedures do Oracle, e DMS com replicação contínua para mover os dados com o banco em uso. DataSync para os 40 TB, que cabem no link de 10 Gbps em menos de um dia de transferência; um dispositivo offline não faz sentido quando a rede dá conta."
+      }
+    ],
+    "check": [
+      "Citar as seis perspectivas do CAF e separar as de negócio das técnicas",
+      "Listar três custos indiretos que entram no TCO",
+      "Dizer quando usar DMS sozinho e quando somar a conversão de esquema"
+    ],
+    "src": [
+      {
+        "t": "AWS Cloud Adoption Framework",
+        "u": "https://aws.amazon.com/cloud-adoption-framework/"
+      },
+      {
+        "t": "AWS DMS: o que é",
+        "u": "https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-conformidade",
+    "exam": "clf",
+    "dom": "d2",
+    "mins": 6,
+    "concept": "conformidade-governanca",
+    "extra": true,
+    "title": "Conformidade e governança: relatório, evidência e controle",
+    "lead": "A AWS tem certificações para a parte dela. A prova quer saber onde baixar esse relatório, como provar a sua parte e quais serviços impedem, detectam ou registram desvio em várias contas.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Quem responde qual pergunta"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Responde",
+          "Natureza"
+        ],
+        "rows": [
+          [
+            "AWS Artifact",
+            "Onde baixo o relatório SOC, ISO ou PCI da AWS e aceito acordos como o BAA",
+            "Documentação, sob demanda"
+          ],
+          [
+            "AWS Audit Manager (fechado a novos clientes)",
+            "Como reúno evidência contínua, mapeada a um framework, para a minha auditoria",
+            "Coleta de evidência; hoje a AWS indica pacotes de conformidade do Config"
+          ],
+          [
+            "AWS Config",
+            "Como cada recurso está configurado, como mudou e se segue a regra",
+            "Detectivo"
+          ],
+          [
+            "AWS CloudTrail",
+            "Quem fez qual chamada de API, quando e de onde",
+            "Registro de atividade"
+          ],
+          [
+            "Organizations com SCP",
+            "Qual é o teto de permissão de cada conta-membro",
+            "Preventivo"
+          ],
+          [
+            "AWS Control Tower",
+            "Como crio e governo várias contas com boas práticas prontas",
+            "Orquestração da landing zone"
+          ],
+          [
+            "IAM Identity Center",
+            "Como as pessoas entram em várias contas e aplicações com um único login",
+            "Acesso da força de trabalho"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "O Audit Manager coleta evidência do Config, do CloudTrail e do Security Hub CSPM e monta relatórios por framework, como PCI DSS, HIPAA e SOC 2. Ele não declara a conformidade: só organiza a evidência. Desde 30 de abril de 2026 ele não aceita novos clientes (quem já usa continua); a AWS indica os pacotes de conformidade do Config como alternativa. Ele ainda está na lista do CLF-C02: na prova, \"evidência contínua para auditoria\" continua sendo Audit Manager."
+      },
+      {
+        "t": "h",
+        "x": "O que a certificação da AWS cobre"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Fica com a AWS",
+          "Fica com o cliente"
+        ],
+        "rows": [
+          [
+            "Datacenter, hardware e rede global auditados",
+            "Classificar os dados e decidir quem acessa"
+          ],
+          [
+            "Controles descritos nos relatórios SOC, ISO e PCI",
+            "Controles da própria carga: IAM, criptografia, configuração"
+          ],
+          [
+            "Hipervisor e software dos serviços gerenciados",
+            "Sistema operacional, patches e aplicação no EC2"
+          ],
+          [
+            "Oferecer acordos como o BAA no Artifact",
+            "Aceitar o acordo e configurar a carga conforme a norma"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Um serviço estar no escopo de um programa de conformidade significa que a parte da AWS foi auditada. A carga do cliente só fica conforme se ele implementar a parte dele, e o próprio relatório indica quais controles adicionais cabem ao cliente."
+      },
+      {
+        "t": "h",
+        "x": "Governança em várias contas"
+      },
+      {
+        "t": "ul",
+        "x": [
+          "SCP não concede permissão: só define o máximo que usuários e funções do IAM de uma conta-membro podem fazer, inclusive o usuário raiz dela. A permissão em si continua vindo das políticas do IAM.",
+          "SCP não afeta usuários nem funções da conta de gerenciamento. Por isso, a boa prática é não rodar cargas de trabalho nela.",
+          "Control Tower monta a landing zone sobre Organizations, IAM Identity Center e Service Catalog, em menos de uma hora.",
+          "Os controles do Control Tower são preventivos (impedem a ação, em geral com SCP), detectivos (apontam o desvio, com regras do Config) ou proativos (checam o recurso antes de o CloudFormation criá-lo).",
+          "O Account Factory do Control Tower cria contas novas já com a configuração e os controles aprovados.",
+          "IAM Identity Center dá login único: a pessoa entra uma vez num portal de acesso e vê as contas e aplicações liberadas para ela. Os usuários podem ser criados no próprio Identity Center ou vir de um provedor externo ou do Active Directory. O acesso a cada conta é definido por conjuntos de permissões."
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Auditor pede o relatório SOC 2 da AWS",
+            "AWS Artifact"
+          ],
+          [
+            "Aceitar o BAA para dados de saúde",
+            "AWS Artifact, seção de acordos"
+          ],
+          [
+            "Juntar evidência contínua mapeada a um framework",
+            "Na prova: AWS Audit Manager (hoje fechado a novos clientes)"
+          ],
+          [
+            "Histórico de configuração e regra de conformidade de recursos",
+            "AWS Config"
+          ],
+          [
+            "Quem excluiu o recurso e de qual IP",
+            "AWS CloudTrail"
+          ],
+          [
+            "Proibir um serviço nas contas-membro, até para o administrador e o usuário raiz delas",
+            "SCP no Organizations"
+          ],
+          [
+            "Contas novas já nascerem com controles e padrões",
+            "Control Tower com Account Factory"
+          ],
+          [
+            "Funcionários com um só login para 20 contas",
+            "IAM Identity Center"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Baixar o relatório PCI da AWS no Artifact não deixa a sua aplicação em conformidade com PCI: ele prova os controles da AWS, não os seus. Outra confusão clássica: o Config aponta o recurso fora da regra, mas não impede a criação; quem impede é a SCP ou um controle preventivo."
+      },
+      {
+        "t": "case",
+        "q": "Uma fintech vai abrir 15 contas no próximo trimestre. Toda conta nova precisa nascer com registro de atividade e controles padrão, os funcionários devem entrar com um único login corporativo e o auditor externo quer o relatório PCI da AWS. O que usar?",
+        "a": "Control Tower, que monta a landing zone e usa o Account Factory para criar cada conta já com os controles e o registro de atividade. Ele integra o IAM Identity Center, que dá o login único com permissões por conta. O relatório PCI da AWS sai do Artifact. Criar contas à mão no Organizations funcionaria, mas sem o padrão automático exigido."
+      }
+    ],
+    "check": [
+      "Dizer o que o Artifact entrega e por que isso não torna a carga conforme",
+      "Separar controle preventivo, detectivo e proativo",
+      "Explicar o que a SCP faz e o que ela não faz"
+    ],
+    "src": [
+      {
+        "t": "AWS Artifact: perguntas frequentes",
+        "u": "https://aws.amazon.com/artifact/faq/"
+      },
+      {
+        "t": "O que é o AWS Control Tower",
+        "u": "https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-custo-ferr",
+    "exam": "clf",
+    "dom": "d4",
+    "mins": 6,
+    "concept": "custo-ferramentas",
+    "extra": true,
+    "title": "Ferramentas de custo: qual pergunta cada uma responde",
+    "lead": "Toda questão de ferramenta de custo é uma pergunta disfarçada: quanto vai custar, quanto já custou, me avise, me dê o detalhe, de quem é o gasto, o que está grande demais. Cada pergunta tem dona.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Pergunta → ferramenta"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Pergunta",
+          "Ferramenta",
+          "Detalhe que a prova cobra"
+        ],
+        "rows": [
+          [
+            "Quanto vai custar o que ainda não existe?",
+            "AWS Pricing Calculator",
+            "Estimativa antes de criar qualquer recurso"
+          ],
+          [
+            "Quanto já gastei e para onde vai a tendência?",
+            "Cost Explorer",
+            "Gráficos por serviço, conta e tag; até 13 meses de histórico, o mês atual e previsão para os próximos 18 meses"
+          ],
+          [
+            "Me avise ou aja quando passar do limite",
+            "AWS Budgets",
+            "Alerta por valor real ou previsto; ações aplicam política do IAM, SCP ou param EC2 e RDS"
+          ],
+          [
+            "Quero todos os dados, linha a linha, no meu sistema",
+            "Data Exports (CUR 2.0)",
+            "Exportação recorrente e detalhada para um bucket do S3"
+          ],
+          [
+            "De qual projeto ou equipe é esse gasto?",
+            "Tags de alocação de custo",
+            "Precisam ser ativadas no console de faturamento"
+          ],
+          [
+            "Esta instância está grande demais?",
+            "Compute Optimizer",
+            "Recomenda tamanho para EC2, grupos de Auto Scaling, EBS, Lambda, ECS no Fargate e RDS"
+          ],
+          [
+            "O que posso melhorar na conta em geral?",
+            "Trusted Advisor",
+            "Verificações de custo, segurança, desempenho, tolerância a falhas, cotas de serviço e excelência operacional"
+          ],
+          [
+            "Uma fatura só para várias contas",
+            "Faturamento consolidado",
+            "Recurso do Organizations, sem custo adicional"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Faturamento consolidado"
+      },
+      {
+        "t": "p",
+        "x": "No AWS Organizations, a conta de gerenciamento paga a fatura de todas as contas-membro. O uso é somado para atingir faixas de desconto por volume, e os descontos de Reserved Instances e Savings Plans são compartilhados entre as contas. Não há cobrança extra por consolidar."
+      },
+      {
+        "t": "h",
+        "x": "Tags de alocação de custo"
+      },
+      {
+        "t": "ul",
+        "x": [
+          "Há dois tipos: geradas pela AWS (prefixo aws:, como createdBy) e definidas pelo usuário (como CentroCusto).",
+          "Cada tag precisa ser ativada no console de faturamento antes de aparecer no Cost Explorer e nos relatórios de custo.",
+          "Numa organização, só a conta de gerenciamento ativa as tags.",
+          "Uma tag recém-criada pode levar até 24 horas para aparecer no console de faturamento e mais até 24 horas para valer depois de ativada."
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Data Exports e o antigo CUR"
+      },
+      {
+        "t": "p",
+        "x": "O Cost and Usage Report agora vive dentro do AWS Data Exports. A AWS recomenda o CUR 2.0 como forma padrão de receber o dado mais detalhado de custo e uso. Você escolhe as colunas, filtra linhas e recebe o arquivo no S3, pronto para o Athena, o Amazon Quick (antigo QuickSight) ou um sistema interno de rateio."
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Orçar uma arquitetura antes de criar",
+            "Pricing Calculator"
+          ],
+          [
+            "Qual serviço mais cresceu nos últimos três meses",
+            "Cost Explorer"
+          ],
+          [
+            "Bloquear novos recursos automaticamente ao atingir 90% do orçamento",
+            "Budgets com ação"
+          ],
+          [
+            "Dados de faturamento em arquivo para carregar no data warehouse",
+            "Data Exports (CUR 2.0)"
+          ],
+          [
+            "Ver custo por projeto, mas a tag não aparece no relatório",
+            "Ativar a tag de alocação de custo"
+          ],
+          [
+            "Instâncias com CPU baixa o mês inteiro, qual tamanho usar",
+            "Compute Optimizer"
+          ],
+          [
+            "Desconto de volume somando o uso de várias contas",
+            "Faturamento consolidado do Organizations"
+          ],
+          [
+            "Checagem ampla de custo, segurança e cotas de serviço",
+            "Trusted Advisor"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Budgets não é teto rígido de gasto: por padrão ele avisa, e só bloqueia se você configurar uma ação, como aplicar uma política de negação ou parar instâncias. E aplicar uma tag no recurso não basta para ratear custo: sem ativá-la como tag de alocação de custo, ela não aparece no Cost Explorer."
+      },
+      {
+        "t": "case",
+        "q": "A diretoria quer o gasto mensal por centro de custo. Os recursos já têm a tag CentroCusto há semanas, mas o Cost Explorer não oferece essa tag para agrupar. A empresa usa várias contas no Organizations. O que fazer?",
+        "a": "Na conta de gerenciamento, ativar CentroCusto como tag de alocação de custo definida pelo usuário no console de faturamento. Só a conta de gerenciamento pode fazer isso numa organização, e a tag pode levar até 24 horas para valer. Compute Optimizer e Trusted Advisor recomendam otimização, mas não fazem rateio; o Budgets controla limite, não atribui gasto."
+      }
+    ],
+    "check": [
+      "Dizer qual ferramenta responde \"quanto vai custar\" e qual responde \"quanto já custou\"",
+      "Explicar por que uma tag aplicada pode não aparecer no Cost Explorer",
+      "Citar três vantagens do faturamento consolidado"
+    ],
+    "src": [
+      {
+        "t": "Tags de alocação de custo",
+        "u": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html"
+      },
+      {
+        "t": "Faturamento consolidado",
+        "u": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-ia",
+    "exam": "clf",
+    "dom": "d3",
+    "mins": 7,
+    "concept": "ia-ml-aws",
+    "extra": true,
+    "title": "IA e aprendizado de máquina: serviço pronto, Bedrock ou SageMaker AI",
+    "lead": "A prova não pede que você saiba treinar modelo. Pede que você leia o cenário e diga em qual camada ele está: usar uma IA pronta, gerar conteúdo com modelo de base ou construir o próprio modelo.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "As três camadas"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Camada",
+          "O que entrega",
+          "Quanto de ML você precisa saber",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Serviços de IA prontos",
+            "Uma tarefa específica por chamada de API, com modelo já treinado pela AWS",
+            "Nenhum: você manda o dado e recebe o resultado",
+            "Rekognition detecta rostos numa foto"
+          ],
+          [
+            "Amazon Bedrock",
+            "Acesso gerenciado, por API, a modelos de base da Amazon e de outras empresas, para IA generativa",
+            "Pouco: escolher modelo, escrever prompt, ligar aos seus dados",
+            "Assistente que responde com base nos manuais da empresa"
+          ],
+          [
+            "Amazon SageMaker AI",
+            "Plataforma para construir, treinar e implantar o seu próprio modelo",
+            "Muito: dados de treino, algoritmo, avaliação e endpoint",
+            "Modelo de risco de crédito treinado com o histórico do banco"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "Quanto mais alto na pilha, menos trabalho e menos controle. Quando o enunciado diz \"sem experiência em aprendizado de máquina\", a resposta está nos serviços prontos ou no Bedrock. Quando diz \"modelo próprio com dados exclusivos\", é SageMaker AI. Desde dezembro de 2024 o nome oficial é Amazon SageMaker AI; materiais antigos ainda escrevem só SageMaker."
+      },
+      {
+        "t": "h",
+        "x": "Serviços prontos: o que entra e o que sai"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Entrada e saída",
+          "Cenário típico"
+        ],
+        "rows": [
+          [
+            "Amazon Rekognition",
+            "Imagem ou vídeo para rótulos, rostos, texto e conteúdo impróprio",
+            "Moderar fotos enviadas por usuários"
+          ],
+          [
+            "Amazon Textract",
+            "Documento digitalizado para texto, campos de formulário e tabelas",
+            "Ler notas fiscais e formulários sem digitação"
+          ],
+          [
+            "Amazon Comprehend",
+            "Texto para sentimento, entidades, frases-chave e dado pessoal",
+            "Classificar avaliações de clientes como positivas ou negativas"
+          ],
+          [
+            "Amazon Transcribe",
+            "Áudio de fala para texto",
+            "Gerar legenda ou transcrever ligações do atendimento"
+          ],
+          [
+            "Amazon Polly",
+            "Texto para fala com voz natural",
+            "Ler notícias em voz alta num aplicativo"
+          ],
+          [
+            "Amazon Translate",
+            "Texto em um idioma para outro idioma",
+            "Traduzir chamados de suporte em tempo real"
+          ],
+          [
+            "Amazon Lex",
+            "Conversa por voz ou texto para intenção e resposta",
+            "Chatbot que agenda consultas"
+          ],
+          [
+            "Amazon Personalize",
+            "Histórico de interações para recomendações por usuário",
+            "\"Quem comprou isto também levou\" numa loja virtual (fora da lista oficial do CLF-C02)"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Amazon Q e o que mudou em 2026"
+      },
+      {
+        "t": "ul",
+        "x": [
+          "Amazon Q Developer: assistente de IA para quem constrói e opera na AWS. Continua disponível no Console de Gerenciamento da AWS e em apps de chat como Slack e Microsoft Teams.",
+          "Os plugins do Amazon Q Developer para IDE (editores de código) não aceitam novas assinaturas desde 15 de maio de 2026 e perdem o suporte em 30 de abril de 2027; a AWS indica o Kiro como substituto.",
+          "Amazon Q Business: assistente para funcionários consultarem dados da empresa respeitando permissões. Não aceita mais clientes novos (quem já usa continua); a AWS recomenda o Amazon Quick.",
+          "Amazon Kendra (busca inteligente em documentos corporativos) não aceita clientes novos desde 30 de julho de 2026; a alternativa indicada são as bases de conhecimento do Bedrock. Ele ainda está na lista do CLF-C02, então saiba o que ele faz.",
+          "Amazon Forecast (previsão de séries temporais) também fechou para clientes novos; a AWS indica o SageMaker Canvas."
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Responsabilidade compartilhada aplicada a IA"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Item",
+          "AWS",
+          "Cliente"
+        ],
+        "rows": [
+          [
+            "Infraestrutura e hospedagem do modelo",
+            "Protege hardware, rede e o serviço gerenciado",
+            "Escolhe região e serviço"
+          ],
+          [
+            "Dados enviados e de treino",
+            "Não usa entradas e saídas do Bedrock para treinar modelos de base",
+            "Decide quais dados envia, classifica e criptografa"
+          ],
+          [
+            "Acesso",
+            "Oferece IAM e criptografia com KMS",
+            "Concede o mínimo de permissão a quem chama o modelo"
+          ],
+          [
+            "Conteúdo gerado",
+            "Oferece Amazon Bedrock Guardrails para filtrar conteúdo e ocultar dado pessoal",
+            "Configura os filtros e revisa se a resposta é correta e adequada"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Detectar rostos ou conteúdo impróprio em imagens",
+            "Amazon Rekognition"
+          ],
+          [
+            "Extrair campos e tabelas de formulários digitalizados",
+            "Amazon Textract"
+          ],
+          [
+            "Saber se o comentário do cliente é positivo ou negativo",
+            "Amazon Comprehend"
+          ],
+          [
+            "Transformar gravação de reunião em texto",
+            "Amazon Transcribe"
+          ],
+          [
+            "Aplicativo que lê o texto em voz alta",
+            "Amazon Polly"
+          ],
+          [
+            "Chatbot de voz ou texto que entende a intenção",
+            "Amazon Lex"
+          ],
+          [
+            "Gerar texto ou resumo com modelo de base, sem gerenciar infraestrutura",
+            "Amazon Bedrock"
+          ],
+          [
+            "Treinar modelo próprio com dados exclusivos da empresa",
+            "Amazon SageMaker AI"
+          ],
+          [
+            "Ajuda de IA para entender e operar recursos da AWS no console",
+            "Amazon Q Developer"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "Textract não é só OCR: ele entende formulário e tabela, enquanto o Rekognition apenas encontra texto solto numa imagem. E Comprehend não ouve áudio: se o dado é uma gravação, primeiro vem o Transcribe, depois o Comprehend analisa o texto resultante."
+      },
+      {
+        "t": "case",
+        "q": "Uma operadora quer analisar as ligações gravadas do atendimento para descobrir quais clientes saíram insatisfeitos. A equipe não tem cientista de dados e não quer treinar modelo.",
+        "a": "Amazon Transcribe converte o áudio em texto e o Amazon Comprehend aplica análise de sentimento sobre esse texto. Os dois são serviços prontos, sem treino. SageMaker AI exigiria construir o modelo, o que a equipe descartou; Polly faz o caminho inverso, de texto para fala."
+      }
+    ],
+    "check": [
+      "Dizer em qual das três camadas está um cenário de chatbot com documentos da empresa",
+      "Associar Rekognition, Textract, Comprehend, Transcribe, Polly, Translate, Lex e Personalize a uma entrada e uma saída",
+      "Citar duas responsabilidades do cliente ao usar o Amazon Bedrock"
+    ],
+    "src": [
+      {
+        "t": "AWS: O que é o Amazon SageMaker AI",
+        "u": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html"
+      },
+      {
+        "t": "AWS: Proteção de dados no Amazon Bedrock",
+        "u": "https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html"
+      }
+    ]
+  },
+  {
+    "id": "f-aw-ops",
+    "exam": "clf",
+    "dom": "d3",
+    "mins": 6,
+    "concept": "implantacao-operacao",
+    "extra": true,
+    "title": "Implantar e operar: infraestrutura como código, Systems Manager e monitoramento",
+    "lead": "Três perguntas caem juntas: como criar recursos de forma repetível, como administrar servidores sem abrir portas e qual serviço olhar quando algo dá errado. Cada uma tem um serviço certo e dois parecidos.",
+    "blocks": [
+      {
+        "t": "h",
+        "x": "Criar e implantar"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Ferramenta",
+          "Você entrega",
+          "Ela faz",
+          "Escolha quando"
+        ],
+        "rows": [
+          [
+            "AWS CloudFormation",
+            "Modelo em JSON ou YAML",
+            "Cria, atualiza e apaga os recursos como uma pilha",
+            "Mesmo ambiente repetido em várias contas ou regiões"
+          ],
+          [
+            "AWS CDK",
+            "Código em TypeScript, JavaScript, Python, Java, C# ou Go",
+            "Gera um modelo do CloudFormation e o implanta",
+            "Equipe prefere linguagem de programação a YAML"
+          ],
+          [
+            "AWS Elastic Beanstalk",
+            "O código da aplicação web",
+            "Provisiona capacidade, balanceador, dimensionamento e monitoramento de saúde",
+            "Publicar rápido sem montar a infraestrutura à mão"
+          ],
+          [
+            "CodePipeline, CodeBuild e CodeDeploy",
+            "Repositório de código e as etapas",
+            "Orquestra o fluxo, compila e testa, e implanta",
+            "Integração e entrega contínuas automatizadas"
+          ]
+        ]
+      },
+      {
+        "t": "p",
+        "x": "No pipeline, cada serviço tem um papel: o CodePipeline encadeia as etapas de origem, compilação, teste e implantação; o CodeBuild compila e roda os testes; o CodeDeploy leva a nova versão para EC2, servidores locais, Lambda ou ECS. O Elastic Beanstalk não cobra taxa própria, só os recursos que ele cria."
+      },
+      {
+        "t": "h",
+        "x": "Systems Manager: administrar a frota"
+      },
+      {
+        "t": "ul",
+        "x": [
+          "Session Manager: abre terminal na instância pelo navegador ou pela CLI, sem porta de entrada aberta, sem bastião e sem chave SSH. Quem pode abrir sessão é definido pelo IAM, e a sessão pode ser registrada no S3 ou no CloudWatch Logs.",
+          "Patch Manager: automatiza patches do sistema operacional e de aplicativos (no Windows, só os da Microsoft) em instâncias EC2 e servidores locais. Uma linha de base de patches define o que é aprovado; a execução pode ser agendada numa janela de manutenção ou feita na hora.",
+          "Parameter Store: guarda configurações, como IDs de AMI e strings de conexão, organizadas em hierarquia (/prod/app/...). O tipo SecureString criptografa o valor com o KMS, e o nível padrão não tem custo adicional.",
+          "Run Command: executa o mesmo comando ou script em dezenas ou centenas de instâncias de uma vez, sem SSH.",
+          "Para tudo isso, a máquina precisa ser um nó gerenciado: ter o SSM Agent instalado e permissão do IAM para falar com o Systems Manager."
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Observar, auditar e saber da AWS"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Serviço",
+          "Pergunta que responde",
+          "Exemplo"
+        ],
+        "rows": [
+          [
+            "Amazon CloudWatch",
+            "Como o recurso está se comportando agora?",
+            "Métrica de CPU, log da aplicação e alarme que dispara acima de um limite"
+          ],
+          [
+            "AWS CloudTrail",
+            "Quem fez qual chamada de API, quando e de onde?",
+            "Descobrir quem apagou um grupo de segurança"
+          ],
+          [
+            "AWS X-Ray",
+            "Onde a requisição está perdendo tempo entre os componentes?",
+            "Mapa de rastreamento mostra que a lentidão está no banco"
+          ],
+          [
+            "AWS Health Dashboard",
+            "A AWS tem algum evento que afeta minha conta?",
+            "Manutenção programada em uma instância ou incidente regional"
+          ]
+        ]
+      },
+      {
+        "t": "h",
+        "x": "Formas de acessar a AWS"
+      },
+      {
+        "t": "table",
+        "head": [
+          "Forma",
+          "Para quem",
+          "Detalhe que cai"
+        ],
+        "rows": [
+          [
+            "Console de Gerenciamento",
+            "Quem prefere interface visual",
+            "Bom para explorar e para tarefas pontuais"
+          ],
+          [
+            "AWS CLI",
+            "Quem automatiza com scripts no terminal",
+            "Exige configurar credenciais na máquina local"
+          ],
+          [
+            "SDKs",
+            "Desenvolvedores, dentro do código da aplicação",
+            "Bibliotecas para várias linguagens chamarem as APIs"
+          ],
+          [
+            "AWS CloudShell",
+            "Quem quer a CLI sem instalar nada",
+            "Abre no navegador já autenticado, com até 1 GB persistente por região, sem custo adicional"
+          ]
+        ]
+      },
+      {
+        "t": "signal",
+        "head": [
+          "Sinal no enunciado",
+          "Resposta"
+        ],
+        "rows": [
+          [
+            "Mesmo ambiente criado igual em várias regiões a partir de um modelo",
+            "AWS CloudFormation"
+          ],
+          [
+            "Definir infraestrutura usando Python ou TypeScript",
+            "AWS CDK"
+          ],
+          [
+            "Subir aplicação web sem configurar balanceador e dimensionamento",
+            "AWS Elastic Beanstalk"
+          ],
+          [
+            "Acessar instância privada sem porta 22 aberta e sem bastião",
+            "Systems Manager Session Manager"
+          ],
+          [
+            "Aplicar correções do sistema operacional em toda a frota",
+            "Systems Manager Patch Manager"
+          ],
+          [
+            "Alarme quando a CPU passar de 80%",
+            "Amazon CloudWatch"
+          ],
+          [
+            "Quem excluiu o recurso e quando",
+            "AWS CloudTrail"
+          ],
+          [
+            "Achar o componente lento numa aplicação de microsserviços",
+            "AWS X-Ray"
+          ],
+          [
+            "Saber se uma manutenção da AWS vai afetar suas instâncias",
+            "AWS Health Dashboard"
+          ],
+          [
+            "Rodar comandos da CLI no navegador sem instalar ou configurar credenciais",
+            "AWS CloudShell"
+          ]
+        ]
+      },
+      {
+        "t": "trap",
+        "x": "CloudWatch e CloudTrail têm nomes parecidos e funções diferentes: CloudWatch mede desempenho e dispara alarme, CloudTrail registra ações de API para auditoria. O Health Dashboard mostra eventos do lado da AWS, não a métrica da sua aplicação. E senha de banco que precisa de rotação automática vai para o Secrets Manager, não para o Parameter Store, que não faz rotação."
+      },
+      {
+        "t": "case",
+        "q": "Uma equipe precisa recriar o mesmo ambiente de homologação em três regiões, sem passos manuais, e quer que cada mudança no ambiente fique versionada junto com o código. Ninguém na equipe programa, mas todos leem YAML.",
+        "a": "AWS CloudFormation. O modelo em YAML descreve os recursos, pode ser versionado e implantado igual em cada região. O CDK também geraria CloudFormation, mas pede linguagem de programação, que a equipe não usa. Elastic Beanstalk publica uma aplicação web, não descreve um ambiente inteiro."
+      }
+    ],
+    "check": [
+      "Explicar a relação entre CDK e CloudFormation",
+      "Diferenciar CloudWatch, CloudTrail, X-Ray e Health Dashboard com um exemplo cada",
+      "Dizer o que o Session Manager dispensa em relação ao SSH tradicional"
+    ],
+    "src": [
+      {
+        "t": "AWS: Systems Manager Session Manager",
+        "u": "https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html"
+      },
+      {
+        "t": "AWS: O que é o AWS CloudShell",
+        "u": "https://docs.aws.amazon.com/cloudshell/latest/userguide/welcome.html"
+      }
+    ]
+  }
+]

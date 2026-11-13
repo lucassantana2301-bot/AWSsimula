@@ -1,0 +1,158 @@
+[
+  {
+    "id": "az900",
+    "provider": "azure",
+    "code": "AZ-900",
+    "version": "atual",
+    "name": "Azure Fundamentals",
+    "level": "Fundamentos",
+    "status": "active",
+    "pass": 700,
+    "scale": 1000,
+    "simQ": 24,
+    "simMin": 35,
+    "realQ": "40-60",
+    "realMin": 45,
+    "price": "USD 99",
+    "note": "Não foi afetado pela reforma de 2026.",
+    "domains": [
+      {
+        "id": "d1",
+        "name": "Conceitos de nuvem",
+        "w": "25-30%"
+      },
+      {
+        "id": "d2",
+        "name": "Arquitetura e serviços do Azure",
+        "w": "35-40%"
+      },
+      {
+        "id": "d3",
+        "name": "Gerenciamento e governança",
+        "w": "30-35%"
+      }
+    ]
+  },
+  {
+    "id": "az104",
+    "provider": "azure",
+    "code": "AZ-104",
+    "version": "atual",
+    "name": "Azure Administrator",
+    "level": "Associate",
+    "status": "active",
+    "pass": 700,
+    "scale": 1000,
+    "simQ": 28,
+    "simMin": 50,
+    "realQ": "40-60",
+    "realMin": 100,
+    "price": "USD 165",
+    "note": "Refresh de abril de 2026 ampliou Entra ID, Container Apps e Azure Arc.",
+    "domains": [
+      {
+        "id": "d1",
+        "name": "Identidades e governança",
+        "w": "20-25%"
+      },
+      {
+        "id": "d2",
+        "name": "Armazenamento",
+        "w": "15-20%"
+      },
+      {
+        "id": "d3",
+        "name": "Computação",
+        "w": "20-25%"
+      },
+      {
+        "id": "d4",
+        "name": "Rede virtual",
+        "w": "15-20%"
+      },
+      {
+        "id": "d5",
+        "name": "Monitorar e manter",
+        "w": "10-15%"
+      }
+    ]
+  },
+  {
+    "id": "saa",
+    "provider": "aws",
+    "code": "SAA-C03",
+    "version": "C03",
+    "name": "Solutions Architect Associate",
+    "level": "Associate",
+    "status": "active",
+    "pass": 720,
+    "scale": 1000,
+    "simQ": 30,
+    "simMin": 55,
+    "realQ": "65",
+    "realMin": 130,
+    "price": "USD 150",
+    "note": "A certificação de nuvem mais citada em vagas no nível associate.",
+    "domains": [
+      {
+        "id": "d1",
+        "name": "Arquiteturas seguras",
+        "w": "30%"
+      },
+      {
+        "id": "d2",
+        "name": "Arquiteturas resilientes",
+        "w": "26%"
+      },
+      {
+        "id": "d3",
+        "name": "Arquiteturas de alto desempenho",
+        "w": "24%"
+      },
+      {
+        "id": "d4",
+        "name": "Arquiteturas com custo otimizado",
+        "w": "20%"
+      }
+    ]
+  },
+  {
+    "id": "clf",
+    "provider": "aws",
+    "code": "CLF-C02",
+    "version": "C02",
+    "name": "Cloud Practitioner",
+    "level": "Fundamentos",
+    "status": "active",
+    "pass": 700,
+    "scale": 1000,
+    "simQ": 30,
+    "simMin": 45,
+    "realQ": "65",
+    "realMin": 90,
+    "price": "USD 100",
+    "note": "Guia revisado para incluir conceitos de IA generativa.",
+    "domains": [
+      {
+        "id": "d1",
+        "name": "Conceitos de nuvem",
+        "w": "24%"
+      },
+      {
+        "id": "d2",
+        "name": "Segurança e conformidade",
+        "w": "30%"
+      },
+      {
+        "id": "d3",
+        "name": "Tecnologia e serviços de nuvem",
+        "w": "34%"
+      },
+      {
+        "id": "d4",
+        "name": "Cobrança, preços e suporte",
+        "w": "12%"
+      }
+    ]
+  }
+]

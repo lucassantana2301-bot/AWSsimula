@@ -1,0 +1,412 @@
+[
+  {
+    "id": "l-az-models",
+    "exam": "az900",
+    "dom": "d1",
+    "concept": "modelos-nuvem",
+    "secs": 78,
+    "title": "IaaS, PaaS e SaaS pela fronteira de administração",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🧱",
+        "h": "A pergunta é sempre a mesma",
+        "p": "Até onde vai o provedor e onde começa você. Responda isso e a questão se resolve."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🍕",
+        "h": "Pense em comer pizza",
+        "p": "IaaS é comprar a massa e o recheio e assar em casa: a cozinha é sua. PaaS é pedir a pizza e usar a mesa do restaurante: você só come. SaaS é ir à casa de alguém, que faz tudo. O que nunca muda é que a fome é sua."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "camadas",
+        "h": "A fronteira se move",
+        "p": "Quanto mais gerenciado, mais camadas ficam com o provedor."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "Em PaaS quem aplica patch do sistema operacional é o provedor, não você. E em SaaS a responsabilidade pelos dados e pelos acessos continua sendo sua: nenhum modelo transfere isso. Se a alternativa diz que no SaaS a classificação de dados passa ao provedor, está errada."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Não quero administrar sistema operacional nem patch, só publicar minha API.",
+        "a": [
+          "PaaS",
+          "IaaS",
+          "SaaS"
+        ],
+        "c": 0,
+        "e": "PaaS entrega plataforma pronta: você cuida do código e dos dados."
+      },
+      {
+        "q": "Em SaaS, quem responde pela classificação dos dados?",
+        "a": [
+          "Você",
+          "O provedor"
+        ],
+        "c": 0,
+        "e": "Dados, identidades e acessos ficam com o cliente em todos os modelos."
+      }
+    ]
+  },
+  {
+    "id": "l-az-cost",
+    "exam": "az900",
+    "dom": "d3",
+    "concept": "custo-az",
+    "secs": 80,
+    "title": "Quatro ferramentas de custo, quatro perguntas",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "💸",
+        "h": "Elas parecem a mesma coisa",
+        "p": "E não são. Cada uma responde uma pergunta diferente sobre dinheiro."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🧾",
+        "h": "Pense na sua vida financeira",
+        "p": "A Calculadora de Preços é o orçamento da reforma antes de contratar. O TCO compara o custo de continuar no aluguel com o de comprar. O Cost Management é o extrato do mês. O Advisor é o amigo que olha o extrato e diz onde você está jogando dinheiro fora."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "custoFerr",
+        "h": "Antes, depois e o que melhorar",
+        "p": "Repare no eixo do tempo: duas olham para frente, duas para trás."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "O gatilho no enunciado",
+        "gotcha": "Comparar com o datacenter próprio, incluindo energia, espaço e equipe, é sempre TCO, nunca a Calculadora de Preços, que só estima recursos do Azure. E alerta quando o gasto passar de um valor é orçamento no Cost Management, não Azure Monitor: o Monitor acompanha métrica técnica, não a fatura."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Comparar o custo de 60 servidores locais com o custo no Azure, incluindo energia e equipe.",
+        "a": [
+          "Calculadora de TCO",
+          "Calculadora de Preços",
+          "Cost Management"
+        ],
+        "c": 0,
+        "e": "Só o TCO modela o custo do seu datacenter atual."
+      },
+      {
+        "q": "Receber e-mail quando o gasto do mês passar de 80% do planejado.",
+        "a": [
+          "Orçamento no Cost Management",
+          "Azure Advisor",
+          "Azure Monitor"
+        ],
+        "c": 0,
+        "e": "Orçamento com alerta é o instrumento feito exatamente para isso."
+      }
+    ]
+  },
+  {
+    "id": "l-az-elastic",
+    "exam": "az900",
+    "dom": "d1",
+    "concept": "elasticidade",
+    "secs": 72,
+    "title": "Elasticidade, escalabilidade e agilidade",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "📈",
+        "h": "Três palavras que a prova troca de propósito",
+        "p": "Elas parecem sinônimo e não são. A diferença vale ponto."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🍱",
+        "h": "Pense num restaurante",
+        "p": "Escalabilidade é poder colocar mais mesas quando precisar. Elasticidade é colocar e tirar mesas sozinho conforme o movimento. Agilidade é conseguir abrir uma filial nova em uma tarde, para testar uma ideia."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "elastic",
+        "h": "Capacidade seguindo a demanda",
+        "p": "A marca da elasticidade é o automatismo nos DOIS sentidos."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Como decidir no enunciado",
+        "gotcha": "Se o texto diz que a capacidade aumenta E diminui automaticamente conforme a métrica, a resposta é elasticidade. Se diz apenas que o sistema suporta crescer, é escalabilidade. Se o tema é provisionar um ambiente novo em minutos para testar, é agilidade. E lembre: escalar vertical é aumentar a máquina; horizontal é somar máquinas."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "A capacidade sobe no pico e cai sozinha na madrugada.",
+        "a": [
+          "Elasticidade",
+          "Agilidade",
+          "Tolerância a falhas"
+        ],
+        "c": 0,
+        "e": "Automático e nos dois sentidos: elasticidade."
+      },
+      {
+        "q": "Criar um ambiente de teste completo em 10 minutos para validar uma ideia.",
+        "a": [
+          "Agilidade",
+          "Elasticidade",
+          "Alta disponibilidade"
+        ],
+        "c": 0,
+        "e": "Velocidade de provisionar e experimentar é agilidade."
+      }
+    ]
+  },
+  {
+    "id": "l-az-rbac",
+    "exam": "az900",
+    "dom": "d3",
+    "concept": "rbac-policy-lock",
+    "secs": 82,
+    "title": "RBAC x Azure Policy x Lock",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "⚡",
+        "h": "Três coisas que a prova adora trocar",
+        "p": "Se você confundir essas três, perde questão de graça no AZ-900 e no AZ-104."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏢",
+        "h": "Pense num prédio",
+        "p": "RBAC é o crachá: diz quem entra em qual andar. A Policy é o regulamento do condomínio: diz o que pode ser construído. O Lock é a fita de obra: ninguém mexe, nem o síndico."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "rbacPolicy",
+        "h": "Cada um responde uma pergunta diferente",
+        "p": "RBAC = QUEM. Policy = O QUE. Lock = NÃO MEXE."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "A pegadinha clássica",
+        "gotcha": "O enunciado diz: impedir que QUALQUER pessoa crie recurso fora do Brazil South. Muita gente marca RBAC. Errado: RBAC não sabe o que é região, ele só distribui permissão. A resposta é Azure Policy. E para impedir que alguém apague um recurso crítico mesmo sendo Proprietário, a resposta é Resource Lock, não RBAC."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Impedir a criação de VMs de tamanho caro em toda a assinatura.",
+        "a": [
+          "Azure Policy",
+          "RBAC",
+          "Resource Lock"
+        ],
+        "c": 0,
+        "e": "Policy restringe O QUE pode existir, inclusive SKUs permitidos."
+      },
+      {
+        "q": "Impedir que um Proprietário apague por acidente o banco de produção.",
+        "a": [
+          "RBAC Leitor",
+          "Resource Lock CanNotDelete",
+          "Azure Policy"
+        ],
+        "c": 1,
+        "e": "O lock vale acima do RBAC: nem Proprietário apaga sem remover o lock antes."
+      }
+    ]
+  },
+  {
+    "id": "l-az-region",
+    "exam": "az900",
+    "dom": "d2",
+    "concept": "region-az-pair",
+    "secs": 78,
+    "title": "Região, Zona e Par de Região",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🌎",
+        "h": "Alta disponibilidade ou recuperação de desastre?",
+        "p": "São duas perguntas diferentes e a resposta certa muda."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏬",
+        "h": "Pense em lojas",
+        "p": "Zonas são lojas diferentes no mesmo bairro: se uma pega fogo, as outras atendem. O par de região é a loja em outro estado: serve quando o bairro inteiro alaga."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "regionAz",
+        "h": "Escala de proteção",
+        "p": "Zona protege de datacenter. Par de região protege de desastre regional."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde todo mundo erra",
+        "gotcha": "Grupo de recursos NÃO é limite de região: ele guarda metadados em uma região, mas pode conter recursos de várias regiões. E atualização planejada do Azure não sai nas duas regiões do par ao mesmo tempo, exatamente para você nunca perder as duas de uma vez. Brazil South tem como par o South Central US."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Proteger uma aplicação da queda de um datacenter dentro da mesma região.",
+        "a": [
+          "Zonas de disponibilidade",
+          "Par de região",
+          "Grupo de recursos separado"
+        ],
+        "c": 0,
+        "e": "Zonas são datacenters isolados na mesma região, com energia e rede independentes."
+      },
+      {
+        "q": "Um grupo de recursos pode conter recursos de regiões diferentes?",
+        "a": [
+          "Sim",
+          "Não"
+        ],
+        "c": 0,
+        "e": "Pode. A região do grupo só define onde ficam os metadados."
+      }
+    ]
+  },
+  {
+    "id": "l-az-blob",
+    "exam": "az900",
+    "dom": "d2",
+    "concept": "blob-tiers",
+    "secs": 74,
+    "title": "Camadas do Blob Storage",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🧊",
+        "h": "Quanto mais frio, mais barato guardar",
+        "p": "E mais caro e mais lento ler. Toda questão de custo de storage gira nisso."
+      },
+      {
+        "k": "analogia",
+        "emoji": "📦",
+        "h": "Pense no seu armário",
+        "p": "Hot é a gaveta ao lado da cama. Cool é o alto do guarda-roupa. Cold é a caixa em cima do armário. Archive é o depósito no outro bairro: baratíssimo, mas você espera horas para buscar."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "blobTiers",
+        "h": "As quatro camadas",
+        "p": "Hot, Cool, Cold e Archive, com mínimos de 0, 30, 90 e 180 dias."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "A pegadinha de prova",
+        "gotcha": "Se o enunciado disser que o arquivo precisa ser lido em segundos, Archive está eliminado, por mais barato que seja: Archive é offline e exige reidratação que leva horas. E se disser que o dado sai antes do mínimo da camada, existe taxa de exclusão antecipada: mover tudo para Cold pode sair mais caro."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Backup legal de 7 anos, acesso quase nunca, resgate pode levar horas.",
+        "a": [
+          "Archive",
+          "Hot",
+          "Cool"
+        ],
+        "c": 0,
+        "e": "Caso exato do Archive: mínimo 180 dias e resgate em horas."
+      },
+      {
+        "q": "Arquivo auditado 2 vezes por ano, mas que precisa abrir na hora quando pedem.",
+        "a": [
+          "Archive",
+          "Cool ou Cold",
+          "Hot"
+        ],
+        "c": 1,
+        "e": "Acesso raro mas imediato: Cool ou Cold. Archive cairia por causa da reidratação."
+      }
+    ]
+  },
+  {
+    "id": "l-az-entra",
+    "exam": "az900",
+    "dom": "d2",
+    "concept": "entra-vs-adds",
+    "secs": 70,
+    "title": "Entra ID não é controlador de domínio",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🔑",
+        "h": "O erro mais caro de identidade no Azure",
+        "p": "Trocar Entra ID por AD DS custa questão na prova e retrabalho no projeto."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🚪",
+        "h": "Catraca x cadeado",
+        "p": "Entra ID é a catraca moderna da portaria: crachá digital, token, aprovação no celular. AD DS é o cadeado antigo: o app legado só abre com aquela chave específica."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "entra",
+        "h": "Protocolos diferentes",
+        "p": "Entra ID fala OAuth, SAML e OIDC. Kerberos, LDAP e GPO ficam no AD DS."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Gatilho no enunciado",
+        "gotcha": "Se aparecer LDAP, Kerberos, Group Policy ou ingresso em domínio, a resposta NÃO é Entra ID puro: é Microsoft Entra Domain Services ou um controlador de domínio em VM. Entra ID também não é uma extensão do seu AD local, mesmo com sincronização: são diretórios diferentes."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "App legado que precisa autenticar via LDAP, sem alterar o código.",
+        "a": [
+          "Entra ID puro",
+          "Entra Domain Services ou AD DS em VM",
+          "Chave SSH"
+        ],
+        "c": 1,
+        "e": "LDAP e Kerberos exigem serviços de domínio, não o Entra ID puro."
+      },
+      {
+        "q": "Login único em um SaaS moderno com MFA.",
+        "a": [
+          "Entra ID",
+          "AD DS em VM"
+        ],
+        "c": 0,
+        "e": "Caso clássico do Entra ID: SAML/OIDC e MFA."
+      }
+    ]
+  }
+]

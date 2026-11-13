@@ -1,0 +1,245 @@
+[
+  {
+    "id": "dk-modelos",
+    "exam": "az900",
+    "dom": "d1",
+    "concept": "modelos-nuvem",
+    "title": "IaaS, PaaS ou SaaS?",
+    "prompt": "Classifique cada situação pelo modelo de serviço.",
+    "buckets": [
+      {
+        "k": "i",
+        "label": "IaaS"
+      },
+      {
+        "k": "p",
+        "label": "PaaS"
+      },
+      {
+        "k": "s",
+        "label": "SaaS"
+      }
+    ],
+    "items": [
+      {
+        "t": "Máquina virtual onde você instala e atualiza o sistema operacional",
+        "k": "i",
+        "e": "Você administra o SO: isso é IaaS."
+      },
+      {
+        "t": "Azure App Service hospedando sua API, com a plataforma atualizada pela Microsoft",
+        "k": "p",
+        "e": "Plataforma gerenciada: PaaS."
+      },
+      {
+        "t": "Microsoft 365, usado como vem, sem instalar nada",
+        "k": "s",
+        "e": "Software pronto de terceiro: SaaS."
+      },
+      {
+        "t": "Azure SQL Database, com patch e backup pelo provedor",
+        "k": "p",
+        "e": "Banco gerenciado é PaaS: você cuida de dados e usuários."
+      },
+      {
+        "t": "Rede virtual e discos que você configura por conta própria",
+        "k": "i",
+        "e": "Infraestrutura crua: IaaS."
+      },
+      {
+        "t": "Azure Functions executando um trecho de código por evento",
+        "k": "p",
+        "e": "Sem servidor é uma forma de PaaS."
+      },
+      {
+        "t": "Um CRM contratado por assinatura, acessado pelo navegador",
+        "k": "s",
+        "e": "Aplicação pronta, sem nada para administrar: SaaS."
+      },
+      {
+        "t": "Servidor Windows Server legado migrado como está para a nuvem",
+        "k": "i",
+        "e": "Continua sendo você quem administra o SO: IaaS."
+      },
+      {
+        "t": "Serviço de e-mail corporativo gerenciado de ponta a ponta",
+        "k": "s",
+        "e": "Aplicação pronta e operada pelo fornecedor: SaaS."
+      },
+      {
+        "t": "Plataforma de contêineres gerenciada em que você só publica a imagem",
+        "k": "p",
+        "e": "PaaS: o provedor cuida de nó, patch e orquestração."
+      },
+      {
+        "t": "Conjunto de dimensionamento de máquinas virtuais",
+        "k": "i",
+        "e": "São máquinas virtuais: IaaS, mesmo com escala automática."
+      },
+      {
+        "t": "Ferramenta de videoconferência usada pelo navegador",
+        "k": "s",
+        "e": "Você só usa, não administra nada: SaaS."
+      }
+    ]
+  },
+  {
+    "id": "dk-gov",
+    "exam": "az900",
+    "dom": "d3",
+    "concept": "rbac-policy-lock",
+    "title": "RBAC, Policy ou Bloqueio?",
+    "prompt": "Qual mecanismo de governança do Azure resolve cada pedido?",
+    "buckets": [
+      {
+        "k": "r",
+        "label": "RBAC"
+      },
+      {
+        "k": "p",
+        "label": "Azure Policy"
+      },
+      {
+        "k": "l",
+        "label": "Bloqueio"
+      }
+    ],
+    "items": [
+      {
+        "t": "Dar somente leitura à equipe de suporte",
+        "k": "r",
+        "e": "Permissão de identidade: RBAC, função Leitor."
+      },
+      {
+        "t": "Impedir a criação de recursos fora de Brazil South",
+        "k": "p",
+        "e": "Policy restringe o que pode existir."
+      },
+      {
+        "t": "Impedir que o banco de produção seja excluído, mesmo pelo Proprietário",
+        "k": "l",
+        "e": "Bloqueio CanNotDelete vale acima do RBAC."
+      },
+      {
+        "t": "Exigir a tag de centro de custo em todo recurso novo",
+        "k": "p",
+        "e": "Policy pode negar ou preencher a tag."
+      },
+      {
+        "t": "Permitir que um desenvolvedor crie recursos, mas não conceda permissões a outros",
+        "k": "r",
+        "e": "Função Colaborador."
+      },
+      {
+        "t": "Proibir tamanhos de máquina virtual acima de um limite",
+        "k": "p",
+        "e": "Policy sobre SKUs permitidos."
+      },
+      {
+        "t": "Congelar um ambiente para que nada seja alterado durante uma auditoria",
+        "k": "l",
+        "e": "Bloqueio ReadOnly impede qualquer escrita."
+      },
+      {
+        "t": "Conceder acesso apenas a um grupo de recursos específico",
+        "k": "r",
+        "e": "RBAC atribuído no escopo do grupo."
+      },
+      {
+        "t": "Auditar quais recursos estão fora do padrão sem bloquear ninguém",
+        "k": "p",
+        "e": "Policy com efeito de auditoria."
+      }
+    ]
+  },
+  {
+    "id": "dk-nuvem",
+    "exam": "az900",
+    "dom": "d2",
+    "concept": "equivalencias",
+    "title": "Azure ou AWS?",
+    "prompt": "De qual nuvem é cada serviço? Treina o vocabulário das duas provas.",
+    "buckets": [
+      {
+        "k": "a",
+        "label": "Azure"
+      },
+      {
+        "k": "w",
+        "label": "AWS"
+      }
+    ],
+    "items": [
+      {
+        "t": "Amazon EC2",
+        "k": "w",
+        "e": "Máquinas virtuais da AWS."
+      },
+      {
+        "t": "Azure Blob Storage",
+        "k": "a",
+        "e": "Armazenamento de objetos do Azure."
+      },
+      {
+        "t": "Amazon VPC",
+        "k": "w",
+        "e": "Rede virtual da AWS. No Azure é VNet."
+      },
+      {
+        "t": "Microsoft Entra ID",
+        "k": "a",
+        "e": "Identidade do Azure."
+      },
+      {
+        "t": "AWS Lambda",
+        "k": "w",
+        "e": "Funções sem servidor da AWS."
+      },
+      {
+        "t": "Azure Cosmos DB",
+        "k": "a",
+        "e": "NoSQL distribuído do Azure."
+      },
+      {
+        "t": "Amazon Redshift",
+        "k": "w",
+        "e": "Data warehouse da AWS."
+      },
+      {
+        "t": "Azure ExpressRoute",
+        "k": "a",
+        "e": "Link privado do Azure. Na AWS é Direct Connect."
+      },
+      {
+        "t": "Amazon CloudFront",
+        "k": "w",
+        "e": "CDN da AWS. No Azure o equivalente é o Front Door."
+      },
+      {
+        "t": "Azure Monitor",
+        "k": "a",
+        "e": "Métricas e logs do Azure. Na AWS é CloudWatch."
+      },
+      {
+        "t": "AWS Trusted Advisor",
+        "k": "w",
+        "e": "Recomendações da AWS. No Azure é o Advisor."
+      },
+      {
+        "t": "Azure Key Vault",
+        "k": "a",
+        "e": "Cofre de chaves e segredos do Azure."
+      },
+      {
+        "t": "Amazon Route 53",
+        "k": "w",
+        "e": "DNS da AWS. No Azure é o Azure DNS com Traffic Manager."
+      },
+      {
+        "t": "Azure Policy",
+        "k": "a",
+        "e": "Governança de recursos do Azure."
+      }
+    ]
+  }
+]

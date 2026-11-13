@@ -1,0 +1,531 @@
+[
+  {
+    "id": "l-aws-sec",
+    "exam": "clf",
+    "dom": "d2",
+    "concept": "seguranca-servicos",
+    "secs": 86,
+    "title": "Serviços de segurança da AWS: um verbo para cada",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🔎",
+        "h": "Sete nomes parecidos numa questão só",
+        "p": "A prova adora embaralhar. A saída é decorar o verbo de cada um."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏢",
+        "h": "Pense na segurança de um prédio",
+        "p": "O CloudTrail é o livro da portaria: quem entrou, quando. O Config é o checklist de manutenção: o extintor está no lugar? O GuardDuty é o segurança que percebe movimento estranho. O Macie é quem descobre que tem documento confidencial largado na copa. O Artifact é o arquivo com os laudos para o fiscal."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "awsVerbos",
+        "h": "Cada um com seu verbo",
+        "p": "Registra, detecta, classifica, compara, varre, entrega."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "As trocas mais comuns",
+        "gotcha": "CloudTrail registra chamada de API; CloudWatch mede métrica e log. Inspector procura vulnerabilidade de software, não dado pessoal: dado pessoal é Macie. Config avalia configuração, não distribui relatório de conformidade: isso é Artifact. E o Security Hub centraliza e correlaciona os achados (GuardDuty, Inspector, Macie e o Security Hub CSPM, antigo Security Hub); quem detecta ameaça é o GuardDuty."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Descobrir se algum bucket tem dado pessoal sem proteção.",
+        "a": [
+          "Macie",
+          "Inspector",
+          "Config"
+        ],
+        "c": 0,
+        "e": "Macie descobre e classifica dado sensível no S3."
+      },
+      {
+        "q": "Saber quem apagou um recurso e quando.",
+        "a": [
+          "CloudTrail",
+          "CloudWatch",
+          "GuardDuty"
+        ],
+        "c": 0,
+        "e": "CloudTrail é o registro de auditoria das chamadas de API."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-compute",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "compute-aws",
+    "secs": 78,
+    "title": "EC2, Lambda ou Fargate",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "⚙",
+        "h": "Três dados decidem",
+        "p": "Quanto dura a execução, quão previsível é a carga e quanto você quer administrar."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🚕",
+        "h": "Como ir ao trabalho",
+        "p": "Lambda é o aplicativo de corrida: você chama, usa e paga pela viagem. Fargate é o carro alugado por assinatura: você dirige, mas não cuida de manutenção. EC2 é o carro próprio: controle total e toda a responsabilidade junto."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "computeEscolha",
+        "h": "Do evento curto à carga constante",
+        "p": "O eixo é duração e previsibilidade."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Quando o Lambda deixa de ser a resposta",
+        "gotcha": "Lambda brilha em execução curta disparada por evento, com volume irregular. Se o enunciado fala em carga constante o dia inteiro, ou em processo que leva muitos minutos, ele perde a vantagem e a resposta vira contêiner ou instância. E se exigir controle do sistema operacional ou software legado, a resposta é EC2, por mais moderna que a alternativa sem servidor pareça."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Converter imagens assim que chegam no S3: 8 segundos cada, às vezes zero por hora, às vezes cinco mil em minutos.",
+        "a": [
+          "Lambda",
+          "EC2 reservada",
+          "AWS Batch"
+        ],
+        "c": 0,
+        "e": "Curto, por evento e muito irregular: caso natural do Lambda."
+      },
+      {
+        "q": "Software legado que exige uma versão específica do sistema operacional.",
+        "a": [
+          "EC2",
+          "Lambda",
+          "Fargate"
+        ],
+        "c": 0,
+        "e": "Controle do sistema operacional só em EC2."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-vpc",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "rede-aws",
+    "secs": 84,
+    "title": "Sub-rede pública, privada e o NAT",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🌐",
+        "h": "O que torna uma sub-rede pública",
+        "p": "Não é o nome. É a rota."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏠",
+        "h": "Pense num condomínio",
+        "p": "O Internet Gateway é o portão da rua: quem tem caminho até ele está na parte pública. O NAT Gateway é o porteiro que leva sua encomenda até a rua e traz a resposta, sem deixar ninguém de fora entrar no seu apartamento."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "vpcSub",
+        "h": "Onde cada peça fica",
+        "p": "O NAT mora na sub-rede pública e atende a privada."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Os três erros clássicos",
+        "gotcha": "O NAT Gateway fica na sub-rede PÚBLICA, nunca na privada que ele atende. Dar IP elástico a uma instância privada a torna alcançável de fora e quebra o requisito. E não existe VPC Endpoint para a internet em geral: endpoint dá caminho privado para serviços da AWS, como S3 e DynamoDB. Para alta disponibilidade, um NAT por zona."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Instâncias privadas precisam baixar atualização, sem aceitar conexão de fora.",
+        "a": [
+          "NAT Gateway na sub-rede pública",
+          "Internet Gateway na sub-rede privada",
+          "IP elástico em cada instância"
+        ],
+        "c": 0,
+        "e": "O NAT permite saída e não aceita entrada."
+      },
+      {
+        "q": "Tráfego para o S3 não pode passar pela internet pública.",
+        "a": [
+          "VPC Endpoint",
+          "NAT Gateway",
+          "Internet Gateway"
+        ],
+        "c": 0,
+        "e": "O endpoint cria caminho privado até o serviço da AWS."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-global",
+    "exam": "clf",
+    "dom": "d1",
+    "concept": "infra-global",
+    "secs": 76,
+    "title": "Região, AZ, Edge e Local Zone",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🌐",
+        "h": "Quatro camadas da infraestrutura global",
+        "p": "Confundir edge location com região é erro clássico de prova."
+      },
+      {
+        "k": "analogia",
+        "emoji": "📦",
+        "h": "Pense numa rede de lojas",
+        "p": "A região é a cidade. As zonas são lojas diferentes nessa cidade. O ponto de presença é o armário de entregas do seu prédio: só guarda cópia do que já existe. A Local Zone é uma mini-loja no seu bairro, que consegue atender de verdade."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "awsGlobal",
+        "h": "O que cada camada faz",
+        "p": "Região é geografia, AZ é isolamento, edge é cache, Local Zone é computação próxima."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "O detalhe que elimina alternativa",
+        "gotcha": "Ponto de presença não executa a sua aplicação: ele guarda conteúdo em cache para o CloudFront. Se o enunciado fala em usuário distante reclamando de download lento, a resposta é CDN, não abrir outra região. E alta disponibilidade dentro da mesma região vem de usar várias AZ, não várias regiões."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Usuários na América do Sul reclamam de download lento de arquivos no S3 em us-east-1.",
+        "a": [
+          "CloudFront com pontos de presença",
+          "Mais uma zona de disponibilidade",
+          "Auto Scaling"
+        ],
+        "c": 0,
+        "e": "Conteúdo estático distante do usuário: a resposta é CDN."
+      },
+      {
+        "q": "Proteger a aplicação contra a queda de um datacenter dentro da região.",
+        "a": [
+          "Distribuir entre várias AZ",
+          "Usar pontos de presença",
+          "Usar instâncias maiores"
+        ],
+        "c": 0,
+        "e": "AZ são datacenters isolados: é a base da alta disponibilidade regional."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-sgnacl",
+    "exam": "clf",
+    "dom": "d2",
+    "concept": "sg-vs-nacl",
+    "secs": 80,
+    "title": "Security Group x Network ACL",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🛡",
+        "h": "Stateful x stateless em 80 segundos",
+        "p": "Essa dupla aparece em praticamente toda prova de AWS."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🎯",
+        "h": "Porteiro com memória",
+        "p": "O Security Group é um porteiro que lembra de você: deixou entrar, deixa sair sem perguntar. A NACL é um porteiro amnésico: na saída ele pergunta tudo de novo, então você precisa liberar os dois sentidos."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "sgNacl",
+        "h": "Onde cada um atua",
+        "p": "SG na instância, só com ALLOW. NACL na sub-rede, com ALLOW e DENY numerados."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "A pegadinha que derruba gente boa",
+        "gotcha": "Precisa BLOQUEAR um IP específico que está atacando? Security Group não consegue, porque ele só tem regra de permissão: não existe deny em SG. A resposta é NACL. E ao usar NACL para abrir uma porta, lembre de liberar também as portas efêmeras na saída, senão a resposta nunca volta."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Bloquear um único IP de origem que está atacando a sub-rede.",
+        "a": [
+          "Network ACL",
+          "Security Group",
+          "IAM Policy"
+        ],
+        "c": 0,
+        "e": "Somente a NACL tem regra de DENY. O SG só permite."
+      },
+      {
+        "q": "Liberei a porta 443 de entrada no Security Group. Preciso criar regra de saída para a resposta?",
+        "a": [
+          "Sim",
+          "Não"
+        ],
+        "c": 1,
+        "e": "SG é stateful: a resposta da conexão permitida volta automaticamente."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-msg",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "sqs-sns-eb",
+    "secs": 86,
+    "title": "SQS x SNS x EventBridge",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "📬",
+        "h": "Três serviços de mensagem, três problemas",
+        "p": "Marcar o errado aqui é o jeito mais rápido de perder ponto em integração."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏤",
+        "h": "Correio, rádio e triagem",
+        "p": "SQS é a caixa postal: a carta fica esperando e um carteiro leva. SNS é o rádio: anuncia e todo mundo inscrito ouve na hora. EventBridge é a central de triagem: lê o conteúdo e decide para qual setor mandar."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "msgSvcs",
+        "h": "Fila, publicação e roteamento",
+        "p": "SQS desacopla. SNS distribui. EventBridge roteia por regra."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Palavras que decidem a resposta",
+        "gotcha": "Absorver pico de carga sem perder pedido: SQS. Um evento que precisa chegar a vários destinos ao mesmo tempo: SNS. Reagir a eventos de serviços AWS ou de SaaS, filtrando por conteúdo, ou agendar execução: EventBridge. Se o enunciado exigir ORDEM e poder reprocessar o histórico, não é nenhum dos três: é Kinesis."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "A cada upload, três sistemas diferentes precisam ser avisados ao mesmo tempo.",
+        "a": [
+          "SNS",
+          "SQS",
+          "Nenhum"
+        ],
+        "c": 0,
+        "e": "Fan-out: um publisher, vários inscritos. Padrão comum: SNS para várias filas SQS."
+      },
+      {
+        "q": "O processamento é lento e não pode perder pedido quando chega pico de 10x.",
+        "a": [
+          "SQS",
+          "SNS"
+        ],
+        "c": 0,
+        "e": "A fila absorve o pico e o consumidor processa no ritmo que aguenta."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-iam",
+    "exam": "clf",
+    "dom": "d2",
+    "concept": "iam-role-ec2",
+    "secs": 72,
+    "title": "IAM Role em vez de access key",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🔐",
+        "h": "A resposta certa é quase sempre role",
+        "p": "Qualquer questão em que uma aplicação da AWS acessa outro serviço da AWS."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🎫",
+        "h": "Crachá de visitante",
+        "p": "Access key é uma chave de casa copiada: vale para sempre e você não sabe quem tem. Role é um crachá de visitante que expira sozinho no fim do dia."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "iamRole",
+        "h": "Como a aplicação autentica",
+        "p": "EC2 assume a role via instance profile e recebe credencial temporária."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Sinais de alternativa errada",
+        "gotcha": "Se a alternativa fala em gravar chave de acesso no código, em variável de ambiente, na imagem da instância ou passar por user data, pode descartar. Também descarte usar o usuário root para a aplicação. Para credencial de terceiro que não é da AWS, a resposta tende a Secrets Manager, não role."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Aplicação em EC2 precisa ler um bucket S3. Qual a forma recomendada?",
+        "a": [
+          "IAM Role anexada à instância",
+          "Access key no arquivo de configuração",
+          "Usuário root"
+        ],
+        "c": 0,
+        "e": "Credencial temporária, rotacionada pela AWS, sem segredo no código."
+      },
+      {
+        "q": "Guardar a senha de um banco MySQL de terceiro, com rotação automática.",
+        "a": [
+          "Secrets Manager",
+          "IAM Role",
+          "Security Group"
+        ],
+        "c": 0,
+        "e": "Role não guarda senha de sistema externo. Secrets Manager faz rotação."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-cost",
+    "exam": "clf",
+    "dom": "d4",
+    "concept": "pricing-models",
+    "secs": 84,
+    "title": "On-Demand, Savings Plan, Reserved e Spot",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "💰",
+        "h": "Quatro formas de pagar computação",
+        "p": "A questão sempre dá uma pista do perfil da carga. Ache a pista e a resposta aparece."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🚗",
+        "h": "Como alugar carro",
+        "p": "On-Demand é diária no balcão. Savings Plan é um contrato de gasto mensal com desconto. Reserved é alugar aquele modelo por um ano. Spot é pegar o carro que sobrou no pátio: baratíssimo, mas podem pedir de volta em 2 minutos."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "savings",
+        "h": "Compromisso x desconto",
+        "p": "Quanto mais compromisso, maior o desconto e menor a flexibilidade."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "O que elimina alternativa",
+        "gotcha": "Se a carga não pode ser interrompida, Spot está eliminado, por mais barato que seja. Se o enunciado fala em trocar de família, região ou até migrar para Fargate e Lambda, prefira Savings Plan em vez de Reserved padrão. Pico curto e imprevisível que não vale compromisso: On-Demand mesmo."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Processamento de lote à noite, pode ser interrompido e reiniciado.",
+        "a": [
+          "Spot",
+          "Reserved de 3 anos",
+          "On-Demand"
+        ],
+        "c": 0,
+        "e": "Tolerante a interrupção: caso ideal de Spot, com o maior desconto."
+      },
+      {
+        "q": "Base estável 24/7 por 3 anos, mas a equipe quer liberdade de trocar de família e usar Fargate.",
+        "a": [
+          "Savings Plan de computação",
+          "Reserved padrão",
+          "Spot"
+        ],
+        "c": 0,
+        "e": "Savings Plan de computação é flexível entre família, região, EC2, Fargate e Lambda."
+      }
+    ]
+  },
+  {
+    "id": "l-aws-s3",
+    "exam": "clf",
+    "dom": "d3",
+    "concept": "s3-classes",
+    "secs": 80,
+    "title": "Classes de armazenamento do S3",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🪣",
+        "h": "Durabilidade não é o que muda",
+        "p": "Quase toda classe tem os mesmos 11 noves de durabilidade. O que muda é acesso, AZ e preço."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🗄",
+        "h": "Arquivo do escritório",
+        "p": "Standard é a mesa. Standard-IA é o armário da sala. One Zone-IA é o armário de uma única sala: se aquela sala fechar, você não alcança. Glacier é o arquivo morto no subsolo."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "s3classes",
+        "h": "Comparando as classes",
+        "p": "Repare em quem tem 3+ AZ e quem tem apenas uma."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Pistas do enunciado",
+        "gotcha": "Padrão de acesso desconhecido ou que muda: Intelligent-Tiering, porque ele move sozinho sem taxa de recuperação. Dado que pode ser gerado de novo e você quer o menor custo: One Zone-IA é aceitável. Mas se o enunciado disser que não pode perder o dado, One Zone-IA cai, porque ele vive em uma única AZ."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Padrão de acesso imprevisível e ninguém quer administrar ciclo de vida.",
+        "a": [
+          "S3 Intelligent-Tiering",
+          "Standard-IA",
+          "Glacier Deep Archive"
+        ],
+        "c": 0,
+        "e": "Ele move o objeto entre camadas automaticamente, sem taxa de recuperação."
+      },
+      {
+        "q": "Thumbnails que podem ser regerados a partir do original, com menor custo possível.",
+        "a": [
+          "One Zone-IA",
+          "Standard",
+          "Glacier Flexible"
+        ],
+        "c": 0,
+        "e": "Dado reproduzível tolera uma única AZ, e One Zone-IA é mais barato."
+      }
+    ]
+  }
+]

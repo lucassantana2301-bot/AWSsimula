@@ -3,7 +3,7 @@ const fs=require("fs");
 const errs=[], js=[];
 const vc=new VirtualConsole();
 vc.on("jsdomError",e=>js.push("JS ERROR: "+e.message+"\n"+String(e.stack||"").split("\n").slice(0,4).join("\n")));
-const dom=new JSDOM(fs.readFileSync(require("path").join(__dirname,"..","dist","index.html"),"utf8"),
+const dom=new JSDOM(fs.readFileSync(require("path").join(__dirname,"..","build","test.html"),"utf8"),
   {runScripts:"dangerously",pretendToBeVisual:true,url:"https://ex.test/",virtualConsole:vc});
 const w=dom.window, d=w.document; w.scrollTo=()=>{};
 const all=s=>[...d.querySelectorAll(s)];

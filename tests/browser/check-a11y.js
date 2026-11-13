@@ -67,7 +67,7 @@ const CONTRAST=`(()=>{
   const probs=[];
   for(const [w,h] of [[1240,1000],[390,844]]){
     const p=await b.newPage(); await p.setViewport({width:w,height:h});
-    await p.goto("file://"+require("path").join(__dirname,"..","..","dist","index.html"),{waitUntil:"domcontentloaded"});
+    await p.goto(process.env.CQ_URL||"http://localhost:4173/",{waitUntil:"networkidle0"});
     await new Promise(r=>setTimeout(r,900));
 
     /* link de pular, só uma vez */

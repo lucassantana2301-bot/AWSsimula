@@ -1,5 +1,5 @@
 /* todo braço do traço é feito só de segmentos retos e mede metade do perímetro */
-const src=require("fs").readFileSync(__dirname+"/../src/p8-motion.js","utf8");
+const src=require("fs").readFileSync(__dirname+"/../src/legacy/engine.js","utf8");
 const perimetro=eval("("+src.slice(src.indexOf("function perimetro"),src.indexOf("function chegada"))+")");
 let ruim=0,casos=0;
 for(const [w,h] of [[600,260],[120,40],[40,300],[300,300],[1180,96]]){

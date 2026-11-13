@@ -1,0 +1,278 @@
+[
+  {
+    "id": "l-saa-sgnacl",
+    "exam": "saa",
+    "dom": "d1",
+    "concept": "vpc-seguranca",
+    "secs": 88,
+    "title": "Grupo de segurança e lista de rede: a diferença que decide a questão",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🚧",
+        "h": "Sai e não volta",
+        "p": "Esse sintoma tem uma causa quase certa, e saber qual dos dois controles guarda estado resolve a questão em segundos."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏢",
+        "h": "Portaria e recepção",
+        "p": "A portaria do prédio é a lista de rede: lista numerada, lê o nome, pode barrar alguém específico, e não lembra que você entrou, então a saída precisa estar liberada também. A recepção da empresa é o grupo de segurança: deixou entrar, deixa sair."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "sgnacl",
+        "h": "As duas camadas no mesmo caminho",
+        "p": "O pacote passa pelas duas, e ambas precisam permitir."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "Negar um endereço específico só existe na lista de rede, porque grupo de segurança não tem regra de negação. E o grupo de segurança pode referenciar outro grupo como origem, que é como se diz aplicação fala com banco sem citar endereço nenhum: a alternativa que resolve isso com faixa de IP funciona e é a resposta pior."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "A conexão sai da instância e a resposta nunca chega. Grupo de segurança está correto. O que falta?",
+        "a": [
+          "Portas efêmeras na lista de rede",
+          "Uma regra de saída no grupo de segurança",
+          "Um gateway de internet"
+        ],
+        "c": 0,
+        "e": "A lista de rede não guarda estado: o retorno chega em porta efêmera e precisa de regra de entrada."
+      },
+      {
+        "q": "Preciso bloquear um endereço IP específico que está atacando. Onde?",
+        "a": [
+          "Lista de controle de rede",
+          "Grupo de segurança",
+          "Tabela de rotas"
+        ],
+        "c": 0,
+        "e": "Só a lista de rede tem regra de negação."
+      },
+      {
+        "q": "Como dizer que a camada de aplicação fala com o banco, sem citar endereço?",
+        "a": [
+          "Grupo de segurança referenciando outro grupo",
+          "Lista de rede com a faixa da sub-rede",
+          "Ponto de extremidade de interface"
+        ],
+        "c": 0,
+        "e": "Referenciar o grupo mantém a regra certa mesmo quando as instâncias mudam de IP."
+      }
+    ]
+  },
+  {
+    "id": "l-saa-ha",
+    "exam": "saa",
+    "dom": "d2",
+    "concept": "dados-resilientes",
+    "secs": 86,
+    "title": "Multi-AZ e réplica de leitura não são a mesma coisa",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "🗃",
+        "h": "Dois nomes parecidos, problemas opostos",
+        "p": "Confundir os dois é o erro mais caro do domínio de resiliência, e a prova monta a alternativa contando com essa confusão."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🚘",
+        "h": "Estepe e segundo carro",
+        "p": "Multi-AZ é o estepe: está no porta-malas, não leva ninguém a lugar nenhum, e serve para o dia em que o pneu furar. Réplica de leitura é um segundo carro: roda todo dia, leva gente, mas ninguém trocou o estepe por ele."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "rdsha",
+        "h": "Síncrono e assíncrono",
+        "p": "Um existe para assumir, o outro para servir consulta."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "No Multi-AZ clássico o nó de espera não aceita leitura, então a alternativa que manda o relatório para ele está errada. E a réplica é assíncrona: leitura logo após a escrita pode vir velha, o que elimina a réplica em qualquer enunciado que exija leitura consistente. Quando o cenário pede disponibilidade E alívio de leitura, a resposta são as duas construções, não uma."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Relatório pesado está derrubando o banco de produção. O que usar?",
+        "a": [
+          "Réplica de leitura",
+          "Implantação Multi-AZ",
+          "Instância de classe maior"
+        ],
+        "c": 0,
+        "e": "A réplica tira a carga analítica do nó de escrita."
+      },
+      {
+        "q": "O banco precisa continuar no ar se a zona cair, sem intervenção. O que usar?",
+        "a": [
+          "Implantação Multi-AZ",
+          "Réplica de leitura",
+          "Snapshot automático"
+        ],
+        "c": 0,
+        "e": "Multi-AZ tem cópia síncrona e falha automática."
+      },
+      {
+        "q": "Retomada em outra região em cerca de um minuto, perdendo segundos. O que usar?",
+        "a": [
+          "Aurora com banco de dados global",
+          "Réplica de leitura entre regiões",
+          "Cópia de snapshot entre regiões"
+        ],
+        "c": 0,
+        "e": "O banco de dados global replica com atraso de cerca de um segundo e promove em cerca de um minuto."
+      }
+    ]
+  },
+  {
+    "id": "l-saa-armz",
+    "exam": "saa",
+    "dom": "d3",
+    "concept": "computacao-armazenamento",
+    "secs": 84,
+    "title": "Bloco, arquivo e objeto: eliminar antes de escolher",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "💾",
+        "h": "Quase toda alternativa funciona",
+        "p": "No domínio de desempenho, várias opções resolvem. A certa é a que sobra depois que o enunciado elimina as outras, e ele elimina sempre pelas mesmas duas frases."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🗄",
+        "h": "Gaveta, armário e guarda-volumes",
+        "p": "Bloco é a gaveta da sua mesa: só você alcança. Arquivo é o armário da sala: todo mundo abre ao mesmo tempo e cada um pega a sua pasta. Objeto é o guarda-volumes com etiqueta: você entrega a chave e recebe o pacote inteiro, sem abrir no lugar."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "armz",
+        "h": "As três naturezas",
+        "p": "A pergunta é quem acessa, de onde, e se o dado precisa sobreviver."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "Duas frases eliminam opções sozinhas. Compartilhar entre zonas elimina o EBS, porque o volume vive em uma zona. Precisar persistir elimina o armazenamento de instância, que some quando a instância para. Quando as duas aparecem juntas, a resposta é EFS, ou S3 se o acesso for por chave."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Instâncias em três zonas precisam ler e gravar nos mesmos arquivos. O que usar?",
+        "a": [
+          "EFS",
+          "EBS com Multi-Attach",
+          "Armazenamento de instância"
+        ],
+        "c": 0,
+        "e": "EFS é o único com acesso simultâneo de várias zonas e semântica de sistema de arquivos."
+      },
+      {
+        "q": "Volume gp2 grande só para alcançar operações por segundo. Como baratear?",
+        "a": [
+          "Migrar para gp3",
+          "Migrar para io2",
+          "Migrar para st1"
+        ],
+        "c": 0,
+        "e": "Em gp3 o desempenho é configurado à parte do tamanho, então o volume pode encolher."
+      },
+      {
+        "q": "Nós que trocam mensagens entre si precisam da menor latência possível.",
+        "a": [
+          "Grupo de posicionamento do tipo cluster",
+          "Tipo spread",
+          "Três zonas de disponibilidade"
+        ],
+        "c": 0,
+        "e": "O tipo cluster junta as instâncias no mesmo ponto da rede."
+      }
+    ]
+  },
+  {
+    "id": "l-saa-custo",
+    "exam": "saa",
+    "dom": "d4",
+    "concept": "custo-computacao",
+    "secs": 82,
+    "title": "Os quatro modelos de compra, e o que elimina o Spot",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "💸",
+        "h": "A mesma instância, até 90% mais barata",
+        "p": "A prova descreve o perfil da carga e espera o modelo certo. Perfil de carga é tudo: o nome do serviço não muda."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏨",
+        "h": "Pense em hospedagem",
+        "p": "Sob demanda é diária na recepção. Savings Plans é contrato de valor mensal, podendo trocar de quarto. Reserva é alugar um quarto específico por um ano. Spot é o quarto que sobrou: sai quase de graça, e podem te pedir para desocupar em dois minutos."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "compra",
+        "h": "A escada do desconto",
+        "p": "Spot foge da escada: desconto máximo sem compromisso, pagando com o risco."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "Onde a prova te pega",
+        "gotcha": "As palavras crítico, com estado e sem interrupção eliminam o Spot. Mas o inverso também cai, e é mais perdido: enunciado com fila de trabalho, lote ou ponto de verificação está pedindo Spot, e a alternativa com sob demanda, embora funcione, perde por custo. A pergunta nunca é o que funciona, é o mais barato que atende."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Renderização noturna que pode recomeçar do zero. Qual modelo?",
+        "a": [
+          "Spot",
+          "Sob demanda",
+          "Instância reservada"
+        ],
+        "c": 0,
+        "e": "Tolerância a interrupção é o pré-requisito do Spot, e aqui ele é explícito."
+      },
+      {
+        "q": "Base estável por um ano, mas a família de instância pode mudar.",
+        "a": [
+          "Savings Plans de computação",
+          "Instância reservada padrão",
+          "Spot"
+        ],
+        "c": 0,
+        "e": "O Savings Plans compromete valor por hora e deixa trocar de família, tamanho e região."
+      },
+      {
+        "q": "Licença de software exige contar soquetes do servidor físico.",
+        "a": [
+          "Host dedicado",
+          "Instância dedicada",
+          "Instância reservada"
+        ],
+        "c": 0,
+        "e": "Só o host dedicado dá visibilidade do servidor físico para licenciamento por soquete."
+      }
+    ]
+  }
+]

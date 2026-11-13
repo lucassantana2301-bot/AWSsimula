@@ -1,0 +1,2911 @@
+[
+  {
+    "id": "104-d1-01",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "entra-id",
+      "rbac-governanca"
+    ],
+    "case": "Uma analista recebeu a função Proprietário na assinatura de produção. Ela precisa redefinir a senha de um usuário do Entra ID que perdeu o acesso.",
+    "stem": "O que acontece quando ela tenta redefinir a senha?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Funciona, porque Proprietário é a função mais alta da assinatura"
+      },
+      {
+        "k": "B",
+        "t": "Falha, porque redefinir senha é função do Entra ID e não do RBAC do Azure"
+      },
+      {
+        "k": "C",
+        "t": "Funciona apenas se o usuário estiver na mesma assinatura"
+      },
+      {
+        "k": "D",
+        "t": "Falha, porque falta o bloqueio ReadOnly ser removido do locatário"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "RBAC do Azure governa recursos; o diretório é governado pelas funções do Entra ID. Redefinir senha exige Administrador de Senha, Administrador de Usuários ou Administrador Global, e nenhuma delas vem junto com Proprietário.",
+      "A": "Proprietário é a função máxima no plano de recursos, que não inclui o diretório. São dois sistemas de permissão separados.",
+      "C": "Usuário não pertence a assinatura: ele pertence ao locatário. A assinatura contém recursos.",
+      "D": "Bloqueio atua sobre recursos do Azure e não existe sobre o locatário do Entra ID."
+    },
+    "src": [
+      {
+        "t": "Funções do Entra ID e RBAC",
+        "u": "https://learn.microsoft.com/azure/role-based-access-control/rbac-and-directory-admin-roles"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-02",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "case": "Você precisa que a equipe de suporte possa criar e excluir máquinas virtuais no grupo de recursos rg-dev, mas nunca conceder acesso a outras pessoas. A equipe também precisa ver, sem alterar, todos os recursos da assinatura.",
+    "stem": "Qual conjunto de atribuições atende com o menor privilégio?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Proprietário em rg-dev e Leitor na assinatura"
+      },
+      {
+        "k": "B",
+        "t": "Colaborador em rg-dev e Leitor na assinatura"
+      },
+      {
+        "k": "C",
+        "t": "Colaborador na assinatura e Leitor em rg-dev"
+      },
+      {
+        "k": "D",
+        "t": "Administrador de Acesso de Usuário em rg-dev e Leitor na assinatura"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Colaborador cria e exclui recursos e explicitamente não concede acesso, que é o requisito. Leitor na assinatura cobre a visão de leitura, e permissões são cumulativas, então dentro de rg-dev vale a mais permissiva.",
+      "A": "Proprietário concede acesso a terceiros, exatamente o que o enunciado proíbe.",
+      "C": "Colaborador na assinatura daria poder de alteração em toda a assinatura, não só em rg-dev. Leitor em rg-dev não reduz nada, porque permissões somam.",
+      "D": "Administrador de Acesso de Usuário só gerencia atribuições de acesso e não cria máquina nenhuma. É o oposto do requisito."
+    },
+    "src": [
+      {
+        "t": "Funções internas do Azure",
+        "u": "https://learn.microsoft.com/azure/role-based-access-control/built-in-roles"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-03",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "yn",
+    "sec": 120,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre Azure Policy, RBAC e bloqueios.",
+    "rows": [
+      {
+        "t": "Uma política com efeito Deny impede que um Proprietário da assinatura crie um recurso que viole a regra.",
+        "a": true,
+        "e": "Policy atua sobre a requisição, não sobre a identidade. Nenhuma função fura uma política de negação."
+      },
+      {
+        "t": "Atribuir uma política com efeito Deny exclui automaticamente os recursos existentes que já violam a regra.",
+        "a": false,
+        "e": "Deny só barra gravações futuras. Os recursos existentes aparecem como não conformes e continuam existindo."
+      },
+      {
+        "t": "Um bloqueio CanNotDelete permite alterar as configurações do recurso.",
+        "a": true,
+        "e": "CanNotDelete impede exclusão e permite leitura e alteração. Quem impede alteração é o ReadOnly."
+      },
+      {
+        "t": "Para remover um bloqueio basta ter a função Colaborador no escopo.",
+        "a": false,
+        "e": "A permissão de bloqueio fica nas ações de autorização, que Colaborador não tem. É preciso Proprietário ou Administrador de Acesso de Usuário."
+      }
+    ],
+    "src": [
+      {
+        "t": "Bloqueios de recurso",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/lock-resources"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-04",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "entra-id"
+    ],
+    "case": "A diretoria exige que todo usuário cujo atributo department seja Vendas tenha acesso a um aplicativo, e que o acesso seja retirado automaticamente quando a pessoa mudar de área. O atributo chega pelo RH via sincronização.",
+    "stem": "Qual construção atende sem intervenção manual?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Grupo de segurança com associação atribuída, revisado mensalmente"
+      },
+      {
+        "k": "B",
+        "t": "Grupo de segurança com associação dinâmica, com regra sobre o atributo department"
+      },
+      {
+        "k": "C",
+        "t": "Unidade administrativa contendo os usuários de Vendas"
+      },
+      {
+        "k": "D",
+        "t": "Grupo do Microsoft 365 com proprietário na gerência de Vendas"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "A regra dinâmica reavalia quando o atributo muda e remove o usuário sem ninguém agir. É o único mecanismo da lista que reage a mudança de atributo. Exige licença Entra ID P1.",
+      "A": "Associação atribuída depende de alguém lembrar de remover, e o enunciado pede automatismo.",
+      "C": "Unidade administrativa limita o alcance de um administrador sobre usuários. Ela não concede acesso a aplicativo.",
+      "D": "Grupo do Microsoft 365 serve a colaboração e também dependeria de alguém remover o membro."
+    },
+    "src": [
+      {
+        "t": "Grupos dinâmicos",
+        "u": "https://learn.microsoft.com/entra/identity/users/groups-dynamic-membership"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-05",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "case": "Trezentas máquinas virtuais existentes estão sem a marca centro-de-custo, obrigatória por auditoria. Toda máquina nova precisa nascer com a marca, e as existentes precisam ser corrigidas sem que ninguém abra uma por uma.",
+    "stem": "Qual configuração de Azure Policy resolve as duas exigências?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Efeito Deny, atribuído no grupo de gerenciamento"
+      },
+      {
+        "k": "B",
+        "t": "Efeito Audit, com relatório semanal para os donos dos recursos"
+      },
+      {
+        "k": "C",
+        "t": "Efeito Modify, com identidade gerenciada e tarefa de correção"
+      },
+      {
+        "k": "D",
+        "t": "Efeito DeployIfNotExists, apontando para um modelo que recria as máquinas com a marca"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Modify acrescenta ou altera a marca nas gravações futuras e, por aceitar tarefa de correção, aplica a marca retroativamente nos trezentos recursos existentes. A identidade gerenciada é o que dá à política permissão de escrever.",
+      "A": "Deny impediria a criação sem marca, mas não corrige nada do que já existe.",
+      "B": "Audit apenas relata. O enunciado pede correção, não visibilidade.",
+      "D": "DeployIfNotExists implanta recurso que falta, e não serve para alterar marca; recriar trezentas máquinas é desproporcional e não foi pedido."
+    },
+    "src": [
+      {
+        "t": "Correção de recursos não conformes",
+        "u": "https://learn.microsoft.com/azure/governance/policy/how-to/remediate-resources"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-06",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 110,
+    "tags": [
+      "entra-id",
+      "rbac-governanca"
+    ],
+    "stem": "Uma assinatura foi transferida de um locatário do Entra ID para outro. Quais consequências são esperadas? Escolha as DUAS corretas.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "As atribuições de função do RBAC existentes são removidas"
+      },
+      {
+        "k": "B",
+        "t": "Os recursos da assinatura são excluídos e precisam ser recriados"
+      },
+      {
+        "k": "C",
+        "t": "As identidades gerenciadas atribuídas pelo sistema precisam ser recriadas"
+      },
+      {
+        "k": "D",
+        "t": "As políticas do Azure atribuídas no grupo de recursos continuam valendo sem ajuste"
+      },
+      {
+        "k": "E",
+        "t": "O identificador da assinatura muda"
+      }
+    ],
+    "ans": [
+      "A",
+      "C"
+    ],
+    "why": {
+      "ok": "As atribuições apontam para principais do locatário antigo, que deixam de existir no novo, então caem. Identidades gerenciadas vivem no diretório e precisam ser recriadas e reautorizadas.",
+      "B": "Os recursos permanecem. A transferência muda o diretório de confiança, não o conteúdo da assinatura.",
+      "D": "As atribuições de política também são afetadas quando dependem de identidade gerenciada, e precisam ser revistas.",
+      "E": "O identificador da assinatura é preservado na transferência."
+    },
+    "src": [
+      {
+        "t": "Transferir assinatura entre locatários",
+        "u": "https://learn.microsoft.com/azure/role-based-access-control/transfer-subscription"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-07",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "order",
+    "sec": 90,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "stem": "Uma gravação de recurso é avaliada por vários controles. Ordene do controle que é avaliado PRIMEIRO ao que é avaliado por ÚLTIMO.",
+    "items": [
+      {
+        "t": "Autenticação: a identidade é válida no locatário"
+      },
+      {
+        "t": "Atribuição de negação: existe negação explícita no escopo"
+      },
+      {
+        "t": "RBAC: a função concede a ação pedida"
+      },
+      {
+        "t": "Azure Policy: o estado do recurso respeita as regras"
+      }
+    ],
+    "e": "Sem identidade válida nada prossegue. Em seguida o Resource Manager resolve autorização, e dentro dela a negação explícita vence qualquer concessão, por isso é avaliada antes do RBAC. Só depois de autorizado o pedido é confrontado com as políticas, que podem barrar a gravação mesmo de quem tinha permissão. Entender esta ordem explica por que um Proprietário recebe erro de política e não erro de permissão.",
+    "src": [
+      {
+        "t": "Atribuições de negação",
+        "u": "https://learn.microsoft.com/azure/role-based-access-control/deny-assignments"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-08",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "single",
+    "sec": 105,
+    "tags": [
+      "entra-id"
+    ],
+    "case": "Um administrador de uma filial deve poder redefinir senha e gerenciar apenas os usuários daquela filial. A empresa tem licença Entra ID P1.",
+    "stem": "Qual abordagem entrega esse recorte?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Função Administrador de Usuários atribuída no locatário inteiro"
+      },
+      {
+        "k": "B",
+        "t": "Função Administrador de Usuários com escopo em uma unidade administrativa que contém os usuários da filial"
+      },
+      {
+        "k": "C",
+        "t": "Função Colaborador no grupo de recursos da filial"
+      },
+      {
+        "k": "D",
+        "t": "Grupo dinâmico dos usuários da filial, com o administrador como proprietário do grupo"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "A unidade administrativa é a construção do Entra ID feita para reduzir o escopo de uma função de diretório a um subconjunto de objetos. É exatamente o cenário descrito, e a licença P1 citada é o pré-requisito.",
+      "A": "Atribuir no locatário entrega poder sobre todos os usuários da empresa, não só os da filial.",
+      "C": "Colaborador é RBAC do Azure e não gerencia usuário nenhum.",
+      "D": "Proprietário de grupo administra a associação do grupo, não redefine senha dos membros."
+    },
+    "src": [
+      {
+        "t": "Unidades administrativas",
+        "u": "https://learn.microsoft.com/entra/identity/role-based-access-control/administrative-units"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-01",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "armazenamento-redundancia"
+    ],
+    "case": "Uma equipe de relatórios precisa ler os dados de uma conta de armazenamento a partir de uma segunda região, em operação normal, para não competir com a carga de produção.",
+    "stem": "Qual opção de redundância atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "GRS"
+      },
+      {
+        "k": "B",
+        "t": "RA-GRS"
+      },
+      {
+        "k": "C",
+        "t": "ZRS"
+      },
+      {
+        "k": "D",
+        "t": "LRS com uma cópia manual agendada"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Só as opções com o prefixo de acesso de leitura expõem o ponto de extremidade secundário em operação normal. RA-GRS entrega isso com a cópia na região emparelhada.",
+      "A": "GRS mantém a cópia geográfica, mas o secundário só fica legível depois de um failover.",
+      "C": "ZRS replica entre zonas da mesma região, então não há segunda região para ler.",
+      "D": "Resolveria com script, duplicando custo e criando defasagem própria, quando a plataforma já oferece a função."
+    },
+    "src": [
+      {
+        "t": "Redundância de armazenamento",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-redundancy"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-02",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 115,
+    "tags": [
+      "armazenamento-redundancia"
+    ],
+    "case": "Um conjunto de blobs será lido com frequência nos primeiros 30 dias, depois quase nunca, e deve ser mantido por sete anos por exigência fiscal. O objetivo declarado é o menor custo total.",
+    "stem": "Qual configuração atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Deixar tudo na camada quente e aplicar bloqueio CanNotDelete"
+      },
+      {
+        "k": "B",
+        "t": "Mover para Arquivo no dia 1 por regra de ciclo de vida"
+      },
+      {
+        "k": "C",
+        "t": "Regra de ciclo de vida: fria após 30 dias, Arquivo após 180 dias"
+      },
+      {
+        "k": "D",
+        "t": "Mover para a camada gelada no dia 1 e manter lá por sete anos"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Os 30 dias de leitura frequente pedem a camada quente no início. Depois, fria cobre a transição e Arquivo entrega o menor custo de guarda para o longo prazo, que é onde estão quase todos os sete anos.",
+      "A": "Quente é a camada mais cara para guardar, e a maior parte do período não tem leitura. Bloqueio não tem relação com custo.",
+      "B": "Mover no dia 1 para Arquivo implica reidratar a cada leitura durante o primeiro mês, com custo e espera de horas, além do risco de exclusão antecipada.",
+      "D": "Gelada tem custo de guarda maior que Arquivo e o cenário não pede leitura imediata depois do primeiro mês."
+    },
+    "src": [
+      {
+        "t": "Gerenciamento de ciclo de vida",
+        "u": "https://learn.microsoft.com/azure/storage/blobs/lifecycle-management-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-03",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 115,
+    "tags": [
+      "armazenamento-acesso"
+    ],
+    "case": "Um parceiro precisa enviar arquivos para um contêiner por 15 dias. A segurança exige poder revogar esse acesso isoladamente, sem afetar outras integrações que usam a mesma conta.",
+    "stem": "Qual mecanismo atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Entregar a chave de acesso primária e girá-la ao final"
+      },
+      {
+        "k": "B",
+        "t": "SAS de serviço vinculada a uma política de acesso armazenada no contêiner"
+      },
+      {
+        "k": "C",
+        "t": "SAS de serviço com prazo de 15 dias, sem política armazenada"
+      },
+      {
+        "k": "D",
+        "t": "Função Colaborador na conta de armazenamento para a conta do parceiro"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "A política de acesso armazenada é o único caminho para revogar uma SAS individual: apagar ou alterar a política invalida o token sem tocar na chave da conta, preservando as outras integrações.",
+      "A": "Girar a chave derruba toda SAS assinada por ela, inclusive as integrações que o enunciado manda preservar.",
+      "C": "Sem política armazenada, a única forma de revogar antes do prazo é girar a chave, que é o efeito proibido.",
+      "D": "Colaborador é permissão de plano de controle e dá poder muito maior do que enviar arquivo a um contêiner."
+    },
+    "src": [
+      {
+        "t": "Políticas de acesso armazenadas",
+        "u": "https://learn.microsoft.com/rest/api/storageservices/define-stored-access-policy"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-04",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "yn",
+    "sec": 120,
+    "tags": [
+      "armazenamento-acesso"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre acesso a uma conta de armazenamento.",
+    "rows": [
+      {
+        "t": "A função Colaborador na conta de armazenamento concede, por si, permissão de leitura de blob pelo Entra ID.",
+        "a": false,
+        "e": "Leitura de dados exige função de plano de dados, como Leitor de Dados do Blob de Armazenamento. Colaborador permite ler as chaves, o que é outro caminho."
+      },
+      {
+        "t": "Um ponto de extremidade privado dá à conta de armazenamento um endereço privado dentro da rede virtual.",
+        "a": true,
+        "e": "O ponto de extremidade privado cria uma interface de rede na sua sub-rede, com endereço do espaço da rede virtual."
+      },
+      {
+        "t": "Um ponto de extremidade de serviço faz a conta de armazenamento deixar de ter endereço público.",
+        "a": false,
+        "e": "Ele apenas direciona o tráfego da sub-rede pelo backbone; o nome e o endereço da conta continuam públicos."
+      },
+      {
+        "t": "Desativar o acesso por chave compartilhada obriga todo acesso a usar identidade do Entra ID.",
+        "a": true,
+        "e": "Desativada a chave, caem as SAS assinadas por ela e resta a autorização por identidade, com função de dados."
+      }
+    ],
+    "src": [
+      {
+        "t": "Autorizar acesso a dados",
+        "u": "https://learn.microsoft.com/azure/storage/common/authorize-data-access"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-05",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "armazenamento-acesso"
+    ],
+    "case": "Um servidor de arquivos no escritório está sem espaço em disco. Os usuários precisam continuar acessando os arquivos pelos mesmos caminhos de rede, e os arquivos pouco usados devem passar a viver na nuvem.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure File Sync com camadas de nuvem"
+      },
+      {
+        "k": "B",
+        "t": "AzCopy em tarefa agendada para um contêiner de blob"
+      },
+      {
+        "k": "C",
+        "t": "Azure Data Box"
+      },
+      {
+        "k": "D",
+        "t": "Azure Backup do servidor de arquivos"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O File Sync transforma o servidor em cache do compartilhamento na nuvem. As camadas de nuvem liberam espaço local mantendo o arquivo acessível pelo mesmo caminho, que é exatamente o requisito duplo do enunciado.",
+      "B": "AzCopy copia; ele não mantém o caminho de rede nem libera espaço de forma transparente.",
+      "C": "Data Box é transferência física em massa, não sincronização contínua.",
+      "D": "Backup protege contra perda; ele não libera espaço no disco de produção."
+    },
+    "src": [
+      {
+        "t": "Azure File Sync",
+        "u": "https://learn.microsoft.com/azure/storage/file-sync/file-sync-introduction"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-06",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "multi",
+    "sec": 115,
+    "tags": [
+      "armazenamento-redundancia"
+    ],
+    "stem": "Uma conta de armazenamento está em LRS e a exigência passou a ser sobreviver à perda de um datacenter dentro da região, sem mudar de região. Quais afirmações são corretas? Escolha as DUAS.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "ZRS atende, porque distribui as três cópias em zonas distintas da região"
+      },
+      {
+        "k": "B",
+        "t": "A mudança de LRS para ZRS pode exigir conversão da conta e não está disponível em toda combinação de região e tipo de conta"
+      },
+      {
+        "k": "C",
+        "t": "GRS atende melhor, porque protege contra perda de datacenter dentro da região"
+      },
+      {
+        "k": "D",
+        "t": "A mudança de redundância protege contra exclusão acidental de blob"
+      },
+      {
+        "k": "E",
+        "t": "LRS já protege contra perda de datacenter, porque mantém três cópias"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "ZRS é a opção desenhada para falha de zona, que é a falha de um datacenter da região. E a migração a partir de LRS é uma conversão, com restrições de região e tipo de conta que precisam ser verificadas antes.",
+      "C": "GRS protege contra perda da região inteira, mas sua primária continua sendo LRS: dentro da região ele não protege contra falha de zona.",
+      "D": "Redundância protege contra falha de infraestrutura. Contra exclusão servem exclusão reversível, controle de versão e bloqueio.",
+      "E": "As três cópias do LRS ficam no mesmo datacenter, então a falha dele derruba todas."
+    },
+    "src": [
+      {
+        "t": "Alterar a redundância",
+        "u": "https://learn.microsoft.com/azure/storage/common/redundancy-migration"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-07",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "order",
+    "sec": 85,
+    "tags": [
+      "armazenamento-redundancia"
+    ],
+    "stem": "Ordene as camadas de acesso de blob do MENOR para o MAIOR custo de armazenamento por gigabyte.",
+    "items": [
+      {
+        "t": "Arquivo"
+      },
+      {
+        "t": "Gelada"
+      },
+      {
+        "t": "Fria"
+      },
+      {
+        "t": "Quente"
+      }
+    ],
+    "e": "O custo de guardar cai de quente para arquivo, e o custo de ler sobe na mesma direção. A ordem é quente, fria, gelada e arquivo em custo de guarda decrescente, com permanências mínimas de nenhuma, 30, 90 e 180 dias. Trocar a ordem de fria e gelada é o erro mais comum, porque a camada gelada é mais nova que as outras três.",
+    "src": [
+      {
+        "t": "Camadas de acesso",
+        "u": "https://learn.microsoft.com/azure/storage/blobs/access-tiers-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-01",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "case": "Duas máquinas virtuais já existem em uma região, criadas sem conjunto de disponibilidade. A exigência passou a ser um acordo de nível de serviço de 99,99%.",
+    "stem": "O que é necessário fazer?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Adicionar as duas máquinas existentes a um conjunto de disponibilidade"
+      },
+      {
+        "k": "B",
+        "t": "Recriar as máquinas, cada uma em uma zona de disponibilidade distinta"
+      },
+      {
+        "k": "C",
+        "t": "Trocar todos os discos para SSD Premium"
+      },
+      {
+        "k": "D",
+        "t": "Adicionar as duas máquinas a um conjunto de dimensionamento com orquestração uniforme"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "99,99% só vem de zonas de disponibilidade, e nem a zona nem o conjunto de disponibilidade podem ser atribuídos a uma máquina já criada: a associação é definida na criação. A saída é recriar a partir dos discos ou de uma imagem.",
+      "A": "Além de o conjunto entregar 99,95% e não 99,99%, não é possível adicionar máquina existente a um conjunto de disponibilidade.",
+      "C": "SSD Premium em todos os discos entrega 99,9% para máquina única, que é menos do que o exigido.",
+      "D": "O conjunto de dimensionamento também não aceita máquinas pré-existentes, e por si não garante distribuição entre zonas sem ser criado com zonas."
+    },
+    "src": [
+      {
+        "t": "SLA de máquinas virtuais",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/availability"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-02",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "case": "Uma aplicação grava arquivos temporários grandes e precisa do disco mais rápido possível para eles. Os dados não precisam sobreviver a um desligamento.",
+    "stem": "Onde esses arquivos devem ser gravados?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "No disco temporário da máquina"
+      },
+      {
+        "k": "B",
+        "t": "Em um disco de dados SSD Premium"
+      },
+      {
+        "k": "C",
+        "t": "No disco do sistema operacional"
+      },
+      {
+        "k": "D",
+        "t": "Em um compartilhamento do Azure Files"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O disco temporário é armazenamento local do host, rápido e já pago com o tamanho da máquina, e seu conteúdo não sobrevive a desalocação, o que combina com o requisito explícito de não precisar persistir.",
+      "B": "Funciona, mas custa a mais por durabilidade que o enunciado dispensa.",
+      "C": "Encher o disco do sistema operacional com arquivo temporário é a receita para a máquina parar de iniciar.",
+      "D": "Compartilhamento de rede é mais lento que disco local e serve ao caso oposto, de acesso compartilhado."
+    },
+    "src": [
+      {
+        "t": "Disco temporário",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/managed-disks-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-03",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "single",
+    "sec": 105,
+    "tags": [
+      "app-containers"
+    ],
+    "case": "Uma equipe publica um aplicativo web no App Service na camada Básica. Ela precisa publicar uma nova versão, validá-la com tráfego real e reverter em segundos se der problema.",
+    "stem": "Qual é a mudança mínima necessária?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Nenhuma: a camada Básica já tem slots de implantação"
+      },
+      {
+        "k": "B",
+        "t": "Elevar o plano para a camada Padrão, para ter slots de implantação"
+      },
+      {
+        "k": "C",
+        "t": "Elevar o plano para a camada Isolada, para ter ambiente dedicado"
+      },
+      {
+        "k": "D",
+        "t": "Criar um segundo App Service e alternar manualmente o registro DNS"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Slot de implantação começa na camada Padrão. A troca aquece o destino antes de direcionar tráfego e a troca inversa é imediata, que é a reversão em segundos pedida.",
+      "A": "A camada Básica tem domínio próprio e certificado, mas não tem slot nem dimensionamento automático.",
+      "C": "Isolada resolveria, com custo muito acima do necessário. A pergunta pede a mudança mínima.",
+      "D": "Propagação de DNS leva minutos ou mais, então não entrega reversão em segundos."
+    },
+    "src": [
+      {
+        "t": "Slots de implantação",
+        "u": "https://learn.microsoft.com/azure/app-service/deploy-staging-slots"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-04",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "app-containers"
+    ],
+    "case": "Um serviço consome uma fila. Entre 20h e 7h a fila fica vazia e o custo deve cair a zero. Às 14h a fila satura e o serviço precisa escalar para dezenas de instâncias. A equipe não tem ninguém para administrar cluster.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Container Apps com regra de escala pelo tamanho da fila"
+      },
+      {
+        "k": "B",
+        "t": "Azure Kubernetes Service com dimensionamento automático de pods"
+      },
+      {
+        "k": "C",
+        "t": "Azure Container Instances criado por tarefa agendada"
+      },
+      {
+        "k": "D",
+        "t": "App Service na camada Padrão com dimensionamento automático"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Container Apps escala por evento, inclusive por tamanho de fila, desce a zero quando ninguém chama e não expõe plano de controle para administrar. Atende aos três requisitos ao mesmo tempo.",
+      "B": "Resolveria tecnicamente e criaria a administração de cluster que o enunciado diz não haver quem faça.",
+      "C": "Container Instances não escala por regra: cada instância é criada avulsa.",
+      "D": "App Service escala por métrica de instância, mas o plano continua sendo cobrado: ele não chega a zero."
+    },
+    "src": [
+      {
+        "t": "Azure Container Apps",
+        "u": "https://learn.microsoft.com/azure/container-apps/overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-05",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 115,
+    "tags": [
+      "vm-disponibilidade",
+      "app-containers"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre computação no Azure.",
+    "rows": [
+      {
+        "t": "Um disco gerenciado pode ser reduzido de tamanho depois de criado.",
+        "a": false,
+        "e": "Disco gerenciado só cresce. Para diminuir é preciso criar um disco menor e migrar os dados."
+      },
+      {
+        "t": "Mudar o tamanho de uma máquina pode exigir desalocá-la quando o tamanho alvo pertence a outra família de hardware.",
+        "a": true,
+        "e": "Se o tamanho alvo não está no cluster atual, a máquina precisa ser desalocada para ser realocada em outro hardware."
+      },
+      {
+        "t": "Um conjunto de disponibilidade protege contra a perda de uma zona de disponibilidade inteira.",
+        "a": false,
+        "e": "O conjunto distribui entre racks dentro de um datacenter. Para falha de zona é preciso zonas de disponibilidade."
+      },
+      {
+        "t": "A orquestração flexível de um conjunto de dimensionamento aceita instâncias com configurações diferentes entre si.",
+        "a": true,
+        "e": "É justamente o que distingue a flexível da uniforme, que trata as instâncias como idênticas."
+      }
+    ],
+    "src": [
+      {
+        "t": "Modos de orquestração",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/flexible-virtual-machine-scale-sets"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-06",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "app-containers"
+    ],
+    "case": "A diretoria quer aplicar as mesmas políticas, marcas e controles de acesso do Azure em trinta servidores que rodam no datacenter próprio e em outra nuvem.",
+    "stem": "Qual serviço entrega isso?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Arc"
+      },
+      {
+        "k": "B",
+        "t": "Azure Migrate"
+      },
+      {
+        "k": "C",
+        "t": "Azure Site Recovery"
+      },
+      {
+        "k": "D",
+        "t": "Azure Lighthouse"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O Arc projeta recursos de fora do Azure para dentro do Resource Manager, e a partir daí valem Policy, RBAC, marcas e Monitor sobre eles, sem migrar nada.",
+      "B": "Migrate avalia e move cargas para o Azure. O enunciado quer governar onde estão.",
+      "C": "Site Recovery replica para recuperação de desastre, não governa configuração.",
+      "D": "Lighthouse serve a parceiro que administra locatários de clientes, que é outro problema."
+    },
+    "src": [
+      {
+        "t": "Azure Arc",
+        "u": "https://learn.microsoft.com/azure/azure-arc/overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-07",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "multi",
+    "sec": 110,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "stem": "Uma máquina virtual precisa ser replicada como modelo para outras dez idênticas. Quais passos pertencem ao processo correto? Escolha as DUAS.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Generalizar a máquina antes de capturar a imagem"
+      },
+      {
+        "k": "B",
+        "t": "Capturar a imagem em uma galeria de computação e implantar as novas a partir dela"
+      },
+      {
+        "k": "C",
+        "t": "Copiar o disco do sistema operacional e anexá-lo às dez máquinas simultaneamente"
+      },
+      {
+        "k": "D",
+        "t": "Criar um ponto de restauração do Backup do Azure e restaurá-lo dez vezes"
+      },
+      {
+        "k": "E",
+        "t": "Habilitar o conjunto de disponibilidade antes de capturar a imagem"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "Generalizar remove identificadores específicos da instância, sem o que as novas máquinas nascem com conflito de identidade. A galeria de computação é o repositório de imagens com versionamento e replicação por região.",
+      "C": "Um disco gerenciado só pode estar anexado a uma máquina por vez: dez máquinas não compartilham um disco de sistema operacional.",
+      "D": "Restauração de backup recria a máquina original, não um modelo generalizado para frota.",
+      "E": "Conjunto de disponibilidade é decisão de implantação das novas máquinas e não faz parte da captura da imagem."
+    },
+    "src": [
+      {
+        "t": "Galeria de computação do Azure",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/azure-compute-gallery"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-08",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "order",
+    "sec": 85,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "stem": "Ordene as construções do MENOR para o MAIOR acordo de nível de serviço de disponibilidade.",
+    "items": [
+      {
+        "t": "Máquina única com discos SSD Standard"
+      },
+      {
+        "t": "Máquina única com todos os discos em SSD Premium"
+      },
+      {
+        "t": "Duas ou mais máquinas em um conjunto de disponibilidade"
+      },
+      {
+        "t": "Duas ou mais máquinas em zonas de disponibilidade distintas"
+      }
+    ],
+    "e": "Máquina única com disco Standard fica abaixo de 99,9%; com todos os discos em SSD Premium chega a 99,9%; o conjunto de disponibilidade entrega 99,95%; e zonas distintas entregam 99,99%. Decorar esta escada resolve qualquer questão que cite um número de disponibilidade exigido pelo negócio.",
+    "src": [
+      {
+        "t": "SLA de máquinas virtuais",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/availability"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-01",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 85,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "Uma sub-rede foi criada com o prefixo /29.",
+    "stem": "Quantos endereços ficam disponíveis para seus recursos?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "8"
+      },
+      {
+        "k": "B",
+        "t": "6"
+      },
+      {
+        "k": "C",
+        "t": "3"
+      },
+      {
+        "k": "D",
+        "t": "5"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Um /29 tem oito endereços e o Azure reserva cinco por sub-rede: o da rede, três para a plataforma e o de difusão. Sobram três.",
+      "A": "Oito é o total do bloco, antes das reservas.",
+      "B": "Seis seria a conta de uma rede tradicional, que reserva apenas dois endereços.",
+      "D": "Cinco é o número de endereços reservados, não o de disponíveis."
+    },
+    "src": [
+      {
+        "t": "Sub-redes de rede virtual",
+        "u": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-faq"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-02",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "single",
+    "sec": 115,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "A rede A está emparelhada com a rede B, e a rede B está emparelhada com a rede C. Uma máquina na rede A não consegue alcançar uma máquina na rede C, e os grupos de segurança permitem o tráfego.",
+    "stem": "Qual é a causa e a correção mais direta?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "O emparelhamento não é transitivo; emparelhar A com C ou habilitar trânsito de gateway em B"
+      },
+      {
+        "k": "B",
+        "t": "Falta uma regra de entrada no grupo de segurança da rede C"
+      },
+      {
+        "k": "C",
+        "t": "Os emparelhamentos precisam estar na mesma região"
+      },
+      {
+        "k": "D",
+        "t": "Falta habilitar o ponto de extremidade de serviço na sub-rede de A"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Emparelhamento liga apenas os dois pares envolvidos e não propaga rota para um terceiro. Para A chegar a C é preciso um emparelhamento direto, ou trânsito de gateway, ou um dispositivo de rede no centro com rotas definidas pelo usuário.",
+      "B": "O enunciado já afirma que os grupos de segurança permitem o tráfego.",
+      "C": "Emparelhamento global entre regiões é suportado, então região não é a causa.",
+      "D": "Ponto de extremidade de serviço serve ao acesso a serviços de PaaS, não à rota entre redes virtuais."
+    },
+    "src": [
+      {
+        "t": "Emparelhamento de rede virtual",
+        "u": "https://learn.microsoft.com/azure/virtual-network/virtual-network-peering-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-03",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "Todo o tráfego de saída de uma sub-rede para a internet deve passar por um dispositivo virtual de rede que faz inspeção.",
+    "stem": "O que precisa ser configurado?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Regra de saída no grupo de segurança da sub-rede apontando para o dispositivo"
+      },
+      {
+        "k": "B",
+        "t": "Tabela de rotas associada à sub-rede, com rota 0.0.0.0/0 e próximo salto no endereço do dispositivo"
+      },
+      {
+        "k": "C",
+        "t": "Grupo de segurança de aplicativo contendo o dispositivo e as máquinas"
+      },
+      {
+        "k": "D",
+        "t": "Ponto de extremidade privado para o dispositivo virtual de rede"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Encaminhar tráfego é trabalho de rota, não de grupo de segurança. A rota definida pelo usuário para 0.0.0.0/0 sobrepõe a rota de sistema para a internet e manda tudo ao dispositivo.",
+      "A": "Grupo de segurança permite ou nega pacote; ele não decide por onde o pacote sai.",
+      "C": "Grupo de segurança de aplicativo é apenas um apelido para um conjunto de interfaces nas regras.",
+      "D": "Ponto de extremidade privado expõe um serviço de PaaS na rede virtual e não redireciona saída."
+    },
+    "src": [
+      {
+        "t": "Rotas definidas pelo usuário",
+        "u": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-udr-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-04",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "single",
+    "sec": 115,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "Uma aplicação web precisa de balanceamento com inspeção de cabeçalho HTTP, roteamento por caminho de URL e firewall de aplicação web, dentro de uma única região.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Load Balancer Standard"
+      },
+      {
+        "k": "B",
+        "t": "Azure Application Gateway com WAF"
+      },
+      {
+        "k": "C",
+        "t": "Azure Front Door"
+      },
+      {
+        "k": "D",
+        "t": "Azure Traffic Manager"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Roteamento por caminho de URL e inspeção de cabeçalho são camada 7, e o Application Gateway é o serviço regional de camada 7, com firewall de aplicação web acoplado.",
+      "A": "Load Balancer opera em camada 4: ele não lê cabeçalho nem caminho de URL.",
+      "C": "Front Door também é camada 7, mas é global. O enunciado delimita uma única região, e Front Door adicionaria alcance e custo não pedidos.",
+      "D": "Traffic Manager trabalha por DNS: ele não encerra a conexão, então não inspeciona nada."
+    },
+    "src": [
+      {
+        "t": "Application Gateway",
+        "u": "https://learn.microsoft.com/azure/application-gateway/overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-05",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "yn",
+    "sec": 120,
+    "tags": [
+      "rede-virtual"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre grupos de segurança de rede.",
+    "rows": [
+      {
+        "t": "Quando há grupo de segurança na sub-rede e na interface de rede, ambos precisam permitir o tráfego de entrada para que ele chegue à máquina.",
+        "a": true,
+        "e": "A entrada é avaliada primeiro na sub-rede e depois na interface. Qualquer negação nas duas camadas encerra o caminho."
+      },
+      {
+        "t": "Dentro de um grupo de segurança, a avaliação continua depois que uma regra casa com o tráfego.",
+        "a": false,
+        "e": "A primeira regra que casa, por ordem de prioridade, decide e a avaliação para."
+      },
+      {
+        "t": "Por padrão, uma máquina em uma rede virtual pode iniciar conexões de saída para a internet.",
+        "a": true,
+        "e": "A regra padrão de saída permite internet. A entrada da internet é negada por padrão."
+      },
+      {
+        "t": "Um grupo de segurança de aplicativo substitui o grupo de segurança de rede.",
+        "a": false,
+        "e": "Ele não contém regras: serve de origem ou destino nomeado dentro das regras do grupo de segurança de rede."
+      }
+    ],
+    "src": [
+      {
+        "t": "Grupos de segurança de rede",
+        "u": "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-06",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "As máquinas de três redes virtuais emparelhadas precisam se encontrar por nome, sem que ninguém mantenha um servidor DNS e sem registro manual de cada máquina nova.",
+    "stem": "Qual configuração atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Zona privada do Azure DNS ligada às três redes, com registro automático habilitado"
+      },
+      {
+        "k": "B",
+        "t": "Zona pública do Azure DNS com registros A para cada máquina"
+      },
+      {
+        "k": "C",
+        "t": "Servidor DNS personalizado em uma máquina virtual do centro"
+      },
+      {
+        "k": "D",
+        "t": "Arquivo hosts distribuído por script em todas as máquinas"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A zona privada responde dentro das redes ligadas a ela, e o registro automático cria e remove o nome da máquina conforme ela nasce e morre, o que elimina os dois trabalhos manuais citados.",
+      "B": "Zona pública publica nomes na internet e exigiria manter cada registro à mão.",
+      "C": "Funciona e reintroduz exatamente o servidor DNS que o enunciado quer evitar.",
+      "D": "Arquivo hosts não escala e quebra a cada máquina nova."
+    },
+    "src": [
+      {
+        "t": "Zonas privadas do Azure DNS",
+        "u": "https://learn.microsoft.com/azure/dns/private-dns-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-01",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 4,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "case": "Os logs de um Key Vault não aparecem no espaço de trabalho do Log Analytics, embora as métricas do recurso estejam visíveis no Azure Monitor.",
+    "stem": "Qual é a causa mais provável?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Falta uma configuração de diagnóstico no Key Vault encaminhando os logs ao espaço de trabalho"
+      },
+      {
+        "k": "B",
+        "t": "O espaço de trabalho está em outra região e isso impede a ingestão"
+      },
+      {
+        "k": "C",
+        "t": "Falta instalar o Agente do Azure Monitor no Key Vault"
+      },
+      {
+        "k": "D",
+        "t": "A retenção de 93 dias das métricas expirou"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Métrica de plataforma é coletada sozinha; log de recurso não. É a configuração de diagnóstico, definida por recurso, que encaminha o log para espaço de trabalho, conta de armazenamento ou hub de eventos.",
+      "B": "Espaço de trabalho em outra região é suportado, com implicação de custo de saída e de residência, não de ingestão.",
+      "C": "O agente é instalado dentro de máquina virtual. Key Vault é serviço de plataforma e não hospeda agente.",
+      "D": "A retenção de métricas não tem relação com a ausência de logs, e o enunciado diz que as métricas aparecem."
+    },
+    "src": [
+      {
+        "t": "Configurações de diagnóstico",
+        "u": "https://learn.microsoft.com/azure/azure-monitor/essentials/diagnostic-settings"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-02",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 5,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "case": "A auditoria exige dois resultados: aviso em até cinco minutos quando alguém alterar uma regra de grupo de segurança de rede, e consulta a esse histórico por dois anos.",
+    "stem": "Qual combinação atende aos dois requisitos?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Alerta de métrica no grupo de segurança, com retenção padrão do log de atividades"
+      },
+      {
+        "k": "B",
+        "t": "Alerta de log de atividades, mais configuração de diagnóstico exportando o log de atividades com retenção de dois anos"
+      },
+      {
+        "k": "C",
+        "t": "Alerta de pesquisa de log a cada cinco minutos, com retenção padrão do log de atividades"
+      },
+      {
+        "k": "D",
+        "t": "Bloqueio ReadOnly no grupo de segurança e exportação mensal manual"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "São dois mecanismos distintos. O alerta de log de atividades dispara na operação de gravação, e a exportação por configuração de diagnóstico é o que permite guardar além dos 90 dias nativos.",
+      "A": "Alteração de configuração é evento do plano de controle e não produz métrica. E a retenção padrão de 90 dias não cobre dois anos.",
+      "C": "O alerta funcionaria se o log estivesse sendo ingerido, mas a retenção padrão continua em 90 dias e falha no segundo requisito.",
+      "D": "Bloqueio impede a alteração em vez de registrá-la, e o enunciado pede registro e aviso, não proibição."
+    },
+    "src": [
+      {
+        "t": "Alertas de log de atividades",
+        "u": "https://learn.microsoft.com/azure/azure-monitor/alerts/activity-log-alerts"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-03",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 5,
+    "type": "multi",
+    "sec": 110,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "stem": "Um arquivo foi excluído por engano de uma máquina virtual protegida pelo Backup do Azure, e separadamente a diretoria quer poder subir o ambiente inteiro em outra região após um desastre. Quais afirmações são corretas? Escolha as DUAS.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A restauração de arquivo individual é feita pelo Backup do Azure, a partir de um ponto de recuperação do cofre"
+      },
+      {
+        "k": "B",
+        "t": "Subir o ambiente em outra região após desastre é o papel do Azure Site Recovery"
+      },
+      {
+        "k": "C",
+        "t": "O Site Recovery também restaura arquivos individuais excluídos por engano"
+      },
+      {
+        "k": "D",
+        "t": "O cofre dos Serviços de Recuperação pode estar em qualquer região, independente da máquina protegida"
+      },
+      {
+        "k": "E",
+        "t": "A exclusão reversível do cofre retém os dados de backup por 90 dias após a exclusão"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "As duas ferramentas resolvem problemas diferentes: Backup responde por ponto no tempo e restauração granular; Site Recovery responde por replicação contínua e retomada em outra região.",
+      "C": "Site Recovery replica o estado para failover: ele não oferece catálogo de pontos para restaurar um arquivo.",
+      "D": "Para backup de máquina virtual, o cofre precisa estar na mesma região da máquina protegida.",
+      "E": "A exclusão reversível do cofre retém por 14 dias, não 90."
+    },
+    "src": [
+      {
+        "t": "Backup do Azure",
+        "u": "https://learn.microsoft.com/azure/backup/backup-overview"
+      },
+      {
+        "t": "Azure Site Recovery",
+        "u": "https://learn.microsoft.com/azure/site-recovery/site-recovery-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-04",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 4,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "case": "Uma equipe precisa coletar contadores de desempenho e logs de evento de 40 máquinas virtuais em um espaço de trabalho do Log Analytics.",
+    "stem": "O que precisa estar no lugar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Agente do Azure Monitor nas máquinas e uma regra de coleta de dados associada a elas"
+      },
+      {
+        "k": "B",
+        "t": "Configuração de diagnóstico em cada máquina virtual"
+      },
+      {
+        "k": "C",
+        "t": "Apenas o espaço de trabalho, porque a coleta de dentro da máquina é automática"
+      },
+      {
+        "k": "D",
+        "t": "Azure Arc em cada máquina virtual"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O que está dentro do sistema operacional convidado precisa de agente, e o que o agente coleta é descrito por uma regra de coleta de dados associada às máquinas.",
+      "B": "Configuração de diagnóstico encaminha logs da plataforma, não contador de desempenho de dentro do convidado.",
+      "C": "Nada de dentro da máquina chega sozinho: a plataforma só enxerga métricas do hipervisor para fora.",
+      "D": "Arc serve a máquinas fora do Azure. Estas já são máquinas virtuais do Azure."
+    },
+    "src": [
+      {
+        "t": "Agente do Azure Monitor",
+        "u": "https://learn.microsoft.com/azure/azure-monitor/agents/azure-monitor-agent-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-05",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 5,
+    "type": "single",
+    "sec": 105,
+    "tags": [
+      "monitorar-recuperar",
+      "rede-virtual"
+    ],
+    "case": "Uma máquina em uma sub-rede não alcança um serviço na internet. Você quer descobrir se alguma regra está barrando o pacote e, se estiver, qual delas.",
+    "stem": "Qual ferramenta responde isso diretamente?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Verificação de fluxo de IP, no Observador de Rede"
+      },
+      {
+        "k": "B",
+        "t": "Próximo salto, no Observador de Rede"
+      },
+      {
+        "k": "C",
+        "t": "Alerta de métrica sobre bytes de saída da interface"
+      },
+      {
+        "k": "D",
+        "t": "Logs de fluxo do grupo de segurança exportados para uma conta de armazenamento"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A verificação de fluxo de IP recebe origem, destino, porta e protocolo e responde se o tráfego é permitido ou negado, nomeando a regra que decidiu.",
+      "B": "O próximo salto responde por onde o pacote sai, o que ajuda em problema de rota, não de regra.",
+      "C": "Métrica mostra que o tráfego caiu, sem dizer qual regra o barrou.",
+      "D": "Os logs de fluxo registram o que aconteceu e servem a análise posterior; a verificação responde na hora e aponta a regra."
+    },
+    "src": [
+      {
+        "t": "Observador de Rede",
+        "u": "https://learn.microsoft.com/azure/network-watcher/network-watcher-ip-flow-verify-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-06",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 5,
+    "type": "yn",
+    "sec": 115,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre cópia de segurança e recuperação.",
+    "rows": [
+      {
+        "t": "Para proteger uma máquina virtual com o Backup do Azure, o cofre precisa estar na mesma região da máquina.",
+        "a": true,
+        "e": "O cofre dos Serviços de Recuperação protege cargas da própria região."
+      },
+      {
+        "t": "A exclusão reversível do cofre mantém os dados de backup por 14 dias depois da exclusão.",
+        "a": true,
+        "e": "São 14 dias de retenção adicional, pensados para desfazer exclusão maliciosa ou acidental."
+      },
+      {
+        "t": "Uma política de backup define com que frequência o ponto de recuperação é criado e por quanto tempo é mantido.",
+        "a": true,
+        "e": "Frequência e retenção são exatamente as duas dimensões da política."
+      },
+      {
+        "t": "O Azure Site Recovery substitui o Backup do Azure, porque replica continuamente.",
+        "a": false,
+        "e": "Replicação contínua serve a failover regional; ela não guarda catálogo de pontos no tempo para restauração granular."
+      }
+    ],
+    "src": [
+      {
+        "t": "Cofres dos Serviços de Recuperação",
+        "u": "https://learn.microsoft.com/azure/backup/backup-azure-recovery-services-vault-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-09",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "case": "Você criou uma função personalizada que só permite reiniciar máquinas virtuais. A segurança exige que ela só possa ser atribuída nas assinaturas de Produção e de Homologação, e em nenhuma outra.",
+    "stem": "Qual propriedade da definição da função controla isso?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AssignableScopes, listando apenas as duas assinaturas"
+      },
+      {
+        "k": "B",
+        "t": "NotActions, removendo as ações das demais assinaturas"
+      },
+      {
+        "k": "C",
+        "t": "DataActions, limitando as operações ao plano de dados"
+      },
+      {
+        "k": "D",
+        "t": "Atribuir a função em um grupo de gerenciamento acima das duas assinaturas"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "AssignableScopes define onde a função personalizada fica disponível para atribuição. Fora desses escopos ela simplesmente não aparece.",
+      "B": "NotActions subtrai operações da lista de ações. Não tem nenhuma relação com onde a função pode ser atribuída.",
+      "C": "DataActions trata de operações sobre dados, como ler um blob. Não restringe escopo.",
+      "D": "Atribuir no grupo de gerenciamento faz a permissão valer para todas as assinaturas abaixo dele, o contrário do pedido."
+    },
+    "src": [
+      {
+        "t": "Funções personalizadas do Azure",
+        "u": "https://learn.microsoft.com/azure/role-based-access-control/custom-roles"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-10",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "entra-id"
+    ],
+    "case": "Um consultor de uma empresa parceira precisa administrar recursos de um grupo de recursos por três meses. A empresa dele tem o próprio locatário do Entra ID. A segurança não quer gerenciar senha de quem não é funcionário.",
+    "stem": "Qual abordagem atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Criar uma conta de nuvem para ele no seu locatário e atribuir a função no grupo de recursos"
+      },
+      {
+        "k": "B",
+        "t": "Convidá-lo como usuário convidado (B2B) e atribuir a função no grupo de recursos"
+      },
+      {
+        "k": "C",
+        "t": "Gerar uma assinatura de acesso compartilhado com validade de três meses"
+      },
+      {
+        "k": "D",
+        "t": "Sincronizar a conta dele com o Entra Connect"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "No B2B ele entra com a credencial da própria empresa, e você só controla o acesso. Quando ele sair da parceira, a conta de origem é desativada lá e o acesso cai junto.",
+      "A": "Funciona, mas cria exatamente o que a segurança não quer: uma senha de terceiro sob sua gestão.",
+      "C": "Assinatura de acesso compartilhado vale para armazenamento, não para administrar recursos do Azure.",
+      "D": "O Entra Connect sincroniza o AD local da sua empresa. Não traz contas de outra organização."
+    },
+    "src": [
+      {
+        "t": "Colaboração B2B",
+        "u": "https://learn.microsoft.com/entra/external-id/what-is-b2b"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-11",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "case": "A empresa tem 12 assinaturas e cria novas todo trimestre. Uma política que exige marca de centro de custo precisa valer em todas, inclusive nas que ainda vão ser criadas, sem trabalho manual a cada nova assinatura.",
+    "stem": "Onde a política deve ser atribuída?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Em cada assinatura, com um script que roda quando uma assinatura é criada"
+      },
+      {
+        "k": "B",
+        "t": "Em um grupo de gerenciamento que contém as assinaturas, com novas assinaturas criadas sob ele"
+      },
+      {
+        "k": "C",
+        "t": "No grupo de recursos padrão de cada assinatura"
+      },
+      {
+        "k": "D",
+        "t": "No locatário do Entra ID, por meio de acesso condicional"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Atribuições em grupo de gerenciamento são herdadas por tudo que estiver abaixo. Uma assinatura nova colocada sob ele já nasce coberta.",
+      "A": "Resolve, mas é justamente o trabalho manual que o cenário quer evitar, e falha se o script não rodar.",
+      "C": "Grupo de recursos é escopo menor que a assinatura. Recursos fora dele ficariam descobertos.",
+      "D": "Acesso condicional controla login, não as propriedades dos recursos do Azure."
+    },
+    "src": [
+      {
+        "t": "Grupos de gerenciamento",
+        "u": "https://learn.microsoft.com/azure/governance/management-groups/overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-12",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 110,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre marcas (tags) no Azure.",
+    "rows": [
+      {
+        "t": "Um recurso herda automaticamente as marcas do grupo de recursos onde está.",
+        "a": false,
+        "e": "Marcas não são herdadas por padrão. Para isso é preciso uma política com efeito Modify, como a de herdar marca do grupo de recursos."
+      },
+      {
+        "t": "Uma política com efeito Modify pode adicionar a marca do grupo de recursos aos recursos existentes por meio de uma tarefa de correção.",
+        "a": true,
+        "e": "Modify altera recursos novos na criação e, com uma tarefa de correção, também os existentes."
+      },
+      {
+        "t": "A função Colaborador de Marcas permite alterar marcas de um recurso sem dar acesso ao próprio recurso.",
+        "a": true,
+        "e": "É a função feita para isso: gerenciar marcas sem permissão de alterar a configuração do recurso."
+      },
+      {
+        "t": "Marcas aplicadas a um grupo de recursos aparecem automaticamente na fatura de cada recurso dele.",
+        "a": false,
+        "e": "A cobrança usa as marcas do recurso. Marca só no grupo de recursos não chega aos itens da fatura, a não ser que seja herdada."
+      }
+    ],
+    "src": [
+      {
+        "t": "Marcas de recursos",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/tag-resources"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-13",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "multi",
+    "sec": 110,
+    "tags": [
+      "entra-id"
+    ],
+    "stem": "A empresa vai habilitar a redefinição de senha por autoatendimento (SSPR). As contas vêm de um AD DS local sincronizado. Quais afirmações estão corretas? Escolha as DUAS corretas.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A SSPR pode ser habilitada apenas para um grupo selecionado, num piloto"
+      },
+      {
+        "k": "B",
+        "t": "Para a nova senha valer no AD DS local, é preciso habilitar o write-back de senha na sincronização"
+      },
+      {
+        "k": "C",
+        "t": "A política de SSPR configurada para os usuários vale também para as contas de administrador"
+      },
+      {
+        "k": "D",
+        "t": "Usuários podem redefinir a senha sem ter registrado nenhum método de autenticação"
+      },
+      {
+        "k": "E",
+        "t": "A SSPR troca a senha no AD DS local mesmo sem nenhuma ferramenta de sincronização"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "O escopo pode ser Nenhum, Selecionado (um grupo) ou Todos, o que permite começar por um piloto. Em contas sincronizadas, sem write-back a senha nova fica só na nuvem e o login local continua com a antiga.",
+      "C": "Administradores seguem uma política própria, mais rígida, com dois métodos exigidos. A política dos usuários não se aplica a eles.",
+      "D": "Sem método registrado não há como provar identidade. A pessoa é levada a registrar os métodos antes.",
+      "E": "O caminho de volta para o AD local passa pelo Entra Connect ou pelo Cloud Sync com write-back habilitado."
+    },
+    "src": [
+      {
+        "t": "Como a SSPR funciona",
+        "u": "https://learn.microsoft.com/entra/identity/authentication/concept-sspr-howitworks"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-14",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "case": "A diretoria financeira quer ser avisada por e-mail quando o gasto previsto do mês na assinatura de desenvolvimento passar de 80% de um valor definido, e quer que um runbook desligue as máquinas de teste quando o real passar de 100%.",
+    "stem": "O que configurar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Um orçamento no Gerenciamento de Custos, com alertas que acionam um grupo de ações"
+      },
+      {
+        "k": "B",
+        "t": "As recomendações de custo do Azure Advisor"
+      },
+      {
+        "k": "C",
+        "t": "O limite de gastos da assinatura"
+      },
+      {
+        "k": "D",
+        "t": "Uma Azure Policy que nega a criação de recursos acima de um custo"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Orçamento aceita limites sobre o gasto real e o previsto e pode acionar grupo de ações, que dispara e-mail e também runbook ou função.",
+      "B": "O Advisor sugere economias, mas não acompanha um valor definido nem dispara automação.",
+      "C": "O limite de gastos só existe em ofertas como avaliação gratuita e créditos de assinatura, e desativa a assinatura inteira em vez de agir de forma seletiva.",
+      "D": "Policy avalia propriedades de recursos, não o valor gasto."
+    },
+    "src": [
+      {
+        "t": "Criar e gerenciar orçamentos",
+        "u": "https://learn.microsoft.com/azure/cost-management-billing/costs/tutorial-acm-create-budgets"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-15",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 5,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "case": "Uma conta de armazenamento será movida do grupo de recursos RG-Antigo para o RG-Novo, na mesma assinatura. Scripts de automação apontam para o recurso pelo identificador completo.",
+    "stem": "O que acontece com o recurso após a movimentação?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "O identificador do recurso muda e os scripts precisam ser atualizados"
+      },
+      {
+        "k": "B",
+        "t": "O recurso passa para a região do grupo de recursos de destino"
+      },
+      {
+        "k": "C",
+        "t": "O recurso é recriado e fica indisponível durante a cópia dos dados"
+      },
+      {
+        "k": "D",
+        "t": "As marcas do grupo de destino substituem as marcas do recurso"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O identificador contém o nome do grupo de recursos, então muda. Qualquer automação que use o caminho antigo quebra.",
+      "B": "A região do recurso não muda. A região do grupo de recursos guarda só os metadados do grupo.",
+      "C": "A movimentação é uma operação de metadados. O recurso não é recriado e continua no ar.",
+      "D": "Marcas não são herdadas nem substituídas pela movimentação."
+    },
+    "src": [
+      {
+        "t": "Mover recursos",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/move-resource-group-and-subscription"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-08",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "armazenamento-redundancia"
+    ],
+    "case": "Um regulador exige que extratos fiquem guardados por sete anos sem possibilidade de alteração ou exclusão, nem pelo administrador da assinatura.",
+    "stem": "Qual recurso atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Exclusão reversível de blobs com retenção máxima"
+      },
+      {
+        "k": "B",
+        "t": "Bloqueio ReadOnly na conta de armazenamento"
+      },
+      {
+        "k": "C",
+        "t": "Política de retenção baseada em tempo, em armazenamento imutável, no estado bloqueado"
+      },
+      {
+        "k": "D",
+        "t": "Controle de versão de blobs habilitado"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Armazenamento imutável grava no modelo WORM. Com a política bloqueada, ninguém encurta a retenção nem apaga os blobs antes do prazo, nem o administrador.",
+      "A": "A exclusão reversível guarda por no máximo 365 dias e pode ser desligada por quem tem permissão.",
+      "B": "O bloqueio pode ser removido por um Proprietário. Além disso, ele age no plano de gerenciamento e não protege os dados em si.",
+      "D": "Versões podem ser excluídas por quem tem permissão. Não é garantia contra alteração."
+    },
+    "src": [
+      {
+        "t": "Armazenamento imutável",
+        "u": "https://learn.microsoft.com/azure/storage/blobs/immutable-storage-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-09",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "armazenamento-acesso"
+    ],
+    "case": "Toda noite, uma tarefa agendada em um servidor local precisa enviar para um contêiner de blobs só os arquivos novos ou alterados de uma pasta de 2 TB, por linha de comando. O link tem banda suficiente.",
+    "stem": "Qual ferramenta atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AzCopy com o comando sync"
+      },
+      {
+        "k": "B",
+        "t": "Azure Storage Explorer"
+      },
+      {
+        "k": "C",
+        "t": "Azure Data Box"
+      },
+      {
+        "k": "D",
+        "t": "Azure File Sync"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O AzCopy roda em script e o sync compara origem e destino, enviando só a diferença. Encaixa em tarefa agendada.",
+      "B": "É uma interface gráfica para uso manual, não para tarefa noturna.",
+      "C": "Data Box é envio físico de disco, para quando a rede não dá conta. Não serve para sincronia diária.",
+      "D": "File Sync sincroniza servidor de arquivos com compartilhamento do Azure Files, não com contêiner de blobs."
+    },
+    "src": [
+      {
+        "t": "Introdução ao AzCopy",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-use-azcopy-v10"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-10",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "yn",
+    "sec": 120,
+    "tags": [
+      "armazenamento-acesso"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre chaves e assinaturas de acesso compartilhado (SAS).",
+    "rows": [
+      {
+        "t": "Regenerar a chave 1 da conta invalida as SAS de conta que foram assinadas com a chave 1.",
+        "a": true,
+        "e": "A SAS de conta e a de serviço são assinadas com a chave. Trocar a chave invalida tudo que foi assinado com ela."
+      },
+      {
+        "t": "Uma SAS de delegação de usuário é assinada com credenciais do Entra ID, e não com a chave da conta.",
+        "a": true,
+        "e": "Ela usa uma chave de delegação obtida com identidade do Entra ID. É a forma recomendada."
+      },
+      {
+        "t": "Desabilitar o acesso por chave compartilhada também bloqueia as SAS de delegação de usuário.",
+        "a": false,
+        "e": "Só bloqueia o que depende da chave. A SAS de delegação continua funcionando, por isso combina com essa configuração."
+      },
+      {
+        "t": "Uma política de acesso armazenada pode ser associada a uma SAS de conta.",
+        "a": false,
+        "e": "Política armazenada vale só para SAS de serviço, criada no nível do contêiner, fila, tabela ou compartilhamento."
+      }
+    ],
+    "src": [
+      {
+        "t": "Visão geral de SAS",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-sas-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-11",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "armazenamento-acesso",
+      "rede-virtual"
+    ],
+    "case": "Servidores no escritório, conectados ao Azure por VPN site a site, precisam acessar uma conta de armazenamento por endereço privado. O acesso público da conta deve ficar desligado.",
+    "stem": "O que configurar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Um ponto de extremidade de serviço na sub-rede do gateway"
+      },
+      {
+        "k": "B",
+        "t": "Um ponto de extremidade privado na rede virtual, com resolução de DNS para o endereço privado"
+      },
+      {
+        "k": "C",
+        "t": "O IP público do escritório no firewall da conta"
+      },
+      {
+        "k": "D",
+        "t": "Uma SAS de delegação de usuário para os servidores"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "O ponto de extremidade privado dá à conta um IP da rede virtual, alcançável pela VPN. A resolução de nome precisa apontar para esse IP, ou o tráfego tenta o endpoint público.",
+      "A": "Ponto de extremidade de serviço vale para tráfego que sai da própria sub-rede no Azure. Não se estende a quem chega pela VPN.",
+      "C": "Liberar o IP do escritório mantém o acesso público ligado e o tráfego pela internet.",
+      "D": "SAS é autorização, não caminho de rede. Com acesso público desligado, ela sozinha não chega."
+    },
+    "src": [
+      {
+        "t": "Pontos de extremidade privados no armazenamento",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-private-endpoints"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-12",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "armazenamento-acesso",
+      "entra-id"
+    ],
+    "case": "Um compartilhamento do Azure Files já usa autenticação do AD DS local. Usuários do domínio, em máquinas do domínio, precisam ler e gravar arquivos pelo SMB.",
+    "stem": "Qual função atribuir no nível do compartilhamento?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Colaborador da Conta de Armazenamento"
+      },
+      {
+        "k": "B",
+        "t": "Colaborador de Compartilhamento SMB de Dados de Arquivo de Armazenamento"
+      },
+      {
+        "k": "C",
+        "t": "Leitor na conta de armazenamento"
+      },
+      {
+        "k": "D",
+        "t": "Colaborador de Dados de Blob de Armazenamento"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "É a função de plano de dados que dá leitura, gravação e exclusão no compartilhamento pelo SMB. As permissões NTFS refinam depois, por pasta e arquivo.",
+      "A": "Gerencia a conta, no plano de gerenciamento. Não dá acesso aos arquivos pelo SMB.",
+      "C": "Leitor vê a configuração do recurso, não os arquivos.",
+      "D": "É uma função de blobs, sem efeito no Azure Files."
+    },
+    "src": [
+      {
+        "t": "Permissões no nível do compartilhamento",
+        "u": "https://learn.microsoft.com/azure/storage/files/storage-files-identity-assign-share-level-permissions"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-13",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "multi",
+    "sec": 110,
+    "tags": [
+      "armazenamento-redundancia"
+    ],
+    "stem": "Você vai configurar a replicação de objeto de blobs de uma conta de origem para uma conta de destino. Quais pré-requisitos existem? Escolha as DUAS corretas.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Controle de versão de blobs habilitado na origem e no destino"
+      },
+      {
+        "k": "B",
+        "t": "Feed de alterações habilitado na conta de origem"
+      },
+      {
+        "k": "C",
+        "t": "As duas contas na mesma região"
+      },
+      {
+        "k": "D",
+        "t": "Namespace hierárquico habilitado nas duas contas"
+      },
+      {
+        "k": "E",
+        "t": "Uma SAS do contêiner de destino gravada na regra"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "A replicação lê o feed de alterações da origem e trabalha com versões nas duas pontas. Sem esses dois recursos a regra não é criada.",
+      "C": "A replicação funciona entre regiões, e esse é um dos principais usos dela.",
+      "D": "Contas com namespace hierárquico não são suportadas pela replicação de objeto.",
+      "E": "A replicação usa a própria plataforma, não uma SAS informada pelo usuário."
+    },
+    "src": [
+      {
+        "t": "Replicação de objeto",
+        "u": "https://learn.microsoft.com/azure/storage/blobs/object-replication-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-09",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "case": "Um conjunto de dimensionamento adiciona uma instância quando a CPU média passa de 70% e remove uma quando cai abaixo de 65%. O número de instâncias fica subindo e descendo a cada poucos minutos.",
+    "stem": "Qual é a causa e a correção?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Os limites estão próximos demais. Aumentar a distância entre eles, por exemplo remover abaixo de 40%"
+      },
+      {
+        "k": "B",
+        "t": "O máximo de instâncias está baixo. Aumentar o máximo"
+      },
+      {
+        "k": "C",
+        "t": "O conjunto não usa zonas. Distribuir as instâncias em zonas"
+      },
+      {
+        "k": "D",
+        "t": "A métrica está errada. Trocar a CPU pela memória"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Ao remover uma instância, a carga das restantes sobe e passa dos 70%, o que dispara outra adição. A margem entre os limites precisa absorver o efeito da própria mudança.",
+      "B": "O problema não é teto, é oscilação. Um máximo maior não muda o vaivém.",
+      "C": "Zonas tratam de disponibilidade, não de regra de escala.",
+      "D": "Qualquer métrica oscila do mesmo jeito se os limites forem próximos."
+    },
+    "src": [
+      {
+        "t": "Boas práticas de dimensionamento automático",
+        "u": "https://learn.microsoft.com/azure/azure-monitor/autoscale/autoscale-best-practices"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-10",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 85,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "case": "Você quer mudar uma máquina virtual em execução para um tamanho maior, mas o tamanho desejado não aparece na lista de opções do portal.",
+    "stem": "O que fazer primeiro?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Parar e desalocar a máquina e procurar o tamanho de novo"
+      },
+      {
+        "k": "B",
+        "t": "Reimplantar a máquina pelo comando Redeploy"
+      },
+      {
+        "k": "C",
+        "t": "Mover a máquina para outro grupo de recursos"
+      },
+      {
+        "k": "D",
+        "t": "Excluir a máquina e recriá-la a partir de um instantâneo"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Ligada, a máquina só lista os tamanhos do cluster de hardware onde está. Desalocada, ela pode ir para outro cluster e todos os tamanhos da região aparecem.",
+      "B": "Reimplantar move para outro host para corrigir problemas, mas não é o caminho para liberar tamanhos.",
+      "C": "Grupo de recursos é organização lógica. Não muda o hardware disponível.",
+      "D": "Funciona como último recurso, mas é destrutivo e desnecessário antes de tentar a desalocação."
+    },
+    "src": [
+      {
+        "t": "Redimensionar uma VM",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/sizes/resize-vm"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-11",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "app-containers"
+    ],
+    "case": "Um aplicativo no App Service usa um slot de homologação. Na troca de slots, a cadeia de conexão do banco de homologação não pode ir para produção, e a de produção não pode ir para homologação.",
+    "stem": "Como configurar a cadeia de conexão?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Marcá-la como configuração de slot de implantação em cada slot"
+      },
+      {
+        "k": "B",
+        "t": "Defini-la como configuração comum do aplicativo nos dois slots"
+      },
+      {
+        "k": "C",
+        "t": "Gravá-la no arquivo de configuração publicado com o código"
+      },
+      {
+        "k": "D",
+        "t": "Criar dois aplicativos separados em vez de slots"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Configuração marcada como de slot fica presa ao slot e não acompanha o código na troca. É a forma de cada ambiente manter o próprio banco.",
+      "B": "Configurações comuns viajam com a troca. Homologação iria para produção.",
+      "C": "Ir no código faz a cadeia acompanhar o pacote, exatamente o que não pode acontecer, e ainda expõe o segredo.",
+      "D": "Resolve, mas perde a troca sem indisponibilidade, que é o motivo de usar slots."
+    },
+    "src": [
+      {
+        "t": "Slots de implantação",
+        "u": "https://learn.microsoft.com/azure/app-service/deploy-staging-slots"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-12",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "app-containers"
+    ],
+    "case": "Antes de aplicar um arquivo Bicep alterado em produção, a equipe quer ver quais recursos serão criados, alterados ou excluídos, sem mudar nada.",
+    "stem": "Qual operação usar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A operação what-if da implantação"
+      },
+      {
+        "k": "B",
+        "t": "A validação da implantação"
+      },
+      {
+        "k": "C",
+        "t": "A implantação em modo Completo"
+      },
+      {
+        "k": "D",
+        "t": "A exportação do modelo do grupo de recursos"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O what-if compara o modelo com o estado atual e lista cada mudança prevista, sem aplicar nada.",
+      "B": "A validação verifica se o modelo é aceito, mas não mostra a diferença em relação ao que existe.",
+      "C": "O modo Completo aplica as mudanças e ainda exclui o que não está no modelo. É o oposto de uma prévia.",
+      "D": "Exportar mostra o estado atual, não o que vai mudar."
+    },
+    "src": [
+      {
+        "t": "Operação what-if",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/templates/deploy-what-if"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-13",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 110,
+    "tags": [
+      "app-containers"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre contêineres no Azure.",
+    "rows": [
+      {
+        "t": "Contêineres de um mesmo grupo de contêineres do ACI compartilham ciclo de vida, rede e volumes.",
+        "a": true,
+        "e": "O grupo é a unidade do ACI, como um pod. Os contêineres sobem juntos, compartilham o IP e podem montar os mesmos volumes."
+      },
+      {
+        "t": "O Azure Container Apps pode escalar até zero réplicas quando não há tráfego.",
+        "a": true,
+        "e": "A escala é por regras, inclusive por requisição HTTP ou fila, e o mínimo pode ser zero."
+      },
+      {
+        "t": "O ACI oferece dimensionamento horizontal automático nativo, por regra de métrica.",
+        "a": false,
+        "e": "O ACI roda grupos isolados. Para escala automática, o caminho é o Container Apps ou o AKS."
+      },
+      {
+        "t": "O ACI cobra pelos recursos alocados enquanto o grupo de contêineres está em execução.",
+        "a": true,
+        "e": "A cobrança é por segundo de vCPU e memória alocadas, o que serve bem para tarefas curtas."
+      }
+    ],
+    "src": [
+      {
+        "t": "Azure Container Instances",
+        "u": "https://learn.microsoft.com/azure/container-instances/container-instances-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-14",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "order",
+    "sec": 100,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "stem": "Os discos de uma máquina virtual existente devem passar a usar chave gerenciada pelo cliente. Ordene os passos do PRIMEIRO ao ÚLTIMO.",
+    "items": [
+      {
+        "t": "Criar um Key Vault com proteção contra limpeza e gerar a chave"
+      },
+      {
+        "t": "Criar o conjunto de criptografia de disco apontando para a chave"
+      },
+      {
+        "t": "Conceder à identidade do conjunto acesso à chave no cofre"
+      },
+      {
+        "t": "Desalocar a máquina e associar os discos ao conjunto"
+      }
+    ],
+    "e": "O conjunto de criptografia de disco referencia uma chave, então ela tem de existir antes, num cofre com proteção contra limpeza, que é obrigatória. O conjunto ganha uma identidade, e só depois dela receber acesso à chave os discos conseguem usar a criptografia. A troca da chave de um disco em uso exige a máquina desalocada.",
+    "src": [
+      {
+        "t": "Criptografia de disco do lado do servidor",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/disk-encryption"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-15",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 85,
+    "tags": [
+      "app-containers"
+    ],
+    "case": "Um aplicativo no App Service, num plano da camada Básica, precisa ganhar instâncias automaticamente quando a CPU sobe e perdê-las quando cai.",
+    "stem": "Qual é a mudança mínima?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Mudar o plano para a camada Standard ou superior e criar a regra de escala"
+      },
+      {
+        "k": "B",
+        "t": "Aumentar o tamanho da instância dentro da camada Básica"
+      },
+      {
+        "k": "C",
+        "t": "Habilitar a opção Sempre Ativo"
+      },
+      {
+        "k": "D",
+        "t": "Criar um slot de implantação"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A camada Básica só permite escala manual. Escala automática por regra começa na Standard.",
+      "B": "Instância maior é escala vertical e não muda com a carga.",
+      "C": "Sempre Ativo evita que o aplicativo descarregue por inatividade. Não adiciona instâncias.",
+      "D": "Slot serve para implantação, não para escala."
+    },
+    "src": [
+      {
+        "t": "Escalar um aplicativo no App Service",
+        "u": "https://learn.microsoft.com/azure/app-service/manage-scale-up"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-07",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 85,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "A criação de um gateway de VPN falha. A rede virtual tem uma sub-rede /27 vazia chamada sn-gateway, criada para ele.",
+    "stem": "Qual é a causa?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A sub-rede precisa se chamar GatewaySubnet"
+      },
+      {
+        "k": "B",
+        "t": "A sub-rede precisa ser /29"
+      },
+      {
+        "k": "C",
+        "t": "A sub-rede precisa de um grupo de segurança de rede"
+      },
+      {
+        "k": "D",
+        "t": "O gateway precisa de uma rede virtual exclusiva"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O gateway só é implantado numa sub-rede com o nome exato GatewaySubnet. O tamanho /27 é o recomendado.",
+      "B": "/29 é pequeno demais para a maioria das configurações. O recomendado é /27 ou maior.",
+      "C": "Aplicar grupo de segurança na GatewaySubnet não é suportado e pode quebrar o gateway.",
+      "D": "O gateway fica na mesma rede virtual das cargas, numa sub-rede dedicada."
+    },
+    "src": [
+      {
+        "t": "Configurações do gateway de VPN",
+        "u": "https://learn.microsoft.com/azure/vpn-gateway/vpn-gateway-about-vpn-gateway-settings"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-08",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "Uma rede hub tem um gateway de VPN para o escritório. Três redes spoke estão emparelhadas com o hub e precisam alcançar o escritório sem gateway próprio.",
+    "stem": "Qual configuração do emparelhamento atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "No hub, permitir trânsito de gateway. Em cada spoke, usar gateways remotos"
+      },
+      {
+        "k": "B",
+        "t": "Em cada spoke, permitir trânsito de gateway. No hub, usar gateways remotos"
+      },
+      {
+        "k": "C",
+        "t": "Criar uma rota definida pelo usuário em cada spoke apontando para o hub"
+      },
+      {
+        "k": "D",
+        "t": "Emparelhar as spokes entre si"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Quem tem o gateway permite o trânsito, e quem não tem usa o gateway remoto. Assim as spokes compartilham a VPN do hub.",
+      "B": "A direção está invertida. As spokes não têm gateway para oferecer.",
+      "C": "Rota sozinha não basta: sem o trânsito de gateway no emparelhamento, o tráfego não usa o gateway do hub.",
+      "D": "Emparelhar spokes entre si não as conecta ao escritório."
+    },
+    "src": [
+      {
+        "t": "Emparelhamento de redes virtuais",
+        "u": "https://learn.microsoft.com/azure/virtual-network/virtual-network-peering-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-09",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "yn",
+    "sec": 120,
+    "tags": [
+      "rede-virtual"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre grupos de segurança de rede (NSG) e grupos de segurança de aplicativo (ASG).",
+    "rows": [
+      {
+        "t": "Um ASG pode ser usado como origem ou destino em uma regra de NSG.",
+        "a": true,
+        "e": "É para isso que ele existe: escrever regras por função da máquina, como web ou banco, em vez de por endereço IP."
+      },
+      {
+        "t": "Interfaces de redes virtuais diferentes podem fazer parte do mesmo ASG.",
+        "a": false,
+        "e": "Todas as interfaces de um ASG precisam estar na mesma rede virtual."
+      },
+      {
+        "t": "Uma regra com prioridade 100 é avaliada antes de uma regra com prioridade 200.",
+        "a": true,
+        "e": "Número menor tem prioridade maior. A primeira regra que combinar decide."
+      },
+      {
+        "t": "A regra padrão AllowVnetInBound pode ser excluída do NSG.",
+        "a": false,
+        "e": "Regras padrão não podem ser excluídas. Para anulá-las, crie uma regra de prioridade maior."
+      }
+    ],
+    "src": [
+      {
+        "t": "Grupos de segurança de aplicativo",
+        "u": "https://learn.microsoft.com/azure/virtual-network/application-security-groups"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-10",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "Administradores precisam acessar por RDP e SSH máquinas sem IP público, pelo navegador, sem instalar VPN e sem abrir a porta 3389 para a internet.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Bastion, numa sub-rede chamada AzureBastionSubnet"
+      },
+      {
+        "k": "B",
+        "t": "Acesso just-in-time do Defender for Cloud"
+      },
+      {
+        "k": "C",
+        "t": "Gateway da NAT na sub-rede das máquinas"
+      },
+      {
+        "k": "D",
+        "t": "Regra NAT de entrada num balanceador de carga público"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O Bastion recebe a sessão pelo portal em HTTPS e fala com as máquinas pelo IP privado. Exige uma sub-rede dedicada com esse nome.",
+      "B": "O just-in-time abre a porta por um tempo, mas ainda exige um caminho público até a máquina.",
+      "C": "NAT é só para saída. Não recebe conexão de entrada.",
+      "D": "Expõe a porta de administração na internet, o que o cenário proíbe."
+    },
+    "src": [
+      {
+        "t": "Azure Bastion",
+        "u": "https://learn.microsoft.com/azure/bastion/bastion-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-11",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "Vinte máquinas numa sub-rede chamam uma API externa que só libera IPs cadastrados. Em pico, aparecem falhas por esgotamento de portas de SNAT.",
+    "stem": "Qual solução resolve as duas questões?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Gateway da NAT associado à sub-rede, com IP público estático"
+      },
+      {
+        "k": "B",
+        "t": "Um IP público em cada máquina"
+      },
+      {
+        "k": "C",
+        "t": "Azure Bastion na rede virtual"
+      },
+      {
+        "k": "D",
+        "t": "Um ponto de extremidade privado para a API"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Toda a saída da sub-rede passa a usar o IP fixo do gateway, um só endereço para cadastrar, e o gateway oferece muito mais portas de SNAT.",
+      "B": "Seriam vinte endereços para cadastrar, e qualquer máquina nova exigiria outro cadastro.",
+      "C": "O Bastion é para acesso administrativo de entrada, não para saída.",
+      "D": "Ponto de extremidade privado vale para serviços que oferecem Private Link, não para uma API qualquer na internet."
+    },
+    "src": [
+      {
+        "t": "Gateway da NAT",
+        "u": "https://learn.microsoft.com/azure/nat-gateway/nat-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-12",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "multi",
+    "sec": 110,
+    "tags": [
+      "rede-virtual"
+    ],
+    "stem": "Sobre zonas privadas do Azure DNS, quais afirmações estão corretas? Escolha as DUAS corretas.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Para resolver nomes da zona, a rede virtual precisa de um vínculo com ela"
+      },
+      {
+        "k": "B",
+        "t": "Com o registro automático ligado no vínculo, as máquinas da rede ganham registros na zona"
+      },
+      {
+        "k": "C",
+        "t": "Uma zona privada pode ser resolvida a partir da internet"
+      },
+      {
+        "k": "D",
+        "t": "Uma rede virtual pode ter registro automático em várias zonas privadas ao mesmo tempo"
+      },
+      {
+        "k": "E",
+        "t": "Zonas privadas exigem um servidor DNS próprio na rede virtual"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "A rede só enxerga a zona por meio do vínculo, e o registro automático cria e remove os registros das máquinas sozinho.",
+      "C": "Zona privada só responde às redes vinculadas.",
+      "D": "Cada rede virtual pode ter registro automático em apenas uma zona privada, embora possa resolver várias.",
+      "E": "O DNS fornecido pelo Azure já resolve zonas privadas vinculadas."
+    },
+    "src": [
+      {
+        "t": "Zonas privadas do Azure DNS",
+        "u": "https://learn.microsoft.com/azure/dns/private-dns-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-07",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "case": "Máquinas virtuais críticas precisam voltar a funcionar em outra região em poucos minutos se a região principal cair, com perda de dados de poucos minutos.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Site Recovery com replicação para a região secundária"
+      },
+      {
+        "k": "B",
+        "t": "Azure Backup com restauração entre regiões"
+      },
+      {
+        "k": "C",
+        "t": "Redundância geográfica nos discos gerenciados"
+      },
+      {
+        "k": "D",
+        "t": "Instantâneos diários dos discos copiados para outra região"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O Site Recovery replica continuamente e faz failover orquestrado, com recuperação em minutos e pontos de recuperação frequentes.",
+      "B": "Backup tem pontos diários ou em poucas horas, e restaurar leva muito mais que minutos.",
+      "C": "Discos gerenciados não oferecem redundância geográfica. Os tipos são LRS ou ZRS.",
+      "D": "Perda de até um dia e restauração manual. Não atende nenhum dos dois requisitos."
+    },
+    "src": [
+      {
+        "t": "Replicação de VMs com Site Recovery",
+        "u": "https://learn.microsoft.com/azure/site-recovery/azure-to-azure-tutorial-enable-replication"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-08",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "case": "Toda noite, das 22h às 23h, uma janela de manutenção gera dezenas de alertas. A equipe quer parar de ser notificada nesse horário sem desligar as regras de alerta.",
+    "stem": "O que configurar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma regra de processamento de alertas que suprime as notificações nesse horário"
+      },
+      {
+        "k": "B",
+        "t": "Desabilitar as regras às 22h e reabilitar às 23h com um runbook"
+      },
+      {
+        "k": "C",
+        "t": "Aumentar os limites das regras"
+      },
+      {
+        "k": "D",
+        "t": "Excluir o grupo de ações e recriá-lo depois"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A regra de processamento atua sobre alertas já disparados e pode suprimir ações num agendamento recorrente. As regras continuam avaliando e registrando.",
+      "B": "Funciona, mas é frágil e perde os registros do período.",
+      "C": "Mudaria o comportamento o dia inteiro, não só na janela.",
+      "D": "Trabalhoso, arriscado e afeta todas as regras que usam o grupo."
+    },
+    "src": [
+      {
+        "t": "Regras de processamento de alertas",
+        "u": "https://learn.microsoft.com/azure/azure-monitor/alerts/alerts-processing-rules"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-09",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 5,
+    "type": "single",
+    "sec": 95,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "case": "Um operador interrompeu a proteção de uma máquina virtual e escolheu excluir os dados de backup. Dez dias depois, descobriu-se que era a máquina errada. O cofre usa as configurações padrão de segurança.",
+    "stem": "O que é possível fazer?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Desfazer a exclusão, porque a exclusão reversível guarda os dados por 14 dias"
+      },
+      {
+        "k": "B",
+        "t": "Nada, porque a exclusão dos dados de backup é imediata"
+      },
+      {
+        "k": "C",
+        "t": "Abrir chamado no suporte para recuperar os dados"
+      },
+      {
+        "k": "D",
+        "t": "Restaurar a partir do backup do próprio cofre"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Por padrão, dados excluídos ficam em estado de exclusão reversível por mais 14 dias, sem custo, e podem ser recuperados. Aos dez dias ainda dá tempo.",
+      "B": "Com a exclusão reversível ligada, que é o padrão, a exclusão não é imediata.",
+      "C": "A recuperação está ao alcance do administrador. O suporte não tem outro caminho.",
+      "D": "O cofre não tem backup de si mesmo. A proteção é a exclusão reversível."
+    },
+    "src": [
+      {
+        "t": "Exclusão reversível no Azure Backup",
+        "u": "https://learn.microsoft.com/azure/backup/backup-azure-security-feature-cloud"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-10",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 4,
+    "type": "order",
+    "sec": 90,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "stem": "Você quer as 10 máquinas com mais eventos de erro na última hora, no Log Analytics. Ordene os trechos da consulta KQL do PRIMEIRO ao ÚLTIMO.",
+    "items": [
+      {
+        "t": "Event"
+      },
+      {
+        "t": "| where TimeGenerated > ago(1h) and EventLevelName == \"Error\""
+      },
+      {
+        "t": "| summarize Erros = count() by Computer"
+      },
+      {
+        "t": "| top 10 by Erros"
+      }
+    ],
+    "e": "KQL começa pela tabela e cada linha recebe o resultado da anterior. Filtrar cedo reduz o volume, agregar transforma eventos em contagem por máquina, e só então dá para ordenar e cortar pela contagem. Colocar o top antes do summarize pegaria 10 eventos, não 10 máquinas.",
+    "src": [
+      {
+        "t": "Visão geral do KQL",
+        "u": "https://learn.microsoft.com/kusto/query/"
+      }
+    ]
+  }
+]

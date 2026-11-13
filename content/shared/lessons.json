@@ -1,0 +1,63 @@
+[
+  {
+    "id": "l-x-shared",
+    "exam": "both",
+    "doms": {
+      "az900": "d1",
+      "clf": "d2"
+    },
+    "dom": "d1",
+    "concept": "shared-responsibility",
+    "secs": 76,
+    "title": "Responsabilidade compartilhada (vale nas duas nuvens)",
+    "slides": [
+      {
+        "k": "gancho",
+        "emoji": "⚖",
+        "h": "O conceito que aparece nas duas provas",
+        "p": "Azure e AWS cobram a mesma ideia com nomes diferentes."
+      },
+      {
+        "k": "analogia",
+        "emoji": "🏠",
+        "h": "Prédio alugado",
+        "p": "O provedor cuida da estrutura, da fiação e da portaria do prédio. Você cuida do que há dentro do seu apartamento e de quem recebe a chave."
+      },
+      {
+        "k": "diagrama",
+        "diagram": "shared",
+        "h": "A linha se move",
+        "p": "Quanto mais gerenciado o serviço, mais sobe a parte do provedor."
+      },
+      {
+        "k": "pegadinha",
+        "emoji": "🚨",
+        "h": "O que NUNCA é do provedor",
+        "gotcha": "Seus dados, a classificação deles, suas identidades e a configuração de acesso são sempre seus, em IaaS, PaaS ou SaaS. Bucket público por engano é culpa sua, não da AWS. Patch do sistema operacional: em VM ou EC2 é seu; em serviço gerenciado como App Service ou RDS, o provedor aplica, mas você ainda responde pelos usuários e pelas regras de rede."
+      },
+      {
+        "k": "quiz"
+      }
+    ],
+    "quiz": [
+      {
+        "q": "Em um banco gerenciado (RDS ou Azure SQL), quem aplica patch no sistema operacional?",
+        "a": [
+          "O provedor",
+          "Você"
+        ],
+        "c": 0,
+        "e": "Em serviço gerenciado o provedor cuida de SO e engine. Você cuida de usuários, rede e dados."
+      },
+      {
+        "q": "Um bucket S3 ficou público por configuração errada. De quem é a responsabilidade?",
+        "a": [
+          "Sua",
+          "Da AWS"
+        ],
+        "c": 0,
+        "e": "Configuração de acesso e dados são sempre do cliente, em qualquer modelo."
+      }
+    ]
+  }
+]
