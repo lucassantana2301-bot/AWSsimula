@@ -4,8 +4,10 @@
 #   docker build --target api -t cloudquest-api .
 # Tudo roda como usuário sem privilégio e com sistema de arquivos só leitura.
 
-ARG NODE_IMAGE=node:22-alpine
-ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.27-alpine
+# Fixadas por digest: a tag pode ser repontada (foi o que aconteceu com o trivy-action em
+# 03/2026); o digest não. O Dependabot (ecossistema docker) abre PR quando sai um novo.
+ARG NODE_IMAGE=node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+ARG NGINX_IMAGE=nginxinc/nginx-unprivileged:1.27-alpine@sha256:65e3e85dbaed8ba248841d9d58a899b6197106c23cb0ff1a132b7bfe0547e4c0
 
 # ---------- dependências (cache separado do código) ----------
 FROM ${NODE_IMAGE} AS deps
@@ -31,6 +33,10 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
 # ---------- imagem da API ----------
 FROM ${NODE_IMAGE} AS api
 ENV NODE_ENV=production PORT=3000
+# Em execução a API só precisa do node. npm, npx e corepack vêm na imagem base e traziam
+# 10 CVEs HIGH (brace-expansion, pacote, sigstore, ip-address…) que o Trivy barrou.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+      /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
 WORKDIR /app
 COPY --from=api-deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /src/build-api/server.mjs ./server.mjs
@@ -43,6 +49,11 @@ CMD ["node", "server.mjs"]
 
 # ---------- imagem do site ----------
 FROM ${NGINX_IMAGE} AS web
+# Correções de segurança do Alpine sobre a base fixada (o Trivy barrou 68 CVEs HIGH/CRITICAL em
+# libssl3, libcrypto3, c-ares…). Precisa de root só para o apk; o nginx volta a rodar como 101.
+USER root
+RUN apk upgrade --no-cache && rm -rf /var/cache/apk/*
+USER 101
 ENV API_UPSTREAM=http://api:3000
 # só ${API_UPSTREAM} é substituído; as variáveis do nginx ($uri) ficam intactas
 ENV NGINX_ENVSUBST_FILTER=API_UPSTREAM

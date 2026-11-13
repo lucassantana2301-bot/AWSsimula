@@ -10,11 +10,15 @@
  * - só GET e HEAD; o resto recebe 405;
  * - SIGTERM fecha o servidor e espera as requisições em andamento, como o
  *   Kubernetes espera ao trocar um pod;
- * - erro inesperado vira 500 sem pilha no corpo (a pilha vai para o log).
+ * - erro inesperado vira 500 sem pilha no corpo (a pilha vai para o log);
+ * - limite de taxa por cliente nas rotas /api (server/limite.ts). Atrás do nginx o IP vem de
+ *   X-Real-IP, que o nginx sobrescreve; só é lido com TRUST_PROXY=1, senão um cliente falaria
+ *   direto com a API e escolheria o próprio "IP".
  */
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { GET as imagemResultado } from "../api/og";
 import { GET as paginaResultado } from "../api/r";
+import { criarLimite, ipDoCliente, respostaLimite } from "./limite";
 
 type Handler = (req: Request) => Response | Promise<Response>;
 
@@ -30,8 +34,18 @@ export function origemPublica(valor: string | undefined): string {
   return u.origin;
 }
 
+export type Limite = ReturnType<typeof criarLimite>;
+
+/** 30 de rajada e 1 por segundo por cliente; healthz fica de fora (as sondas do Kubernetes). */
+export const limitePadrao = (): Limite => criarLimite({ capacidade: 30, porSegundo: 1 });
+
 /** Resolve uma requisição já separada em método e caminho. Pura o bastante para testar sem rede. */
-export async function responder(metodo: string, caminho: string, origem: string): Promise<Response> {
+export async function responder(
+  metodo: string,
+  caminho: string,
+  origem: string,
+  cliente?: { id: string; limite: Limite },
+): Promise<Response> {
   if (metodo !== "GET" && metodo !== "HEAD")
     return new Response("Método não permitido", {
       status: 405,
@@ -43,6 +57,10 @@ export async function responder(metodo: string, caminho: string, origem: string)
   if (url.pathname === "/healthz")
     return new Response("ok", { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
   const handler = ROTAS[url.pathname];
+  if (handler && cliente) {
+    const v = cliente.limite(cliente.id);
+    if (!v.permitido) return respostaLimite(v);
+  }
   if (!handler) return new Response("Não encontrado", { status: 404, headers: { "Content-Type": "text/plain; charset=utf-8" } });
   return handler(new Request(url, { method: "GET" }));
 }
@@ -56,11 +74,19 @@ async function escrever(res: ServerResponse, resposta: Response, cabeca: boolean
   res.end(corpo ?? undefined);
 }
 
-export function criarServidor(origem: string): Server {
+export function criarServidor(origem: string, opcoes: { confiarProxy?: boolean; limite?: Limite } = {}): Server {
+  const limite = opcoes.limite ?? limitePadrao();
+  const confiar = opcoes.confiarProxy ?? false;
   const servidor = createServer((req: IncomingMessage, res: ServerResponse) => {
     const inicio = performance.now();
     const metodo = req.method ?? "GET";
-    responder(metodo, req.url ?? "/", origem)
+    const cabecalhos = new Headers();
+    for (const nome of ["x-real-ip", "x-forwarded-for"]) {
+      const v = req.headers[nome];
+      if (typeof v === "string") cabecalhos.set(nome, v);
+    }
+    const id = ipDoCliente(cabecalhos, req.socket.remoteAddress, confiar);
+    responder(metodo, req.url ?? "/", origem, { id, limite })
       .then((r) => escrever(res, r, metodo === "HEAD"))
       .catch((e: unknown) => {
         console.error(
@@ -91,7 +117,7 @@ export function criarServidor(origem: string): Server {
 if (process.argv[1] && /server\.(m?js|ts)$/.test(process.argv[1])) {
   const porta = Number(process.env["PORT"] ?? 3000);
   const origem = origemPublica(process.env["PUBLIC_ORIGIN"]);
-  const servidor = criarServidor(origem);
+  const servidor = criarServidor(origem, { confiarProxy: process.env["TRUST_PROXY"] === "1" });
   servidor.listen(porta, () => {
     console.log(JSON.stringify({ nivel: "info", msg: "api no ar", porta, origem }));
   });

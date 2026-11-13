@@ -9,6 +9,8 @@ services:
     image: cloudquest-api:local
     environment:
       PUBLIC_ORIGIN: http://localhost:8080
+      # a API só recebe tráfego do nginx (sem porta publicada): pode confiar no X-Real-IP
+      TRUST_PROXY: "1"
     read_only: true
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]

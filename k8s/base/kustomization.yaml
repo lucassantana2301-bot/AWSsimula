@@ -11,3 +11,5 @@ configMapGenerator:
   - name: cloudquest-config
     literals:
       - PUBLIC_ORIGIN=http://localhost:8080
+      # a NetworkPolicy só deixa o web falar com a API: o X-Real-IP do nginx é confiável
+      - TRUST_PROXY=1

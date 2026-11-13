@@ -1,0 +1,27 @@
+name: Monitor da produção
+
+# Teste sintético a cada 6 h (~1 min por execução, ~120 min/mês dos 2.000 gratuitos).
+# Falhou: o GitHub avisa por e-mail quem é dono do repositório (notificação padrão de
+# workflow com falha).
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  producao:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/monitor-producao.sh
+          sparse-checkout-cone-mode: false
+      - run: bash scripts/monitor-producao.sh https://awssimula.vercel.app

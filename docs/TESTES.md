@@ -17,7 +17,9 @@
 Os instantâneos ficam em `tests/e2e/visual.spec.ts-snapshots/` e são gerados no Linux. Relógio fixo,
 `Math.random` com semente e animações desligadas deixam a captura determinística; o relógio do
 simulado fica mascarado. Mudou o visual de propósito: `npm run test:visual -- --update-snapshots` e
-revise as imagens no diff do PR. Se o CI falhar só por diferença de renderização do Chrome, o
+revise as imagens no diff do PR. Código novo que chama `Math.random` na abertura desloca o
+sorteio das questões e muda a captura do simulado; para sorteios que não são do conteúdo (amostra
+de telemetria, ids), use `crypto.getRandomValues`. Se o CI falhar só por diferença de renderização do Chrome, o
 artefato `playwright-report` traz a imagem do CI (`*-actual.png`) para substituir a versionada.
 
 ## Firefox e WebKit

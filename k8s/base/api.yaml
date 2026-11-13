@@ -40,6 +40,9 @@ spec:
             - name: PUBLIC_ORIGIN
               valueFrom:
                 configMapKeyRef: { name: cloudquest-config, key: PUBLIC_ORIGIN }
+            - name: TRUST_PROXY
+              valueFrom:
+                configMapKeyRef: { name: cloudquest-config, key: TRUST_PROXY }
           resources:
             requests: { cpu: 50m, memory: 96Mi }
             limits: { memory: 256Mi }

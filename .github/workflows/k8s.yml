@@ -78,6 +78,28 @@ jobs:
         run: |
           docker build --target api -t cloudquest-api:local .
           docker build --target web -t cloudquest-web:local .
+      # Sem aquasecurity/trivy-action: 76 das 77 tags dela foram sequestradas em 03/2026
+      # (CVE-2026-33634). Binário do release v0.69.3, que é imutável no GitHub, conferido
+      # pelo checksum do próprio release antes de rodar.
+      - name: Instalar o Trivy 0.69.3 (release imutável, checksum conferido)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V: "0.69.3"
+        run: |
+          test "$(gh api "repos/aquasecurity/trivy/releases/tags/v$V" --jq .immutable)" = true
+          gh release download "v$V" -R aquasecurity/trivy -D /tmp/trivy \
+            -p "trivy_${V}_Linux-64bit.tar.gz" -p "trivy_${V}_checksums.txt"
+          cd /tmp/trivy
+          grep " trivy_${V}_Linux-64bit.tar.gz$" "trivy_${V}_checksums.txt" | sha256sum -c -
+          tar -xzf "trivy_${V}_Linux-64bit.tar.gz" trivy
+          sudo install -m 0755 trivy /usr/local/bin/trivy
+          trivy --version
+      - name: Vulnerabilidades nas imagens (HIGH/CRITICAL com correção disponível)
+        run: |
+          for img in cloudquest-api:local cloudquest-web:local; do
+            trivy image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed \
+              --exit-code 1 --no-progress "$img"
+          done
       - name: Criar o cluster
         uses: helm/kind-action@v1
         with:

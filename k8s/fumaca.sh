@@ -45,4 +45,16 @@ loc=$(curl -s -o /dev/null -w '%{redirect_url}' -H 'Host: malicioso.exemplo' "$B
 code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/nao-existe")
 [ "$code" = 404 ] && ok "404 de verdade para caminho inexistente" || erro "caminho inexistente respondeu $code"
 
+code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/og?d=2026-11-12&s=0812&e=saa&x=1")
+[ "$code" = 301 ] && ok "/api/og fora da forma canônica redireciona" || erro "/api/og não canônico respondeu $code"
+
+# por último (esvazia o balde): rajada de 100 com X-Real-IP e X-Forwarded-For falsos e diferentes a
+# cada pedido. O nginx sobrescreve os dois, então o limite tem que aparecer mesmo assim.
+limitadas=0
+for i in $(seq 1 100); do
+  c=$(curl -s -o /dev/null -w '%{http_code}' -H "X-Real-IP: 10.9.$((i / 250)).$((i % 250))" -H "X-Forwarded-For: 203.0.113.$i" "$BASE/api/r?e=saa&s=812&d=2026-11-12")
+  [ "$c" = 429 ] && limitadas=$((limitadas + 1))
+done
+[ "$limitadas" -gt 0 ] && ok "limite de taxa ativo, sem burlar por cabeçalho ($limitadas de 100 com 429)" || erro "100 pedidos seguidos e nenhum 429"
+
 [ "$falhas" = 0 ] && echo "fumaça: tudo certo" || { echo "fumaça: $falhas falha(s)"; exit 1; }
