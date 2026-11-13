@@ -23,15 +23,15 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(300);
 
   const cartoes = await p.$$eval(".gv-card", (cs) => cs.map((c) => ({
-    lang: c.querySelector(".gv-lang")?.textContent?.trim(),
-    rotulo: c.querySelector("button")?.getAttribute("aria-label") || "",
+    lang: c.querySelector(".gv-lang [aria-hidden]")?.textContent?.trim(),
+    rotulo: (c.querySelector("button")?.textContent || "").replace(/\s+/g, " ").trim(),
     meta: c.querySelector(".gv-m")?.textContent || "",
     link: c.querySelector("a.gv-yt")?.getAttribute("rel") || "",
   })));
   if (cartoes.length < 1 || cartoes.length > 2) prob.push("s3 deveria ter 1 ou 2 vídeos, tem " + cartoes.length);
   if (cartoes[0] && cartoes[0].lang !== "PT") prob.push("primeiro vídeo do s3 deveria ser em português");
   for (const c of cartoes) {
-    if (!/^Assistir: .+\((Português|Inglês)\)$/.test(c.rotulo)) prob.push("rótulo acessível fora do padrão: " + c.rotulo);
+    if (!/^Assistir: .+ (PT|EN) em (Português|Inglês) /.test(c.rotulo)) prob.push("nome acessível fora do padrão: " + c.rotulo);
     if (!/noopener/.test(c.link)) prob.push("link do YouTube sem noopener");
   }
   if (await p.$(".gv-frame iframe")) prob.push("player criado antes do toque");

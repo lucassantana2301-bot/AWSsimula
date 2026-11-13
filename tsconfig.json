@@ -19,6 +19,6 @@
     "noEmit": true,
     "allowJs": false
   },
-  "include": ["src", "tests/unit", "vite.config.ts", "vitest.config.ts"],
+  "include": ["tests/e2e", "playwright.config.ts", "src", "tests/unit", "vite.config.ts", "vitest.config.ts"],
   "exclude": ["src/legacy/engine.js"]
 }
