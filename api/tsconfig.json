@@ -1,0 +1,15 @@
+{
+  // As funções da Vercel são compiladas arquivo a arquivo pelo @vercel/node com o tsconfig mais
+  // próximo. O do projeto gera módulos ES (module ESNext, para o Vite), mas o package.json é
+  // CommonJS: a função não carregava ("Cannot use import statement outside a module") e toda
+  // rota /api respondia 500. Aqui a saída é CommonJS. Verificado com `vercel build`.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    "verbatimModuleSyntax": false,
+    "esModuleInterop": true,
+    "types": ["node"]
+  },
+  "include": ["./**/*.ts", "../server/**/*.ts", "../src/features/compartilhar/**/*.ts", "../src/lib/**/*.ts"]
+}

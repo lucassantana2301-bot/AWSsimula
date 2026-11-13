@@ -14,3 +14,4 @@ reports
 playwright-report
 test-results
 .stryker-tmp
+.vercel

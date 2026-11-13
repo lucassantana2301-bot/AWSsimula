@@ -48,6 +48,20 @@ jobs:
           include-hidden-files: true
           retention-days: 7
 
+  funcoes:
+    name: Funções da Vercel (compiladas como no deploy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # vercel build local (sem token) e cada rota /api executada de verdade
+      - run: npm run test:vercel
+
   navegador:
     name: Navegador (layout, acessibilidade, CSP, movimento)
     needs: qualidade
