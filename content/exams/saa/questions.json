@@ -7527,6 +7527,7 @@
     "tags": [
       "iam-permissoes"
     ],
+    "rev": "2026-11-13",
     "case": "Um aplicativo móvel deixa o cliente enviar uma foto de documento de até 20 MB para um bucket privado do S3. Hoje o arquivo passa por uma API em EC2 que repassa ao S3, e as instâncias saturam nos picos. Os usuários não têm credenciais da AWS.",
     "stem": "Qual mudança tira o arquivo do caminho da API mantendo o bucket privado?",
     "opts": [
@@ -7573,6 +7574,7 @@
     "tags": [
       "criptografia-segredos"
     ],
+    "rev": "2026-11-13",
     "case": "Uma auditoria exige que nenhum acesso a um bucket do S3 com dados de clientes aconteça por HTTP sem criptografia, venha de onde vier.",
     "stem": "Como garantir isso no próprio bucket?",
     "opts": [
@@ -7619,6 +7621,7 @@
     "tags": [
       "alta-disponibilidade"
     ],
+    "rev": "2026-11-13",
     "case": "Durante as implantações, um grupo de Auto Scaling troca instâncias atrás de um Application Load Balancer. Requisições de geração de relatório levam até 90 segundos, e os clientes reclamam de erros 5xx bem no momento em que uma instância sai. O atraso de cancelamento do registro foi reduzido para 10 segundos para \"acelerar o deploy\".",
     "stem": "O que corrige os erros?",
     "opts": [
@@ -7665,6 +7668,7 @@
     "tags": [
       "alta-disponibilidade"
     ],
+    "rev": "2026-11-13",
     "case": "Uma aplicação Java leva 8 minutos para iniciar (aquece cache e carrega modelos). Nos picos, o Auto Scaling demora tanto para colocar capacidade que a latência dispara. Manter instâncias extras ligadas o tempo todo ficou caro.",
     "stem": "Qual a melhor opção?",
     "opts": [
@@ -7711,6 +7715,7 @@
     "tags": [
       "rede-desempenho"
     ],
+    "rev": "2026-11-13",
     "case": "Um catálogo de produtos fica atrás do CloudFront, mas a taxa de acerto do cache está baixa e a origem continua sobrecarregada. Os links de campanha chegam com parâmetros como utm_source e utm_campaign, e a distribuição repassa e usa todas as query strings, cookies e cabeçalhos na chave de cache. A página só muda conforme os parâmetros categoria e pagina.",
     "stem": "Qual mudança mais aumenta a taxa de acerto?",
     "opts": [
@@ -7757,6 +7762,7 @@
     "tags": [
       "custo-banco-rede"
     ],
+    "rev": "2026-11-13",
     "case": "Uma tabela do DynamoDB guarda sessões de usuário que só servem por 24 horas. Hoje um job noturno lê a tabela inteira e apaga as sessões vencidas, consumindo muita capacidade de leitura e escrita. Não é preciso que a sessão suma no segundo exato em que vence, porque a aplicação já confere a validade ao ler.",
     "stem": "Qual a forma mais barata de remover as sessões vencidas?",
     "opts": [
@@ -7803,6 +7809,7 @@
     "tags": [
       "custo-armazenamento"
     ],
+    "rev": "2026-11-13",
     "case": "A conta do S3 de um serviço de vídeos cresce todo mês, mas o número de objetos listados no bucket quase não muda. Os vídeos são enviados em várias partes, e muitos envios são interrompidos pelos usuários no meio.",
     "stem": "Qual ação reduz o custo sem afetar os vídeos válidos?",
     "opts": [

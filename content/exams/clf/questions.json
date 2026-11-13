@@ -6121,6 +6121,7 @@
     "tags": [
       "infra-global"
     ],
+    "rev": "2026-11-13",
     "case": "Um estúdio de efeitos visuais numa grande cidade quer rodar estações de renderização na AWS com latência muito baixa para os artistas no escritório. A região mais próxima fica a centenas de quilômetros, e o tráfego não vem de rede móvel 5G.",
     "stem": "Que tipo de infraestrutura atende melhor?",
     "opts": [
@@ -6167,6 +6168,7 @@
     "tags": [
       "well-architected"
     ],
+    "rev": "2026-11-13",
     "case": "A diretoria quer reduzir o impacto ambiental da carga na nuvem: maximizar o uso do que já está provisionado, usar serviços gerenciados e escolher instâncias mais eficientes.",
     "stem": "Qual pilar do AWS Well-Architected Framework trata disso?",
     "opts": [
@@ -6213,6 +6215,7 @@
     "tags": [
       "seguranca-servicos"
     ],
+    "rev": "2026-11-13",
     "case": "Uma startup lança um aplicativo e precisa de cadastro e login dos clientes, com opção de entrar com a conta do Google e autenticação multifator. Ela não quer criar e manter um banco de senhas próprio.",
     "stem": "Qual serviço da AWS atende?",
     "opts": [
@@ -6259,6 +6262,7 @@
     "tags": [
       "custo-ferramentas"
     ],
+    "rev": "2026-11-13",
     "case": "No mês passado, uma chave vazada foi usada para subir instâncias caras, e a empresa só percebeu ao receber a fatura. Ela quer ser avisada por e-mail quando o gasto de um serviço fugir do padrão habitual, sem ter que adivinhar um valor fixo de alerta para cada serviço.",
     "stem": "Qual recurso atende melhor?",
     "opts": [

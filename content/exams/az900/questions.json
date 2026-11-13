@@ -1445,7 +1445,7 @@
       },
       {
         "k": "C",
-        "t": "Armazenamento com redundância de zona (ZRS)"
+        "t": "Armazenamento com redundância de zona em toda a região (ZRS)"
       },
       {
         "k": "D",
@@ -1585,7 +1585,7 @@
       },
       {
         "k": "B",
-        "t": "Azure App Service"
+        "t": "Azure App Service com slots de implantação"
       },
       {
         "k": "C",
@@ -4253,6 +4253,7 @@
     "tags": [
       "escalabilidade"
     ],
+    "rev": "2026-11-13",
     "case": "Uma loja virtual roda em duas máquinas virtuais iguais. Na Black Friday o tráfego quadruplica por algumas horas. A equipe quer atender o pico sem tirar o site do ar e voltar ao tamanho normal depois.",
     "stem": "Que tipo de dimensionamento atende melhor esse pedido?",
     "opts": [
@@ -4299,6 +4300,7 @@
     "tags": [
       "rto-rpo"
     ],
+    "rev": "2026-11-13",
     "case": "O plano de continuidade de um sistema de pedidos diz: \"em um desastre, podemos perder no máximo 15 minutos de pedidos, e o sistema precisa voltar a funcionar em até 4 horas\".",
     "stem": "Como esses dois números se chamam, nessa ordem?",
     "opts": [
@@ -4345,6 +4347,7 @@
     "tags": [
       "identidade"
     ],
+    "rev": "2026-11-13",
     "case": "Depois de um vazamento, a diretoria pediu que a segurança siga o modelo Confiança Zero (Zero Trust). Um gerente afirma que basta \"confiar em quem já está na rede interna\".",
     "stem": "Quais são princípios do modelo Confiança Zero? Escolha os TRÊS.",
     "opts": [
@@ -4396,6 +4399,7 @@
     "tags": [
       "storage"
     ],
+    "rev": "2026-11-13",
     "case": "Uma conta de armazenamento usa LRS. Um estagiário apagou por engano uma pasta com os contratos do mês. O gerente diz: \"tranquilo, o Azure guarda várias cópias, é só pegar uma delas\".",
     "stem": "O gerente está certo?",
     "opts": [
@@ -4442,6 +4446,7 @@
     "tags": [
       "policy"
     ],
+    "rev": "2026-11-13",
     "case": "A equipe de governança quer saber quantas contas de armazenamento aceitam tráfego sem HTTPS. Antes de bloquear qualquer coisa, ela quer só um relatório de conformidade, sem atrapalhar implantações em andamento.",
     "stem": "Qual configuração do Azure Policy atende agora?",
     "opts": [

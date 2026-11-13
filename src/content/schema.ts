@@ -46,6 +46,8 @@ const base = {
   id: z.string().regex(/^[a-z0-9]+-d\d-\d{2}$/, "id no padrão <prefixo>-dN-NN"),
   exam: id, dom: z.string().regex(/^d\d$/), lvl: z.number().int().min(1).max(5), sec: z.number().int().min(30).max(240),
   tags: z.array(id).min(1), case: texto(40).optional(), stem: texto(15), src: fontes,
+  /* data em que a questão foi conferida contra a documentação oficial */
+  rev: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "rev precisa ser AAAA-MM-DD").optional(),
 };
 const opcao = z.object({ k: z.string().regex(/^[A-F]$/), t: texto(1) });
 const escolha = z.object({

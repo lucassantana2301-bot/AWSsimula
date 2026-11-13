@@ -15,7 +15,7 @@
     "opts": [
       {
         "k": "A",
-        "t": "Funciona, porque Proprietário é a função mais alta da assinatura"
+        "t": "Funciona, porque Proprietário é a função mais alta da assinatura e herda todas as permissões"
       },
       {
         "k": "B",
@@ -147,7 +147,7 @@
     "opts": [
       {
         "k": "A",
-        "t": "Grupo de segurança com associação atribuída, revisado mensalmente"
+        "t": "Grupo de segurança com associação atribuída, revisado e atualizado manualmente todo mês pelo RH"
       },
       {
         "k": "B",
@@ -327,7 +327,7 @@
       },
       {
         "k": "B",
-        "t": "Função Administrador de Usuários com escopo em uma unidade administrativa que contém os usuários da filial"
+        "t": "Administrador de Usuários no escopo de uma unidade administrativa da filial"
       },
       {
         "k": "C",
@@ -427,7 +427,7 @@
       },
       {
         "k": "D",
-        "t": "Mover para a camada gelada no dia 1 e manter lá por sete anos"
+        "t": "Mover para a camada gelada já no primeiro dia e manter tudo lá pelos sete anos"
       }
     ],
     "ans": [
@@ -473,7 +473,7 @@
       },
       {
         "k": "D",
-        "t": "Função Colaborador na conta de armazenamento para a conta do parceiro"
+        "t": "Função Colaborador na conta de armazenamento inteira, atribuída à conta do parceiro"
       }
     ],
     "ans": [
@@ -780,7 +780,7 @@
       },
       {
         "k": "D",
-        "t": "Criar um segundo App Service e alternar manualmente o registro DNS"
+        "t": "Criar um segundo App Service e alternar manualmente o registro DNS entre os dois"
       }
     ],
     "ans": [
@@ -1126,7 +1126,7 @@
       },
       {
         "k": "B",
-        "t": "Tabela de rotas associada à sub-rede, com rota 0.0.0.0/0 e próximo salto no endereço do dispositivo"
+        "t": "Tabela de rotas na sub-rede: 0.0.0.0/0 com próximo salto no dispositivo"
       },
       {
         "k": "C",
@@ -1168,7 +1168,7 @@
     "opts": [
       {
         "k": "A",
-        "t": "Azure Load Balancer Standard"
+        "t": "Azure Load Balancer Standard com investigação HTTP"
       },
       {
         "k": "B",
@@ -1254,11 +1254,11 @@
     "opts": [
       {
         "k": "A",
-        "t": "Zona privada do Azure DNS ligada às três redes, com registro automático habilitado"
+        "t": "Zona privada do Azure DNS ligada às três redes, com registro automático"
       },
       {
         "k": "B",
-        "t": "Zona pública do Azure DNS com registros A para cada máquina"
+        "t": "Zona pública do Azure DNS com registros A criados para cada máquina virtual"
       },
       {
         "k": "C",
@@ -1446,7 +1446,7 @@
     "opts": [
       {
         "k": "A",
-        "t": "Agente do Azure Monitor nas máquinas e uma regra de coleta de dados associada a elas"
+        "t": "Agente do Azure Monitor nas máquinas e regra de coleta de dados associada"
       },
       {
         "k": "B",
@@ -1671,11 +1671,11 @@
     "opts": [
       {
         "k": "A",
-        "t": "Em cada assinatura, com um script que roda quando uma assinatura é criada"
+        "t": "Em cada assinatura, com um script de automação que roda sempre que uma assinatura é criada"
       },
       {
         "k": "B",
-        "t": "Em um grupo de gerenciamento que contém as assinaturas, com novas assinaturas criadas sob ele"
+        "t": "Num grupo de gerenciamento acima das assinaturas, criando as novas sob ele"
       },
       {
         "k": "C",
@@ -1819,7 +1819,7 @@
       },
       {
         "k": "D",
-        "t": "Uma Azure Policy que nega a criação de recursos acima de um custo"
+        "t": "Uma Azure Policy que nega a criação de qualquer recurso acima de um custo mensal definido"
       }
     ],
     "ans": [
@@ -1861,7 +1861,7 @@
       },
       {
         "k": "C",
-        "t": "O recurso é recriado e fica indisponível durante a cópia dos dados"
+        "t": "O recurso é recriado no destino e fica indisponível durante a cópia dos dados"
       },
       {
         "k": "D",
@@ -1949,7 +1949,7 @@
       },
       {
         "k": "B",
-        "t": "Azure Storage Explorer"
+        "t": "Azure Storage Explorer arrastando as pastas"
       },
       {
         "k": "C",
@@ -2013,53 +2013,6 @@
       {
         "t": "Visão geral de SAS",
         "u": "https://learn.microsoft.com/azure/storage/common/storage-sas-overview"
-      }
-    ]
-  },
-  {
-    "id": "104-d2-11",
-    "exam": "az104",
-    "dom": "d2",
-    "lvl": 5,
-    "type": "single",
-    "sec": 100,
-    "tags": [
-      "armazenamento-acesso",
-      "rede-virtual"
-    ],
-    "case": "Servidores no escritório, conectados ao Azure por VPN site a site, precisam acessar uma conta de armazenamento por endereço privado. O acesso público da conta deve ficar desligado.",
-    "stem": "O que configurar?",
-    "opts": [
-      {
-        "k": "A",
-        "t": "Um ponto de extremidade de serviço na sub-rede do gateway"
-      },
-      {
-        "k": "B",
-        "t": "Um ponto de extremidade privado na rede virtual, com resolução de DNS para o endereço privado"
-      },
-      {
-        "k": "C",
-        "t": "O IP público do escritório no firewall da conta"
-      },
-      {
-        "k": "D",
-        "t": "Uma SAS de delegação de usuário para os servidores"
-      }
-    ],
-    "ans": [
-      "B"
-    ],
-    "why": {
-      "ok": "O ponto de extremidade privado dá à conta um IP da rede virtual, alcançável pela VPN. A resolução de nome precisa apontar para esse IP, ou o tráfego tenta o endpoint público.",
-      "A": "Ponto de extremidade de serviço vale para tráfego que sai da própria sub-rede no Azure. Não se estende a quem chega pela VPN.",
-      "C": "Liberar o IP do escritório mantém o acesso público ligado e o tráfego pela internet.",
-      "D": "SAS é autorização, não caminho de rede. Com acesso público desligado, ela sozinha não chega."
-    },
-    "src": [
-      {
-        "t": "Pontos de extremidade privados no armazenamento",
-        "u": "https://learn.microsoft.com/azure/storage/common/storage-private-endpoints"
       }
     ]
   },
@@ -2233,7 +2186,7 @@
       },
       {
         "k": "D",
-        "t": "Excluir a máquina e recriá-la a partir de um instantâneo"
+        "t": "Excluir a máquina e recriá-la a partir de um instantâneo do disco do sistema"
       }
     ],
     "ans": [
@@ -2271,7 +2224,7 @@
       },
       {
         "k": "B",
-        "t": "Defini-la como configuração comum do aplicativo nos dois slots"
+        "t": "Defini-la como configuração comum do aplicativo, igual nos dois slots"
       },
       {
         "k": "C",
@@ -2432,11 +2385,11 @@
     "opts": [
       {
         "k": "A",
-        "t": "Mudar o plano para a camada Standard ou superior e criar a regra de escala"
+        "t": "Mudar para a camada Standard ou superior e criar a regra de escala"
       },
       {
         "k": "B",
-        "t": "Aumentar o tamanho da instância dentro da camada Básica"
+        "t": "Aumentar o tamanho da instância dentro da própria camada Básica do plano"
       },
       {
         "k": "C",
@@ -2528,7 +2481,7 @@
       },
       {
         "k": "B",
-        "t": "Em cada spoke, permitir trânsito de gateway. No hub, usar gateways remotos"
+        "t": "Em cada spoke, permitir trânsito de gateway. No hub, usar os gateways remotos"
       },
       {
         "k": "C",
@@ -2622,7 +2575,7 @@
       },
       {
         "k": "D",
-        "t": "Regra NAT de entrada num balanceador de carga público"
+        "t": "Regra NAT de entrada num balanceador de carga público, apontando para a porta 3389"
       }
     ],
     "ans": [
@@ -2668,7 +2621,7 @@
       },
       {
         "k": "D",
-        "t": "Um ponto de extremidade privado para a API"
+        "t": "Um ponto de extremidade privado para a API externa, criado na rede virtual"
       }
     ],
     "ans": [
@@ -2764,7 +2717,7 @@
       },
       {
         "k": "D",
-        "t": "Instantâneos diários dos discos copiados para outra região"
+        "t": "Instantâneos diários dos discos, copiados automaticamente para outra região"
       }
     ],
     "ans": [
@@ -2802,7 +2755,7 @@
       },
       {
         "k": "B",
-        "t": "Desabilitar as regras às 22h e reabilitar às 23h com um runbook"
+        "t": "Desabilitar as regras às 22h e reabilitar às 23h com um runbook agendado na Automação"
       },
       {
         "k": "C",
@@ -2844,11 +2797,11 @@
     "opts": [
       {
         "k": "A",
-        "t": "Desfazer a exclusão, porque a exclusão reversível guarda os dados por 14 dias"
+        "t": "Desfazer a exclusão: a exclusão reversível guarda os dados por 14 dias"
       },
       {
         "k": "B",
-        "t": "Nada, porque a exclusão dos dados de backup é imediata"
+        "t": "Nada, porque a exclusão dos dados de backup no cofre é imediata e definitiva"
       },
       {
         "k": "C",
@@ -3117,7 +3070,7 @@
       },
       {
         "k": "B",
-        "t": "Criar uma regra no grupo de segurança permitindo o IP 168.63.129.16"
+        "t": "Criar uma regra no grupo de segurança permitindo o IP 168.63.129.16 na entrada"
       },
       {
         "k": "C",
@@ -5523,6 +5476,7 @@
     "tags": [
       "rbac-governanca"
     ],
+    "rev": "2026-11-13",
     "case": "Três engenheiros precisam da função Proprietário na assinatura de produção algumas vezes por mês, para manutenção. A auditoria exige que ninguém tenha esse acesso de forma permanente e que cada uso tenha aprovação e prazo.",
     "stem": "O que você deve configurar?",
     "opts": [
@@ -5569,6 +5523,7 @@
     "tags": [
       "entra-id"
     ],
+    "rev": "2026-11-13",
     "case": "O RH mandou uma planilha com 300 funcionários novos que precisam de conta no Microsoft Entra ID amanhã cedo. Você não tem script pronto e quer usar o centro de administração.",
     "stem": "Qual o caminho mais direto?",
     "opts": [
@@ -5615,6 +5570,7 @@
     "tags": [
       "armazenamento-acesso"
     ],
+    "rev": "2026-11-13",
     "case": "A equipe de dados pede para habilitar o namespace hierárquico (Data Lake Storage) numa conta de armazenamento que já está em produção, para ter pastas de verdade e renomear diretórios inteiros de uma vez.",
     "stem": "O que você precisa avaliar antes de aceitar?",
     "opts": [
@@ -5661,6 +5617,7 @@
     "tags": [
       "vm-disponibilidade"
     ],
+    "rev": "2026-11-13",
     "case": "Toda VM Linux nova de um projeto precisa, logo depois de criada, instalar um agente de inventário e ajustar um arquivo de configuração. O script está num blob privado e a equipe não quer guardar chave de conta nem SAS no comando.",
     "stem": "Qual a solução?",
     "opts": [
@@ -5707,6 +5664,7 @@
     "tags": [
       "app-containers"
     ],
+    "rev": "2026-11-13",
     "case": "Você vai rodar no Azure Container Instances uma API e um contêiner auxiliar que coleta os logs dela, os dois no mesmo grupo de contêineres. Ambos são imagens Linux.",
     "stem": "Quais afirmações sobre esse grupo de contêineres estão corretas? Escolha as DUAS.",
     "opts": [
@@ -5753,6 +5711,7 @@
     "tags": [
       "rede-virtual"
     ],
+    "rev": "2026-11-13",
     "case": "A rede vnet-vendas usa 10.1.0.0/16 e a rede vnet-estoque, criada por outra equipe, também usa 10.1.0.0/16. Você tenta criar um emparelhamento entre elas e a operação falha.",
     "stem": "Qual a causa e a correção?",
     "opts": [
@@ -5799,6 +5758,7 @@
     "tags": [
       "rede-virtual"
     ],
+    "rev": "2026-11-13",
     "case": "Atrás de um Azure Load Balancer, duas VMs aparecem como não íntegras desde que alguém adicionou ao NSG da sub-rede uma regra de prioridade 100 que nega todo tráfego de entrada vindo de qualquer origem. As aplicações estão funcionando dentro das VMs.",
     "stem": "Qual a correção mínima, mantendo o bloqueio geral?",
     "opts": [
@@ -5849,6 +5809,7 @@
     "tags": [
       "monitorar-recuperar"
     ],
+    "rev": "2026-11-13",
     "case": "As VMs de produção ficam em Brazil South. Para \"ficar longe de desastres\", alguém criou o cofre dos Serviços de Recuperação em East US e tenta configurar o backup das VMs nele, sem sucesso.",
     "stem": "O que explica a falha e qual o desenho correto?",
     "opts": [
@@ -5882,6 +5843,382 @@
       {
         "t": "Matriz de suporte do backup de VMs do Azure",
         "u": "https://learn.microsoft.com/azure/backup/backup-support-matrix-iaas"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-30",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "rev": "2026-11-13",
+    "case": "Uma analista precisa criar e gerenciar máquinas virtuais e contas de armazenamento no grupo de recursos rg-dados. Ela não deve conseguir dar acesso a outras pessoas.",
+    "stem": "Qual função interna atribuir a ela no rg-dados?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Colaborador"
+      },
+      {
+        "k": "B",
+        "t": "Proprietário"
+      },
+      {
+        "k": "C",
+        "t": "Leitor"
+      },
+      {
+        "k": "D",
+        "t": "Administrador de Acesso do Usuário"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Colaborador gerencia todos os recursos do escopo, mas não atribui funções no RBAC do Azure. É exatamente o limite pedido.",
+      "B": "Proprietário também atribui funções, o que daria a ela o poder de liberar acesso a outras pessoas.",
+      "C": "Leitor só visualiza; não cria nem altera máquinas ou contas de armazenamento.",
+      "D": "Essa função gerencia o acesso dos outros e não cria recursos: é o oposto do pedido."
+    },
+    "src": [
+      {
+        "t": "Funções internas do Azure",
+        "u": "https://learn.microsoft.com/azure/role-based-access-control/built-in-roles"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-31",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "rev": "2026-11-13",
+    "case": "O grupo de recursos rg-prod guarda o banco de produção. A equipe ainda precisa alterar configurações dos recursos no dia a dia, mas ninguém pode apagá-los por engano.",
+    "stem": "Qual bloqueio aplicar no rg-prod?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "CanNotDelete (Excluir)"
+      },
+      {
+        "k": "B",
+        "t": "ReadOnly (Somente leitura)"
+      },
+      {
+        "k": "C",
+        "t": "Uma política do Azure com efeito Audit"
+      },
+      {
+        "k": "D",
+        "t": "Remover a função Colaborador de toda a equipe"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "CanNotDelete deixa ler e modificar, e só impede a exclusão. Vale para o grupo e para os recursos dentro dele.",
+      "B": "ReadOnly impede também as alterações do dia a dia, o que a equipe ainda precisa fazer.",
+      "C": "Audit só registra a não conformidade; não impede nenhuma exclusão.",
+      "D": "Tira da equipe a capacidade de alterar, que o cenário exige manter."
+    },
+    "src": [
+      {
+        "t": "Bloquear recursos do Azure",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/lock-resources"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-26",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "armazenamento-redundancia"
+    ],
+    "rev": "2026-11-13",
+    "case": "Uma conta de armazenamento guarda os backups dos contratos. A diretoria quer que os dados sobrevivam mesmo se a região inteira do Azure ficar fora do ar.",
+    "stem": "Qual redundância escolher?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "GRS (armazenamento com redundância geográfica)"
+      },
+      {
+        "k": "B",
+        "t": "LRS (armazenamento com redundância local, três cópias)"
+      },
+      {
+        "k": "C",
+        "t": "ZRS (armazenamento com redundância de zona)"
+      },
+      {
+        "k": "D",
+        "t": "LRS com uma segunda conta LRS na mesma região"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O GRS copia os dados para uma segunda região, longe da primária. É a opção que resiste à perda de uma região inteira.",
+      "B": "O LRS mantém as cópias dentro de um único datacenter: não sobrevive nem a um desastre no prédio.",
+      "C": "O ZRS espalha as cópias por zonas da mesma região: protege contra a queda de um datacenter, não da região.",
+      "D": "Duas contas na mesma região caem juntas se a região cair."
+    },
+    "src": [
+      {
+        "t": "Redundância de armazenamento",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-redundancy"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-27",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "armazenamento-acesso"
+    ],
+    "rev": "2026-11-13",
+    "case": "Um blob de 2019 está na camada de acesso Arquivo. O jurídico pede o arquivo e quer abri-lo direto pelo portal agora.",
+    "stem": "O que acontece?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Não abre direto: é preciso reidratar o blob para uma camada online, o que pode levar horas"
+      },
+      {
+        "k": "B",
+        "t": "Abre normalmente, só com latência um pouco maior que na camada Fria"
+      },
+      {
+        "k": "C",
+        "t": "Abre, mas apenas para leitura"
+      },
+      {
+        "k": "D",
+        "t": "O blob foi apagado, porque a camada Arquivo guarda dados por no máximo 180 dias corridos"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A camada Arquivo é offline: o blob só pode ser lido depois de reidratado para uma camada online (Frequente, Esporádica ou Fria). A reidratação pode levar horas.",
+      "B": "Latência um pouco maior é o comportamento da camada Fria, que é online. A Arquivo não serve leitura direta.",
+      "C": "Na camada Arquivo não há leitura nenhuma, nem só leitura, antes da reidratação.",
+      "D": "Os 180 dias são o período mínimo de cobrança na camada, não um prazo de exclusão."
+    },
+    "src": [
+      {
+        "t": "Camadas de acesso de blobs",
+        "u": "https://learn.microsoft.com/azure/storage/blobs/access-tiers-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-30",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "rev": "2026-11-13",
+    "case": "Duas máquinas virtuais de um site estão no mesmo conjunto de disponibilidade. A empresa quer que o site continue no ar mesmo se um datacenter inteiro da região falhar.",
+    "stem": "O que você deve fazer?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Distribuir as máquinas em zonas de disponibilidade diferentes da região"
+      },
+      {
+        "k": "B",
+        "t": "Adicionar uma terceira máquina virtual ao mesmo conjunto de disponibilidade"
+      },
+      {
+        "k": "C",
+        "t": "Aumentar o tamanho das duas máquinas"
+      },
+      {
+        "k": "D",
+        "t": "Aumentar o número de domínios de atualização do conjunto"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Zonas de disponibilidade são datacenters fisicamente separados dentro da região. Máquinas em zonas diferentes sobrevivem à queda de um deles.",
+      "B": "O conjunto de disponibilidade espalha as máquinas por racks de um mesmo datacenter: se o datacenter cair, todas caem.",
+      "C": "Tamanho maior não muda onde a máquina está nem o que derruba as duas juntas.",
+      "D": "Domínios de atualização evitam reinício simultâneo em manutenção; não protegem contra a perda do datacenter."
+    },
+    "src": [
+      {
+        "t": "Disponibilidade de VMs",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/availability"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-31",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "rev": "2026-11-13",
+    "case": "Uma máquina virtual ligada atende um sistema interno. Você vai trocar o tamanho dela para um com mais memória, durante o expediente.",
+    "stem": "O que avisar aos usuários antes?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A máquina reinicia durante a troca, então o sistema fica fora por alguns minutos"
+      },
+      {
+        "k": "B",
+        "t": "Nada: a troca de tamanho é feita a quente, sem interrupção"
+      },
+      {
+        "k": "C",
+        "t": "A máquina será recriada e os dados do disco do sistema operacional serão perdidos"
+      },
+      {
+        "k": "D",
+        "t": "A troca exige abrir um chamado de suporte com a Microsoft"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Redimensionar uma máquina ligada a reinicia. Por isso a troca deve ser avisada ou feita numa janela de manutenção.",
+      "B": "Não há troca de tamanho a quente para máquinas virtuais do Azure: sempre há reinício.",
+      "C": "Os discos gerenciados são preservados; a máquina é a mesma, só reinicia com outro tamanho.",
+      "D": "A troca de tamanho é feita pelo próprio portal, CLI ou PowerShell, sem envolver o suporte."
+    },
+    "src": [
+      {
+        "t": "Redimensionar uma VM",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/sizes/resize-vm"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-27",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "rede-virtual"
+    ],
+    "rev": "2026-11-13",
+    "case": "Um grupo de segurança de rede tem duas regras de entrada para a porta 22: \"Negar SSH\" com prioridade 200 e \"Permitir SSH do escritório\" com prioridade 300. O escritório não consegue conectar.",
+    "stem": "Por quê, e qual a correção?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A regra de número menor é avaliada primeiro e nega; dar à regra de permissão um número menor que 200"
+      },
+      {
+        "k": "B",
+        "t": "Regras de negação sempre vencem as de permissão; apagar a regra de negação é a única saída"
+      },
+      {
+        "k": "C",
+        "t": "A regra de número maior é avaliada primeiro; basta trocar a prioridade da regra de negação para 400 e salvar"
+      },
+      {
+        "k": "D",
+        "t": "Grupos de segurança de rede só aceitam uma regra por porta; juntar as duas"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "As regras são avaliadas da prioridade de número menor para a de número maior, e a avaliação para na primeira que combina. A negação em 200 vence antes de chegar na permissão em 300.",
+      "B": "Não há precedência por tipo de regra; o que manda é a ordem de prioridade.",
+      "C": "Inverte a regra: número menor é avaliado primeiro.",
+      "D": "Várias regras para a mesma porta são permitidas; a prioridade decide qual vale."
+    },
+    "src": [
+      {
+        "t": "Grupos de segurança de rede",
+        "u": "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-22",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "rev": "2026-11-13",
+    "case": "A equipe criou uma regra de alerta de CPU alta numa máquina virtual. Agora quer definir que o alerta envie e-mail para o plantão e SMS para o coordenador.",
+    "stem": "Onde se configura quem é notificado e como?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Num grupo de ações ligado à regra de alerta"
+      },
+      {
+        "k": "B",
+        "t": "Na própria métrica de CPU, nas configurações da máquina"
+      },
+      {
+        "k": "C",
+        "t": "Num espaço de trabalho do Log Analytics"
+      },
+      {
+        "k": "D",
+        "t": "Numa regra de processamento de alertas que suprime notificações"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O grupo de ações reúne as preferências de notificação (e-mail, SMS, voz, push) e as ações. A regra de alerta aponta para ele, e o mesmo grupo serve a várias regras.",
+      "B": "A métrica é o dado medido; quem recebe o aviso não se configura nela.",
+      "C": "O Log Analytics guarda e consulta logs; não define destinatários de alerta.",
+      "D": "A regra de processamento muda ou suprime notificações, por exemplo numa manutenção; quem recebe continua no grupo de ações."
+    },
+    "src": [
+      {
+        "t": "Grupos de ações",
+        "u": "https://learn.microsoft.com/azure/azure-monitor/alerts/action-groups"
       }
     ]
   }
