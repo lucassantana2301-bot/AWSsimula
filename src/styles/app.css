@@ -533,11 +533,26 @@ span.gdu-col{cursor:default;text-decoration:none}
 .opts{display:grid;gap:6px;margin:13px 0}
 .opt{display:flex;gap:10px;align-items:flex-start;width:100%;padding:10px 12px;background:var(--sheet);
   border:1px solid var(--rule2);border-left-width:3px;border-radius:2px;font-size:14.5px;line-height:1.45}
-.opt:hover:not(:disabled){background:var(--sheet2);border-left-color:var(--ink2)}
+.opt{position:relative;isolation:isolate;cursor:pointer;
+  transition:border-color .16s var(--e-out),background-color .16s var(--e-out),transform .12s var(--e-out)}
+.opt:disabled{cursor:default}
+@media(hover:hover){.opt:hover:not(:disabled){background:var(--sheet2);border-left-color:var(--acc,var(--ink2))}
+  .opt:hover:not(:disabled) .k{border-color:var(--acc,var(--rule2));color:var(--acc,var(--ink2))}}
+.opt:active:not(:disabled){transform:translateY(1px) scale(.995)}
+.opt .k{transition:background-color .16s var(--e-out),border-color .16s var(--e-out),color .16s var(--e-out)}
 .opt .k{flex:none;width:19px;height:19px;display:grid;place-items:center;font:600 11px/1 var(--fm);
   background:var(--sheet2);border:1px solid var(--rule2);border-radius:2px;color:var(--ink2)}
-.opt[data-sel="1"]{border-left-color:var(--az);background:var(--az-s)}
-.opt[data-sel="1"] .k{background:var(--az);border-color:var(--az);color:var(--on-accent)}
+/* cor do exame: azul no Azure, laranja na AWS (antes era sempre azul) */
+.qbox,.sim-bar,.qnav{--acc:var(--az);--acc-s:var(--az-s)}
+.qbox.aw,.sim-bar.aw,.qnav.aw{--acc:var(--aw);--acc-s:var(--aw-s)}
+.opt[data-sel="1"]{border-color:var(--acc);border-left-width:5px;padding-left:10px;background:var(--acc-s)}
+.opt[data-sel="1"] .k{background:var(--acc);border-color:var(--acc);color:var(--on-accent)}
+/* escolher: o preenchimento atravessa a alternativa como um pacote no conector */
+.opt.fx-pick::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--acc-s);
+  transform-origin:left center;animation:fx-fill .3s var(--e-out) both}
+.opt.fx-pick{background:transparent}
+.opt.fx-pick .k{animation:fx-pop .32s var(--e-out) both .06s}
+@keyframes fx-fill{from{transform:scaleX(0)}to{transform:none}}
 .opt[data-res="ok"]{border-color:var(--go);border-left-color:var(--go);background:var(--go-s)}
 .opt[data-res="ok"] .k{background:var(--go);border-color:var(--go);color:var(--on-accent)}
 .opt[data-res="bad"]{border-color:var(--no);border-left-color:var(--no);background:var(--no-s)}
@@ -571,7 +586,10 @@ span.gdu-col{cursor:default;text-decoration:none}
 .yn[data-res="bad"]{border-left-color:var(--no);background:var(--no-s)}
 .yn-b{display:flex;gap:4px;flex:none}
 .yn-b button{padding:4px 11px;border:1px solid var(--rule2);border-radius:2px;font-size:12px;font-weight:600;color:var(--ink2);background:var(--sheet)}
-.yn-b button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--canvas)}
+.yn-b button{transition:background-color .16s var(--e-out),border-color .16s var(--e-out),color .16s var(--e-out)}
+@media(hover:hover){.yn-b button:hover:not(:disabled){border-color:var(--acc,var(--ink2));color:var(--acc,var(--ink))}}
+.yn-b button[aria-pressed="true"]{background:var(--acc,var(--ink));border-color:var(--acc,var(--ink));color:var(--on-accent)}
+.yn-b button.fx-pick{animation:fx-pop .3s var(--e-out)}
 .yn-e{font-size:12.5px;line-height:1.5;margin-top:6px;color:var(--ink2)}
 .ord{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--sheet);
   border:1px solid var(--rule2);border-left-width:3px;border-radius:2px;font-size:14px}
@@ -584,7 +602,11 @@ span.gdu-col{cursor:default;text-decoration:none}
 .verdict{border-radius:2px;padding:14px;margin-top:13px;border-left-width:3px}
 .verdict.ok{background:var(--go-s);border:1px solid var(--go);border-left-width:3px}
 .verdict.no{background:var(--no-s);border:1px solid var(--no);border-left-width:3px}
-.verdict h4{font-size:14.5px;margin-bottom:7px}
+.verdict h4{font-size:14.5px;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.verdict h4::before{content:"";flex:none;width:20px;height:20px;border-radius:2px;display:grid;place-items:center;
+  font:700 13px/1 var(--fs);color:var(--on-accent)}
+.verdict.ok h4::before{content:"✓";background:var(--go)} .verdict.no h4::before{content:"✕";background:var(--no)}
+.verdict h4.fx-mark::before{animation:fx-pop .36s var(--e-out) both .2s}
 .verdict.ok h4{color:var(--go)} .verdict.no h4{color:var(--no)}
 .verdict .why{font-size:14px;line-height:1.6}
 .wrongs{display:grid;gap:5px;margin-top:11px}
@@ -595,11 +617,18 @@ span.gdu-col{cursor:default;text-decoration:none}
 /* ---------- simulado ---------- */
 .sim-bar{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--sheet);
   border:1px solid var(--rule2);border-radius:3px;margin-bottom:14px;flex-wrap:wrap;position:sticky;top:46px;z-index:30}
+.sim-bar .sp{flex:1}
+.sim-prog{position:absolute;left:-1px;bottom:-1px;height:3px;width:calc(var(--p,0%) + 1px);max-width:calc(100% + 2px);
+  background:var(--acc);border-radius:0 2px 2px 0;transition:width .3s var(--e-out)}
+@media(max-width:560px){.sim-bar{gap:6px;padding:8px 10px}.sim-bar .sp{flex-basis:100%;height:0}.sim-bar>.btn{flex:1}}
 .clock{font:600 16px/1 var(--fm);padding:5px 9px;background:var(--sheet2);border:1px solid var(--rule2);border-radius:2px;font-variant-numeric:tabular-nums}
-.clock.warn{color:var(--fl);border-color:var(--fl)} .clock.crit{color:var(--no);border-color:var(--no)}
+.clock.warn{color:var(--fl);border-color:var(--fl)} .clock.crit{color:var(--no);border-color:var(--no);animation:fx-alarme 1.6s ease-in-out infinite}
+/* o único movimento que se repete sozinho: o tempo está acabando */
+@keyframes fx-alarme{50%{background:var(--no-s)}}
 .qnav{display:flex;gap:3px;flex-wrap:wrap;margin-top:12px}
 .qnav button{width:28px;height:28px;border:1px solid var(--rule2);border-radius:2px;font:600 11.5px/1 var(--fm);color:var(--ink2);background:var(--sheet)}
-.qnav button[data-st="ans"]{border-color:var(--az);color:var(--az)}
+.qnav button{transition:background-color .16s var(--e-out),border-color .16s var(--e-out)}
+.qnav button[data-st="ans"]{border-color:var(--acc,var(--az));color:var(--acc,var(--az));background:var(--acc-s,var(--sheet))}
 .qnav button[data-st="flag"]{border-color:var(--fl);color:var(--fl);background:var(--fl-s)}
 .qnav button[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:var(--canvas)}
 .result{display:grid;gap:3px;padding:22px;background:var(--sheet);border:1.5px solid var(--ink);border-radius:3px;text-align:center}
@@ -699,6 +728,12 @@ span.gdu-col{cursor:default;text-decoration:none}
 [data-fx~="check"] .verdict{animation:fx-open .34s var(--e-out) both .14s}
 @keyframes fx-open{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
 
+/* troca de questão: o cartão entra pelo lado para onde você foi */
+.qbox.fx-nav-next{animation:fx-nav-n .24s var(--e-out) both}
+.qbox.fx-nav-prev{animation:fx-nav-p .24s var(--e-out) both}
+@keyframes fx-nav-n{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes fx-nav-p{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+
 /* cartão: vira de verdade */
 [data-fx~="flip"] .card3.back{animation:fx-flip .4s var(--e-out) both}
 @keyframes fx-flip{from{transform:perspective(900px) rotateY(-96deg);opacity:.35}to{transform:perspective(900px) rotateY(0)}}
@@ -712,7 +747,7 @@ span.gdu-col{cursor:default;text-decoration:none}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.18s}
 ::view-transition-group(*){animation-duration:.32s;animation-timing-function:var(--e-out)}
 
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms !important;animation-delay:0ms !important;transition-duration:1ms !important;transition-delay:0ms !important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:1ms !important;animation-delay:0ms !important;animation-iteration-count:1 !important;transition-duration:1ms !important;transition-delay:0ms !important}}
 @media(max-width:560px){
   .canvas{padding:16px 12px 48px}
   .paper{padding:22px 18px 26px}

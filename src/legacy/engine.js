@@ -36,7 +36,7 @@ GUIA_MOD.ligar({
    resposta, virar cartão) chegam pela fila FX e valem um render.
    Com movimento reduzido, nada aqui cria elemento nem conta número.
    ============================================================ */
-let FX={};            /* sinais de um render: check, flip */
+let FX={};            /* sinais de um render: check, flip, pick (alternativa), yn ("i:v"), nav ("next"|"prev") */
 const MEM={};         /* chave da tela -> { chave do nó -> estado } */
 const ROTAS=new Set();/* trilhas cuja rota já foi desenhada nesta sessão */
 let LAST_XP=null, LAST_PCT=null;
@@ -186,6 +186,16 @@ function instrumentos(){
   LAST_XP=S.xp;
 }
 
+/* escolha e navegação: a classe entra uma vez e sai no fim da animação,
+   então um re-render sem mudança não repete nada */
+function marcaUmaVez(app,f){
+  const liga=(el,cls)=>{ if(!el) return; el.classList.add(cls);
+    el.addEventListener("animationend",()=>el.classList.remove(cls),{once:true}); };
+  if(f.pick) liga(app.querySelector('.opt[data-k="'+f.pick+'"]'),"fx-pick");
+  if(f.yn){ const [i,v]=String(f.yn).split(":"); liga(app.querySelector('[data-act="qyn"][data-i="'+i+'"][data-v="'+v+'"]'),"fx-pick"); }
+  if(f.nav==="next"||f.nav==="prev") liga(app.querySelector(".qbox"),"fx-nav-"+f.nav);
+  if(f.check){ const v=app.querySelector(".verdict h4"); liga(v,"fx-mark"); }
+}
 /* chamado ao fim de cada render da tela principal */
 function motion(){
   const app=document.getElementById("app"); if(!app) return;
@@ -196,6 +206,7 @@ function motion(){
   if(V.name==="trilha"&&!ROTAS.has(S.meta)){ ROTAS.add(S.meta); rota=true; }
   provisiona(app,rota);   /* navegar também conta: o que mudou em outra tela aparece ao voltar */
   if(rota) desenhaRota(app);
+  marcaUmaVez(app,f);
   if(f.check) app.querySelectorAll('.opt[data-res="ok"],.opt[data-res="miss"],.yn[data-res="ok"],.ord[data-res="ok"],.bucket.ok')
     .forEach((el,i)=>traco(el,"var(--go)",80+i*60));
   instrumentos();
@@ -1187,8 +1198,8 @@ function qHtml(q,shown,sel,risc){
       </div>`;}).join("")}</div>
       ${shown?"":`<p class="t-xs dim2">Use as setas para reordenar. A ordem mostrada já conta como resposta.</p>`}`;
   })();
-  return head+(q.case?`<div class="q-case">${esc(q.case)}</div>`:"")+`<p class="q-stem" id="q-stem">${esc(q.stem)}</p>`+
-    `<div role="group" aria-labelledby="q-stem">`+body+`</div>`;
+  return `<div class="qbox ${aw?"aw":"az"}">`+head+(q.case?`<div class="q-case">${esc(q.case)}</div>`:"")+`<p class="q-stem" id="q-stem">${esc(q.stem)}</p>`+
+    `<div role="group" aria-labelledby="q-stem">`+body+`</div></div>`;
 }
 const REPORTADAS=new Set();
 function verdictHtml(q,sel){
@@ -1305,13 +1316,15 @@ function viewSim(){
   const e=ex0(SIM.exam), q=SIM.qs[SIM.i], aw=isAws(SIM.exam), left=SIM.end-Date.now();
   if(SIM.review) return SIMM.revisao({codigo:e.code,rotulo:simRotulo(SIM),aws:aw,restanteMs:left,
     respondidas:SIM.ans.map(x=>x!=null),marcadas:SIM.flags.map(Boolean)});
+  const feitas=SIM.ans.filter(x=>x!=null).length, pct=Math.round(feitas/SIM.qs.length*100);
   return `<div class="stack">
-    <div class="sim-bar">
+    <div class="sim-bar ${aw?"aw":"az"}">
+      <i class="sim-prog" aria-hidden="true" style="--p:${pct}%"></i>
       <span class="tag ${aw?"aw":"az"} mono" title="${esc(simRotulo(SIM))}">${e.code}${SIM.full?" · completa":SIM.modo==="dominio"?" · domínio":SIM.modo==="erros"?" · erros":""}</span>
       <span class="clock ${left<12e4?"crit":left<3e5?"warn":""}" id="simclock">${clock(left)}</span>
-      <span class="tag mono">${SIM.i+1}/${SIM.qs.length}</span>
-      <span style="flex:1"></span>
-      <button class="btn sm ${SIM.flags[SIM.i]?"fill":""}" data-act="simflag">${SIM.flags[SIM.i]?"Marcada":"Marcar"}</button>
+      <span class="tag mono" title="${feitas} respondidas">${SIM.i+1}/${SIM.qs.length}</span>
+      <span class="sp"></span>
+      <button class="btn sm ${SIM.flags[SIM.i]?"fill":""}" data-act="simflag" aria-pressed="${!!SIM.flags[SIM.i]}">${SIM.flags[SIM.i]?"Marcada":"Marcar"}</button>
       <button class="btn sm" data-act="simreview">Revisar e entregar</button>
     </div>
     <div class="sheet">${qHtml(q,false,SIM.ans[SIM.i],SIM.risc&&SIM.risc[SIM.i])}</div>
@@ -1319,7 +1332,7 @@ function viewSim(){
       <button class="btn" data-act="simprev" ${SIM.i===0?"disabled":""}>Anterior</button>
       <button class="btn ${aw?"aw":"az"}" style="flex:1" data-act="simnext">${SIM.i===SIM.qs.length-1?"Revisar e entregar":"Próxima"}</button>
     </div>
-    <div class="qnav">${SIM.qs.map((_,i)=>`<button data-act="simgo" data-i="${i}" aria-current="${i===SIM.i}"
+    <div class="qnav ${aw?"aw":"az"}">${SIM.qs.map((_,i)=>`<button data-act="simgo" data-i="${i}" aria-current="${i===SIM.i}"
       data-st="${SIM.flags[i]?"flag":SIM.ans[i]!=null?"ans":""}" aria-label="Questão ${i+1}">${i+1}</button>`).join("")}</div>
     <p class="t-xs dim2">Modo prova: sem retorno agora. Correção e explicações saem na entrega. Teclado: 1 a 9 escolhem, setas navegam, F marca. Use o ✕ ao lado de uma alternativa para riscá-la.</p>
   </div>`;
@@ -1339,6 +1352,7 @@ function twoStep(act,msg){
 }
 function finishSim(){
   if(!SIM) return;
+  PEND=null; TQ.forEach(el=>el.remove()); TQ=[];   /* "toque de novo" deixou de valer */
   simClock(); SIM.done=true;
   const e=ex0(SIM.exam), byDom={}; let right=0;
   e.domains.forEach(d=>byDom[d.id]={n:0,ok:0});
@@ -2091,12 +2105,14 @@ document.addEventListener("click",ev=>{
     const cur=(SES?SES.sel:SIM.ans[SIM.i])||[], k=b.dataset.k;
     const next=q.type==="single"?[k]:(cur.includes(k)?cur.filter(x=>x!==k):cur.concat([k]));
     if(SES) SES.sel=next; else { SIM.ans[SIM.i]=next; saveSim(); }
+    if(next.includes(k)) FX.pick=k;
     return render();
   }
   if(a==="qyn"){
     const q=SES?SES.qs[SES.i]:SIM.qs[SIM.i];
     const cur=((SES?SES.sel:SIM.ans[SIM.i])||q.rows.map(()=>undefined)).slice();
     cur[+b.dataset.i]=b.dataset.v==="1";
+    FX.yn=b.dataset.i+":"+b.dataset.v;
     if(SES) SES.sel=cur; else { SIM.ans[SIM.i]=cur; saveSim(); }
     return render();
   }
@@ -2134,7 +2150,7 @@ document.addEventListener("click",ev=>{
     save(); return render();
   }
   if(a==="qduv"){ if(SES&&!SES.shown){ SES.duv=!SES.duv; render(); } return; }
-  if(a==="qnext"){ SES.i++; SES.sel=initSel(SES.qs[SES.i]); SES.shown=false; SES.duv=false; clearTimers(); return render(); }
+  if(a==="qnext"){ FX.nav="next"; SES.i++; SES.sel=initSel(SES.qs[SES.i]); SES.shown=false; SES.duv=false; clearTimers(); return render(); }
 
   /* simulado */
   if(a==="simstart"){
@@ -2149,7 +2165,7 @@ document.addEventListener("click",ev=>{
     document.querySelectorAll('[data-act="simfilter"]').forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
     return;
   }
-  if(a==="simnext"){ if(SIM.i<SIM.qs.length-1) SIM.i++; else SIM.review=true; saveSim(); render(); window.scrollTo(0,0); return; }
+  if(a==="simnext"){ if(SIM.i<SIM.qs.length-1){ SIM.i++; FX.nav="next"; } else SIM.review=true; saveSim(); render(); window.scrollTo(0,0); return; }
   if(a==="simreview"){ SIM.review=true; saveSim(); render(); window.scrollTo(0,0); return; }
   if(a==="simback"){ SIM.review=false; render(); return; }
   if(a==="simrisc"){
@@ -2159,8 +2175,8 @@ document.addEventListener("click",ev=>{
     const nb=document.querySelector('[data-act="simrisc"][data-k="'+k+'"]'); if(nb) nb.focus();
     return;
   }
-  if(a==="simprev"){ if(SIM.i>0){ SIM.i--; saveSim(); render(); } return; }
-  if(a==="simgo"){ const i=+b.dataset.i; if(Number.isInteger(i)&&i>=0&&i<SIM.qs.length){ SIM.i=i; SIM.review=false; saveSim(); render(); window.scrollTo(0,0); } return; }
+  if(a==="simprev"){ if(SIM.i>0){ SIM.i--; FX.nav="prev"; saveSim(); render(); } return; }
+  if(a==="simgo"){ const i=+b.dataset.i; if(Number.isInteger(i)&&i>=0&&i<SIM.qs.length){ if(!SIM.review&&i!==SIM.i) FX.nav=i>SIM.i?"next":"prev"; SIM.i=i; SIM.review=false; saveSim(); render(); window.scrollTo(0,0); } return; }
   if(a==="qreport"){
     const id=b.dataset.q, m=b.dataset.m;
     if(!id||!SIMM.motivoValido(m)||REPORTADAS.has(id)) return;
@@ -2303,6 +2319,7 @@ function pickIndex(i){
   const k=list[i].k, cur=(SES?SES.sel:SIM.ans[SIM.i])||[];
   const next=q.type==="single"?[k]:(cur.includes(k)?cur.filter(x=>x!==k):cur.concat([k]));
   if(SES) SES.sel=next; else { SIM.ans[SIM.i]=next; saveSim(); }
+  if(next.includes(k)) FX.pick=k;
   render(); return true;
 }
 const chRead=ev=>{ const g=ev.target&&ev.target.closest&&ev.target.closest(".ch-pt"), out=document.getElementById("chread");
@@ -2360,8 +2377,8 @@ document.addEventListener("keydown",ev=>{
     if(SIM.review){ if(k==="Escape"){ ev.preventDefault(); SIM.review=false; render(); } return; }
     if(/^[1-9]$/.test(k)){ if(pickIndex(+k-1)) ev.preventDefault(); return; }
     if(k==="ArrowRight"||k==="Enter"){ ev.preventDefault();
-      if(SIM.i<SIM.qs.length-1) SIM.i++; else SIM.review=true; saveSim(); render(); return; }
-    if(k==="ArrowLeft"){ ev.preventDefault(); if(SIM.i>0){ SIM.i--; saveSim(); render(); } return; }
+      if(SIM.i<SIM.qs.length-1){ SIM.i++; FX.nav="next"; } else SIM.review=true; saveSim(); render(); return; }
+    if(k==="ArrowLeft"){ ev.preventDefault(); if(SIM.i>0){ SIM.i--; FX.nav="prev"; saveSim(); render(); } return; }
     if(k==="f"||k==="F"){ ev.preventDefault(); SIM.flags[SIM.i]=!SIM.flags[SIM.i]; saveSim(); render(); }
     return;
   }
