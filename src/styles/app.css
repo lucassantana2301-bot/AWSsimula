@@ -342,6 +342,21 @@ button.tr:hover{border-color:var(--ink3);color:var(--ink)}
 .gs-card .um{font-size:13px;color:var(--ink2);line-height:1.4}
 .gs-card .pv,.gd-card .p{margin-top:auto;padding-top:2px}
 .gs-busca input{width:100%;font:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--rule2);border-radius:6px;background:var(--sheet);color:var(--ink)}
+/* vídeos do guia: cartão próprio até o toque, depois o player */
+.gv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.gv-card{display:flex;flex-direction:column;gap:6px}
+.gv-play{display:grid;grid-template-columns:40px 1fr;grid-template-rows:auto auto;column-gap:10px;row-gap:3px;align-items:center;text-align:left;padding:12px;border:1px solid var(--rule2);border-radius:6px;background:var(--sheet);color:var(--ink);font:inherit;cursor:pointer;min-height:72px;aspect-ratio:auto}
+.gv-play:hover{border-color:var(--ink3)}
+.gv-play:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.gv-ico{grid-row:1/3;width:40px;height:40px;border-radius:50%;background:var(--ink);position:relative}
+.gv-ico::after{content:"";position:absolute;left:15px;top:12px;border-style:solid;border-width:8px 0 8px 13px;border-color:transparent transparent transparent var(--sheet)}
+.gv-t{font-weight:700;font-size:14.5px;line-height:1.3}
+.gv-m{font-size:12.5px;color:var(--ink2)}
+.gv-lang{display:inline-block;font-family:var(--fm);font-size:11px;font-weight:700;padding:1px 5px;border-radius:3px;border:1px solid var(--rule2)}
+.gv-lang.pt{background:var(--go-s);color:var(--ink);border-color:var(--go)}
+.gv-yt{align-self:flex-start;color:var(--ink2)}
+.gv-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#000}
+.gv-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .gs-busca input:focus{outline:2px solid var(--ink);outline-offset:1px}
 .gs-h{margin:8px 0 6px;color:var(--ink2)}
 .gs-ana{border-left:3px solid var(--aw);padding:4px 0 4px 12px}

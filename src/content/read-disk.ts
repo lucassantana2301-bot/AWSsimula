@@ -16,5 +16,6 @@ export function lerConteudo(raiz: string): RawBundle {
   return {
     exams: j("exams.json"), catalogo: j("catalogo.json"), equiv: j("equiv.json"), diagrams: j("diagrams.json"),
     sharedLessons: opc("shared/lessons.json"), porExame, servicos: opc("guia/servicos.json"), duelos: opc("guia/duelos.json"),
+    videos: existsSync(join(raiz, "guia/videos.json")) ? j("guia/videos.json") : {},
   };
 }

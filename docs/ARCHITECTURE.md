@@ -57,3 +57,15 @@ Tudo junto: `npm run verify`. O CI (`.github/workflows/ci.yml`) roda isso em cad
 ## Como acrescentar conteúdo
 
 Edite o JSON em `content/`, rode `npm run test:unit` e corrija o que o schema apontar. A mensagem diz arquivo, item e campo.
+
+## Vídeos do guia (`src/features/guia/videos.ts`)
+
+Primeiro módulo fora do motor legado. O motor só chama `C.blocoVideos(id)`.
+
+- **Conteúdo**: `content/guia/videos.json`, `{ idDoServiço: Video[] }`, com no máximo 2 vídeos e o português antes do inglês.
+  - Só vale canal oficial da AWS, conferido pelo oEmbed do YouTube.
+  - `min` só existe se a duração foi conferida; a tela nunca mostra estimativa.
+  - O CI barra: serviço inexistente, serviço fechado com vídeo, vídeo repetido, id inválido, canal fora da lista e ordem errada.
+- **Privacidade**: nada do YouTube carrega até o toque. O cartão é próprio, sem miniatura externa.
+  - O toque cria o iframe pela API do DOM, em `youtube-nocookie.com`, o único domínio liberado em `frame-src`.
+- **Falha**: se `videos.json` não baixar, o guia abre do mesmo jeito, só sem a seção.

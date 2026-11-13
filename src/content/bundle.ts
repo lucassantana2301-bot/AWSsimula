@@ -10,7 +10,8 @@ import diagrams from "../../content/diagrams.json";
 import shared from "../../content/shared/lessons.json";
 import servicosUrl from "../../content/guia/servicos.json?url";
 import duelosUrl from "../../content/guia/duelos.json?url";
-import type { Catalogo, Deck, Duelo, Equiv, Exam, Ficha, Lesson, Question, Servico } from "./schema";
+import videosUrl from "../../content/guia/videos.json?url";
+import type { Catalogo, Deck, Duelo, Equiv, Exam, Ficha, Lesson, Question, Servico, Videos } from "./schema";
 
 /**
  * Fronteira de confiança: o JSON de content/ é validado pelos schemas Zod
@@ -33,6 +34,8 @@ const juntar = <T>(arquivo: string): T[] =>
 export interface Guia {
   GUIA: Servico[];
   DUELOS: Duelo[];
+  /** opcional: falha ao baixar os vídeos não impede o guia de abrir */
+  VIDEOS: Videos;
 }
 
 /*
@@ -51,9 +54,11 @@ async function baixarJson(url: string, sinal: AbortSignal): Promise<unknown> {
 /** Baixa o guia. Rejeita em falha de rede, HTTP != 2xx ou depois de `limiteMs`. */
 export async function carregarGuia(limiteMs = 15_000): Promise<Guia> {
   const sinal = AbortSignal.timeout(limiteMs);
-  const [servicos, duelos] = await Promise.all([baixarJson(servicosUrl, sinal), baixarJson(duelosUrl, sinal)]);
+  const videos = baixarJson(videosUrl, sinal).catch((): unknown => ({}));
+  const [servicos, duelos, vids] = await Promise.all([baixarJson(servicosUrl, sinal), baixarJson(duelosUrl, sinal), videos]);
   if (!Array.isArray(servicos) || !Array.isArray(duelos)) throw new Error("Guia em formato inesperado");
-  return { GUIA: validado<Servico[]>(servicos), DUELOS: validado<Duelo[]>(duelos) };
+  const VIDEOS = typeof vids === "object" && vids !== null && !Array.isArray(vids) ? validado<Videos>(vids) : {};
+  return { GUIA: validado<Servico[]>(servicos), DUELOS: validado<Duelo[]>(duelos), VIDEOS };
 }
 
 export interface ContentBundle {

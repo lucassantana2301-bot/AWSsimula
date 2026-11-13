@@ -29,4 +29,32 @@ describe("conteúdo", () => {
       .join("\n");
     expect(msgs).toMatch(/gabarito|ans/);
   });
+
+  describe("vídeos", () => {
+    const com = (videos: unknown) => validarConteudo({ ...raw, videos }).map((x) => `${x.onde}: ${x.msg}`);
+    const v = (yt: string, lang: "pt" | "en", extra: object = {}) => ({
+      yt,
+      titulo: "Vídeo oficial",
+      canal: "Amazon Web Services",
+      lang,
+      ...extra,
+    });
+
+    it("recusa canal não oficial", () => {
+      expect(com({ s3: [{ ...v("aaaaaaaaaaa", "pt"), canal: "Canal Qualquer" }] }).join("\n")).toMatch(/guia\/videos/);
+    });
+    it("recusa inglês antes do português", () => {
+      expect(com({ s3: [v("aaaaaaaaaaa", "en"), v("bbbbbbbbbbb", "pt")] }).join("\n")).toMatch(/português deve vir antes/);
+    });
+    it("recusa mais de 2 vídeos, id inválido e duração fora de 1–6 min", () => {
+      expect(com({ s3: [v("aaaaaaaaaaa", "pt"), v("bbbbbbbbbbb", "pt"), v("ccccccccccc", "en")] })).not.toEqual([]);
+      expect(com({ s3: [v("curto", "pt")] })).not.toEqual([]);
+      expect(com({ s3: [v("aaaaaaaaaaa", "pt", { min: 12 })] })).not.toEqual([]);
+    });
+    it("recusa serviço inexistente, serviço fechado e vídeo repetido", () => {
+      expect(com({ "nao-existe": [v("aaaaaaaaaaa", "pt")] }).join("\n")).toMatch(/inexistente/);
+      expect(com({ kendra: [v("aaaaaaaaaaa", "pt")] }).join("\n")).toMatch(/fechado/);
+      expect(com({ s3: [v("aaaaaaaaaaa", "pt")], ebs: [v("aaaaaaaaaaa", "en")] }).join("\n")).toMatch(/repetido/);
+    });
+  });
 });

@@ -135,6 +135,24 @@ export const DueloSchema = z.object({
   if (new Set(d.sinais.map((s) => s.r)).size !== n) ctx.addIssue({ code: "custom", message: "sinais não cobrem todas as colunas" });
 });
 
+/* ---------- vídeos curtos por serviço ----------
+ * Só canais oficiais da AWS, conferidos pelo oEmbed do YouTube.
+ * `min` só existe quando a duração foi conferida: a tela nunca mostra
+ * estimativa como fato. Português vem antes do inglês. */
+export const CANAIS_OFICIAIS = ["Amazon Web Services", "AWS Developers", "AWS Developers LATAM"] as const;
+export const VideoSchema = z.object({
+  yt: z.string().regex(/^[A-Za-z0-9_-]{11}$/, "id do YouTube deve ter 11 caracteres"),
+  titulo: texto(5), canal: z.enum(CANAIS_OFICIAIS), lang: z.enum(["pt", "en"]),
+  min: z.number().int().min(1).max(6).optional(),
+}).strict();
+export const VideosSchema = z.record(id, z.array(VideoSchema).min(1).max(2)).superRefine((m, ctx) => {
+  for (const [sid, vs] of Object.entries(m)) {
+    const primeiroEn = vs.findIndex((v) => v.lang === "en");
+    if (primeiroEn !== -1 && vs.slice(primeiroEn).some((v) => v.lang === "pt"))
+      ctx.addIssue({ code: "custom", path: [sid], message: "vídeo em português deve vir antes do inglês" });
+  }
+});
+
 export type Exam = z.infer<typeof ExamSchema>;
 export type Question = z.infer<typeof QuestionSchema>;
 export type Ficha = z.infer<typeof FichaSchema>;
@@ -142,5 +160,7 @@ export type Lesson = z.infer<typeof LessonSchema>;
 export type Deck = z.infer<typeof DeckSchema>;
 export type Servico = z.infer<typeof ServicoSchema>;
 export type Duelo = z.infer<typeof DueloSchema>;
+export type Video = z.infer<typeof VideoSchema>;
+export type Videos = z.infer<typeof VideosSchema>;
 export type Catalogo = z.infer<typeof CatalogoSchema>;
 export type Equiv = z.infer<typeof EquivSchema>;

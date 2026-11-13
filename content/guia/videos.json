@@ -1,0 +1,726 @@
+{
+  "ec2": [
+    {
+      "yt": "t48aVpw6kkI",
+      "titulo": "What is Amazon EC2? | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "lambda": [
+    {
+      "yt": "qlkr0h9JQ6U",
+      "titulo": "AWS Lambda explained in 90 seconds | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "elastic-beanstalk": [
+    {
+      "yt": "TyFbwdWimTQ",
+      "titulo": "AWS Elastic Beanstalk Explainer Video | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "local-zones": [
+    {
+      "yt": "gYezwKIEFTc",
+      "titulo": "AWS Local Zones Explainer Video | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "fargate": [
+    {
+      "yt": "4CHu1ErN51o",
+      "titulo": "Introduction to AWS Fargate",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "step-functions": [
+    {
+      "yt": "wdJ5DN15jus",
+      "titulo": "AWS Step Functions explained in 90 seconds | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "eventbridge": [
+    {
+      "yt": "ZfIkcCaPm14",
+      "titulo": "Amazon EventBridge Explainer Video | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cloudfront": [
+    {
+      "yt": "AT-nHW3_SVI",
+      "titulo": "Introduction to Amazon CloudFront",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "s3": [
+    {
+      "yt": "1HbY_M55pN0",
+      "titulo": "Amazon S3: Versionamento - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "77lMCiiMilo",
+      "titulo": "Introduction to Amazon Simple Storage Service (S3) - Cloud Storage on AWS",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "s3-glacier": [
+    {
+      "yt": "3ixfo2wg9Fk",
+      "titulo": "Economize até 90% no armazenamento com o Amazon S3 Glacier Deep Archive",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "MoiEpfmNiUo",
+      "titulo": "Introduction to the Amazon S3 Glacier Instant Retrieval Storage Class | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "ebs": [
+    {
+      "yt": "b6vaNi1SD7Y",
+      "titulo": "Introduction to Amazon EBS | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "77qLAl-lRpo",
+      "titulo": "Amazon Elastic Block Store (EBS) Overview",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "efs": [
+    {
+      "yt": "6ZIPBC78U0s",
+      "titulo": "Introduction to Amazon Elastic File System (EFS) - Cloud File Storage on AWS",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "vAV4ASDnbN0",
+      "titulo": "Amazon EFS Overview | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "fsx": [
+    {
+      "yt": "t5CzFL8VXEw",
+      "titulo": "Amazon FSx for Windows File Server, Capítulo 1 - AWS Blog Post",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "2MefyahWOq4",
+      "titulo": "Amazon FSx for NetApp ONTAP Overview | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "aws-backup": [
+    {
+      "yt": "peUjKlE3dEk",
+      "titulo": "Como começar com AWS Backup - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    }
+  ],
+  "datasync": [
+    {
+      "yt": "iauNQZBHtF8",
+      "titulo": "Migrando sistemas de arquivos para a AWS - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "yyadbihEK0c",
+      "titulo": "The Power of AWS DataSync | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "transfer-family": [
+    {
+      "yt": "Ie9M0qBGrCE",
+      "titulo": "Getting started with AWS Transfer Family Web App | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "rds": [
+    {
+      "yt": "mr_WGUjuSvM",
+      "titulo": "Alta disponibilidade com Amazon RDS Multi-AZ - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "eZjolFiUqH8",
+      "titulo": "AWS Otimizando na Prática - Dica #3 - Reservas de RDS - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    }
+  ],
+  "aurora": [
+    {
+      "yt": "l7IpsIzMa6E",
+      "titulo": "What is Amazon Aurora | Animated Explainer | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "dynamodb": [
+    {
+      "yt": "IED0R9rh48I",
+      "titulo": "What is Amazon DynamoDB? | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "elasticache": [
+    {
+      "yt": "VGKbTnzyD_o",
+      "titulo": "Introduction to Amazon ElastiCache for Memcached",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "memorydb": [
+    {
+      "yt": "uClbpz5LWPg",
+      "titulo": "Introduction to Amazon MemoryDB for Redis | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "documentdb": [
+    {
+      "yt": "SRWbm1dfOs4",
+      "titulo": "Introduction to Amazon DocumentDB (with MongoDB compatibility) | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "neptune": [
+    {
+      "yt": "QqqZgmVsxlM",
+      "titulo": "Neptune Database and Neptune Analytics: Which one is for me? | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "keyspaces": [
+    {
+      "yt": "ldutTZqj6SQ",
+      "titulo": "Amazon Keyspaces Getting Started Video | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "timestream": [
+    {
+      "yt": "91LClHNCYRs",
+      "titulo": "Amazon Timestream for InfluxDB | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "direct-connect": [
+    {
+      "yt": "y4rIwSbdlS0",
+      "titulo": "Getting Started with AWS Direct Connect | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "iam": [
+    {
+      "yt": "SXSqhTn2DuE",
+      "titulo": "AWS Identity and Access Management (IAM) | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "iam-identity-center": [
+    {
+      "yt": "4yJp5-jGGNk",
+      "titulo": "AWS IAM Identity Center (Successor to AWS SSO) Overview Demo | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "organizations": [
+    {
+      "yt": "T4NK8fv8YdI",
+      "titulo": "Introducing AWS Organizations",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cognito": [
+    {
+      "yt": "A8Naua_2PMA",
+      "titulo": "Tech Pills - Configurando Autenticação com o Amazon Cognito - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    }
+  ],
+  "kms": [
+    {
+      "yt": "jfJavBwYMdQ",
+      "titulo": "Como AWS KMS ajuda a proteger seu conteúdo",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "8Z0wsE2HoSo",
+      "titulo": "What is AWS Key Management Service? | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cloudhsm": [
+    {
+      "yt": "BLnuUtjJNLE",
+      "titulo": "What is AWS CloudHSM? | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "secrets-manager": [
+    {
+      "yt": "-9nOyaM3kZk",
+      "titulo": "What is AWS Secrets Manager | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "HiY2oxR1Jd0",
+      "titulo": "AWS Secrets Manager",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "acm": [
+    {
+      "yt": "Nk77te-cksQ",
+      "titulo": "What is AWS Certificate Manager?  | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "waf": [
+    {
+      "yt": "HYtLvPYYoxk",
+      "titulo": "Criando sua primeira web ACL no AWS WAF - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "FdJ4fKMMTIE",
+      "titulo": "Getting started with AWS WAF- Service Overview | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "shield": [
+    {
+      "yt": "7rgiXEa0_jE",
+      "titulo": "AWS Shield Animated Explainer Video | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "firewall-manager": [
+    {
+      "yt": "FGhKpPDBvXc",
+      "titulo": "Getting Started with AWS Firewall Manager | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "network-firewall": [
+    {
+      "yt": "BYVObzBWnqo",
+      "titulo": "AWS Network Firewall console experience | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "guardduty": [
+    {
+      "yt": "ng14ToMXnTA",
+      "titulo": "What is Amazon GuardDuty? | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "inspector": [
+    {
+      "yt": "wi1PDr9n67Y",
+      "titulo": "Introduction to the New Amazon Inspector | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "Nx8s7lwapoE",
+      "titulo": "Amazon Inspector Overview Demo | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "macie": [
+    {
+      "yt": "CenD1dq3xj8",
+      "titulo": "What is Amazon Macie?",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "security-hub": [
+    {
+      "yt": "zhqn_P-FGqU",
+      "titulo": "AWS Security Hub Exposure Findings | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "yAjYm-eSxec",
+      "titulo": "AWS Security Hub Exposure Findings Demo | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "detective": [
+    {
+      "yt": "84BhFGIxIqg",
+      "titulo": "What is Amazon Detective?",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "dFR4Dk4h1Go",
+      "titulo": "Amazon Detective investigations for Amazon GuardDuty threat detections | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "artifact": [
+    {
+      "yt": "ILEoLqpbfXM",
+      "titulo": "Get to know AWS Artifact",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "O307zdIOmWo",
+      "titulo": "Learn How to Use AWS Artifact to Retrieve Your Compliance Reports",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cloudwatch": [
+    {
+      "yt": "a4dhoTQCyRA",
+      "titulo": "Amazon CloudWatch: Complete Visibility of Your Cloud Resources and Applications",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cloudtrail": [
+    {
+      "yt": "mXQSnbc9jMs",
+      "titulo": "AWS CloudTrail: Simplify Security Analysis, Resource Change Tracking, and Troubleshooting",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "config": [
+    {
+      "yt": "MJDuAvNEv64",
+      "titulo": "AWS Config: Assess, Audit, and Evaluate Your AWS Resources",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "systems-manager": [
+    {
+      "yt": "MK4ZoCs-muo",
+      "titulo": "What is AWS Systems Manager?",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cloudformation": [
+    {
+      "yt": "Omppm_YUG2g",
+      "titulo": "Introduction to AWS CloudFormation",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "health-dashboard": [
+    {
+      "yt": "pKpwN3dQSmo",
+      "titulo": "AWS Health | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "service-catalog": [
+    {
+      "yt": "A6-jv3gZa4U",
+      "titulo": "Introduction to AWS Service Catalog",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "x-ray": [
+    {
+      "yt": "Td7ZSS8p6DA",
+      "titulo": "Announcing AWS X-Ray",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cloudshell": [
+    {
+      "yt": "fz4rbjRaiQM",
+      "titulo": "AWS CloudShell - Access a Linux terminal in your browser with a single click",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "code-services": [
+    {
+      "yt": "YxcIj_SLflw",
+      "titulo": "Introduction to AWS CodePipeline - Continuous Delivery on Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "well-architected-tool": [
+    {
+      "yt": "n4BTqappip0",
+      "titulo": "Navigating Best Practices with the AWS Well-Architected Tool | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "cost-explorer": [
+    {
+      "yt": "8oF4yDWA3qA",
+      "titulo": "How can I use Cost Explorer to analyze my spending and usage?",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "savings-plans": [
+    {
+      "yt": "QuCboyyTPwU",
+      "titulo": "AWS Otimizando na Prática - Dica #2 - Adquirindo Compute Savings Plans - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    }
+  ],
+  "athena": [
+    {
+      "yt": "npe9RcSTIzI",
+      "titulo": "Consulte dados com o AWS Athena - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    }
+  ],
+  "glue": [
+    {
+      "yt": "HFFiAy2J2OQ",
+      "titulo": "Transforme e catalogue dados com o AWS Glue   Parte 1 - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "u14iVEc-C6E",
+      "titulo": "AWS Glue Overview | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "emr": [
+    {
+      "yt": "QuwaBOESGiU",
+      "titulo": "An introduction to Amazon EMR - Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "kinesis-streams": [
+    {
+      "yt": "hLLgkTUmwOU",
+      "titulo": "Amazon Kinesis Data Streams Fundamentals",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "X0SKArvV7oI",
+      "titulo": "Getting Started with Amazon Kinesis Data Streams",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "data-firehose": [
+    {
+      "yt": "qRoyF9dEqgw",
+      "titulo": "Introduction to Kinesis Data Firehose | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "msk": [
+    {
+      "yt": "5WaIgJwYpS8",
+      "titulo": "Get Started with Amazon Managed Streaming for Apache Kafka (MSK) | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "quick": [
+    {
+      "yt": "a1MWutEbzuI",
+      "titulo": "Visualize dados com o Amazon Quicksight - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "dGWbzNfEhzk",
+      "titulo": "Amazon Quick Sight | Unlock AI-powered business intelligence | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "sagemaker-ai": [
+    {
+      "yt": "1bt11sLo5Pw",
+      "titulo": "Introduction to SageMaker AI | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "rekognition": [
+    {
+      "yt": "aMGdffpVHHE",
+      "titulo": "What Is Amazon Rekognition? | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "U3nsR1yyxKk",
+      "titulo": "What's Amazon Rekognition Content Moderation | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "comprehend": [
+    {
+      "yt": "wYunViHQXHg",
+      "titulo": "Amazon Comprehend Video Snacks - Episode 01 | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "transcribe": [
+    {
+      "yt": "zD8NMw4T1TI",
+      "titulo": "What is Amazon Transcribe?",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "oBgSJ7bsP2U",
+      "titulo": "Amazon Transcribe video snacks: Using custom vocabulary | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "lex": [
+    {
+      "yt": "Q2yJf4bn5fQ",
+      "titulo": "Conversational AI powered by Amazon Lex | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "P3eh5f5Q2Wc",
+      "titulo": "Amazon Lex: Bot Templates | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "textract": [
+    {
+      "yt": "5Cs4_e2CJRo",
+      "titulo": "What is Amazon Textract?",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    },
+    {
+      "yt": "FsdQYWh-6qo",
+      "titulo": "Extract specific information from documents using Queries from Amazon Textract - AWS",
+      "canal": "AWS Developers",
+      "lang": "en"
+    }
+  ],
+  "personalize": [
+    {
+      "yt": "NN6sM0Dj_Cg",
+      "titulo": "Use Amazon Personalize Recommenders for Common Business Use Cases | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "workspaces": [
+    {
+      "yt": "F3UdQbkFGxc",
+      "titulo": "Criando seu primeiro desktop com o Amazon WorkSpaces - Português",
+      "canal": "AWS Developers LATAM",
+      "lang": "pt"
+    },
+    {
+      "yt": "JzIxmK2O9qE",
+      "titulo": "Getting started with Amazon WorkSpaces Pools | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "connect": [
+    {
+      "yt": "amm7C44NV2s",
+      "titulo": "Transform Your Customer Experience with Amazon Connect | Amazon Web Services",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ],
+  "iot-core": [
+    {
+      "yt": "6w9a6y_-T2o",
+      "titulo": "How to Get Started with AWS IoT Core Quick Connect",
+      "canal": "Amazon Web Services",
+      "lang": "en"
+    }
+  ]
+}

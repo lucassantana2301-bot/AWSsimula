@@ -6,13 +6,13 @@
 import type { z } from "zod";
 import {
   CatalogoSchema, DeckSchema, DiagramsSchema, DueloSchema, EquivSchema, ExamSchema, FichaSchema, LessonSchema,
-  QuestionSchema, ServicoSchema, type Deck, type Duelo, type Exam, type Ficha, type Lesson, type Question, type Servico,
+  QuestionSchema, ServicoSchema, VideosSchema, type Deck, type Duelo, type Exam, type Ficha, type Lesson, type Question, type Servico,
 } from "./schema";
 
 export interface ExamContent { questions: unknown; fichas: unknown; lessons: unknown; decks: unknown }
 export interface RawBundle {
   exams: unknown; catalogo: unknown; equiv: unknown; diagrams: unknown; sharedLessons: unknown;
-  porExame: Record<string, ExamContent>; servicos: unknown; duelos: unknown;
+  porExame: Record<string, ExamContent>; servicos: unknown; duelos: unknown; videos: unknown;
 }
 export interface Problema { onde: string; msg: string }
 
@@ -97,5 +97,19 @@ export function validarConteudo(raw: RawBundle): Problema[] {
     if (!sids.has(c.id) || c.id === s.id) p.push({ onde: `guia/${s.id}`, msg: `confunde aponta para serviço inexistente: ${c.id}` });
   for (const d of duelos) for (const c of d.cols)
     if (c.id && !sids.has(c.id)) p.push({ onde: `guia/${d.id}`, msg: `coluna aponta para serviço inexistente: ${c.id}` });
+
+  /* vídeos: serviço existe, não está fechado, e cada vídeo aparece uma vez */
+  const rv = VideosSchema.safeParse(raw.videos);
+  if (!rv.success) for (const iss of rv.error.issues) p.push({ onde: "guia/videos" + (iss.path.length ? "." + iss.path.join(".") : ""), msg: iss.message });
+  else {
+    const porId = new Map(servicos.map((s) => [s.id, s]));
+    const yts = new Set<string>();
+    for (const [sid, vs] of Object.entries(rv.data)) {
+      const s = porId.get(sid);
+      if (!s) p.push({ onde: `guia/videos.${sid}`, msg: "vídeo para serviço inexistente" });
+      else if (s.status === "fechado") p.push({ onde: `guia/videos.${sid}`, msg: "serviço fechado não deve ter vídeo" });
+      for (const v of vs) { if (yts.has(v.yt)) p.push({ onde: `guia/videos.${sid}`, msg: `vídeo repetido: ${v.yt}` }); yts.add(v.yt); }
+    }
+  }
   return p;
 }
