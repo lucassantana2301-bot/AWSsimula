@@ -245,7 +245,7 @@ export function telaRevisao(r: EstadoRevisao): Html {
         <button class="btn sm" data-act="simgo" data-i="${Math.max(0, primeiraBranco)}" ${primeiraBranco < 0 ? "disabled" : ""}>Ir para a primeira em branco</button>
         <button class="btn sm" data-act="simgo" data-i="${Math.max(0, primeiraMarcada)}" ${primeiraMarcada < 0 ? "disabled" : ""}>Revisar marcadas</button>
       </div>
-      <div class="qnav" role="group" aria-label="Todas as questões">${r.respondidas.map(
+      <div class="qnav ${r.aws ? "aw" : "az"}" role="group" aria-label="Todas as questões">${r.respondidas.map(
         (_, i) => html`<button data-act="simgo" data-i="${i}" data-st="${estado(i)}" aria-label="${rotuloQ(i)}">${i + 1}</button>`,
       )}</div>
       <p class="t-xs dim2 rev-leg"><span class="k ans" aria-hidden="true"></span> respondida <span class="k flag" aria-hidden="true"></span> marcada <span class="k" aria-hidden="true"></span> em branco</p>

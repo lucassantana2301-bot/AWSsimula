@@ -116,6 +116,45 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
     await p.close();
   }
 
+  /* ---------- 7b. simulado: escolher e navegar animam só o que mudou ---------- */
+  {
+    const {p,errs}=await nova(false);
+    await p.evaluate(()=>document.querySelector('[data-act="exam"][data-exam="saa"]').click()); await sleep(250);
+    /* outra aba do teste pode ter deixado um simulado salvo: o segundo toque confirma o descarte */
+    await p.evaluate(()=>{ const b=document.querySelector('[data-act="simstart"]'); b.click(); if(!document.querySelector(".sim-bar")) b.click(); }); await sleep(300);
+    /* acha uma questão de alternativas (o sorteio pode começar por sim/não ou ordenar) */
+    for(let i=0;i<30&&!(await p.$('[data-act="qpick"]'));i++){ await p.evaluate(()=>document.querySelector('[data-act="simnext"]').click()); await sleep(80); }
+    const esc=await p.evaluate(()=>{
+      const alvo=document.querySelectorAll('[data-act="qpick"]')[1]; const k=alvo.dataset.k; alvo.click();
+      const marcadas=[...document.querySelectorAll(".opt.fx-pick")].map(o=>o.dataset.k);
+      const box=document.querySelector(".qbox");
+      return {k,marcadas,cor:getComputedStyle(box).getPropertyValue("--acc").trim(),aw:box.classList.contains("aw")};
+    });
+    ok(esc.marcadas.length===1&&esc.marcadas[0]===esc.k,"escolher deveria animar só a alternativa escolhida: "+JSON.stringify(esc));
+    ok(esc.aw&&esc.cor!=="","questão AWS deveria usar a cor do exame: "+JSON.stringify(esc));
+    await sleep(600);
+    const sobra=await p.evaluate(()=>document.querySelectorAll(".fx-pick,.fx-nav-next,.fx-nav-prev").length);
+    ok(sobra===0,"classe de animação sobrou depois de terminar: "+sobra);
+    const repete=await p.evaluate(()=>{ document.querySelector('[data-act="simflag"]').click(); return document.querySelectorAll(".fx-pick,.fx-nav-next").length; });
+    ok(repete===0,"marcar a questão repetiu a animação de escolha: "+repete);
+    const nav=await p.evaluate(()=>{ document.querySelector('[data-act="simnext"]').click(); const q=document.querySelector(".qbox"); return q?q.className:""; });
+    ok(/fx-nav-next/.test(nav),"ir para a próxima não animou a entrada do cartão: "+nav);
+    const volta=await p.evaluate(()=>{ document.querySelector('[data-act="simprev"]').click(); return document.querySelector(".qbox").className; });
+    ok(/fx-nav-prev/.test(volta),"voltar não animou pelo outro lado: "+volta);
+    ok(!errs.length,"erro JS no simulado: "+errs[0]);
+    await p.close();
+  }
+  /* reduzido: escolher não cria classe de animação */
+  {
+    const {p}=await nova(true);
+    await p.evaluate(()=>document.querySelector('[data-act="exam"][data-exam="saa"]').click()); await sleep(250);
+    /* outra aba do teste pode ter deixado um simulado salvo: o segundo toque confirma o descarte */
+    await p.evaluate(()=>{ const b=document.querySelector('[data-act="simstart"]'); b.click(); if(!document.querySelector(".sim-bar")) b.click(); }); await sleep(300);
+    for(let i=0;i<30&&!(await p.$('[data-act="qpick"]'));i++){ await p.evaluate(()=>document.querySelector('[data-act="simnext"]').click()); await sleep(80); }
+    const n=await p.evaluate(()=>{ document.querySelector('[data-act="qpick"]').click(); return document.querySelectorAll(".fx-pick").length; });
+    ok(n===0,"movimento reduzido ainda animou a escolha: "+n);
+    await p.close();
+  }
   /* ---------- 8. movimento reduzido ---------- */
   {
     const {p,errs}=await nova(true);
