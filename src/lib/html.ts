@@ -51,12 +51,14 @@ export function html(partes: TemplateStringsArray, ...valores: readonly Valor[])
 export const confiavel = (texto: string): Html => criar(texto);
 
 /**
- * URL para href/src: só http(s), mailto ou caminho relativo. Qualquer outro
+ * URL para href/src: só http(s), mailto ou caminho relativo do próprio site. Qualquer outro
  * esquema (javascript:, data:, vbscript:) vira "#".
  */
 export function url(u: string): string {
   const t = u.trim();
   if (/^(https?:|mailto:)/i.test(t)) return t;
   if (/^[a-z][a-z0-9+.-]*:/i.test(t)) return "#";
+  /* "//outro-site.com" e "\\outro-site.com" herdam o esquema e saem do site */
+  if (/^[\\/]{2}/.test(t)) return "#";
   return t;
 }

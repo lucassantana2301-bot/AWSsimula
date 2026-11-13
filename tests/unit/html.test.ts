@@ -39,7 +39,14 @@ describe("html`` com escape automático", () => {
   it("url() bloqueia esquemas perigosos", () => {
     expect(url("https://learn.microsoft.com/x")).toBe("https://learn.microsoft.com/x");
     expect(url("/api/r?e=saa")).toBe("/api/r?e=saa");
-    for (const ruim of ["javascript:alert(1)", " JaVaScRiPt:alert(1)", "data:text/html,<script>", "vbscript:x"])
+    for (const ruim of [
+      "//evil.example/x",
+      "\\\\evil.example",
+      "javascript:alert(1)",
+      " JaVaScRiPt:alert(1)",
+      "data:text/html,<script>",
+      "vbscript:x",
+    ])
       expect(url(ruim)).toBe("#");
   });
 
