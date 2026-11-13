@@ -18,6 +18,7 @@ import {
   telemetriaLigada,
   type NomeEvento,
 } from "./features/telemetria/telemetria";
+import { blocoApp, iniciarPwa } from "./features/pwa/pwa";
 import indiceGuia from "../content/guia/indice.json";
 
 type Conteudo = ReturnType<typeof montarConteudo> & {
@@ -55,7 +56,7 @@ globalThis.__CQ_CONTENT = {
   /** serviços do guia citados na explicação, na resposta certa e no enunciado */
   citados: (textos: string[]): string[] => servicosCitados(textos, indice),
   nomesGuia: Object.fromEntries(indiceGuia.map((e) => [e.id, e.nome.replace(/\s*\(.*\)$/, "")])),
-  blocoConta: () => blocoConta() + blocoPrivacidade(),
+  blocoConta: () => blocoApp() + blocoConta() + blocoPrivacidade(),
   aoSalvar: agendar,
   aoNavegar: (tela, o) => {
     const ev = eventoDaRota(tela, o);
@@ -80,4 +81,16 @@ await import("./legacy/engine.js");
 const motor = globalThis.__CQ_MOTOR;
 if (!motor) throw new Error("motor não expôs o contrato __CQ_MOTOR");
 iniciarConta(motor);
+iniciarPwa(
+  {
+    toast: (m, t) => {
+      motor.toast(m, t);
+    },
+    render: () => {
+      motor.render();
+    },
+    evento: registrarEvento,
+  },
+  import.meta.env.PROD,
+);
 registrarEvento("abriu_app");

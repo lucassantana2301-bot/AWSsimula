@@ -8,6 +8,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const prob = [];
   p.on("pageerror", (e) => prob.push("erro JS: " + e.message));
   let bloquear = true;
+  /* sem service worker: com ele o guia já vem do cache (check-offline.js cobre
+     esse caso); aqui o alvo é a primeira visita, antes de o cache existir */
+  await p.setBypassServiceWorker(true);
   await p.setRequestInterception(true);
   p.on("request", (r) => (bloquear && /\/assets\/(servicos|duelos)-/.test(r.url()) ? r.abort() : r.continue()));
   await p.setViewport({ width: 390, height: 844 });

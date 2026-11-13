@@ -21,6 +21,17 @@ export default tseslint.config(
     },
   },
   {
+    /* modelo do service worker: JS puro, escopo de worker; __ARQUIVOS__ vira a lista no build */
+    files: ["src/pwa/*.js"],
+    ...tseslint.configs.disableTypeChecked,
+    languageOptions: {
+      ...tseslint.configs.disableTypeChecked.languageOptions,
+      sourceType: "script",
+      globals: { ...globals.serviceworker, __ARQUIVOS__: "readonly" },
+    },
+    rules: { ...tseslint.configs.disableTypeChecked.rules, eqeqeq: ["error", "always"] },
+  },
+  {
     files: ["scripts/**/*.mjs", "eslint.config.mjs"],
     ...tseslint.configs.disableTypeChecked,
     languageOptions: { ...tseslint.configs.disableTypeChecked.languageOptions, globals: { ...globals.node } },
