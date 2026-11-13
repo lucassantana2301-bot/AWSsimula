@@ -1,0 +1,24 @@
+name: Conteúdo (checagem semanal)
+
+# Links das fontes oficiais e questões sem revisão há mais de 12 meses.
+# Uma vez por semana (segunda, 9h17 UTC) e sob demanda: gasta ~1 minuto.
+on:
+  schedule:
+    - cron: "17 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checar:
+    name: Links e revisão das questões
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Checar
+        run: node scripts/conteudo-semanal.mjs
