@@ -22,6 +22,7 @@ import {
 import { blocoApp, iniciarPwa } from "./features/pwa/pwa";
 import { blocoCalendario } from "./features/progresso/calendario";
 import { type Html } from "./lib/html";
+import { urlLinkedIn, urlResultado, type Resultado } from "./features/compartilhar/resultado";
 import indiceGuia from "../content/guia/indice.json";
 
 interface GuiaTelas {
@@ -42,6 +43,7 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   aoNavegar: (tela: string, o?: Record<string, unknown>) => void;
   evento: (nome: NomeEvento, dados?: Record<string, unknown>) => void;
   guiaTelas: GuiaTelas;
+  compartilharResultado: (r: Resultado) => void;
 };
 
 declare global {
@@ -81,6 +83,15 @@ globalThis.__CQ_CONTENT = {
   evento: registrarEvento,
   /* guia de serviços: telas e ações fora do motor (fase 3) */
   guiaTelas: { ligar: ligarGuia, tela: (nome) => telaDoGuia(nome).texto, acao: acaoDoGuia, filtrar: filtrarGuia },
+  /* abre o LinkedIn com o link público do resultado e copia o link */
+  compartilharResultado: (r) => {
+    const link = urlResultado(location.origin, r);
+    window.open(urlLinkedIn(link), "_blank", "noopener,noreferrer");
+    navigator.clipboard.writeText(link).then(
+      () => globalThis.__CQ_MOTOR?.toast("Link do resultado copiado", "ok"),
+      () => undefined,
+    );
+  },
 };
 instalarVideos();
 

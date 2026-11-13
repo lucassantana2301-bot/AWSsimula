@@ -64,5 +64,15 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/og.ts": {
+      "includeFiles": "api/_fontes/**",
+      "maxDuration": 10,
+      "memory": 512
+    },
+    "api/r.ts": {
+      "maxDuration": 5
+    }
+  }
 }
