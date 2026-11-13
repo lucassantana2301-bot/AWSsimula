@@ -69,3 +69,25 @@ Primeiro módulo fora do motor legado. O motor só chama `C.blocoVideos(id)`.
 - **Privacidade**: nada do YouTube carrega até o toque. O cartão é próprio, sem miniatura externa.
   - O toque cria o iframe pela API do DOM, em `youtube-nocookie.com`, o único domínio liberado em `frame-src`.
 - **Falha**: se `videos.json` não baixar, o guia abre do mesmo jeito, só sem a seção.
+
+## Fase 3: saindo do motor legado
+
+**Padrão de cada tela extraída**
+
+- Módulo tipado em `src/features/<área>/`.
+- HTML só por `html` em `src/lib/html.ts`, que escapa tudo automaticamente.
+  - O único jeito de pular o escape é `confiavel()`, fácil de achar numa revisão.
+  - URLs passam por `url()`, que bloqueia `javascript:` e `data:`.
+- O motor fala com o módulo por um contrato pequeno e explícito (ex.: `MotorGuia`: rota, navegação, render, XP, progresso).
+- O Prettier não formata templates embutidos (`embeddedLanguageFormatting: off`). Ele reescreveria espaços dentro de `html`.
+
+**Estado**
+
+| Área                                                                   | Onde está                         |
+| ---------------------------------------------------------------------- | --------------------------------- |
+| Guia de serviços (lista, serviço, duelo, treino)                       | `src/features/guia/telas.ts` ✅   |
+| Vídeos, revisão FSRS, conta, telemetria, PWA, calendário, compartilhar | `src/features/*` ✅               |
+| Trilha, prova, ficha, aula, prática, simulado, desafios, perfil        | `src/legacy/engine.js` (próximas) |
+
+**Testes do JSDOM**
+`scripts/build-test-bundle.mjs` empacota com esbuild os mesmos módulos que `src/main.ts` liga no app (`scripts/entrada-testes.mjs`).

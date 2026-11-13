@@ -13,6 +13,7 @@
 import type { Session, SupabaseClient } from "@supabase/supabase-js";
 import { SUPABASE_CHAVE_PUBLICA, SUPABASE_URL } from "../../config";
 import { mesclar, temProgresso, type Estado } from "./mesclar";
+import { html, type Html } from "../../lib/html";
 
 export interface Motor {
   estado(): Estado;
@@ -82,9 +83,6 @@ export function mesmoProgresso(a: Estado, b: Estado): boolean {
 export function emailValido(email: string): boolean {
   return email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 }
-
-const esc = (s: string): string =>
-  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] ?? c);
 
 function ler(chave: string): string | null {
   try {
@@ -237,20 +235,22 @@ async function carregarPainel(c: SupabaseClient): Promise<void> {
 }
 
 /** Painel do dono do app: números da semana e erros mais frequentes. */
-export function htmlPainel(p: Painel): string {
-  const linha = (rot: string, v: string | number): string =>
-    `<div class="spread"><span class="t-sm">${esc(rot)}</span><b class="mono">${esc(String(v))}</b></div>`;
+export function htmlPainel(p: Painel): Html {
+  const linha = (rot: string, v: string | number): Html =>
+    html`<div class="spread"><span class="t-sm">${rot}</span><b class="mono">${v}</b></div>`;
   const sims = Object.entries(p.simulados);
-  return `<section class="sheet stack" aria-labelledby="painel-h">
-    <div class="hd"><h2 id="painel-h">Painel do app</h2><span class="n">últimos ${String(p.dias)} dias · só você vê</span></div>
+  return html`<section class="sheet stack" aria-labelledby="painel-h">
+    <div class="hd"><h2 id="painel-h">Painel do app</h2><span class="n">últimos ${p.dias} dias · só você vê</span></div>
     ${linha("Sessões", p.sessoes)}${linha("Contas (ativas na semana)", `${String(p.contas)} (${String(p.contas_ativas)})`)}
-    ${Object.entries(p.provas)
-      .map(([k, n]) => linha(`Abriram ${k.toUpperCase()}`, n))
-      .join("")}
-    ${sims.length ? `<h3 class="t-sm" style="margin-top:6px">Simulados</h3>${sims.map(([k, v]) => linha(`${k.toUpperCase()}: média ${String(v.media)}`, `${String(v.aprovados)}/${String(v.n)} aprovados`)).join("")}` : ""}
-    ${p.servicos_top.length ? `<h3 class="t-sm" style="margin-top:6px">Serviços mais abertos no guia</h3>${p.servicos_top.map((x) => linha(x.id, x.n)).join("")}` : ""}
+    ${Object.entries(p.provas).map(([k, n]) => linha(`Abriram ${k.toUpperCase()}`, n))}
+    ${sims.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Simulados</h3>${sims.map(([k, v]) => linha(`${k.toUpperCase()}: média ${String(v.media)}`, `${String(v.aprovados)}/${String(v.n)} aprovados`))}`}
+    ${p.servicos_top.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Serviços mais abertos no guia</h3>${p.servicos_top.map((x) => linha(x.id, x.n))}`}
     <h3 class="t-sm" style="margin-top:6px">Erros</h3>
-    ${p.erros.length ? p.erros.map((e) => `<p class="t-xs"><b class="mono">${String(e.n)}×</b> ${esc(e.mensagem)} <span class="dim2">(${esc(e.versao)})</span></p>`).join("") : `<p class="t-xs dim">Nenhum erro registrado.</p>`}
+    ${
+      p.erros.length > 0
+        ? p.erros.map((e) => html`<p class="t-xs"><b class="mono">${e.n}×</b> ${e.mensagem} <span class="dim2">(${e.versao})</span></p>`)
+        : html`<p class="t-xs dim">Nenhum erro registrado.</p>`
+    }
   </section>`;
 }
 
@@ -332,25 +332,22 @@ function quando(ms: number): string {
 }
 
 /** Seção "Conta" do Perfil. */
-export function blocoConta(): string {
-  const titulo = `<div class="hd"><h2 id="conta-h">Conta e sincronização</h2></div>`;
+export function blocoConta(): Html {
+  const titulo = html`<div class="hd"><h2 id="conta-h">Conta e sincronização</h2></div>`;
   if (!sessao) {
     const enviado = status === "link_enviado";
-    return `<section class="sheet stack conta" aria-labelledby="conta-h">${titulo}
+    const rotulo = status === "enviando" ? "Enviando…" : enviado ? "Reenviar" : "Enviar link";
+    return html`<section class="sheet stack conta" aria-labelledby="conta-h">${titulo}
       <p class="t-sm dim">Entre com seu e-mail para guardar o progresso e continuar em outro aparelho. Sem senha: chega um link.</p>
-      ${
-        enviado
-          ? `<p class="t-sm" role="status">Link enviado para <b>${esc(emailEnviado)}</b>. Abra o e-mail <b>neste mesmo navegador</b> e toque no link.</p>`
-          : ""
-      }
+      ${enviado && html`<p class="t-sm" role="status">Link enviado para <b>${emailEnviado}</b>. Abra o e-mail <b>neste mesmo navegador</b> e toque no link.</p>`}
       <form class="conta-form" data-conta-form novalidate>
         <label class="t-xs dim" for="cq-email">E-mail</label>
         <div class="row">
           <input id="cq-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required placeholder="voce@exemplo.com">
-          <button class="btn fill sm" type="submit" ${status === "enviando" ? "disabled" : ""}>${status === "enviando" ? "Enviando…" : enviado ? "Reenviar" : "Enviar link"}</button>
+          <button class="btn fill sm" type="submit" ${status === "enviando" && html`disabled`}>${rotulo}</button>
         </div>
       </form>
-      ${status === "erro" ? `<p class="t-sm" style="color:var(--no)" role="alert">${esc(mensagemErro)}</p>` : ""}
+      ${status === "erro" && html`<p class="t-sm" style="color:var(--no)" role="alert">${mensagemErro}</p>`}
     </section>`;
   }
   const email = sessao.user.email ?? "";
@@ -365,17 +362,18 @@ export function blocoConta(): string {
     escolha: "",
   };
   if (status === "escolha")
-    return `<section class="sheet stack conta" aria-labelledby="conta-h" style="border-color:var(--fl)">${titulo}
-      <p class="t-sm">Este aparelho já tem progresso, e a conta <b>${esc(email)}</b> também. O que fazer?</p>
+    return html`<section class="sheet stack conta" aria-labelledby="conta-h" style="border-color:var(--fl)">${titulo}
+      <p class="t-sm">Este aparelho já tem progresso, e a conta <b>${email}</b> também. O que fazer?</p>
       <div class="row" style="flex-wrap:wrap;gap:8px">
         <button class="btn fill sm" data-conta="juntar">Juntar os dois (recomendado)</button>
         <button class="btn sm" data-conta="usar-conta">Usar só o da conta</button>
       </div>
       <p class="t-xs dim2">Juntar mantém o melhor de cada um: nada que você já fez se perde.</p>
     </section>`;
-  return `${painel ? htmlPainel(painel) : ""}<section class="sheet stack conta" aria-labelledby="conta-h">${titulo}
-    <p class="t-sm">Conectado como <b>${esc(email)}</b></p>
-    <p class="t-xs ${status === "erro" ? "" : "dim"}" role="status" ${status === "erro" ? 'style="color:var(--no)"' : ""}>${esc(situacao[status])}</p>
+  const erro = status === "erro";
+  return html`${painel && htmlPainel(painel)}<section class="sheet stack conta" aria-labelledby="conta-h">${titulo}
+    <p class="t-sm">Conectado como <b>${email}</b></p>
+    <p class="t-xs ${erro ? "" : "dim"}" role="status" ${erro && html`style="color:var(--no)"`}>${situacao[status]}</p>
     <div class="row" style="flex-wrap:wrap;gap:8px">
       <button class="btn sm" data-conta="sync">Sincronizar agora</button>
       <button class="btn sm ghost" data-conta="sair">Sair</button>
