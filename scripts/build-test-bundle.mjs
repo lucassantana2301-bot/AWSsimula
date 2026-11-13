@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const j = (rel) => JSON.parse(readFileSync(join(ROOT, "content", rel), "utf8"));
@@ -23,9 +24,20 @@ const C = {
   DUELOS: j("guia/duelos.json"),
   catalogo: j("catalogo.json"),
 };
+/* módulos tipados que o motor usa: o mesmo código da produção, só sem tipos */
+function modulo(rel) {
+  const fonte = readFileSync(join(ROOT, rel), "utf8");
+  const { outputText, diagnostics } = ts.transpileModule(fonte, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+    reportDiagnostics: true,
+  });
+  if (diagnostics?.length) throw new Error(`${rel}: ${diagnostics.length} erro(s) de transpilação`);
+  return `(function(){ var exports = {}; ${outputText}\n return exports; })()`;
+}
 const motor = readFileSync(join(ROOT, "src", "legacy", "engine.js"), "utf8");
+const servicos = `globalThis.__CQ_CONTENT.fsrs = ${modulo("src/features/srs/fsrs.ts")};\n`;
 mkdirSync(join(ROOT, "build"), { recursive: true });
-writeFileSync(join(ROOT, "build", "all.js"), `globalThis.__CQ_CONTENT = ${JSON.stringify(C)};\n${motor}`);
+writeFileSync(join(ROOT, "build", "all.js"), `globalThis.__CQ_CONTENT = ${JSON.stringify(C)};\n${servicos}${motor}`);
 console.log(`build/all.js: ${C.QUESTIONS.length} questões, ${C.FICHAS.length} fichas, ${C.GUIA.length} serviços`);
 
 /* build/test.html: a página com o motor embutido, para as suítes em JSDOM */

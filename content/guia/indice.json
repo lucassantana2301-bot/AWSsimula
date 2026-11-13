@@ -1,0 +1,486 @@
+[
+ {
+  "id": "ec2",
+  "nome": "Amazon EC2"
+ },
+ {
+  "id": "ec2-auto-scaling",
+  "nome": "Amazon EC2 Auto Scaling"
+ },
+ {
+  "id": "lambda",
+  "nome": "AWS Lambda"
+ },
+ {
+  "id": "lightsail",
+  "nome": "Amazon Lightsail"
+ },
+ {
+  "id": "elastic-beanstalk",
+  "nome": "AWS Elastic Beanstalk"
+ },
+ {
+  "id": "batch",
+  "nome": "AWS Batch"
+ },
+ {
+  "id": "outposts",
+  "nome": "AWS Outposts"
+ },
+ {
+  "id": "local-zones",
+  "nome": "AWS Local Zones e Wavelength"
+ },
+ {
+  "id": "ecs",
+  "nome": "Amazon ECS"
+ },
+ {
+  "id": "eks",
+  "nome": "Amazon EKS"
+ },
+ {
+  "id": "fargate",
+  "nome": "AWS Fargate"
+ },
+ {
+  "id": "ecr",
+  "nome": "Amazon ECR"
+ },
+ {
+  "id": "app-runner",
+  "nome": "AWS App Runner"
+ },
+ {
+  "id": "step-functions",
+  "nome": "AWS Step Functions"
+ },
+ {
+  "id": "api-gateway",
+  "nome": "Amazon API Gateway"
+ },
+ {
+  "id": "eventbridge",
+  "nome": "Amazon EventBridge"
+ },
+ {
+  "id": "sqs",
+  "nome": "Amazon SQS"
+ },
+ {
+  "id": "sns",
+  "nome": "Amazon SNS"
+ },
+ {
+  "id": "amazon-mq",
+  "nome": "Amazon MQ"
+ },
+ {
+  "id": "appsync",
+  "nome": "AWS AppSync"
+ },
+ {
+  "id": "amplify",
+  "nome": "AWS Amplify"
+ },
+ {
+  "id": "elb",
+  "nome": "Elastic Load Balancing (ALB, NLB, GWLB)"
+ },
+ {
+  "id": "s3",
+  "nome": "Amazon S3"
+ },
+ {
+  "id": "s3-glacier",
+  "nome": "Classes S3 Glacier"
+ },
+ {
+  "id": "ebs",
+  "nome": "Amazon EBS"
+ },
+ {
+  "id": "instance-store",
+  "nome": "Armazenamento de instância (instance store)"
+ },
+ {
+  "id": "efs",
+  "nome": "Amazon EFS"
+ },
+ {
+  "id": "fsx",
+  "nome": "Amazon FSx"
+ },
+ {
+  "id": "storage-gateway",
+  "nome": "AWS Storage Gateway"
+ },
+ {
+  "id": "aws-backup",
+  "nome": "AWS Backup"
+ },
+ {
+  "id": "datasync",
+  "nome": "AWS DataSync"
+ },
+ {
+  "id": "transfer-family",
+  "nome": "AWS Transfer Family"
+ },
+ {
+  "id": "snow-family",
+  "nome": "Família AWS Snow"
+ },
+ {
+  "id": "dms",
+  "nome": "AWS DMS"
+ },
+ {
+  "id": "transform-mgn",
+  "nome": "AWS Transform MGN (antigo Application Migration Service)"
+ },
+ {
+  "id": "rds",
+  "nome": "Amazon RDS"
+ },
+ {
+  "id": "aurora",
+  "nome": "Amazon Aurora"
+ },
+ {
+  "id": "dynamodb",
+  "nome": "Amazon DynamoDB"
+ },
+ {
+  "id": "elasticache",
+  "nome": "Amazon ElastiCache"
+ },
+ {
+  "id": "memorydb",
+  "nome": "Amazon MemoryDB"
+ },
+ {
+  "id": "documentdb",
+  "nome": "Amazon DocumentDB"
+ },
+ {
+  "id": "neptune",
+  "nome": "Amazon Neptune"
+ },
+ {
+  "id": "keyspaces",
+  "nome": "Amazon Keyspaces"
+ },
+ {
+  "id": "timestream",
+  "nome": "Amazon Timestream"
+ },
+ {
+  "id": "redshift",
+  "nome": "Amazon Redshift"
+ },
+ {
+  "id": "vpc",
+  "nome": "Amazon VPC"
+ },
+ {
+  "id": "security-groups",
+  "nome": "Grupos de segurança"
+ },
+ {
+  "id": "nacl",
+  "nome": "ACL de rede (network ACL)"
+ },
+ {
+  "id": "vpc-peering",
+  "nome": "Emparelhamento de VPC"
+ },
+ {
+  "id": "transit-gateway",
+  "nome": "AWS Transit Gateway"
+ },
+ {
+  "id": "privatelink",
+  "nome": "AWS PrivateLink e pontos de extremidade da VPC"
+ },
+ {
+  "id": "vpn",
+  "nome": "AWS Site-to-Site VPN e Client VPN"
+ },
+ {
+  "id": "direct-connect",
+  "nome": "AWS Direct Connect"
+ },
+ {
+  "id": "route53",
+  "nome": "Amazon Route 53"
+ },
+ {
+  "id": "cloudfront",
+  "nome": "Amazon CloudFront"
+ },
+ {
+  "id": "global-accelerator",
+  "nome": "AWS Global Accelerator"
+ },
+ {
+  "id": "iam",
+  "nome": "AWS IAM"
+ },
+ {
+  "id": "iam-identity-center",
+  "nome": "AWS IAM Identity Center"
+ },
+ {
+  "id": "organizations",
+  "nome": "AWS Organizations"
+ },
+ {
+  "id": "cognito",
+  "nome": "Amazon Cognito"
+ },
+ {
+  "id": "kms",
+  "nome": "AWS KMS"
+ },
+ {
+  "id": "cloudhsm",
+  "nome": "AWS CloudHSM"
+ },
+ {
+  "id": "secrets-manager",
+  "nome": "AWS Secrets Manager"
+ },
+ {
+  "id": "acm",
+  "nome": "AWS Certificate Manager"
+ },
+ {
+  "id": "waf",
+  "nome": "AWS WAF"
+ },
+ {
+  "id": "shield",
+  "nome": "AWS Shield"
+ },
+ {
+  "id": "firewall-manager",
+  "nome": "AWS Firewall Manager"
+ },
+ {
+  "id": "network-firewall",
+  "nome": "AWS Network Firewall"
+ },
+ {
+  "id": "guardduty",
+  "nome": "Amazon GuardDuty"
+ },
+ {
+  "id": "inspector",
+  "nome": "Amazon Inspector"
+ },
+ {
+  "id": "macie",
+  "nome": "Amazon Macie"
+ },
+ {
+  "id": "security-hub",
+  "nome": "AWS Security Hub"
+ },
+ {
+  "id": "detective",
+  "nome": "Amazon Detective"
+ },
+ {
+  "id": "artifact",
+  "nome": "AWS Artifact"
+ },
+ {
+  "id": "cloudwatch",
+  "nome": "Amazon CloudWatch"
+ },
+ {
+  "id": "cloudtrail",
+  "nome": "AWS CloudTrail"
+ },
+ {
+  "id": "config",
+  "nome": "AWS Config"
+ },
+ {
+  "id": "systems-manager",
+  "nome": "AWS Systems Manager"
+ },
+ {
+  "id": "cloudformation",
+  "nome": "AWS CloudFormation"
+ },
+ {
+  "id": "cdk",
+  "nome": "AWS CDK"
+ },
+ {
+  "id": "trusted-advisor",
+  "nome": "AWS Trusted Advisor"
+ },
+ {
+  "id": "health-dashboard",
+  "nome": "AWS Health Dashboard"
+ },
+ {
+  "id": "control-tower",
+  "nome": "AWS Control Tower"
+ },
+ {
+  "id": "service-catalog",
+  "nome": "AWS Service Catalog"
+ },
+ {
+  "id": "x-ray",
+  "nome": "AWS X-Ray"
+ },
+ {
+  "id": "cloudshell",
+  "nome": "AWS CloudShell"
+ },
+ {
+  "id": "code-services",
+  "nome": "CodePipeline, CodeBuild e CodeDeploy"
+ },
+ {
+  "id": "well-architected-tool",
+  "nome": "AWS Well-Architected Tool"
+ },
+ {
+  "id": "audit-manager",
+  "nome": "AWS Audit Manager"
+ },
+ {
+  "id": "compute-optimizer",
+  "nome": "AWS Compute Optimizer"
+ },
+ {
+  "id": "cost-explorer",
+  "nome": "AWS Cost Explorer"
+ },
+ {
+  "id": "budgets",
+  "nome": "AWS Budgets"
+ },
+ {
+  "id": "pricing-calculator",
+  "nome": "AWS Pricing Calculator"
+ },
+ {
+  "id": "savings-plans",
+  "nome": "Savings Plans e Instâncias Reservadas"
+ },
+ {
+  "id": "data-exports",
+  "nome": "AWS Data Exports (relatório de custo e uso)"
+ },
+ {
+  "id": "marketplace",
+  "nome": "AWS Marketplace"
+ },
+ {
+  "id": "athena",
+  "nome": "Amazon Athena"
+ },
+ {
+  "id": "glue",
+  "nome": "AWS Glue"
+ },
+ {
+  "id": "emr",
+  "nome": "Amazon EMR"
+ },
+ {
+  "id": "kinesis-streams",
+  "nome": "Amazon Kinesis Data Streams"
+ },
+ {
+  "id": "data-firehose",
+  "nome": "Amazon Data Firehose"
+ },
+ {
+  "id": "msk",
+  "nome": "Amazon MSK"
+ },
+ {
+  "id": "opensearch",
+  "nome": "Amazon OpenSearch Service"
+ },
+ {
+  "id": "quick",
+  "nome": "Amazon Quick (antigo QuickSight)"
+ },
+ {
+  "id": "lake-formation",
+  "nome": "AWS Lake Formation"
+ },
+ {
+  "id": "bedrock",
+  "nome": "Amazon Bedrock"
+ },
+ {
+  "id": "sagemaker-ai",
+  "nome": "Amazon SageMaker AI"
+ },
+ {
+  "id": "rekognition",
+  "nome": "Amazon Rekognition"
+ },
+ {
+  "id": "comprehend",
+  "nome": "Amazon Comprehend"
+ },
+ {
+  "id": "transcribe",
+  "nome": "Amazon Transcribe"
+ },
+ {
+  "id": "polly",
+  "nome": "Amazon Polly"
+ },
+ {
+  "id": "translate",
+  "nome": "Amazon Translate"
+ },
+ {
+  "id": "lex",
+  "nome": "Amazon Lex"
+ },
+ {
+  "id": "textract",
+  "nome": "Amazon Textract"
+ },
+ {
+  "id": "kendra",
+  "nome": "Amazon Kendra"
+ },
+ {
+  "id": "personalize",
+  "nome": "Amazon Personalize"
+ },
+ {
+  "id": "amazon-q",
+  "nome": "Amazon Q"
+ },
+ {
+  "id": "workspaces",
+  "nome": "Amazon WorkSpaces"
+ },
+ {
+  "id": "connect",
+  "nome": "Amazon Connect Customer"
+ },
+ {
+  "id": "ses",
+  "nome": "Amazon SES"
+ },
+ {
+  "id": "iot-core",
+  "nome": "AWS IoT Core"
+ }
+]
