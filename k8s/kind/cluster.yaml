@@ -1,0 +1,13 @@
+# Cluster local, custo zero: kind create cluster --config k8s/kind/cluster.yaml
+# localhost:8080 do seu computador → NodePort 30080 → Service web
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: cloudquest
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 8080
+        listenAddress: "127.0.0.1"
+        protocol: TCP
+  - role: worker

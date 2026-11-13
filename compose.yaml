@@ -1,0 +1,30 @@
+# Sobe o CloudQuest inteiro no seu computador, custo zero:
+#   docker compose up --build
+#   abra http://localhost:8080
+name: cloudquest
+
+services:
+  api:
+    build: { context: ., target: api }
+    image: cloudquest-api:local
+    environment:
+      PUBLIC_ORIGIN: http://localhost:8080
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+  web:
+    build: { context: ., target: web }
+    image: cloudquest-web:local
+    ports: ["8080:8080"]
+    environment:
+      API_UPSTREAM: http://api:3000
+    depends_on:
+      api: { condition: service_healthy }
+    read_only: true
+    # o nginx escreve a configuração gerada e arquivos temporários
+    tmpfs: [/tmp, /etc/nginx/conf.d]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped

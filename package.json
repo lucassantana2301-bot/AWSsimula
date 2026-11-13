@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:api": "esbuild server/api.ts --bundle --platform=node --format=esm --target=node22 --outfile=build-api/server.mjs --external:@resvg/resvg-js --external:satori",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -39,6 +40,7 @@
     "typescript-eslint": "^8.72.2",
     "vite": "^8.3.8",
     "vitest": "^5.1.0",
+    "yaml": "^2.9.1",
     "zod": "^4.6.7"
   },
   "dependencies": {

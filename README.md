@@ -72,6 +72,16 @@ npm run verify         # build + tudo
 
 Na Vercel, o build roda `npm run vercel-build`, que faz o build **e** roda `npm test`. Se algum teste falhar, o deploy não acontece. A saída publicada é `dist/`, com os cabeçalhos de segurança definidos em `vercel.json`.
 
+## Docker e Kubernetes (laboratório, custo zero)
+
+O app inteiro também roda em contêineres no seu computador:
+
+```bash
+docker compose up --build   # http://localhost:8080
+```
+
+Para Kubernetes local com o kind, com exercícios de escala, rede e atualização sem queda, veja [`docs/KUBERNETES.md`](docs/KUBERNETES.md). A decisão está na [ADR-0003](docs/adr/0003-conteineres-kubernetes.md).
+
 ## Sobre o conteúdo
 
 Todo o material é original, escrito a partir dos objetivos públicos dos guias de exame. Nada aqui reproduz ou imita questão real de prova.
