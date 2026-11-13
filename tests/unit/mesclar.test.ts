@@ -27,6 +27,7 @@ const base = (o: Estado = {}): Estado => ({
   theme: "auto",
   bestCombo: 0,
   dailyDone: null,
+  dias: {},
   upd: 1000,
   ...o,
 });

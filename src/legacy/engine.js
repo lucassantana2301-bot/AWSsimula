@@ -476,7 +476,7 @@ const KEY="cloudquest.v2";
 const DEF=()=>({v:2,xp:0,todayXp:0,streak:0,lastDay:null,shields:1,lives:MAX_LIVES,livesTs:Date.now(),
   goal:2,concepts:{},seen:{},fichas:{},guia:{},lessons:{},bosses:{},sims:[],ach:{},dates:{},sim:null,cards:{},theme:"auto",decks:{},sprints:[],challenges:[],
   meta:"admin",certs:{},catProv:"all",catGroup:"trilha",
-  weekXp:0,weekKey:null,combo:0,bestCombo:0,dailyDone:null,dayKeyCur:null,answered:0});
+  weekXp:0,weekKey:null,combo:0,bestCombo:0,dailyDone:null,dayKeyCur:null,answered:0,dias:{}});
 let S=DEF();
 
 function applyTheme(){
@@ -525,6 +525,10 @@ function regenLives(){
 function addXp(n,why){
   S.xp+=n; S.weekXp+=n; S.todayXp+=n;
   const t=dayKey();
+  /* XP por dia, para o calendário de estudo (guarda ~1 ano) */
+  if(!S.dias||typeof S.dias!=="object") S.dias={};
+  S.dias[t]=(S.dias[t]||0)+n;
+  const chaves=Object.keys(S.dias); if(chaves.length>400) chaves.sort().slice(0,chaves.length-400).forEach(k=>delete S.dias[k]);
   if(S.lastDay!==t){
     const diff=S.lastDay?Math.round((new Date(t)-new Date(S.lastDay))/864e5):1;
     S.streak=(!S.lastDay||diff===1)?S.streak+1:1;
@@ -1555,7 +1559,9 @@ function finishSim(){
   SIM.qs.forEach((q,i)=>{
     const ok=grade(q,SIM.ans[i]); if(ok) right++;
     byDom[q.dom].n++; if(ok) byDom[q.dom].ok++;
-    (q.tags||[]).forEach(t=>schedule(t,ok));
+    /* questão marcada no simulado e acertada = acerto com dúvida na revisão */
+    const nota=ok?(SIM.flags&&SIM.flags[i]?F.Nota.duvida:F.Nota.acertei):F.Nota.errei;
+    (q.tags||[]).forEach(t=>schedule(t,ok,nota));
     S.seen[q.id]={ok,n:((S.seen[q.id]&&S.seen[q.id].n)||0)+1,lastTs:Date.now()};
     S.answered++;
   });
@@ -2059,6 +2065,7 @@ function viewMe(){
   const fr=FICHAS.filter(f=>S.fichas[f.id]).length;
   return `<div class="stack-lg">
     <section><h1 class="t-xl">Seu progresso</h1></section>
+    ${typeof C.blocoCalendario==="function"?C.blocoCalendario(S.dias||{},GOALS[S.goal]||100):""}
     ${typeof C.blocoConta==="function"?C.blocoConta():""}
 
     <section class="sheet">

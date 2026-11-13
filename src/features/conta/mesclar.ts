@@ -104,6 +104,8 @@ export function mesclar(local: Estado, remoto: Estado): Estado {
   out["seen"] = porChave(local["seen"], remoto["seen"], vista);
   for (const k of ["fichas", "lessons", "bosses", "guia"]) out[k] = porChave(local[k], remoto[k], concluido);
   out["ach"] = porChave(local["ach"], remoto["ach"], conquista);
+  /* XP por dia: o mesmo dia estudado em dois aparelhos fica com o maior */
+  out["dias"] = porChave(local["dias"], remoto["dias"], (x, y) => Math.max(num(x), num(y)));
   out["cards"] = porChave(local["cards"], remoto["cards"], maisUsado);
   out["decks"] = porChave(local["decks"], remoto["decks"], deck);
   for (const k of ["sims", "sprints", "challenges"]) out[k] = historico(local[k], remoto[k]);
