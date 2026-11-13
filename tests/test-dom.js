@@ -188,8 +188,30 @@ try{
   if(n(".verdict")) errs.push("FALHOU: simulado mostrou gabarito durante a prova");
   const nq=n(".qnav button");
   if(nq!==24) errs.push("FALHOU: esperava 24 questões no simulado do AZ-900, achei "+nq);
-  for(let i=0;i<nq;i++){ answer(); click('[data-act="simnext"]'); }
+  /* riscar alternativa: marca e desfaz, sem mexer na resposta */
+  /* acha uma questão de alternativas (o sorteio pode começar por sim/não ou ordenar) */
+  for(let i=0;i<nq&&!n('[data-act="simrisc"]');i++) click('[data-act="simgo"][data-i="'+i+'"]');
+  if(n('[data-act="simrisc"]')){
+    click('[data-act="simrisc"]');
+    if(!n('.opt[data-risc="1"]')) errs.push("FALHOU: riscar não marcou a alternativa");
+    click('[data-act="simrisc"]');
+    if(n('.opt[data-risc="1"]')) errs.push("FALHOU: riscar não desfez");
+  } else errs.push("FALHOU: simulado sem botão de riscar alternativa");
+  click('[data-act="simgo"][data-i="0"]');
+  for(let i=0;i<nq-1;i++){ answer(); click('[data-act="simnext"]'); }
+  /* a última fica em branco: a revisão tem que mostrar e não pode entregar sozinha */
+  click('[data-act="simnext"]');
+  has("Revisão antes da entrega","a última questão não abriu a revisão");
+  has("em branco","revisão sem contagem de em branco");
+  if(n(".verdict")) errs.push("FALHOU: revisão mostrou gabarito");
+  /* volta pela grade (a última pode ser "ordenar", que já nasce respondida) */
+  click('.qnav [data-act="simgo"][data-i="'+(nq-1)+'"]');
+  if(!d.querySelector('[data-act="simreview"]')) errs.push("FALHOU: atalho da revisão não voltou para a questão");
+  answer(); click('[data-act="simreview"]');
+  has("Revisão antes da entrega","botão Revisar e entregar não abriu a revisão");
+  click('[data-act="simfinish"]');
   has("Nota na escala","não chegou no resultado");
+  if(!n('[data-act="qreport"]')) errs.push("FALHOU: gabarito sem opção de reportar questão");
   has("Desempenho por domínio","resultado sem relatório por domínio");
   has("Gabarito comentado","resultado sem gabarito");
   const m=txt().match(/corte 700 (\d{3,4})/);

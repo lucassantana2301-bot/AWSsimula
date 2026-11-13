@@ -26,6 +26,7 @@ export const NOMES_EVENTO = [
   "tocou_video",
   "login",
   "instalou_pwa",
+  "questao_reportada",
 ] as const;
 export type NomeEvento = (typeof NOMES_EVENTO)[number];
 export type DadosEvento = Record<string, string | number | boolean>;
@@ -106,8 +107,8 @@ export function ambienteDeProducao(versao: string, host: string): boolean {
   return versao !== "dev" && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(host) && !host.endsWith(".localhost");
 }
 
-function enviar(tabela: "erros" | "eventos", corpo: Record<string, unknown>): void {
-  if (!ambienteDeProducao(VERSAO_APP, location.hostname)) return;
+function enviar(tabela: "erros" | "eventos", corpo: Record<string, unknown>): boolean {
+  if (!ambienteDeProducao(VERSAO_APP, location.hostname)) return false;
   /* keepalive: o erro que acontece ao fechar a aba ainda chega */
   void fetch(`${SUPABASE_URL}/rest/v1/${tabela}`, {
     method: "POST",
@@ -117,6 +118,7 @@ function enviar(tabela: "erros" | "eventos", corpo: Record<string, unknown>): vo
   }).catch(() => {
     /* telemetria nunca pode quebrar o app */
   });
+  return true;
 }
 
 function opcaoSalva(): string | null {
@@ -154,12 +156,13 @@ export function registrarErro(msg: string, origem: string | undefined, pilha: st
   });
 }
 
-export function registrarEvento(nome: NomeEvento, dados?: Record<string, unknown>): void {
-  if (eventos >= MAX_EVENTOS) return;
+/** Devolve false quando o evento não sai (privacidade, teto da sessão ou ambiente de dev). */
+export function registrarEvento(nome: NomeEvento, dados?: Record<string, unknown>): boolean {
+  if (eventos >= MAX_EVENTOS) return false;
   const nav = navigator as Navigator & { globalPrivacyControl?: boolean };
-  if (!eventosPermitidos(nav, opcaoSalva())) return;
+  if (!eventosPermitidos(nav, opcaoSalva())) return false;
   eventos++;
-  enviar("eventos", { nome, dados: dadosSeguros(dados) });
+  return enviar("eventos", { nome, dados: dadosSeguros(dados) });
 }
 
 /** Liga a captura de erros não tratados. `tela()` diz em que tela o aluno estava. */

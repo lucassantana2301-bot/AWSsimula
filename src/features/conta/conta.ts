@@ -58,6 +58,8 @@ export interface Painel {
   provas: Record<string, number>;
   simulados: Record<string, { n: number; media: number; aprovados: number }>;
   servicos_top: { id: string; n: number }[];
+  /* opcional: só existe depois da migração 20261113040000 */
+  reportadas?: { id: string; motivo: string | null; n: number }[];
   erros: { mensagem: string; n: number; ultimo: string; versao: string }[];
 }
 
@@ -245,6 +247,7 @@ export function htmlPainel(p: Painel): Html {
     ${Object.entries(p.provas).map(([k, n]) => linha(`Abriram ${k.toUpperCase()}`, n))}
     ${sims.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Simulados</h3>${sims.map(([k, v]) => linha(`${k.toUpperCase()}: média ${String(v.media)}`, `${String(v.aprovados)}/${String(v.n)} aprovados`))}`}
     ${p.servicos_top.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Serviços mais abertos no guia</h3>${p.servicos_top.map((x) => linha(x.id, x.n))}`}
+    ${p.reportadas && p.reportadas.length > 0 && html`<h3 class="t-sm" style="margin-top:6px">Questões reportadas</h3>${p.reportadas.map((x) => linha(`${x.id} · ${x.motivo ?? "sem motivo"}`, x.n))}`}
     <h3 class="t-sm" style="margin-top:6px">Erros</h3>
     ${
       p.erros.length > 0

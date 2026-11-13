@@ -12,7 +12,7 @@
     "simQ": 24,
     "simMin": 35,
     "realQ": "40-60",
-    "realMin": 45,
+    "realMin": 45, "fullQ": 50,
     "price": "USD 99",
     "note": "Não foi afetado pela reforma de 2026.",
     "domains": [
@@ -46,7 +46,7 @@
     "simQ": 28,
     "simMin": 50,
     "realQ": "40-60",
-    "realMin": 100,
+    "realMin": 100, "fullQ": 50,
     "price": "USD 165",
     "note": "Refresh de abril de 2026 ampliou Entra ID, Container Apps e Azure Arc.",
     "domains": [

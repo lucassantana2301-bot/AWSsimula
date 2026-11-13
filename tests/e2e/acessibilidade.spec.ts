@@ -33,6 +33,25 @@ const TELAS: Tela[] = [
       await clicar(p, '[data-act="gserv"][data-id="s3"]');
     },
   },
+  {
+    nome: "simulado (questão com riscar)",
+    abrir: async (p) => {
+      await clicar(p, '[data-act="exam"][data-exam="saa"]');
+      await clicar(p, '[data-act="simstart"]');
+      /* o sorteio pode começar por "sim ou não"/"ordenar", que não têm o que riscar */
+      for (let i = 0; i < 30 && (await p.locator('[data-act="simrisc"]').count()) === 0; i++) await clicar(p, '[data-act="simnext"]');
+      await clicar(p, '[data-act="simrisc"]');
+    },
+  },
+  {
+    nome: "simulado (revisão antes da entrega)",
+    abrir: async (p) => {
+      await clicar(p, '[data-act="exam"][data-exam="saa"]');
+      await clicar(p, '[data-act="simstart"]');
+      await clicar(p, '[data-act="simflag"]');
+      await clicar(p, '[data-act="simreview"]');
+    },
+  },
   { nome: "treinar", abrir: (p) => clicar(p, '[data-act="review"]') },
   { nome: "desafios", abrir: (p) => clicar(p, '[data-act="chall"]') },
   {

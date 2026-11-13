@@ -17,6 +17,8 @@ const CATALOGO = C.catalogo.certs, CATALOG_SYNCED = C.catalogo.synced, METAS = C
    Aqui fica só o contrato: o módulo recebe acesso à rota, navegação,
    render, XP e progresso, e devolve as telas e trata as ações.
    ============================================================ */
+const SIMM=C.simulado;
+if(!SIMM) throw new Error("módulo do simulado não carregado antes do motor");
 const GUIA_MOD=C.guiaTelas;
 if(!GUIA_MOD) throw new Error("módulo do guia não carregado antes do motor");
 GUIA_MOD.ligar({
@@ -390,21 +392,10 @@ function simPriority(qs){
   return shuffle(qs).map((q,i)=>({q,i})).sort((a,b)=>
     tier(a.q)-tier(b.q) || (tier(a.q)===2?ts(a.q)-ts(b.q):0) || a.i-b.i).map(x=>x.q);
 }
-function pickSim(exam,n){
-  const e=ex0(exam), out=[];
-  const ws=e.domains.map(d=>parseFloat(d.w)||25), tot=ws.reduce((a,b)=>a+b,0);
-  e.domains.forEach((d,i)=>{
-    const want=Math.max(1,Math.round(n*(ws[i]/tot)));
-    out.push(...simPriority(qPool(exam,d.id)).slice(0,want));
-  });
-  if(out.length<n) out.push(...simPriority(qPool(exam).filter(q=>!out.includes(q))).slice(0,n-out.length));
-  return shuffle(out.slice(0,n));
-}
-/* Prova completa no formato oficial. Só é oferecida quando o banco tem
-   folga (1,5 questão por vaga); senão viraria repetição. */
-const fullSpec=exam=>{ const e=ex0(exam), q=parseInt(e.realQ,10);
-  return (String(q)===String(e.realQ).trim()&&e.realMin)?{q,min:e.realMin}:null; };
-const fullReady=exam=>{ const f=fullSpec(exam); return !!f&&qPool(exam).length>=Math.ceil(f.q*1.5); };
+/* montagem, peso dos domínios e regra da prova completa: src/features/simulado */
+const pickSim=(exam,n)=>SIMM.montar(qPool(exam),ex0(exam).domains,n,S.seen);
+const fullSpec=exam=>SIMM.especCompleta(ex0(exam));
+const fullReady=exam=>SIMM.completaDisponivel(ex0(exam),qPool(exam).length);
 
 /* ---------- cartões de memorização ----------
    Gerados das tabelas "sinal no enunciado -> resposta" das fichas: é o
@@ -896,8 +887,18 @@ function viewExam(){
         </div>
         <div class="row" style="gap:6px">
           <button class="btn sm" data-act="simstart" data-exam="${V.exam}">Curto</button>
-          ${fullReady(V.exam)?`<button class="btn fill sm" data-act="simstart" data-full="1" data-exam="${V.exam}">Prova completa</button>`:""}
+          ${fullReady(V.exam)?`<button class="btn fill sm" data-act="simstart" data-modo="completo" data-exam="${V.exam}">Prova completa</button>`:""}
         </div>
+      </div>
+      <div class="sim-modos">
+        <label class="t-xs dim" for="simdom">Treinar um domínio</label>
+        <div class="row" style="gap:6px">
+          <select id="simdom" data-act="noop">${e.domains.map(d=>`<option value="${d.id}">${esc(d.name)} (${esc(d.w)})</option>`).join("")}</select>
+          <button class="btn sm" data-act="simstart" data-modo="dominio" data-exam="${V.exam}">15 questões</button>
+        </div>
+        ${(()=>{ const n=SIMM.erros(qPool(V.exam),S.seen).length;
+          return n>=3?`<div class="spread" style="margin-top:8px"><span class="t-xs dim">${n} questões que você errou da última vez</span>
+          <button class="btn sm" data-act="simstart" data-modo="erros" data-exam="${V.exam}">Refazer erradas (até 20)</button></div>`:""; })()}
       </div>
     </section>
     ${prontidaoHtml(V.exam)}
@@ -1141,7 +1142,7 @@ function viewStudy(){
     <p class="t-xs dim2" style="text-align:center">Teclado: 1 a 9 escolhem, D marca dúvida, Enter confirma e avança.</p>
   </div>`;
 }
-function qHtml(q,shown,sel){
+function qHtml(q,shown,sel,risc){
   const e=ex0(q.exam), aw=isAws(q.exam);
   const kind={single:"",multi:"múltipla escolha",yn:"sim ou não",order:"ordenar"}[q.type];
   const head=`<div class="q-h">
@@ -1153,12 +1154,15 @@ function qHtml(q,shown,sel){
   const body=(()=>{
     if(q.type==="single"||q.type==="multi"){
       const p=sel||[];
+      const rk=!shown&&Array.isArray(risc)?risc:null;
       return `<div class="opts">${(q.shuf||q.opts).map(o=>{
-        const on=p.includes(o.k);
+        const on=p.includes(o.k), x=!!rk&&rk.includes(o.k);
         const res=shown?(q.ans.includes(o.k)?(on?"ok":"miss"):(on?"bad":"")):"";
-        return `<button class="opt" data-act="qpick" data-k="${o.k}" ${shown?"disabled":""} data-sel="${on?1:0}"
-          aria-pressed="${on}" ${res?`data-res="${res}"`:""}>
-          <span class="k">${o.k}</span><span>${esc(o.t)}</span></button>`;}).join("")}</div>
+        const bt=`<button class="opt" data-act="qpick" data-k="${o.k}" ${shown?"disabled":""} data-sel="${on?1:0}"
+          aria-pressed="${on}" ${res?`data-res="${res}"`:""} ${x?'data-risc="1"':""}>
+          <span class="k">${o.k}</span><span>${esc(o.t)}${x?'<span class="sr-only"> (riscada)</span>':""}</span></button>`;
+        return rk?`<div class="opt-w">${bt}<button class="risc" data-act="simrisc" data-k="${o.k}" aria-pressed="${x}"
+          aria-label="${x?"Desfazer risco da":"Riscar a"} alternativa ${o.k}" title="${x?"Desfazer risco":"Riscar alternativa"}">✕</button></div>`:bt;}).join("")}</div>
         ${q.type==="multi"?`<p class="t-xs dim2">Marque todas que se aplicam. São ${q.ans.length} corretas.</p>`:""}`;
     }
     if(q.type==="yn"){
@@ -1186,6 +1190,7 @@ function qHtml(q,shown,sel){
   return head+(q.case?`<div class="q-case">${esc(q.case)}</div>`:"")+`<p class="q-stem" id="q-stem">${esc(q.stem)}</p>`+
     `<div role="group" aria-labelledby="q-stem">`+body+`</div>`;
 }
+const REPORTADAS=new Set();
 function verdictHtml(q,sel){
   const ok=grade(q,sel);
   const why=(q.type==="single"||q.type==="multi")
@@ -1207,6 +1212,7 @@ function verdictHtml(q,sel){
     <h4>${ok?"Correto":"Resposta errada"}</h4>${why}${estude}
     ${q.src?`<p class="t-xs dim2" style="margin:12px 0 5px">Confira na fonte oficial</p>
     <div class="srcs">${q.src.map(s=>`<a href="${s.u}" target="_blank" rel="noopener">${esc(s.t)}</a>`).join("")}</div>`:""}
+    ${SIMM.reportar(q.id,REPORTADAS.has(q.id))}
   </div>`;
 }
 function grade(q,sel){
@@ -1247,7 +1253,7 @@ function sessionEnd(){
 /* ---------------- simulado ---------------- */
 function saveSim(){
   if(!SIM||SIM.done){ S.sim=null; }
-  else{ simClock(); S.sim={exam:SIM.exam,ids:SIM.qs.map(q=>q.id),i:SIM.i,ans:SIM.ans,flags:SIM.flags,end:SIM.end,full:!!SIM.full,t:SIM.t}; }
+  else{ simClock(); S.sim={exam:SIM.exam,ids:SIM.qs.map(q=>q.id),i:SIM.i,ans:SIM.ans,flags:SIM.flags,end:SIM.end,full:!!SIM.full,t:SIM.t,modo:SIM.modo||"curto",dom:SIM.dom||null,risc:SIM.risc}; }
   save();
 }
 function restoreSim(){
@@ -1256,6 +1262,8 @@ function restoreSim(){
   const qs=r.ids.map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean);
   if(qs.length!==r.ids.length){ S.sim=null; save(); return false; }
   SIM={exam:r.exam,qs,i:r.i,ans:r.ans,flags:r.flags,end:r.end,done:false,full:!!r.full,
+    modo:r.modo||(r.full?"completo":"curto"),dom:r.dom||null,review:false,
+    risc:Array.isArray(r.risc)&&r.risc.length===qs.length?r.risc:qs.map(()=>[]),
     t:Array.isArray(r.t)&&r.t.length===qs.length?r.t:qs.map(()=>0),cur:r.i,at:Date.now()};
   go("sim",{exam:r.exam});
   return true;
@@ -1268,33 +1276,52 @@ function simClock(){
   if(SIM.cur!=null&&SIM.at) SIM.t[SIM.cur]=(SIM.t[SIM.cur]||0)+Math.min(now-SIM.at,6e5);
   SIM.cur=SIM.i; SIM.at=now;
 }
-function startSim(exam,full){
-  const e=ex0(exam), f=full&&fullReady(exam)?fullSpec(exam):null;
-  const n=f?f.q:e.simQ, min=f?f.min:e.simMin, qs=pickSim(exam,n).map(prep);
-  SIM={exam,qs,i:0,ans:qs.map(initSel),flags:qs.map(()=>false),end:Date.now()+min*6e4,done:false,
-    full:!!f,t:qs.map(()=>0),cur:0,at:Date.now()};
+function startSim(exam,modo,dom){
+  const e=ex0(exam); let qs, min;
+  if(modo==="completo"&&fullReady(exam)){ const f=fullSpec(exam); qs=pickSim(exam,f.q); min=f.min; }
+  else if(modo==="dominio"){
+    if(!e.domains.some(d=>d.id===dom)){ toast("Escolha um domínio","no"); return; }
+    qs=SIMM.montarPorDominio(qPool(exam),dom,15,S.seen);
+    if(qs.length<5){ toast("Este domínio ainda tem poucas questões","no"); return; }
+    min=SIMM.minutos(e.simMin,e.simQ,qs.length);
+  }
+  else if(modo==="erros"){
+    qs=SIMM.montarErros(qPool(exam),S.seen,20);
+    if(qs.length<3){ toast("Você precisa ter errado pelo menos 3 questões deste exame","no"); return; }
+    min=SIMM.minutos(e.simMin,e.simQ,qs.length);
+  }
+  else { modo="curto"; qs=pickSim(exam,e.simQ); min=e.simMin; }
+  qs=qs.map(prep);
+  SIM={exam,qs,i:0,ans:qs.map(initSel),flags:qs.map(()=>false),risc:qs.map(()=>[]),end:Date.now()+min*6e4,done:false,
+    full:modo==="completo",modo,dom:modo==="dominio"?dom:null,review:false,t:qs.map(()=>0),cur:0,at:Date.now()};
   saveSim(); go("sim",{exam});
+}
+function simRotulo(r){
+  const e=ex0(r.exam), d=r.dom&&e.domains.find(x=>x.id===r.dom);
+  return SIMM.rotulo(r.modo||(r.full?"completo":"curto"),d?d.name:undefined);
 }
 function viewSim(){
   if(!SIM) return viewHome();
   const e=ex0(SIM.exam), q=SIM.qs[SIM.i], aw=isAws(SIM.exam), left=SIM.end-Date.now();
+  if(SIM.review) return SIMM.revisao({codigo:e.code,rotulo:simRotulo(SIM),aws:aw,restanteMs:left,
+    respondidas:SIM.ans.map(x=>x!=null),marcadas:SIM.flags.map(Boolean)});
   return `<div class="stack">
     <div class="sim-bar">
-      <span class="tag ${aw?"aw":"az"} mono">${e.code}${SIM.full?" · completa":""}</span>
+      <span class="tag ${aw?"aw":"az"} mono" title="${esc(simRotulo(SIM))}">${e.code}${SIM.full?" · completa":SIM.modo==="dominio"?" · domínio":SIM.modo==="erros"?" · erros":""}</span>
       <span class="clock ${left<12e4?"crit":left<3e5?"warn":""}" id="simclock">${clock(left)}</span>
       <span class="tag mono">${SIM.i+1}/${SIM.qs.length}</span>
       <span style="flex:1"></span>
       <button class="btn sm ${SIM.flags[SIM.i]?"fill":""}" data-act="simflag">${SIM.flags[SIM.i]?"Marcada":"Marcar"}</button>
-      <button class="btn sm" data-act="simfinish">Entregar</button>
+      <button class="btn sm" data-act="simreview">Revisar e entregar</button>
     </div>
-    <div class="sheet">${qHtml(q,false,SIM.ans[SIM.i])}</div>
+    <div class="sheet">${qHtml(q,false,SIM.ans[SIM.i],SIM.risc&&SIM.risc[SIM.i])}</div>
     <div class="row">
       <button class="btn" data-act="simprev" ${SIM.i===0?"disabled":""}>Anterior</button>
       <button class="btn ${aw?"aw":"az"}" style="flex:1" data-act="simnext">${SIM.i===SIM.qs.length-1?"Revisar e entregar":"Próxima"}</button>
     </div>
     <div class="qnav">${SIM.qs.map((_,i)=>`<button data-act="simgo" data-i="${i}" aria-current="${i===SIM.i}"
       data-st="${SIM.flags[i]?"flag":SIM.ans[i]!=null?"ans":""}" aria-label="Questão ${i+1}">${i+1}</button>`).join("")}</div>
-    <p class="t-xs dim2">Modo prova: sem retorno agora. Correção e explicações saem na entrega. Teclado: 1 a 9 escolhem, setas navegam, F marca.</p>
+    <p class="t-xs dim2">Modo prova: sem retorno agora. Correção e explicações saem na entrega. Teclado: 1 a 9 escolhem, setas navegam, F marca. Use o ✕ ao lado de uma alternativa para riscá-la.</p>
   </div>`;
 }
 function afterSim(){
@@ -1324,15 +1351,13 @@ function finishSim(){
     S.seen[q.id]={ok,n:((S.seen[q.id]&&S.seen[q.id].n)||0)+1,lastTs:Date.now()};
     S.answered++;
   });
-  let ws=0,acc=0;
-  e.domains.forEach(d=>{ const w=parseFloat(d.w)||25, b=byDom[d.id]; ws+=w; acc+=w*(b.n?b.ok/b.n:0); });
-  const score=Math.round(300+700*(ws?acc/ws:0)), pass=score>=e.pass;
-  const rec={exam:SIM.exam,score,pass,right,total:SIM.qs.length,byDom,ts:Date.now(),chall:!!SIM.chall,full:!!SIM.full,
+  const score=SIMM.nota(byDom,e.domains), pass=score>=e.pass, modo=SIM.modo||(SIM.full?"completo":"curto");
+  const rec={exam:SIM.exam,score,pass,right,total:SIM.qs.length,byDom,ts:Date.now(),chall:!!SIM.chall,full:!!SIM.full,modo,dom:SIM.dom||null,
     secs:Math.round(SIM.t.reduce((a,b)=>a+b,0)/1000)};
   S.sims.unshift(rec); S.sims=S.sims.slice(0,20);
-  if(typeof C.evento==="function") C.evento("simulado_fim",{exam:SIM.exam,score,pass,total:SIM.qs.length,completo:!!SIM.full});
+  if(typeof C.evento==="function") C.evento("simulado_fim",{exam:SIM.exam,score,pass,total:SIM.qs.length,completo:!!SIM.full,modo});
   if(S.answered>=50) unlock("q50");
-  if(pass) unlock(isAws(SIM.exam)?"passaw":"passaz");
+  if(pass&&SIMM.contaParaProntidao(modo)) unlock(isAws(SIM.exam)?"passaw":"passaz");
   if(right===SIM.qs.length) unlock("perfect");
   addXp(40+right*5,"simulado concluído");
   const qs=SIM.qs, ans=SIM.ans, t=SIM.t, flags=SIM.flags; SIM=null; S.sim=null; save();
@@ -1345,7 +1370,7 @@ function finishSim(){
    2) todos os domínios com 70% ou mais nas últimas três tentativas;
    3) pelo menos 70% do banco de questões já respondido. */
 function prontidao(exam){
-  const e=ex0(exam), todas=S.sims.filter(r=>r.exam===exam&&!r.chall);
+  const e=ex0(exam), todas=S.sims.filter(r=>r.exam===exam&&!r.chall&&SIMM.contaParaProntidao(r.modo));
   const temFull=fullReady(exam), base=temFull?todas.filter(r=>r.full):todas;
   const ult2=base.slice(0,2);
   const c1=ult2.length===2&&ult2.every(r=>r.score>=e.pass+30);
@@ -1441,6 +1466,7 @@ function viewSimRes(){
   const e=ex0(r.exam), aw=isAws(r.exam);
   return `<div class="stack-lg">
     <div class="result enter">
+      <p class="t-xs dim2">${esc(simRotulo(r))}</p>
       <p class="t-sm dim">Nota na escala de ${e.scale}, corte ${e.pass}</p>
       <div class="big ${r.pass?"ok":"no"}">${r.score}</div>
       <p class="t-lg" style="color:${r.pass?"var(--go)":"var(--no)"}">${r.pass?"Aprovado no simulado":"Reprovado no simulado"}</p>
@@ -2113,7 +2139,9 @@ document.addEventListener("click",ev=>{
   /* simulado */
   if(a==="simstart"){
     if(((SIM&&!SIM.done)||S.sim)&&!twoStep("simstart","Há um simulado em andamento. Toque de novo para descartá-lo e começar outro.")) return;
-    return startSim(b.dataset.exam||V.exam,b.dataset.full==="1");
+    const modo=b.dataset.modo||(b.dataset.full==="1"?"completo":"curto");
+    const sel=document.getElementById("simdom");
+    return startSim(b.dataset.exam||V.exam,modo,modo==="dominio"&&sel?sel.value:undefined);
   }
   if(a==="simfilter"){
     const box=document.getElementById("gabarito"); if(!box) return;
@@ -2121,13 +2149,31 @@ document.addEventListener("click",ev=>{
     document.querySelectorAll('[data-act="simfilter"]').forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
     return;
   }
-  if(a==="simnext")  return SIM.i<SIM.qs.length-1?(SIM.i++,saveSim(),render()):finishSim();
+  if(a==="simnext"){ if(SIM.i<SIM.qs.length-1) SIM.i++; else SIM.review=true; saveSim(); render(); window.scrollTo(0,0); return; }
+  if(a==="simreview"){ SIM.review=true; saveSim(); render(); window.scrollTo(0,0); return; }
+  if(a==="simback"){ SIM.review=false; render(); return; }
+  if(a==="simrisc"){
+    const r=SIM.risc[SIM.i]||(SIM.risc[SIM.i]=[]), k=b.dataset.k, at=r.indexOf(k);
+    if(at>=0) r.splice(at,1); else r.push(k);
+    saveSim(); render();
+    const nb=document.querySelector('[data-act="simrisc"][data-k="'+k+'"]'); if(nb) nb.focus();
+    return;
+  }
   if(a==="simprev"){ if(SIM.i>0){ SIM.i--; saveSim(); render(); } return; }
-  if(a==="simgo"){ SIM.i=+b.dataset.i; saveSim(); return render(); }
+  if(a==="simgo"){ const i=+b.dataset.i; if(Number.isInteger(i)&&i>=0&&i<SIM.qs.length){ SIM.i=i; SIM.review=false; saveSim(); render(); window.scrollTo(0,0); } return; }
+  if(a==="qreport"){
+    const id=b.dataset.q, m=b.dataset.m;
+    if(!id||!SIMM.motivoValido(m)||REPORTADAS.has(id)) return;
+    const foi=typeof C.evento==="function"&&C.evento("questao_reportada",{questao:id,motivo:m});
+    if(!foi){ toast("Não deu para enviar: o envio de estatísticas está desligado ou bloqueado pelo navegador","no"); return; }
+    REPORTADAS.add(id); toast("Obrigado! Vamos revisar esta questão.");
+    const box=b.closest(".reportar"); if(box) box.outerHTML=SIMM.reportar(id,true);
+    return;
+  }
   if(a==="simflag"){ SIM.flags[SIM.i]=!SIM.flags[SIM.i]; saveSim(); return render(); }
   if(a==="simfinish"){
     const miss=SIM.ans.filter(x=>x==null).length;
-    if(miss&&!twoStep("simfinish",miss+" sem resposta. Toque em Entregar de novo para confirmar.")) return;
+    if(miss&&!twoStep("simfinish",miss+" sem resposta. Toque em Entregar agora de novo para confirmar.")) return;
     return finishSim();
   }
 
@@ -2309,9 +2355,12 @@ document.addEventListener("keydown",ev=>{
     return;
   }
   if(V.name==="sim"&&SIM){
+    /* Enter num botão focado (riscar, marcar) é clique, não "próxima" */
+    if(k==="Enter"&&t&&t.tagName==="BUTTON") return;
+    if(SIM.review){ if(k==="Escape"){ ev.preventDefault(); SIM.review=false; render(); } return; }
     if(/^[1-9]$/.test(k)){ if(pickIndex(+k-1)) ev.preventDefault(); return; }
     if(k==="ArrowRight"||k==="Enter"){ ev.preventDefault();
-      if(SIM.i<SIM.qs.length-1){ SIM.i++; saveSim(); render(); } return; }
+      if(SIM.i<SIM.qs.length-1) SIM.i++; else SIM.review=true; saveSim(); render(); return; }
     if(k==="ArrowLeft"){ ev.preventDefault(); if(SIM.i>0){ SIM.i--; saveSim(); render(); } return; }
     if(k==="f"||k==="F"){ ev.preventDefault(); SIM.flags[SIM.i]=!SIM.flags[SIM.i]; saveSim(); render(); }
     return;
