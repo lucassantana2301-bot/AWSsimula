@@ -18,7 +18,7 @@
     "test": "npm run test:unit && npm run test:legacy",
     "test:unit": "vitest run",
     "test:legacy": "node scripts/build-test-bundle.mjs && node tests/test-logic.js && node tests/test-questoes.js && node tests/test-guia.js && node tests/test-perimetro.js && node tests/test-dom.js && node tests/test-features.js",
-    "test:browser": "node scripts/run-browser-tests.mjs tests/browser/check-layout.js tests/browser/check-a11y.js tests/browser/check-disabled.js tests/browser/check-weights.js tests/browser/check-motion.js tests/browser/check-share.js tests/browser/check-guia-rede.js tests/browser/check-videos.js tests/browser/check-revisao.js tests/browser/check-estude.js tests/browser/check-conta.js && node tests/browser/check-csp.js",
+    "test:browser": "node scripts/run-browser-tests.mjs tests/browser/check-layout.js tests/browser/check-a11y.js tests/browser/check-disabled.js tests/browser/check-weights.js tests/browser/check-motion.js tests/browser/check-share.js tests/browser/check-guia-rede.js tests/browser/check-videos.js tests/browser/check-revisao.js tests/browser/check-estude.js tests/browser/check-conta.js tests/browser/check-offline.js && node tests/browser/check-csp.js",
     "size": "node scripts/check-size.mjs",
     "verify": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm run size && npm run test:browser",
     "vercel-build": "npm run typecheck && npm test && npm run build && npm run size"
