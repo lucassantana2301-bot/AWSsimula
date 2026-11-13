@@ -799,7 +799,7 @@ function viewHome(){
 
     ${S.sim&&S.sim.end>Date.now()?`<section class="sheet tight" style="border-color:var(--fl)">
       <div class="spread">
-        <div><h3 class="t-md">Simulado em andamento</h3>
+        <div><h2 class="t-md">Simulado em andamento</h2>
         <p class="t-sm dim" style="margin-top:2px">${ex0(S.sim.exam).code}, questão ${S.sim.i+1} de ${S.sim.ids.length}. Restam ${clock(S.sim.end-Date.now())}.</p></div>
         <div class="row">
           <button class="btn sm" data-act="simdrop">Descartar</button>
@@ -809,14 +809,14 @@ function viewHome(){
 
     ${(()=>{ const n=dueConcepts(null).length; return n?`<section class="sheet tight" style="border-color:var(--go)">
       <div class="spread">
-        <div><h3 class="t-md">Revisão de hoje</h3>
+        <div><h2 class="t-md">Revisão de hoje</h2>
         <p class="t-sm dim" style="margin-top:2px">${n} ${n===1?"conceito está":"conceitos estão"} no ponto de esquecer. Revisar agora fixa por mais tempo.</p></div>
         <button class="btn go sm" data-act="review-go">Revisar ${n}</button>
       </div></section>`:""; })()}
 
     ${d?`<section class="sheet tight">
       <div class="spread">
-        <div><h3 class="t-md">Desafio do dia</h3>
+        <div><h2 class="t-md">Desafio do dia</h2>
         <p class="t-sm dim" style="margin-top:2px">Um cenário difícil, sorteado. ${S.dailyDone===dayKey()?"Você já fez o de hoje.":"Vale 25 XP."}</p></div>
         <button class="btn ${S.dailyDone===dayKey()?"":"fill"} sm" data-act="daily" ${S.dailyDone===dayKey()?"disabled":""}>
           ${S.dailyDone===dayKey()?"Concluído":"Começar"}</button>
