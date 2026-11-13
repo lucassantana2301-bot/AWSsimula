@@ -10,6 +10,7 @@
  * Limites por sessão evitam que um laço de erro inunde o banco.
  */
 import { SUPABASE_CHAVE_PUBLICA, SUPABASE_URL, VERSAO_APP } from "../../config";
+import { html, type Html } from "../../lib/html";
 
 export const NOMES_EVENTO = [
   "abriu_app",
@@ -202,11 +203,11 @@ export function eventoDaRota(
 }
 
 /** Seção "Privacidade" do Perfil. */
-export function blocoPrivacidade(): string {
+export function blocoPrivacidade(): Html {
   const ligada = telemetriaLigada();
-  return `<section class="sheet stack" aria-labelledby="priv-h">
+  return html`<section class="sheet stack" aria-labelledby="priv-h">
     <div class="hd"><h2 id="priv-h">Privacidade</h2></div>
     <p class="t-sm dim">O app envia estatísticas anônimas (telas abertas, notas de simulado, erros técnicos) para saber onde melhorar. Sem nome, e-mail ou conta. Seu navegador com "não rastrear" já fica de fora.</p>
-    <button class="btn sm" data-telemetria aria-pressed="${String(ligada)}" style="align-self:flex-start">${ligada ? "✓ Estatísticas anônimas ligadas" : "Estatísticas anônimas desligadas"}</button>
+    <button class="btn sm" data-telemetria aria-pressed="${ligada ? "true" : "false"}" style="align-self:flex-start">${ligada ? "✓ Estatísticas anônimas ligadas" : "Estatísticas anônimas desligadas"}</button>
   </section>`;
 }

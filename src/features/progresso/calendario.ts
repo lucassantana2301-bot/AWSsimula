@@ -6,6 +6,7 @@
  * cinza. A grade é uma imagem com resumo em texto para leitor de tela; cada
  * célula tem dica com data e XP (title) para quem passa o mouse.
  */
+import { html, type Html } from "../../lib/html";
 
 export interface Celula {
   data: string;
@@ -57,28 +58,20 @@ const rotulo = (k: string): string => {
   return `${String(Number(d))} ${MESES[Number(m) - 1] ?? ""}`;
 };
 
-export function blocoCalendario(dias: Readonly<Record<string, number>>, meta: number, hoje = new Date()): string {
+export function blocoCalendario(dias: Readonly<Record<string, number>>, meta: number, hoje = new Date()): Html {
   const grade = semanas(dias, meta, hoje);
   const passadas = grade.flat().filter((c) => !c.futuro);
   const estudados = passadas.filter((c) => c.xp > 0).length;
   const metas = passadas.filter((c) => c.nivel >= 3).length;
   const resumo = `Nas últimas ${String(grade.length)} semanas: ${String(estudados)} dias de estudo, ${String(metas)} com a meta de ${String(meta)} XP batida.`;
-  const colunas = grade
-    .map(
-      (col) =>
-        `<div class="cal-col">${col
-          .map((c) =>
-            c.futuro
-              ? `<i class="cal-c fut"></i>`
-              : `<i class="cal-c n${String(c.nivel)}" title="${rotulo(c.data)}: ${String(c.xp)} XP"></i>`,
-          )
-          .join("")}</div>`,
-    )
-    .join("");
-  return `<section class="sheet stack" aria-labelledby="cal-h">
-    <div class="hd"><h2 id="cal-h">Calendário de estudo</h2><span class="n">meta ${String(meta)} XP/dia</span></div>
+  const celula = (c: Celula): Html =>
+    c.futuro ? html`<i class="cal-c fut"></i>` : html`<i class="cal-c n${c.nivel}" title="${rotulo(c.data)}: ${c.xp} XP"></i>`;
+  const colunas = grade.map((col) => html`<div class="cal-col">${col.map(celula)}</div>`);
+  const legenda = [0, 1, 2, 3, 4].map((n) => html`<i class="cal-c n${n}"></i>`);
+  return html`<section class="sheet stack" aria-labelledby="cal-h">
+    <div class="hd"><h2 id="cal-h">Calendário de estudo</h2><span class="n">meta ${meta} XP/dia</span></div>
     <div class="cal" role="img" aria-label="${resumo}">${colunas}</div>
-    <div class="cal-leg" aria-hidden="true"><span>menos</span>${[0, 1, 2, 3, 4].map((n) => `<i class="cal-c n${String(n)}"></i>`).join("")}<span>mais</span></div>
+    <div class="cal-leg" aria-hidden="true"><span>menos</span>${legenda}<span>mais</span></div>
     <p class="t-sm dim">${resumo}</p>
   </section>`;
 }
