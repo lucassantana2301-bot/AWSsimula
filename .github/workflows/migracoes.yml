@@ -48,9 +48,9 @@ jobs:
             echo "ok=true" >>"$GITHUB_OUTPUT"
           fi
       - if: steps.segredos.outputs.ok == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - if: steps.segredos.outputs.ok == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Vincular ao projeto e listar o histórico

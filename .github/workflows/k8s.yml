@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Renderizar o overlay do kind
         run: kubectl kustomize k8s/kind > render.yaml
       - name: Validar contra o schema do Kubernetes 1.33
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Subir web e api
         run: docker compose up --build --detach --wait --wait-timeout 120
       - name: Teste de fumaça
@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Construir as imagens
         run: |
           docker build --target api -t cloudquest-api:local .
