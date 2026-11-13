@@ -4,3 +4,8 @@ build/
 *.png
 .vercel
 .DS_Store
+
+# ícones do app (PWA) são código-fonte
+!public/icons/*.png
+test-results/
+playwright-report/
