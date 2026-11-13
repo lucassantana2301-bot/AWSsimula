@@ -4,7 +4,7 @@
  * legado por um contrato explícito, até a fase 3 tirar o motor daqui.
  */
 import "./styles/app.css";
-import { montarConteudo } from "./content/bundle";
+import { carregarQuestoes, montarConteudo } from "./content/bundle";
 import { blocoVideos, definirVideos, instalarVideos } from "./features/guia/videos";
 import * as fsrs from "./features/srs/fsrs";
 import { montarIndice, servicosCitados, type EntradaIndice } from "./features/guia/citados";
@@ -58,7 +58,36 @@ instalarTelemetria(() => globalThis.__CQ_MOTOR?.tela() ?? "inicio");
 /** O motor legado ainda monta HTML com strings: a conversão acontece só aqui. */
 const paraMotor = (h: Html | false): string => (h ? h.texto : "");
 
-const conteudo = montarConteudo();
+/**
+ * O banco de questões chega como JSON antes do motor. Sem ele o app não tem
+ * o que mostrar, então uma falha de rede vira uma tela clara com "Tentar de
+ * novo", nunca uma página em branco. Com o service worker, vem do cache.
+ */
+async function questoesOuTelaDeErro(): Promise<Awaited<ReturnType<typeof carregarQuestoes>>> {
+  for (;;) {
+    try {
+      return await carregarQuestoes();
+    } catch {
+      const app = document.getElementById("app");
+      if (!app) throw new Error("página sem #app");
+      app.innerHTML = `<div class="stack-lg" style="padding:24px 0"><h1 class="t-xl">Não deu para carregar as questões</h1>
+        <p class="t-md dim" role="alert">Confira a conexão com a internet e tente de novo.</p>
+        <button class="btn fill sm" id="cq-tentar" style="align-self:flex-start">Tentar de novo</button></div>`;
+      await new Promise<void>((ok) => {
+        document.getElementById("cq-tentar")?.addEventListener(
+          "click",
+          () => {
+            ok();
+          },
+          { once: true },
+        );
+      });
+      app.textContent = "";
+    }
+  }
+}
+
+const conteudo = montarConteudo(await questoesOuTelaDeErro());
 const indice = montarIndice(indiceGuia satisfies EntradaIndice[]);
 globalThis.__CQ_CONTENT = {
   ...conteudo,
