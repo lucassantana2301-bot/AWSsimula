@@ -6298,5 +6298,936 @@
         "u": "https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html"
       }
     ]
+  },
+  {
+    "id": "aw-d1-31",
+    "exam": "clf",
+    "dom": "d1",
+    "lvl": 2,
+    "type": "single",
+    "sec": 50,
+    "tags": [
+      "well-architected"
+    ],
+    "case": "Uma startup precisa de servidores para lançar o produto, mas não quer gastar o caixa comprando equipamento antes de saber quantos clientes terá.",
+    "stem": "Qual vantagem da nuvem atende diretamente a essa preocupação?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Ficar global em minutos, com regiões no mundo todo"
+      },
+      {
+        "k": "B",
+        "t": "Trocar despesa de capital por despesa variável"
+      },
+      {
+        "k": "C",
+        "t": "Deixar de gastar dinheiro operando e mantendo data centers físicos"
+      },
+      {
+        "k": "D",
+        "t": "Aumentar a velocidade e a agilidade das equipes"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Na nuvem não há compra antecipada de servidores: a empresa paga pelo que usa, quando usa. O investimento inicial (despesa de capital) vira um custo variável que acompanha o crescimento real.",
+      "A": "Alcance global é sobre chegar a usuários de outros países com baixa latência, não sobre evitar o gasto inicial com equipamento.",
+      "C": "Também é uma vantagem, mas fala do trabalho de manter instalações. A preocupação do cenário é o dinheiro adiantado antes de saber a demanda.",
+      "D": "Agilidade é poder experimentar e entregar mais rápido. Ajuda a startup, mas não é a vantagem que responde ao gasto antecipado."
+    },
+    "src": [
+      {
+        "t": "Seis vantagens da computação em nuvem",
+        "u": "https://docs.aws.amazon.com/whitepapers/latest/aws-overview/six-advantages-of-cloud-computing.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-43",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "s3-classes"
+    ],
+    "case": "Uma loja virtual precisa guardar milhões de fotos de produtos, acessadas pelo navegador por URL, com durabilidade alta e sem se preocupar com espaço em disco.",
+    "stem": "Qual serviço de armazenamento usar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon EBS, anexado a uma instância do EC2"
+      },
+      {
+        "k": "B",
+        "t": "Amazon S3"
+      },
+      {
+        "k": "C",
+        "t": "Armazenamento de instância (instance store) do EC2"
+      },
+      {
+        "k": "D",
+        "t": "Amazon EFS montado em todos os servidores da aplicação"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "S3 é armazenamento de objetos: guarda arquivos de qualquer tamanho e quantidade, cada um com seu endereço, cresce sem limite de capacidade a planejar e foi feito para 11 noves de durabilidade.",
+      "A": "EBS é um disco de bloco preso a uma instância. Tem tamanho fixo que você provisiona e não entrega arquivos por URL.",
+      "C": "O armazenamento de instância é temporário: os dados somem quando a instância é parada ou encerrada.",
+      "D": "EFS é um sistema de arquivos compartilhado entre servidores. Funciona, mas custa mais e não serve arquivos direto por URL como o S3."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-44",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 50,
+    "tags": [
+      "bancos-aws"
+    ],
+    "case": "Uma empresa usa MySQL e quer parar de cuidar de instalação, patches, backups e réplicas do banco. A aplicação e as consultas SQL continuam iguais.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon RDS para MySQL"
+      },
+      {
+        "k": "B",
+        "t": "MySQL instalado numa instância do EC2 com backups agendados por script"
+      },
+      {
+        "k": "C",
+        "t": "Amazon DynamoDB"
+      },
+      {
+        "k": "D",
+        "t": "Amazon Redshift"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "RDS é banco relacional gerenciado: a AWS cuida de instalação, patches, backups automáticos e réplicas, e a aplicação continua falando MySQL normalmente.",
+      "B": "Banco no EC2 deixa a equipe responsável pelo sistema operacional, pelos patches e pelos backups, exatamente o que ela quer parar de fazer.",
+      "C": "DynamoDB é NoSQL, de chave e valor. Trocar para ele exige reescrever o modelo de dados e as consultas.",
+      "D": "Redshift é data warehouse para análise de grandes volumes, não o banco transacional de uma aplicação."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon RDS",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-45",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "compute-aws"
+    ],
+    "case": "Sempre que um cliente envia uma foto, um pequeno código precisa gerar a miniatura. Há envios só algumas vezes por hora e a empresa não quer pagar por servidor ocioso.",
+    "stem": "Qual serviço de computação é o mais indicado?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma instância do EC2 ligada o tempo todo"
+      },
+      {
+        "k": "B",
+        "t": "Amazon Lightsail"
+      },
+      {
+        "k": "C",
+        "t": "AWS Lambda"
+      },
+      {
+        "k": "D",
+        "t": "AWS Elastic Beanstalk com uma instância mínima sempre ativa"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Lambda roda o código em resposta a um evento, como o envio do arquivo, e cobra só pelo tempo de execução. Sem envios, não há custo de servidor parado.",
+      "A": "Uma instância ligada o tempo todo é cobrada por hora mesmo sem trabalho, o oposto do que a empresa quer.",
+      "B": "Lightsail oferece servidores virtuais simples com preço mensal fixo. Continua sendo um servidor pago mesmo ocioso.",
+      "D": "Beanstalk facilita publicar a aplicação, mas ela roda em instâncias do EC2 que ficam ligadas e cobrando."
+    },
+    "src": [
+      {
+        "t": "O que é o AWS Lambda",
+        "u": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-46",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 50,
+    "tags": [
+      "bancos-aws"
+    ],
+    "case": "Um jogo online guarda o perfil de cada jogador por um identificador e precisa de respostas em poucos milissegundos com milhões de acessos, sem servidores de banco para administrar.",
+    "stem": "Qual banco de dados atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon Redshift"
+      },
+      {
+        "k": "B",
+        "t": "Amazon Neptune, o banco de grafos para relacionamentos entre jogadores"
+      },
+      {
+        "k": "C",
+        "t": "Amazon RDS para PostgreSQL numa instância grande"
+      },
+      {
+        "k": "D",
+        "t": "Amazon DynamoDB"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "DynamoDB é NoSQL de chave e valor, sem servidor para gerenciar, com latência de milissegundos de um dígito em qualquer escala. Buscar o perfil pelo identificador é o caso de uso clássico.",
+      "A": "Redshift é para consultas analíticas pesadas sobre muitos dados, não para leitura rápida de um registro por chave.",
+      "B": "Neptune é para dados conectados, como redes de amizade. O cenário só busca um perfil pelo identificador.",
+      "C": "RDS é relacional e roda em instâncias que você dimensiona e administra; escalar para milhões de acessos exige muito mais trabalho."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon DynamoDB",
+        "u": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-47",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 50,
+    "tags": [
+      "bancos-aws"
+    ],
+    "case": "O time de BI quer juntar vendas de cinco anos de todas as lojas e rodar relatórios com SQL sobre bilhões de linhas, sem afetar o banco das vendas do dia a dia.",
+    "stem": "Qual serviço é feito para isso?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon Redshift"
+      },
+      {
+        "k": "B",
+        "t": "Amazon DocumentDB"
+      },
+      {
+        "k": "C",
+        "t": "Amazon ElastiCache"
+      },
+      {
+        "k": "D",
+        "t": "Uma réplica de leitura do banco RDS das vendas"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Redshift é o data warehouse da AWS: armazenamento colunar e processamento paralelo para rodar SQL analítico sobre grandes volumes, separado do banco transacional.",
+      "B": "DocumentDB guarda documentos JSON para aplicações. Não foi feito para relatórios analíticos sobre bilhões de linhas.",
+      "C": "ElastiCache é cache em memória para acelerar leituras repetidas da aplicação, não lugar para histórico de anos.",
+      "D": "A réplica tira a carga do banco principal, mas continua sendo um banco transacional, lento para análises pesadas sobre anos de dados."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon Redshift",
+        "u": "https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-48",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 50,
+    "tags": [
+      "s3-classes"
+    ],
+    "case": "Dez instâncias Linux do EC2 precisam ler e gravar ao mesmo tempo nos mesmos arquivos, como se fosse uma pasta de rede compartilhada.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Um volume do Amazon EBS anexado a uma das instâncias"
+      },
+      {
+        "k": "B",
+        "t": "Amazon S3 Glacier Deep Archive"
+      },
+      {
+        "k": "C",
+        "t": "Amazon EFS"
+      },
+      {
+        "k": "D",
+        "t": "Armazenamento de instância de cada servidor"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "EFS é um sistema de arquivos de rede gerenciado: várias instâncias montam a mesma pasta e leem e gravam ao mesmo tempo, e ele cresce sozinho conforme os arquivos.",
+      "A": "Um volume EBS comum fica preso a uma instância; as outras nove não enxergariam os arquivos.",
+      "B": "Deep Archive é para guardar por anos o que quase nunca é lido, com horas para recuperar. Não é pasta de trabalho.",
+      "D": "Cada instância teria seus próprios arquivos temporários, sem compartilhamento e com perda ao parar."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon EFS",
+        "u": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-49",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 3,
+    "type": "yn",
+    "sec": 80,
+    "tags": [
+      "s3-classes"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre S3, EBS e EFS.",
+    "rows": [
+      {
+        "t": "O Amazon S3 guarda objetos acessados por API ou URL, e não é montado como um disco do sistema operacional.",
+        "a": true,
+        "e": "Sim. S3 é armazenamento de objetos: cada arquivo tem uma chave e é lido e gravado por chamadas HTTP, não como um disco."
+      },
+      {
+        "t": "Um volume do EBS é o tipo certo para o disco de sistema de uma instância do EC2.",
+        "a": true,
+        "e": "Sim. EBS é armazenamento em bloco, que a instância usa como disco, inclusive para o sistema operacional e bancos de dados."
+      },
+      {
+        "t": "O Amazon EFS exige que você escolha antes a capacidade em gigabytes e aumente manualmente quando encher.",
+        "a": false,
+        "e": "Não. O EFS é elástico: cresce e diminui sozinho conforme os arquivos, e você paga pelo que está guardado."
+      },
+      {
+        "t": "Os dados do armazenamento de instância continuam lá depois que a instância é encerrada.",
+        "a": false,
+        "e": "Não. O armazenamento de instância é temporário e some quando a instância é parada ou encerrada. Para dados que precisam durar, use EBS, EFS ou S3."
+      }
+    ],
+    "src": [
+      {
+        "t": "Opções de armazenamento na AWS",
+        "u": "https://docs.aws.amazon.com/whitepapers/latest/aws-overview/storage-services.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-50",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "rede-aws"
+    ],
+    "case": "Uma empresa quer registrar o domínio loja-exemplo.com.br e apontar o endereço para o balanceador de carga da aplicação na AWS.",
+    "stem": "Qual serviço faz isso?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon CloudFront"
+      },
+      {
+        "k": "B",
+        "t": "Amazon Route 53"
+      },
+      {
+        "k": "C",
+        "t": "AWS Direct Connect, ligando o domínio ao balanceador"
+      },
+      {
+        "k": "D",
+        "t": "Amazon API Gateway"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Route 53 é o serviço de DNS da AWS: registra domínios e responde a quem pergunta qual endereço corresponde a um nome, apontando para o balanceador.",
+      "A": "CloudFront é rede de entrega de conteúdo, que guarda cópias perto do usuário. Não registra domínio nem é o DNS.",
+      "C": "Direct Connect é um link físico privado entre o data center da empresa e a AWS. Não tem relação com nomes de domínio.",
+      "D": "API Gateway publica e protege APIs. A resolução do nome continua sendo papel do DNS."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon Route 53",
+        "u": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-51",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 55,
+    "tags": [
+      "rede-aws"
+    ],
+    "case": "Um banco quer ligar o data center dele à AWS por uma conexão dedicada, que não passe pela internet pública e tenha desempenho consistente.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AWS Site-to-Site VPN, que cria um túnel criptografado sobre a internet"
+      },
+      {
+        "k": "B",
+        "t": "Amazon CloudFront"
+      },
+      {
+        "k": "C",
+        "t": "AWS Direct Connect"
+      },
+      {
+        "k": "D",
+        "t": "Um gateway da internet na VPC"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Direct Connect é uma conexão de rede dedicada entre o local do cliente e a AWS, fora da internet pública, com largura de banda e latência mais previsíveis.",
+      "A": "A VPN é criptografada, mas o tráfego continua passando pela internet pública, o que o banco quer evitar.",
+      "B": "CloudFront distribui conteúdo para usuários finais; não conecta o data center da empresa à AWS.",
+      "D": "O gateway da internet liga a VPC justamente à internet pública, o oposto do que foi pedido."
+    },
+    "src": [
+      {
+        "t": "O que é o AWS Direct Connect",
+        "u": "https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-52",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 3,
+    "type": "multi",
+    "sec": 70,
+    "tags": [
+      "compute-aws"
+    ],
+    "stem": "Em quais opções a empresa NÃO precisa escolher nem administrar servidores ou instâncias? Escolha as TRÊS corretas.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Funções do AWS Lambda"
+      },
+      {
+        "k": "B",
+        "t": "Contêineres no Amazon ECS com o AWS Fargate"
+      },
+      {
+        "k": "C",
+        "t": "Tabelas do Amazon DynamoDB no modo sob demanda"
+      },
+      {
+        "k": "D",
+        "t": "Instâncias do Amazon EC2 num grupo de Auto Scaling"
+      },
+      {
+        "k": "E",
+        "t": "Um banco Amazon RDS numa classe de instância db.r6g escolhida pela equipe"
+      }
+    ],
+    "ans": [
+      "A",
+      "B",
+      "C"
+    ],
+    "why": {
+      "ok": "Lambda, Fargate e DynamoDB sob demanda são serverless: você entrega código, contêiner ou dados e a AWS cuida da capacidade por trás, sem instância para escolher ou manter.",
+      "D": "O Auto Scaling ajusta a quantidade, mas as instâncias continuam sendo da empresa: tipo, sistema operacional e patches são escolhas dela.",
+      "E": "O RDS é gerenciado, mas a equipe ainda escolhe e redimensiona a classe da instância do banco."
+    },
+    "src": [
+      {
+        "t": "Serverless na AWS",
+        "u": "https://aws.amazon.com/serverless/"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-53",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "implantacao-operacao"
+    ],
+    "case": "A equipe quer ver gráficos do uso de CPU das instâncias e receber um alerta quando passar de 80% por cinco minutos.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AWS CloudTrail, registrando as chamadas de API da conta"
+      },
+      {
+        "k": "B",
+        "t": "AWS Config"
+      },
+      {
+        "k": "C",
+        "t": "Amazon CloudWatch"
+      },
+      {
+        "k": "D",
+        "t": "AWS Trusted Advisor"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "CloudWatch coleta métricas como uso de CPU, mostra em painéis e dispara alarmes quando um limite é ultrapassado por um período.",
+      "A": "CloudTrail registra quem fez o quê na conta, como criar ou apagar um recurso. Não mede desempenho.",
+      "B": "Config acompanha como os recursos estão configurados e se seguem as regras. Não acompanha uso de CPU.",
+      "D": "Trusted Advisor dá recomendações de custo, segurança e limites. Não gera alarmes de desempenho em tempo real."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon CloudWatch",
+        "u": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d3-54",
+    "exam": "clf",
+    "dom": "d3",
+    "lvl": 2,
+    "type": "single",
+    "sec": 50,
+    "tags": [
+      "sqs-sns-eb"
+    ],
+    "case": "Pedidos chegam em picos e o sistema de faturamento não dá conta. A empresa quer que os pedidos fiquem guardados em espera até que o faturamento consiga processar cada um.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon SNS, enviando cada pedido por notificação"
+      },
+      {
+        "k": "B",
+        "t": "Amazon SQS"
+      },
+      {
+        "k": "C",
+        "t": "Amazon Route 53"
+      },
+      {
+        "k": "D",
+        "t": "AWS Step Functions"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "SQS é uma fila: os pedidos ficam guardados até o consumidor buscar e processar cada um no próprio ritmo. Isso desacopla quem produz de quem consome e absorve os picos.",
+      "A": "SNS empurra a mensagem na hora para os assinantes e não guarda uma fila para processar depois; se o faturamento estiver sobrecarregado, o problema continua.",
+      "C": "Route 53 é DNS e não tem nada a ver com guardar mensagens.",
+      "D": "Step Functions coordena etapas de um fluxo de trabalho. Para absorver picos com uma fila de espera, o serviço é o SQS."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon SQS",
+        "u": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d2-38",
+    "exam": "clf",
+    "dom": "d2",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "seguranca-servicos"
+    ],
+    "case": "Um bucket importante foi apagado ontem à noite. A gerência quer saber qual usuário fez isso, de qual endereço IP e a que horas.",
+    "stem": "Onde encontrar essa informação?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Nos gráficos de métricas do Amazon CloudWatch"
+      },
+      {
+        "k": "B",
+        "t": "No AWS CloudTrail"
+      },
+      {
+        "k": "C",
+        "t": "No Amazon Inspector"
+      },
+      {
+        "k": "D",
+        "t": "No AWS Trusted Advisor, na verificação de permissões dos buckets do S3"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "CloudTrail registra as chamadas de API feitas na conta, com quem fez, quando, de onde e o que foi pedido. A exclusão do bucket fica nesse histórico.",
+      "A": "Métricas mostram números de uso e desempenho, não quem executou cada ação.",
+      "C": "Inspector procura vulnerabilidades em instâncias, contêineres e funções. Não guarda histórico de ações dos usuários.",
+      "D": "Trusted Advisor aponta buckets com permissão aberta demais, mas não registra quem apagou o quê."
+    },
+    "src": [
+      {
+        "t": "O que é o AWS CloudTrail",
+        "u": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d2-39",
+    "exam": "clf",
+    "dom": "d2",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "seguranca-servicos"
+    ],
+    "stem": "Qual proteção contra ataques de negação de serviço (DDoS) todo cliente da AWS recebe automaticamente, sem custo adicional?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AWS Shield Advanced, com equipe de resposta a incidentes"
+      },
+      {
+        "k": "B",
+        "t": "AWS WAF"
+      },
+      {
+        "k": "C",
+        "t": "AWS Shield Standard"
+      },
+      {
+        "k": "D",
+        "t": "Amazon GuardDuty"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Shield Standard vem ligado para todos os clientes, sem custo, e protege contra os ataques DDoS mais comuns nas camadas de rede e transporte.",
+      "A": "Shield Advanced é pago e acrescenta proteções extras, relatórios e acesso à equipe de resposta. Não é automático.",
+      "B": "WAF filtra requisições web por regras que você configura e é cobrado pelo uso. Não é a proteção automática e gratuita.",
+      "D": "GuardDuty detecta ameaças analisando registros da conta. É pago e não é o serviço de proteção contra DDoS."
+    },
+    "src": [
+      {
+        "t": "AWS Shield",
+        "u": "https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d2-40",
+    "exam": "clf",
+    "dom": "d2",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "conformidade-governanca"
+    ],
+    "case": "Um cliente pede a uma empresa que usa a AWS os relatórios SOC 2 e o certificado ISO 27001 da infraestrutura da AWS.",
+    "stem": "Onde a empresa baixa esses documentos?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "No AWS Artifact"
+      },
+      {
+        "k": "B",
+        "t": "No AWS Trusted Advisor"
+      },
+      {
+        "k": "C",
+        "t": "No AWS Security Hub, que reúne os achados de segurança"
+      },
+      {
+        "k": "D",
+        "t": "No AWS Config"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Artifact é o portal de autoatendimento com os relatórios de conformidade da própria AWS, como SOC e ISO, e com acordos que a empresa pode aceitar.",
+      "B": "Trusted Advisor dá recomendações sobre a conta do cliente. Não guarda relatórios de auditoria da AWS.",
+      "C": "Security Hub mostra o estado de segurança dos recursos do cliente, não os certificados da infraestrutura da AWS.",
+      "D": "Config avalia as configurações dos recursos do cliente contra regras. Não fornece relatórios da AWS."
+    },
+    "src": [
+      {
+        "t": "O que é o AWS Artifact",
+        "u": "https://docs.aws.amazon.com/artifact/latest/ug/what-is-aws-artifact.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d2-41",
+    "exam": "clf",
+    "dom": "d2",
+    "lvl": 3,
+    "type": "yn",
+    "sec": 80,
+    "tags": [
+      "shared-responsibility"
+    ],
+    "stem": "Uma empresa roda parte do sistema em instâncias do EC2 e parte em funções do Lambda. Responda Sim ou Não sobre quem cuida de cada coisa.",
+    "rows": [
+      {
+        "t": "No EC2, aplicar as atualizações de segurança do sistema operacional da instância é responsabilidade do cliente.",
+        "a": true,
+        "e": "Sim. No EC2 o cliente controla o sistema operacional da instância e, por isso, é quem aplica os patches dele."
+      },
+      {
+        "t": "No Lambda, o cliente também precisa aplicar os patches do sistema operacional onde a função roda.",
+        "a": false,
+        "e": "Não. No Lambda a AWS cuida do sistema operacional e do ambiente de execução; o cliente cuida do código e das permissões da função."
+      },
+      {
+        "t": "Nos dois casos, definir quem pode invocar ou acessar os recursos pelo IAM continua sendo responsabilidade do cliente.",
+        "a": true,
+        "e": "Sim. Controle de acesso e dados ficam sempre com o cliente, qualquer que seja o serviço."
+      },
+      {
+        "t": "A segurança física dos data centers onde o EC2 e o Lambda rodam é responsabilidade do cliente.",
+        "a": false,
+        "e": "Não. Prédios, hardware e rede física são sempre responsabilidade da AWS: a segurança da nuvem."
+      }
+    ],
+    "src": [
+      {
+        "t": "Modelo de responsabilidade compartilhada",
+        "u": "https://aws.amazon.com/compliance/shared-responsibility-model/"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d2-42",
+    "exam": "clf",
+    "dom": "d2",
+    "lvl": 2,
+    "type": "single",
+    "sec": 50,
+    "tags": [
+      "seguranca-servicos"
+    ],
+    "case": "A empresa quer ser avisada se uma instância começar a se comunicar com endereços conhecidos de mineração de criptomoeda ou se credenciais forem usadas de um lugar incomum.",
+    "stem": "Qual serviço faz essa detecção contínua de ameaças?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon Inspector, avaliando as vulnerabilidades de software das instâncias"
+      },
+      {
+        "k": "B",
+        "t": "Amazon GuardDuty"
+      },
+      {
+        "k": "C",
+        "t": "Amazon Macie"
+      },
+      {
+        "k": "D",
+        "t": "AWS Shield Standard"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "GuardDuty analisa continuamente registros como CloudTrail, logs de fluxo da VPC e consultas DNS, e aponta atividades suspeitas como mineração e uso estranho de credenciais.",
+      "A": "Inspector procura falhas conhecidas no software instalado. Não acompanha comportamento suspeito em andamento.",
+      "C": "Macie procura dados sensíveis, como CPF e cartões, guardados no S3. Não detecta ataques à conta.",
+      "D": "Shield Standard protege contra DDoS. Não analisa comportamento de instâncias nem uso de credenciais."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon GuardDuty",
+        "u": "https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d2-43",
+    "exam": "clf",
+    "dom": "d2",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "seguranca-servicos"
+    ],
+    "case": "Por causa da LGPD, a empresa precisa descobrir em quais buckets do S3 existem arquivos com CPF, números de cartão e outros dados pessoais.",
+    "stem": "Qual serviço faz essa descoberta automaticamente?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Amazon GuardDuty"
+      },
+      {
+        "k": "B",
+        "t": "AWS Key Management Service (KMS), criptografando todos os buckets"
+      },
+      {
+        "k": "C",
+        "t": "Amazon Macie"
+      },
+      {
+        "k": "D",
+        "t": "Amazon Inspector"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Macie usa aprendizado de máquina e padrões para encontrar dados sensíveis guardados no S3 e mostra onde eles estão e quanto estão expostos.",
+      "A": "GuardDuty detecta ameaças e comportamentos suspeitos, não o conteúdo sensível dos arquivos.",
+      "B": "Criptografar protege os dados, mas não diz em quais buckets estão os dados pessoais.",
+      "D": "Inspector procura vulnerabilidades de software em instâncias, contêineres e funções, não dados dentro de arquivos."
+    },
+    "src": [
+      {
+        "t": "O que é o Amazon Macie",
+        "u": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "aw-d4-26",
+    "exam": "clf",
+    "dom": "d4",
+    "lvl": 2,
+    "type": "single",
+    "sec": 45,
+    "tags": [
+      "custo-ferramentas"
+    ],
+    "case": "Antes de migrar, a diretoria quer uma estimativa de quanto vão custar por mês 20 instâncias, um banco RDS e 5 TB no S3.",
+    "stem": "Qual ferramenta usar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AWS Cost Explorer, analisando os gastos da conta"
+      },
+      {
+        "k": "B",
+        "t": "AWS Pricing Calculator"
+      },
+      {
+        "k": "C",
+        "t": "AWS Budgets"
+      },
+      {
+        "k": "D",
+        "t": "Relatório de custo e uso (CUR)"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "A Pricing Calculator monta estimativas de serviços que ainda não existem na conta: você descreve a arquitetura e ela calcula o custo mensal previsto.",
+      "A": "Cost Explorer analisa e projeta o gasto do que já está rodando. Antes da migração não há uso para analisar.",
+      "C": "Budgets avisa quando o gasto real passa de um limite definido. Não estima uma arquitetura nova.",
+      "D": "O CUR detalha o uso e o custo que já aconteceram na conta, item por item."
+    },
+    "src": [
+      {
+        "t": "AWS Pricing Calculator",
+        "u": "https://docs.aws.amazon.com/pricing-calculator/latest/userguide/what-is-pricing-calculator.html"
+      }
+    ],
+    "rev": "2026-11-13"
   }
 ]

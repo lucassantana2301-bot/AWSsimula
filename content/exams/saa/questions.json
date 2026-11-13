@@ -7845,5 +7845,474 @@
         "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpu-abort-incomplete-mpu-lifecycle-config.html"
       }
     ]
+  },
+  {
+    "id": "saa-d1-44",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "criptografia-segredos"
+    ],
+    "case": "Uma regra de conformidade exige que as chaves de criptografia fiquem em módulos de hardware dedicados a um único cliente, validados FIPS 140, e que só a empresa tenha controle sobre elas: nem a AWS pode usá-las.",
+    "stem": "Qual solução atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Chave gerenciada pelo cliente no AWS KMS com rotação automática anual"
+      },
+      {
+        "k": "B",
+        "t": "Um cluster do AWS CloudHSM"
+      },
+      {
+        "k": "C",
+        "t": "Criptografia SSE-S3 nos buckets"
+      },
+      {
+        "k": "D",
+        "t": "Segredos no AWS Secrets Manager com política de recurso restrita à conta"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "CloudHSM entrega HSMs de locatário único na VPC do cliente. A empresa cria e controla os usuários e as chaves do HSM, e a AWS não tem acesso a elas.",
+      "A": "O KMS usa HSMs validados, mas compartilhados e operados pela AWS. Rotação não muda quem controla o hardware.",
+      "C": "No SSE-S3 a própria AWS gera e gerencia as chaves, o oposto do controle exclusivo exigido.",
+      "D": "Secrets Manager guarda segredos de aplicação e criptografa com o KMS. Não oferece HSM dedicado."
+    },
+    "src": [
+      {
+        "t": "O que é o AWS CloudHSM",
+        "u": "https://docs.aws.amazon.com/cloudhsm/latest/userguide/introduction.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-45",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "iam-permissoes"
+    ],
+    "case": "Uma aplicação no EC2 conecta a um RDS para MySQL. A segurança proibiu senha de banco em qualquer lugar, inclusive em cofres: a aplicação deve se autenticar com a identidade da instância e credenciais que expiram em minutos.",
+    "stem": "Qual configuração atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Guardar a senha no Secrets Manager com rotação automática a cada 7 dias"
+      },
+      {
+        "k": "B",
+        "t": "Restringir o grupo de segurança do banco ao grupo de segurança das instâncias"
+      },
+      {
+        "k": "C",
+        "t": "Autenticação do IAM no banco, com a função da instância gerando o token de acesso"
+      },
+      {
+        "k": "D",
+        "t": "Criptografar o banco com uma chave do KMS liberada só para a função da instância"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Com autenticação do IAM no RDS, a aplicação pede um token de autenticação usando a função da instância. O token vale 15 minutos e não existe senha de banco guardada.",
+      "A": "A rotação melhora a higiene, mas continua existindo uma senha guardada num cofre, o que a regra proíbe.",
+      "B": "Restringir a rede é boa prática, mas não é autenticação: o banco continuaria pedindo usuário e senha.",
+      "D": "Criptografia em repouso protege os arquivos do banco, não decide como a aplicação faz login."
+    },
+    "src": [
+      {
+        "t": "Autenticação do IAM para RDS",
+        "u": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-46",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "criptografia-segredos"
+    ],
+    "case": "Uma aplicação lê 300 configurações, como URLs e limites, e 5 chaves de API de parceiros que não suportam rotação automática. Tudo precisa ficar fora do código, as chaves criptografadas, com o menor custo.",
+    "stem": "Qual solução atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Tudo no Secrets Manager, um segredo por item"
+      },
+      {
+        "k": "B",
+        "t": "Parâmetros padrão do Systems Manager Parameter Store, com SecureString para as chaves"
+      },
+      {
+        "k": "C",
+        "t": "Variáveis de ambiente da aplicação em texto puro"
+      },
+      {
+        "k": "D",
+        "t": "Um arquivo JSON num bucket do S3 com criptografia SSE-S3 e leitura liberada à função"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Parâmetros padrão do Parameter Store não têm cobrança mensal por item, e o tipo SecureString criptografa as chaves com o KMS. Sem necessidade de rotação gerenciada, é a opção mais barata.",
+      "A": "Secrets Manager cobra por segredo armazenado. Para 305 itens, a maioria nem secreta, o custo é muito maior sem ganho.",
+      "C": "Texto puro não atende à exigência de criptografar as chaves e espalha os valores pela configuração da aplicação.",
+      "D": "Funciona, mas obriga a reescrever o arquivo inteiro a cada mudança e perde o histórico de versões e o controle por item."
+    },
+    "src": [
+      {
+        "t": "Parameter Store",
+        "u": "https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-47",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "deteccao-auditoria"
+    ],
+    "case": "Após uma fusão, a segurança precisa listar quais buckets do S3, funções do IAM e chaves do KMS da organização podem ser acessados por contas fora dela, e ser avisada quando surgir um novo acesso assim.",
+    "stem": "Qual serviço atende com menos esforço?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma consulta no CloudTrail Lake às chamadas AssumeRole de contas externas"
+      },
+      {
+        "k": "B",
+        "t": "IAM Access Analyzer com a organização como zona de confiança"
+      },
+      {
+        "k": "C",
+        "t": "Verificação de permissões de buckets do Trusted Advisor"
+      },
+      {
+        "k": "D",
+        "t": "Amazon GuardDuty"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "O Access Analyzer lê as políticas de recurso e aponta tudo que concede acesso a quem está fora da zona de confiança. Com a organização como zona, ele lista os acessos externos e gera novos achados quando aparecem.",
+      "A": "O CloudTrail mostra acessos que já aconteceram. Uma permissão externa nunca usada não aparece ali.",
+      "C": "O Trusted Advisor olha só buckets abertos e não cobre funções do IAM nem chaves do KMS.",
+      "D": "GuardDuty detecta comportamento malicioso, não analisa quais políticas concedem acesso externo."
+    },
+    "src": [
+      {
+        "t": "IAM Access Analyzer",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-48",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "criptografia-segredos"
+    ],
+    "case": "Várias equipes criam instâncias por scripts próprios. A segurança quer que todo volume do EBS criado daqui em diante seja criptografado, sem depender de cada equipe lembrar e sem quebrar os scripts.",
+    "stem": "Qual configuração atende com menos esforço?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma regra do AWS Config que marca volumes não criptografados"
+      },
+      {
+        "k": "B",
+        "t": "Copiar diariamente os snapshots não criptografados para versões criptografadas"
+      },
+      {
+        "k": "C",
+        "t": "Ativar a criptografia padrão do EBS na região, com a chave escolhida"
+      },
+      {
+        "k": "D",
+        "t": "Ativar a rotação automática da chave aws/ebs no KMS"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Com a criptografia padrão do EBS ativa na região, todo volume e snapshot novo nasce criptografado, mesmo que o script não peça. Nada muda para as equipes.",
+      "A": "A regra do Config só detecta o problema depois de o volume existir. Não impede nem corrige sozinha.",
+      "B": "Copiar snapshots é trabalho contínuo e corrige depois do fato; os volumes em uso seguem sem criptografia.",
+      "D": "Rotacionar a chave não faz volumes não criptografados passarem a ser criptografados."
+    },
+    "src": [
+      {
+        "t": "Criptografia padrão do EBS",
+        "u": "https://docs.aws.amazon.com/ebs/latest/userguide/encryption-by-default.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-49",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 110,
+    "tags": [
+      "iam-permissoes"
+    ],
+    "case": "Uma ferramenta de terceiros de análise de custos vai assumir uma função do IAM na conta do cliente. O fornecedor atende milhares de clientes, todos com a mesma conta da AWS do fornecedor como principal confiável.",
+    "stem": "O que impede que outro cliente do fornecedor faça a ferramenta acessar esta conta?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Exigir MFA na política de confiança da função"
+      },
+      {
+        "k": "B",
+        "t": "Limitar a política de permissões da função à leitura"
+      },
+      {
+        "k": "C",
+        "t": "Exigir na política de confiança um sts:ExternalId único definido para este cliente"
+      },
+      {
+        "k": "D",
+        "t": "Restringir a política de confiança ao endereço IP do fornecedor"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "É o problema do substituto confuso. O ExternalId único por cliente, exigido como condição na política de confiança, garante que o fornecedor só assuma a função quando agir em nome deste cliente.",
+      "A": "A ferramenta é um serviço automatizado, sem pessoa para informar MFA; e o MFA não diferencia em nome de qual cliente o fornecedor está agindo.",
+      "B": "Menos permissão reduz o dano, mas outro cliente continuaria lendo os dados desta conta.",
+      "D": "Todos os clientes usam o mesmo fornecedor e os mesmos IPs, então a restrição não distingue um do outro."
+    },
+    "src": [
+      {
+        "t": "Substituto confuso e ExternalId",
+        "u": "https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-50",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "vpc-seguranca"
+    ],
+    "case": "Um site estático no S3 é servido pelo CloudFront. Alguns usuários acessam o bucket direto pela URL do S3, fugindo do WAF configurado na distribuição. O bucket usa criptografia SSE-KMS.",
+    "stem": "Qual configuração faz o bucket aceitar leituras só vindas do CloudFront?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Controle de acesso à origem (OAC) na distribuição e política do bucket liberando só ela"
+      },
+      {
+        "k": "B",
+        "t": "Hospedagem de site estático do S3 com o bloqueio de acesso público desligado"
+      },
+      {
+        "k": "C",
+        "t": "Um grupo de segurança no bucket liberando os IPs do CloudFront"
+      },
+      {
+        "k": "D",
+        "t": "URLs pré-assinadas do S3 geradas para cada visitante"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Com OAC, o CloudFront assina as requisições à origem, e a política do bucket libera só essa distribuição. O OAC também funciona com SSE-KMS, ao contrário do antigo OAI. O acesso direto pela URL do S3 passa a ser negado.",
+      "B": "O endpoint de site estático exige o bucket público, o que é justamente o acesso direto que se quer bloquear.",
+      "C": "Buckets do S3 não têm grupo de segurança. Isso vale para interfaces de rede numa VPC.",
+      "D": "URLs pré-assinadas dão acesso direto ao S3 e passam ao largo do CloudFront e do WAF."
+    },
+    "src": [
+      {
+        "t": "Restringir acesso a uma origem S3 com OAC",
+        "u": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-51",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "vpc-seguranca"
+    ],
+    "case": "Uma plataforma de cursos entrega pelo CloudFront centenas de arquivos de vídeo por aula. Só assinantes logados podem assistir, e a aplicação não quer reescrever cada URL da página do player.",
+    "stem": "Qual mecanismo atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma URL assinada do CloudFront para cada arquivo de vídeo"
+      },
+      {
+        "k": "B",
+        "t": "Cookies assinados do CloudFront emitidos no login"
+      },
+      {
+        "k": "C",
+        "t": "URLs pré-assinadas do S3 para cada arquivo"
+      },
+      {
+        "k": "D",
+        "t": "Regra do AWS WAF que libera só o IP de cada assinante logado"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Cookies assinados liberam vários arquivos de uma vez, como todos os pedaços dos vídeos, sem mudar as URLs. A aplicação emite o cookie quando o assinante faz login.",
+      "A": "URLs assinadas funcionam bem para um arquivo individual. Para centenas de arquivos por aula, exigiriam reescrever cada endereço, o que a aplicação quer evitar.",
+      "C": "URLs pré-assinadas do S3 levam ao bucket direto, fora do CloudFront, e também teriam de ser geradas uma a uma.",
+      "D": "IPs mudam e são compartilhados, e manter uma regra por assinante não escala."
+    },
+    "src": [
+      {
+        "t": "URLs assinadas ou cookies assinados",
+        "u": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-choosing-signed-urls-cookies.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-52",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 110,
+    "tags": [
+      "iam-permissoes"
+    ],
+    "case": "Um teste de invasão mostrou que uma falha de SSRF na aplicação web conseguia ler, a partir da instância do EC2, as credenciais temporárias da função da instância pelo serviço de metadados.",
+    "stem": "Quais medidas reduzem esse risco? Escolha as DUAS corretas.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Exigir o IMDSv2 (HttpTokens obrigatório) nas instâncias"
+      },
+      {
+        "k": "B",
+        "t": "Manter o limite de saltos da resposta do token em 1 nas instâncias que não rodam contêineres"
+      },
+      {
+        "k": "C",
+        "t": "Mover as credenciais da função para variáveis de ambiente da instância"
+      },
+      {
+        "k": "D",
+        "t": "Trocar a função da instância por uma chave de acesso de longo prazo de um usuário do IAM"
+      },
+      {
+        "k": "E",
+        "t": "Bloquear a porta 80 de saída no grupo de segurança da instância"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "O IMDSv2 exige um token obtido por uma requisição PUT com cabeçalho próprio, o que a maioria das falhas de SSRF não consegue fazer. O limite de saltos 1 impede que o token atravesse mais um salto de rede, como o de um contêiner.",
+      "C": "Credenciais em variáveis de ambiente ficam mais expostas e deixam de ser renovadas automaticamente.",
+      "D": "Chave de longo prazo não expira: se vazar, o estrago é maior e mais duradouro.",
+      "E": "O serviço de metadados é acessado num endereço local da própria instância; regras de saída do grupo de segurança não bloqueiam esse acesso."
+    },
+    "src": [
+      {
+        "t": "Configurar o serviço de metadados da instância",
+        "u": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html"
+      }
+    ],
+    "rev": "2026-11-13"
+  },
+  {
+    "id": "saa-d1-53",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 100,
+    "tags": [
+      "criptografia-segredos"
+    ],
+    "stem": "Responda Sim ou Não para cada afirmação sobre as opções de criptografia no lado do servidor do Amazon S3.",
+    "rows": [
+      {
+        "t": "Desde janeiro de 2023, todo objeto novo enviado ao S3 é criptografado no servidor por padrão, mesmo sem configuração.",
+        "a": true,
+        "e": "Sim. O S3 aplica SSE-S3 por padrão a todos os uploads novos, sem custo extra e sem mudança na aplicação."
+      },
+      {
+        "t": "Com SSE-KMS, cada uso da chave aparece no CloudTrail e a política da chave pode restringir quem consegue descriptografar.",
+        "a": true,
+        "e": "Sim. É o principal motivo para escolher SSE-KMS: auditoria de uso da chave e uma segunda camada de controle de acesso, além da política do bucket."
+      },
+      {
+        "t": "Com SSE-C, a AWS guarda a chave que o cliente enviou para descriptografar os objetos depois.",
+        "a": false,
+        "e": "Não. No SSE-C a chave vai em cada requisição e é descartada depois do uso. Sem enviar a mesma chave de novo, o objeto não pode ser lido."
+      },
+      {
+        "t": "Ativar o S3 Bucket Key reduz as chamadas ao KMS e o custo do SSE-KMS em buckets com muitos objetos.",
+        "a": true,
+        "e": "Sim. O Bucket Key gera uma chave de curta duração no nível do bucket, cortando a quantidade de requisições ao KMS e o custo delas."
+      }
+    ],
+    "src": [
+      {
+        "t": "Proteção de dados com criptografia no S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html"
+      }
+    ],
+    "rev": "2026-11-13"
   }
 ]
