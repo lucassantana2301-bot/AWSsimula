@@ -35,10 +35,10 @@ function cartao(v: Video): string {
   /* duração só aparece quando foi conferida (o schema garante 1–6) */
   const meta = [v.canal, v.min === undefined ? null : `${String(v.min)} min`].filter((x): x is string => x !== null);
   return `<div class="gv-card">
-    <button type="button" class="gv-play" data-gv-play="${v.yt}" aria-label="${esc(`Assistir: ${v.titulo} (${lingua})`)}">
+    <button type="button" class="gv-play" data-gv-play="${v.yt}">
       <span class="gv-ico" aria-hidden="true"></span>
-      <span class="gv-t">${esc(v.titulo)}</span>
-      <span class="gv-m"><span class="gv-lang ${v.lang}">${v.lang.toUpperCase()}</span> ${esc(meta.join(" · "))}</span>
+      <span class="gv-t"><span class="sr-only">Assistir: </span>${esc(v.titulo)}</span>
+      <span class="gv-m"><span class="gv-lang ${v.lang}"><span aria-hidden="true">${v.lang.toUpperCase()}</span><span class="sr-only"> em ${lingua}</span></span> ${esc(meta.join(" · "))}</span>
     </button>
     <a class="gv-yt t-xs" href="https://www.youtube.com/watch?v=${v.yt}" target="_blank" rel="noopener noreferrer">Abrir no YouTube</a>
   </div>`;
@@ -63,7 +63,8 @@ function abrirPlayer(botao: HTMLButtonElement): void {
   moldura.className = "gv-frame";
   const iframe = document.createElement("iframe");
   iframe.src = `${ORIGEM_PLAYER}/embed/${yt}?autoplay=1&rel=0`;
-  iframe.title = botao.getAttribute("aria-label") ?? "Vídeo";
+  /* título do player = texto do botão (sem espaços extras), para o leitor de tela */
+  iframe.title = botao.textContent.replace(/\s+/g, " ").trim() || "Vídeo";
   iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
   iframe.allowFullscreen = true;
   /* o player do YouTube recusa tocar sem referrer (erro 153) */

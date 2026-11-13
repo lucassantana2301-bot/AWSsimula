@@ -9,3 +9,4 @@ build/
 !public/icons/*.png
 test-results/
 playwright-report/
+lighthouse/
