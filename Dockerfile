@@ -33,6 +33,10 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
 # ---------- imagem da API ----------
 FROM ${NODE_IMAGE} AS api
 ENV NODE_ENV=production PORT=3000
+# Em execução a API só precisa do node. npm, npx e corepack vêm na imagem base e traziam
+# 10 CVEs HIGH (brace-expansion, pacote, sigstore, ip-address…) que o Trivy barrou.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+      /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
 WORKDIR /app
 COPY --from=api-deps --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /src/build-api/server.mjs ./server.mjs

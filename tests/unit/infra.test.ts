@@ -88,6 +88,12 @@ describe("imagens e nginx", () => {
     expect(bases.length).toBeGreaterThanOrEqual(2);
     for (const b of bases) expect(b).toMatch(/@sha256:[0-9a-f]{64}$/);
   });
+  it("imagem da API não leva npm/npx/corepack (só o node roda em produção)", () => {
+    const api = ler("Dockerfile").split(/^FROM /m).find((b) => /AS api\s*$/m.test(b.split("\n")[0] ?? "")) ?? "";
+    expect(api).toMatch(/rm -rf \/usr\/local\/lib\/node_modules\/npm/);
+    expect(api).toMatch(/\/usr\/local\/bin\/npx/);
+    expect(api).not.toMatch(/^RUN npm /m);
+  });
   it("nenhum workflow usa ação do Trivy por tag", () => {
     for (const w of ["ci.yml", "k8s.yml", "mutacao.yml"])
       expect(ler(`.github/workflows/${w}`)).not.toMatch(/aquasecurity\/(trivy|setup-trivy)-?action@|setup-trivy@/);
