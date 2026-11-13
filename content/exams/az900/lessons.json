@@ -75,7 +75,7 @@
         "k": "analogia",
         "emoji": "🧾",
         "h": "Pense na sua vida financeira",
-        "p": "A Calculadora de Preços é o orçamento da reforma antes de contratar. O TCO compara o custo de continuar no aluguel com o de comprar. O Cost Management é o extrato do mês. O Advisor é o amigo que olha o extrato e diz onde você está jogando dinheiro fora."
+        "p": "A Calculadora de Preços é o orçamento da reforma antes de contratar. O caso de negócio do Azure Migrate (o TCO) compara o custo de continuar no aluguel com o de comprar. O Cost Management é o extrato do mês. O Advisor é o amigo que olha o extrato e diz onde você está jogando dinheiro fora."
       },
       {
         "k": "diagrama",
@@ -87,7 +87,7 @@
         "k": "pegadinha",
         "emoji": "🚨",
         "h": "O gatilho no enunciado",
-        "gotcha": "Comparar com o datacenter próprio, incluindo energia, espaço e equipe, é sempre TCO, nunca a Calculadora de Preços, que só estima recursos do Azure. E alerta quando o gasto passar de um valor é orçamento no Cost Management, não Azure Monitor: o Monitor acompanha métrica técnica, não a fatura."
+        "gotcha": "Comparar com o datacenter próprio, incluindo energia, espaço e equipe, é o caso de negócio do Azure Migrate (TCO), nunca a Calculadora de Preços, que só estima recursos do Azure. E alerta quando o gasto passar de um valor é orçamento no Cost Management, não Azure Monitor: o Monitor acompanha métrica técnica, não a fatura."
       },
       {
         "k": "quiz"
@@ -97,12 +97,12 @@
       {
         "q": "Comparar o custo de 60 servidores locais com o custo no Azure, incluindo energia e equipe.",
         "a": [
-          "Calculadora de TCO",
+          "Caso de negócio do Azure Migrate",
           "Calculadora de Preços",
           "Cost Management"
         ],
         "c": 0,
-        "e": "Só o TCO modela o custo do seu datacenter atual."
+        "e": "Só o caso de negócio do Azure Migrate modela o custo do seu datacenter atual (TCO). A antiga calculadora de TCO foi aposentada."
       },
       {
         "q": "Receber e-mail quando o gasto do mês passar de 80% do planejado.",

@@ -175,8 +175,8 @@
   },
   {
     "c": "Estimativa antes de gastar",
-    "az": "Pricing Calculator / TCO",
+    "az": "Pricing Calculator / Azure Migrate (caso de negócio)",
     "aw": "AWS Pricing Calculator",
-    "n": "TCO compara com on-premises."
+    "n": "Comparar com on-premises (TCO) agora é o caso de negócio do Azure Migrate; a calculadora de TCO foi aposentada."
   }
 ]

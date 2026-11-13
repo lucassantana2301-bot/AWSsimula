@@ -756,7 +756,7 @@
     "opts": [
       {
         "k": "A",
-        "t": "Calculadora de Custo Total de Propriedade (TCO)"
+        "t": "Caso de negócio do Azure Migrate (business case)"
       },
       {
         "k": "B",
@@ -775,15 +775,15 @@
       "A"
     ],
     "why": {
-      "ok": "A calculadora de TCO existe para comparar o ambiente local com o Azure, considerando custos que a fatura da nuvem não mostra, como energia, espaço físico e pessoal.",
+      "ok": "O caso de negócio do Azure Migrate compara o custo total de propriedade (TCO) do datacenter atual com o do Azure, considerando custos que a fatura da nuvem não mostra, como energia, espaço físico e pessoal. Ele substituiu a antiga calculadora de TCO, que foi aposentada.",
       "B": "A Calculadora de Preços estima quanto custarão recursos do Azure. Ela não modela o custo do seu datacenter atual, então não faz comparação.",
       "C": "Cost Management analisa gasto que JÁ aconteceu na sua conta e cria orçamentos. Não serve para projetar uma migração que ainda não existe.",
       "D": "Advisor recomenda melhorias em recursos existentes no Azure, inclusive economia. Não compara com on-premises."
     },
     "src": [
       {
-        "t": "Calculadora de TCO",
-        "u": "https://azure.microsoft.com/pricing/tco/calculator/"
+        "t": "Caso de negócio do Azure Migrate",
+        "u": "https://learn.microsoft.com/azure/migrate/concepts-business-case-calculation"
       }
     ]
   },
@@ -2024,6 +2024,2222 @@
       {
         "t": "Portal de Confiança do Serviço",
         "u": "https://learn.microsoft.com/compliance/regulatory/offering-home"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-13",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "modelos-nuvem",
+      "consumo"
+    ],
+    "case": "Uma prefeitura recebe fotos de buracos enviadas pelos cidadãos. Cada foto que chega precisa ser redimensionada e registrada, tarefa que leva menos de dois segundos. Há dias com 5 fotos e dias com 3 mil, e a equipe não quer pagar por servidor ligado esperando.",
+    "stem": "Qual abordagem de computação atende ao cenário?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Computação sem servidor (serverless), acionada por evento e cobrada pelo tempo de execução"
+      },
+      {
+        "k": "B",
+        "t": "Máquinas virtuais reservadas por três anos"
+      },
+      {
+        "k": "C",
+        "t": "Uma máquina virtual grande sempre ligada, dimensionada para o pico"
+      },
+      {
+        "k": "D",
+        "t": "Nuvem privada com servidores dedicados à prefeitura"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Em serverless o código roda quando o evento chega (a foto), escala sozinho com o volume e a cobrança é pelo tempo de CPU usado. Sem foto, nada fica provisionado esperando. No Azure, esse é o papel do Azure Functions.",
+      "B": "Reserva é compromisso de capacidade fixa e compensa para carga estável 24x7, o oposto de um volume imprevisível.",
+      "C": "A VM sempre ligada é cobrada 24 horas por dia, inclusive nos dias de 5 fotos, que é justamente o gasto que a equipe quer evitar. Além disso, exige administrar o sistema operacional.",
+      "D": "Nuvem privada exige capacidade dedicada dimensionada para o pico, então não resolve o problema de pagar só pelo uso."
+    },
+    "src": [
+      {
+        "t": "Descrever o Azure Functions",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-compute-networking-services/6-functions"
+      },
+      {
+        "t": "Descrever a computação em nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-cloud-compute/"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-14",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "modelos-nuvem"
+    ],
+    "case": "Um fornecedor da área de defesa tem contrato que proíbe rodar seus sistemas em hardware compartilhado com outros clientes. Mesmo assim, ele quer que as equipes internas criem máquinas por autosserviço, em minutos, a partir de um catálogo próprio. Nenhum dado pode ir para infraestrutura pública.",
+    "stem": "Qual modelo de nuvem atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Nuvem privada"
+      },
+      {
+        "k": "B",
+        "t": "SaaS contratado de um fornecedor especializado"
+      },
+      {
+        "k": "C",
+        "t": "Nuvem pública com criptografia dos dados em repouso"
+      },
+      {
+        "k": "D",
+        "t": "Nuvem híbrida, com os sistemas sensíveis no local e o restante no Azure"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Nuvem privada é usada por uma única organização, em hardware dedicado, e ainda oferece autosserviço e provisionamento rápido. É o único modelo da lista que cumpre a proibição de hardware compartilhado sem levar nada para infraestrutura pública.",
+      "B": "SaaS roda na infraestrutura do fornecedor, normalmente compartilhada, e não dá à empresa um catálogo próprio de máquinas.",
+      "C": "A criptografia protege o dado, mas o hardware continua compartilhado com outros clientes, e o contrato proíbe isso.",
+      "D": "A nuvem híbrida leva parte da carga para a nuvem pública, e o cenário diz que nenhum dado pode ir para infraestrutura pública."
+    },
+    "src": [
+      {
+        "t": "Descrever a computação em nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-cloud-compute/"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-15",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 100,
+    "tags": [
+      "shared-responsibility"
+    ],
+    "case": "Uma empresa usa máquinas virtuais do Azure (IaaS), o Azure SQL Database (PaaS) e o Microsoft 365 (SaaS).",
+    "stem": "Responda Sim ou Não sobre quem responde por cada item.",
+    "rows": [
+      {
+        "t": "No Microsoft 365, decidir quais contas de usuário existem e quem pode acessar cada documento continua sendo responsabilidade do cliente.",
+        "a": true,
+        "e": "Contas, identidades e acesso aos dados ficam sempre com o cliente, em qualquer modelo, inclusive SaaS."
+      },
+      {
+        "t": "Proteger os notebooks e celulares dos funcionários que acessam esses serviços passa a ser responsabilidade da Microsoft, porque os serviços estão na nuvem dela.",
+        "a": false,
+        "e": "Os dispositivos (endpoints) do cliente ficam sempre com o cliente. A Microsoft protege a infraestrutura dela, não o aparelho do funcionário."
+      },
+      {
+        "t": "Nas máquinas virtuais, configurar o firewall do sistema operacional convidado e os controles de rede da VM é responsabilidade do cliente.",
+        "a": true,
+        "e": "Em IaaS os controles de rede que o cliente configura, como o firewall do sistema operacional e os grupos de segurança de rede, são dele. A Microsoft responde pela rede física."
+      },
+      {
+        "t": "Nas máquinas virtuais, os hosts físicos e a rede física do datacenter são responsabilidade do cliente.",
+        "a": false,
+        "e": "Hosts físicos, rede física e datacenter são sempre do provedor. Em IaaS o cliente passa a responder a partir do sistema operacional convidado."
+      }
+    ],
+    "src": [
+      {
+        "t": "Responsabilidade compartilhada na nuvem",
+        "u": "https://learn.microsoft.com/azure/security/fundamentals/shared-responsibility"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-16",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "modelos-nuvem"
+    ],
+    "case": "O diretor financeiro reclama que, no datacenter atual, só descobre o custo real da infraestrutura no fim do ano. Ele quer acompanhar o consumo em tempo real, ver padrões de uso e estimar com antecedência quanto vai gastar no próximo trimestre.",
+    "stem": "Qual benefício da nuvem responde diretamente a essa necessidade?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Alta disponibilidade"
+      },
+      {
+        "k": "B",
+        "t": "Elasticidade"
+      },
+      {
+        "k": "C",
+        "t": "Confiabilidade"
+      },
+      {
+        "k": "D",
+        "t": "Previsibilidade de custo"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "Previsibilidade de custo é conseguir prever o gasto: acompanhar o uso em tempo real, analisar padrões de consumo e estimar valores com ferramentas como a calculadora de preços. É exatamente o que o diretor pede.",
+      "A": "Alta disponibilidade é manter o serviço no ar, com garantia definida em SLA. Não ajuda a estimar gasto.",
+      "B": "Elasticidade ajusta a capacidade à demanda. Pode até reduzir custo, mas não dá visão nem previsão do gasto.",
+      "C": "Confiabilidade é a capacidade de se recuperar de falhas e continuar funcionando. Não trata de orçamento."
+    },
+    "src": [
+      {
+        "t": "Confiabilidade e previsibilidade na nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-benefits-use-cloud-services/3-reliability-predictability-cloud"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-17",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "modelos-nuvem"
+    ],
+    "case": "Um time de operações descreve sua rotina no Azure em duas partes. Primeira: os recursos são criados a partir de modelos, instâncias com falha são substituídas automaticamente e alertas chegam quando uma métrica passa do limite. Segunda: tudo isso é administrado pelo portal web, pela CLI, pelo PowerShell e por APIs.",
+    "stem": "Como o Microsoft Learn classifica essas duas partes da gerenciabilidade?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "As duas são gerenciamento na nuvem"
+      },
+      {
+        "k": "B",
+        "t": "A primeira é elasticidade; a segunda é agilidade"
+      },
+      {
+        "k": "C",
+        "t": "A primeira é gerenciamento da nuvem (o que se faz com os recursos); a segunda é gerenciamento na nuvem (os meios usados para administrar)"
+      },
+      {
+        "k": "D",
+        "t": "A primeira é governança; a segunda é segurança"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "O Learn divide a gerenciabilidade em dois tipos. Gerenciamento da nuvem trata dos recursos: implantar por modelo, monitorar a saúde, substituir recurso com falha e receber alertas. Gerenciamento na nuvem trata das formas de administrar: portal web, CLI, APIs e PowerShell.",
+      "A": "Portal, CLI e APIs são os meios (gerenciamento na nuvem), mas modelos, substituição automática e alertas são ações sobre os recursos, ou seja, gerenciamento da nuvem.",
+      "B": "Elasticidade é ajustar capacidade à demanda e agilidade é provisionar rápido. O cenário descreve como os recursos são administrados, não esses benefícios.",
+      "D": "Governança é garantir que os recursos sigam padrões e normas, e segurança é proteção. Nenhuma das duas descreve as ferramentas de administração."
+    },
+    "src": [
+      {
+        "t": "Gerenciabilidade na nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-benefits-use-cloud-services/5-manageability-cloud"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-18",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 90,
+    "tags": [
+      "modelos-nuvem",
+      "shared-responsibility"
+    ],
+    "case": "Uma auditoria nos servidores locais de uma empresa encontrou dois problemas: configurações diferentes entre servidores que deveriam ser iguais e atualizações de segurança atrasadas.",
+    "stem": "Quais DUAS características da nuvem atacam diretamente esses dois problemas?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Presença em várias regiões, que reduz a latência para usuários distantes"
+      },
+      {
+        "k": "B",
+        "t": "Implantação por modelos, que faz todo recurso nascer no padrão definido e permite atualizar os recursos em escala quando o padrão muda"
+      },
+      {
+        "k": "C",
+        "t": "Em PaaS e SaaS, patches e manutenção da plataforma aplicados pelo provedor"
+      },
+      {
+        "k": "D",
+        "t": "Escala vertical, que permite aumentar a CPU e a memória de uma VM"
+      },
+      {
+        "k": "E",
+        "t": "Cobrança por consumo, que reduz o gasto com servidores ociosos"
+      }
+    ],
+    "ans": [
+      "B",
+      "C"
+    ],
+    "why": {
+      "ok": "Configuração divergente se resolve com implantação por modelo, que padroniza os recursos e permite atualizá-los em escala, e a auditoria na nuvem aponta o que saiu do padrão. Patch atrasado se resolve com PaaS ou SaaS, em que o provedor aplica as atualizações. São os benefícios de segurança e governança descritos no Learn.",
+      "A": "O alcance global melhora latência e disponibilidade, mas não corrige configuração nem atualização.",
+      "D": "Aumentar a VM resolve falta de capacidade. O servidor continua com a mesma configuração e os mesmos patches atrasados.",
+      "E": "Cobrança por consumo é um benefício financeiro. Não padroniza configuração nem aplica patch."
+    },
+    "src": [
+      {
+        "t": "Segurança e governança na nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-benefits-use-cloud-services/4-security-governance-cloud"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-19",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "modelos-nuvem"
+    ],
+    "case": "Uma escola de idiomas com 40 funcionários quer e-mail corporativo, calendário compartilhado e edição de documentos em conjunto já na semana que vem. Não há ninguém de TI na equipe, e ninguém quer instalar ou manter servidor.",
+    "stem": "Qual tipo de serviço de nuvem é o mais adequado?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Nuvem privada instalada no escritório"
+      },
+      {
+        "k": "B",
+        "t": "PaaS, com um aplicativo web de e-mail desenvolvido pela escola"
+      },
+      {
+        "k": "C",
+        "t": "IaaS, com máquinas virtuais rodando um servidor de e-mail"
+      },
+      {
+        "k": "D",
+        "t": "SaaS"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "SaaS entrega o software pronto, como o Microsoft 365. A escola só cria os usuários, configura e usa. Infraestrutura, plataforma e aplicação ficam com o provedor.",
+      "A": "Nuvem privada exige hardware e equipe para operar, e não entrega o software pronto.",
+      "B": "PaaS serve para quem vai desenvolver a própria aplicação. A escola teria de escrever e manter um sistema de e-mail.",
+      "C": "Em IaaS a escola teria de instalar e manter o sistema operacional e o servidor de e-mail, que é o oposto do que ela quer."
+    },
+    "src": [
+      {
+        "t": "Descrever os tipos de serviço de nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-cloud-service-types/"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-20",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "modelos-nuvem"
+    ],
+    "case": "Uma indústria vai levar para o Azure um sistema de chão de fábrica que só roda numa versão específica do Windows Server, com um agente de coleta instalado no sistema operacional e chaves de registro ajustadas pelo fornecedor. A migração precisa ser rápida e sem reescrever o sistema.",
+    "stem": "Qual tipo de serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "IaaS, com máquinas virtuais"
+      },
+      {
+        "k": "B",
+        "t": "SaaS"
+      },
+      {
+        "k": "C",
+        "t": "Serverless, com o Azure Functions"
+      },
+      {
+        "k": "D",
+        "t": "PaaS, com o Azure App Service"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "IaaS dá controle do sistema operacional: dá para escolher a versão do Windows Server, instalar o agente e ajustar o registro. É o caso típico de migração lift-and-shift, em que a aplicação vai como está.",
+      "B": "SaaS é software pronto de um fornecedor. Não hospeda um sistema que a indústria já tem.",
+      "C": "Functions executa trechos de código acionados por evento. O sistema teria de ser reescrito.",
+      "D": "No App Service a Microsoft gerencia o sistema operacional. Não há como instalar um agente próprio no SO nem mexer no registro."
+    },
+    "src": [
+      {
+        "t": "Descrever os tipos de serviço de nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-cloud-service-types/"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-21",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 3,
+    "type": "multi",
+    "sec": 60,
+    "tags": [
+      "consumo",
+      "modelos-nuvem"
+    ],
+    "stem": "Quais DUAS afirmações descrevem o modelo de cobrança baseado em consumo da nuvem?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Paga-se apenas pelos recursos usados, durante o tempo em que são usados"
+      },
+      {
+        "k": "B",
+        "t": "Não há custo inicial de compra de infraestrutura"
+      },
+      {
+        "k": "C",
+        "t": "É preciso comprar antecipadamente a capacidade do pico"
+      },
+      {
+        "k": "D",
+        "t": "É obrigatório assinar contrato de três anos para usar os serviços"
+      },
+      {
+        "k": "E",
+        "t": "O valor mensal é fixo, independentemente do uso"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "No modelo por consumo não existe investimento inicial em hardware, e a cobrança acompanha o uso real: usou mais, paga mais; usou menos, paga menos.",
+      "C": "Comprar antecipadamente a capacidade do pico é o modelo do datacenter próprio (CapEx), justamente o que o consumo evita.",
+      "D": "Compromissos de um ou três anos existem nas reservas, como opção de desconto, e não são requisito do modelo.",
+      "E": "Valor fixo independente do uso contradiz a ideia de pagar pelo que se consome."
+    },
+    "src": [
+      {
+        "t": "Descrever a computação em nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-cloud-compute/"
+      },
+      {
+        "t": "Fatores que afetam custos no Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-cost-management-azure/2-describe-factors-affect-costs-azure"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-22",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "spot",
+      "consumo"
+    ],
+    "case": "Um estúdio renderiza animações em lotes noturnos. Se um quadro for interrompido no meio, o sistema simplesmente o refaz depois. O prazo é flexível e o objetivo é o menor custo de computação possível.",
+    "stem": "Qual opção de preço do Azure combina com essa carga?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Reserva de VM por três anos"
+      },
+      {
+        "k": "B",
+        "t": "Plano de economia para computação de três anos"
+      },
+      {
+        "k": "C",
+        "t": "Máquinas Virtuais Spot do Azure"
+      },
+      {
+        "k": "D",
+        "t": "Pagamento conforme o uso em VMs comuns"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "As VMs Spot usam capacidade ociosa do Azure com desconto grande. Em troca, o Azure pode remover a VM quando precisar da capacidade de volta. Carga interrompível e sem prazo rígido, como renderização em lote, é o uso indicado.",
+      "A": "Reserva compensa para carga estável que roda o tempo todo. O estúdio roda só à noite e assumiria um compromisso de três anos de que não precisa.",
+      "B": "O plano de economia exige compromisso de gasto por hora durante um ou três anos e compensa para uso contínuo, não para lotes noturnos que podem ser interrompidos.",
+      "D": "Pagamento conforme o uso não tem desconto. Funciona, mas não é o menor custo para uma carga que tolera interrupção."
+    },
+    "src": [
+      {
+        "t": "Máquinas Virtuais Spot do Azure",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/spot-vms"
+      },
+      {
+        "t": "Fatores que afetam custos no Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-cost-management-azure/2-describe-factors-affect-costs-azure"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-23",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 3,
+    "type": "order",
+    "sec": 60,
+    "tags": [
+      "shared-responsibility"
+    ],
+    "stem": "Ordene os modelos do que deixa MAIS responsabilidade com o cliente para o que deixa MENOS.",
+    "items": [
+      {
+        "t": "Datacenter próprio (local)"
+      },
+      {
+        "t": "IaaS"
+      },
+      {
+        "t": "PaaS"
+      },
+      {
+        "t": "SaaS"
+      }
+    ],
+    "e": "No datacenter próprio o cliente responde por tudo, do prédio aos dados. Em IaaS o provedor assume a parte física e o cliente começa no sistema operacional. Em PaaS o provedor também cuida do sistema operacional e do runtime. Em SaaS o provedor entrega a aplicação pronta, e o cliente fica com dados, contas e dispositivos.",
+    "src": [
+      {
+        "t": "Responsabilidade compartilhada na nuvem",
+        "u": "https://learn.microsoft.com/azure/security/fundamentals/shared-responsibility"
+      }
+    ]
+  },
+  {
+    "id": "az-d1-24",
+    "exam": "az900",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 100,
+    "tags": [
+      "elasticidade",
+      "ha"
+    ],
+    "stem": "Responda Sim ou Não sobre alta disponibilidade, escalabilidade e confiabilidade na nuvem.",
+    "rows": [
+      {
+        "t": "As garantias de disponibilidade dos serviços do Azure são definidas em SLAs e variam de serviço para serviço.",
+        "a": true,
+        "e": "Cada serviço tem seu próprio SLA, e quem projeta a solução precisa levar essas garantias em conta."
+      },
+      {
+        "t": "Um SLA de 99,99% admite menos tempo de indisponibilidade por mês do que um SLA de 99,9%.",
+        "a": true,
+        "e": "Num mês de 30 dias, 99,9% permite cerca de 43 minutos fora do ar, e 99,99%, cerca de 4 minutos. Cada nove a mais divide a indisponibilidade permitida por dez."
+      },
+      {
+        "t": "Escalabilidade, sozinha, garante que a aplicação continue no ar se o datacenter onde ela roda falhar.",
+        "a": false,
+        "e": "Escalar aumenta ou reduz capacidade. Sobreviver à perda de um datacenter exige redundância, como zonas de disponibilidade, que é assunto de alta disponibilidade."
+      },
+      {
+        "t": "Confiabilidade é a capacidade de um sistema se recuperar de falhas e continuar funcionando.",
+        "a": true,
+        "e": "É a definição usada no Learn. A infraestrutura descentralizada da nuvem, com regiões no mundo todo, ajuda a projetar soluções confiáveis."
+      }
+    ],
+    "src": [
+      {
+        "t": "Alta disponibilidade e escalabilidade na nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-benefits-use-cloud-services/2-high-availability-scalability-cloud"
+      },
+      {
+        "t": "Confiabilidade e previsibilidade na nuvem",
+        "u": "https://learn.microsoft.com/training/modules/describe-benefits-use-cloud-services/3-reliability-predictability-cloud"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-19",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "region-az-pair",
+      "soberania"
+    ],
+    "case": "Uma agência do governo federal dos Estados Unidos precisa hospedar sistemas num ambiente do Azure isolado física e logicamente das regiões públicas, operado por pessoal americano verificado e com certificações adicionais de conformidade.",
+    "stem": "Qual opção atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "As regiões do Azure operadas pela 21Vianet"
+      },
+      {
+        "k": "B",
+        "t": "Uma região pública dos EUA com zonas de disponibilidade"
+      },
+      {
+        "k": "C",
+        "t": "Azure Government, uma região soberana"
+      },
+      {
+        "k": "D",
+        "t": "Um par de regiões dentro dos EUA"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "O Azure Government é uma instância soberana do Azure, isolada física e logicamente, para agências e parceiros do governo dos EUA, operada por pessoal americano verificado e com certificações adicionais.",
+      "A": "As regiões da China são operadas pela 21Vianet por exigência local e não atendem ao governo americano.",
+      "B": "Zonas de disponibilidade dão resiliência dentro da região, mas a região continua pública e compartilhada.",
+      "D": "Par de regiões é uma estratégia de recuperação. As duas regiões continuam sendo do Azure público."
+    },
+    "src": [
+      {
+        "t": "Infraestrutura física do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-core-architectural-components-of-azure/5-describe-azure-physical-infrastructure"
+      },
+      {
+        "t": "Documentação do Azure Government",
+        "u": "https://learn.microsoft.com/azure/azure-government/"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-20",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 90,
+    "tags": [
+      "hierarquia",
+      "escopo"
+    ],
+    "case": "Uma empresa está organizando sua conta do Azure em grupos de gerenciamento e assinaturas, separando produção e desenvolvimento.",
+    "stem": "Responda Sim ou Não.",
+    "rows": [
+      {
+        "t": "Cada assinatura recebe relatórios de cobrança e faturas próprios, o que permite separar o custo de produção e o de desenvolvimento.",
+        "a": true,
+        "e": "A assinatura é um limite de cobrança: o Azure gera relatórios e faturas por assinatura."
+      },
+      {
+        "t": "As políticas de acesso definidas numa assinatura valem para os recursos dela, o que torna a assinatura também um limite de controle de acesso.",
+        "a": true,
+        "e": "Além de limite de cobrança, a assinatura é limite de controle de acesso, e dá para ter regras diferentes para desenvolvimento e produção."
+      },
+      {
+        "t": "Um grupo de gerenciamento pode conter assinaturas e também outros grupos de gerenciamento.",
+        "a": true,
+        "e": "Grupos de gerenciamento podem ser aninhados, até seis níveis abaixo do grupo raiz, sem contar o nível da assinatura."
+      },
+      {
+        "t": "Uma assinatura pode ficar sob dois grupos de gerenciamento ao mesmo tempo, para herdar as políticas de ambos.",
+        "a": false,
+        "e": "Cada grupo de gerenciamento ou assinatura tem um único pai. Para herdar regras comuns, elas devem ser atribuídas num nível acima."
+      }
+    ],
+    "src": [
+      {
+        "t": "Infraestrutura de gerenciamento do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-core-architectural-components-of-azure/6-describe-azure-management-infrastructure"
+      },
+      {
+        "t": "Grupos de gerenciamento",
+        "u": "https://learn.microsoft.com/azure/governance/management-groups/overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-21",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "compute-az",
+      "escalabilidade"
+    ],
+    "case": "Um processador de pedidos roda em 6 VMs idênticas atrás de um balanceador de carga. Hoje cada mudança de configuração é feita VM por VM e, nos picos, alguém cria máquinas novas à mão. A equipe quer gerenciar o grupo como uma unidade e que o número de VMs aumente e diminua por métrica ou por agenda.",
+    "stem": "Qual recurso do Azure atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Virtual Desktop"
+      },
+      {
+        "k": "B",
+        "t": "Conjunto de disponibilidade"
+      },
+      {
+        "k": "C",
+        "t": "Azure Container Instances"
+      },
+      {
+        "k": "D",
+        "t": "Conjuntos de Dimensionamento de Máquinas Virtuais"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "O conjunto de dimensionamento cria e gerencia um grupo de VMs idênticas com balanceamento de carga, configuração centralizada e escala automática por demanda ou por agenda.",
+      "A": "O Virtual Desktop entrega área de trabalho e aplicativos Windows a usuários. Não escala um processador de pedidos.",
+      "B": "O conjunto de disponibilidade distribui VMs em domínios de falha e de atualização para resiliência. Ele não cria nem remove VMs conforme a carga.",
+      "C": "O Container Instances roda contêineres isolados, sem orquestração. Exigiria reempacotar a aplicação e não gerencia um grupo de VMs."
+    },
+    "src": [
+      {
+        "t": "Descrever máquinas virtuais do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-compute-networking-services/2-virtual-machines"
+      },
+      {
+        "t": "Conjuntos de Dimensionamento de Máquinas Virtuais",
+        "u": "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-22",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 90,
+    "tags": [
+      "compute-az",
+      "compute"
+    ],
+    "stem": "Ao criar uma máquina virtual no Azure, quais TRÊS itens precisam ser escolhidos ou provisionados junto com ela?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Um plano do App Service"
+      },
+      {
+        "k": "B",
+        "t": "Um workspace do Log Analytics"
+      },
+      {
+        "k": "C",
+        "t": "A rede virtual, à qual a interface de rede da VM se conecta"
+      },
+      {
+        "k": "D",
+        "t": "O disco do sistema operacional"
+      },
+      {
+        "k": "E",
+        "t": "O tamanho da VM, com número de núcleos e memória"
+      },
+      {
+        "k": "F",
+        "t": "Um grupo de gerenciamento exclusivo para a VM"
+      }
+    ],
+    "ans": [
+      "C",
+      "D",
+      "E"
+    ],
+    "why": {
+      "ok": "Segundo o Learn, ao provisionar uma VM você escolhe o tamanho (núcleos e memória), os discos de armazenamento e a rede (rede virtual, IP público e portas). Sem esses itens a VM não funciona.",
+      "A": "O plano do App Service é a capacidade de hospedagem de aplicativos web no App Service e não tem relação com VM.",
+      "B": "O Log Analytics é opcional e serve para coletar logs. A VM funciona sem ele.",
+      "F": "Grupos de gerenciamento organizam assinaturas. A VM fica num grupo de recursos e não precisa de grupo de gerenciamento próprio."
+    },
+    "src": [
+      {
+        "t": "Descrever máquinas virtuais do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-compute-networking-services/2-virtual-machines"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-23",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "compute-az",
+      "compute"
+    ],
+    "case": "Uma equipe empacota uma API com todas as dependências para que ela rode do mesmo jeito no notebook do desenvolvedor e no Azure. A equipe quer subir e derrubar cópias em segundos conforme a demanda e não quer administrar o sistema operacional de cada instância.",
+    "stem": "Qual tipo de computação descreve essa escolha?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Virtual Desktop"
+      },
+      {
+        "k": "B",
+        "t": "Máquinas virtuais"
+      },
+      {
+        "k": "C",
+        "t": "Conjunto de Dimensionamento de Máquinas Virtuais"
+      },
+      {
+        "k": "D",
+        "t": "Contêineres"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "O contêiner empacota a aplicação com suas dependências e roda igual em qualquer host com um mecanismo de contêiner, como o Docker. É leve, sobe e para em segundos e não exige administrar o sistema operacional de cada instância, ao contrário da VM.",
+      "A": "O Virtual Desktop entrega área de trabalho a usuários. Não hospeda uma API.",
+      "B": "Cada VM tem um sistema operacional próprio para administrar e leva mais tempo para ser criada e escalada do que um contêiner.",
+      "C": "O conjunto de dimensionamento escala VMs, mas cada instância continua sendo uma VM com sistema operacional para administrar, e criar VM demora mais do que subir um contêiner."
+    },
+    "src": [
+      {
+        "t": "Descrever contêineres do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-compute-networking-services/5-containers"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-24",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "rede-az",
+      "rede"
+    ],
+    "case": "A empresa tem o domínio contoso.com.br registrado num provedor externo e quer passar a gerenciar os registros DNS desse domínio no Azure, com as mesmas credenciais, APIs e cobrança dos outros serviços.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Microsoft Entra ID"
+      },
+      {
+        "k": "B",
+        "t": "Azure DNS"
+      },
+      {
+        "k": "C",
+        "t": "Azure VPN Gateway"
+      },
+      {
+        "k": "D",
+        "t": "Grupo de segurança de rede (NSG)"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "O Azure DNS hospeda zonas DNS na infraestrutura do Azure. Delegando o domínio para ele, os registros passam a ser gerenciados com as mesmas credenciais, APIs, ferramentas e cobrança dos demais serviços do Azure.",
+      "A": "No Entra ID se verifica um domínio personalizado para os nomes de usuário, mas ele não hospeda os registros DNS do domínio.",
+      "C": "O VPN Gateway cria túneis criptografados entre redes. Não hospeda zona DNS.",
+      "D": "O NSG filtra tráfego por regras de porta e endereço. Não resolve nomes."
+    },
+    "src": [
+      {
+        "t": "Visão geral do Azure DNS",
+        "u": "https://learn.microsoft.com/azure/dns/dns-overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-25",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "vpn",
+      "rede-az"
+    ],
+    "case": "Uma rede de lojas precisa ligar cada loja pequena a uma rede virtual no Azure. O orçamento é apertado, o tráfego pode passar pela internet pública desde que vá criptografado, e cada loja já tem um roteador compatível com IPsec.",
+    "stem": "Qual opção atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Emparelhamento de redes virtuais"
+      },
+      {
+        "k": "B",
+        "t": "Azure VPN Gateway com conexões site a site"
+      },
+      {
+        "k": "C",
+        "t": "Azure ExpressRoute"
+      },
+      {
+        "k": "D",
+        "t": "Um ponto de extremidade privado em cada loja"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "O VPN Gateway site a site cria um túnel IPsec/IKE criptografado entre o dispositivo VPN da loja e a rede virtual, passando pela internet pública. Atende ao requisito de criptografia sem o custo de um circuito dedicado.",
+      "A": "O emparelhamento conecta redes virtuais do Azure entre si. A rede da loja não é uma rede virtual do Azure.",
+      "C": "O ExpressRoute é uma conexão privada dedicada, contratada com um provedor de conectividade, que não passa pela internet. Resolve outro requisito, custa mais e não é necessário aqui.",
+      "D": "O ponto de extremidade privado dá um IP privado a um serviço do Azure dentro de uma rede virtual. Ele não conecta a rede da loja ao Azure."
+    },
+    "src": [
+      {
+        "t": "Sobre o Azure VPN Gateway",
+        "u": "https://learn.microsoft.com/azure/vpn-gateway/vpn-gateway-about-vpngateways"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-26",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "peering",
+      "rede-az"
+    ],
+    "case": "A rede virtual de produção está em Brazil South e a de análise de dados está em East US, em assinaturas diferentes. As VMs das duas redes precisam conversar por IP privado, com baixa latência, sem passar pela internet e sem implantar gateway.",
+    "stem": "Qual recurso atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "VPN Gateway com conexão de rede virtual para rede virtual"
+      },
+      {
+        "k": "B",
+        "t": "Zona privada do Azure DNS"
+      },
+      {
+        "k": "C",
+        "t": "Azure ExpressRoute"
+      },
+      {
+        "k": "D",
+        "t": "Emparelhamento global de redes virtuais"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "O emparelhamento conecta redes virtuais para que se comuniquem como se fossem uma só. O emparelhamento global liga redes de regiões diferentes, funciona entre assinaturas e mantém o tráfego na rede backbone da Microsoft, sem gateway.",
+      "A": "A conexão de rede virtual para rede virtual funciona, mas exige um VPN Gateway em cada rede, e o cenário descarta gateway.",
+      "B": "Uma zona DNS privada resolve nomes dentro das redes, mas não cria conectividade entre elas.",
+      "C": "O ExpressRoute liga a rede local ao Azure por circuito dedicado. Não é o recurso para ligar duas redes virtuais do Azure."
+    },
+    "src": [
+      {
+        "t": "Emparelhamento de redes virtuais",
+        "u": "https://learn.microsoft.com/azure/virtual-network/virtual-network-peering-overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-27",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "rede-az",
+      "storage"
+    ],
+    "case": "Uma conta de armazenamento guarda contratos. A segurança exige que as VMs de uma rede virtual acessem a conta por um endereço IP privado dessa rede, com o tráfego pela rede da Microsoft, e que tentativas de acesso vindas da internet sejam recusadas.",
+    "stem": "Qual combinação atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Ponto de extremidade privado para a conta, e o firewall da conta negando o acesso público"
+      },
+      {
+        "k": "B",
+        "t": "Emparelhamento entre a rede virtual e a conta de armazenamento"
+      },
+      {
+        "k": "C",
+        "t": "Grupo de segurança de rede na sub-rede das VMs bloqueando a internet"
+      },
+      {
+        "k": "D",
+        "t": "Ponto de extremidade público, com os IPs públicos das VMs liberados no firewall da conta"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O ponto de extremidade privado é uma interface de rede na sua rede virtual, com IP dessa rede, e o tráfego passa pela rede backbone da Microsoft. Criar o ponto privado não bloqueia sozinho o ponto de extremidade público, por isso o firewall da conta também precisa negar o acesso público.",
+      "B": "O emparelhamento liga redes virtuais entre si. Uma conta de armazenamento não é uma rede virtual.",
+      "C": "O NSG controla o tráfego das VMs, mas a conta continuaria aceitando conexões vindas da internet.",
+      "D": "Com ponto de extremidade público o acesso continua sendo por endereço público, o que contraria o requisito de IP privado."
+    },
+    "src": [
+      {
+        "t": "O que é um ponto de extremidade privado",
+        "u": "https://learn.microsoft.com/azure/private-link/private-endpoint-overview"
+      },
+      {
+        "t": "Pontos de extremidade privados no Armazenamento do Azure",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-private-endpoints"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-28",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "blob-tiers",
+      "storage"
+    ],
+    "case": "Uma seguradora guarda apólices no Blob Storage. A norma interna exige que os dados continuem disponíveis para leitura e escrita se um datacenter inteiro da região falhar. Uma regra de residência proíbe cópias fora da região escolhida.",
+    "stem": "Qual opção de redundância atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Armazenamento com redundância local (LRS)"
+      },
+      {
+        "k": "B",
+        "t": "Armazenamento com redundância geográfica (GRS)"
+      },
+      {
+        "k": "C",
+        "t": "Armazenamento com redundância geográfica de zona (GZRS)"
+      },
+      {
+        "k": "D",
+        "t": "Armazenamento com redundância de zona (ZRS)"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "O ZRS grava três cópias de forma síncrona em três zonas de disponibilidade da região primária. Se uma zona falhar, os dados continuam disponíveis para leitura e escrita, e nada sai da região.",
+      "A": "O LRS mantém as três cópias num único datacenter, e a perda desse datacenter atinge todas elas.",
+      "B": "O GRS copia os dados para uma região secundária, o que a regra de residência proíbe. Além disso, na região primária ele usa LRS, num único datacenter.",
+      "C": "O GZRS usa zonas na região primária, mas também replica para uma região secundária, o que viola a regra de residência."
+    },
+    "src": [
+      {
+        "t": "Redundância do Armazenamento do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-storage-services/3-redundancy"
+      },
+      {
+        "t": "Redundância do Armazenamento do Azure",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-redundancy"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-29",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 100,
+    "tags": [
+      "entra-vs-adds",
+      "identidade"
+    ],
+    "stem": "Responda Sim ou Não sobre autenticação e segurança de identidade no Azure.",
+    "rows": [
+      {
+        "t": "Com logon único (SSO), o usuário se autentica uma vez e acessa vários aplicativos confiáveis sem digitar a senha de novo em cada um.",
+        "a": true,
+        "e": "É a definição de SSO. O Learn lembra que o SSO é tão seguro quanto a autenticação inicial, por isso costuma vir junto com MFA."
+      },
+      {
+        "t": "Windows Hello for Business, o aplicativo Microsoft Authenticator e chaves de segurança FIDO2 são opções de autenticação sem senha no Microsoft Entra ID.",
+        "a": true,
+        "e": "São as três opções sem senha citadas no Learn. Elas trocam a senha por um dispositivo confiável combinado com biometria ou PIN."
+      },
+      {
+        "t": "Pedir a senha e depois uma pergunta secreta é autenticação multifator, porque são duas etapas.",
+        "a": false,
+        "e": "Senha e pergunta secreta são da mesma categoria: algo que você sabe. A MFA exige fatores de categorias diferentes, como algo que você sabe, algo que você tem e algo que você é."
+      },
+      {
+        "t": "O modelo Zero Trust parte do princípio de que quem já está dentro da rede corporativa é confiável.",
+        "a": false,
+        "e": "Zero Trust faz o contrário: verifica explicitamente cada acesso, usa privilégio mínimo e presume que já houve violação, não importa de onde vem a solicitação."
+      }
+    ],
+    "src": [
+      {
+        "t": "Métodos de autenticação do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/3-authentication-methods"
+      },
+      {
+        "t": "Modelo Zero Trust",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/7-describe-zero-trust-model"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-30",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "migracao-dados",
+      "storage"
+    ],
+    "case": "Toda madrugada, um script agendado num servidor Linux precisa enviar os arquivos de log do dia para um contêiner do Blob Storage. Ninguém vai estar olhando a tela, e o envio é só de ida, do servidor para o Azure.",
+    "stem": "Qual ferramenta é a mais adequada?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure File Sync"
+      },
+      {
+        "k": "B",
+        "t": "Gerenciador de Armazenamento do Azure (Storage Explorer)"
+      },
+      {
+        "k": "C",
+        "t": "Azure Data Box"
+      },
+      {
+        "k": "D",
+        "t": "AzCopy"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "O AzCopy é um utilitário de linha de comando para copiar blobs e arquivos de e para uma conta de armazenamento, fácil de chamar num script agendado. A sincronização dele é só numa direção, o que basta aqui.",
+      "A": "O File Sync sincroniza um servidor de arquivos Windows com o Azure Files. O servidor do cenário é Linux e o destino é o Blob Storage.",
+      "B": "O Storage Explorer é um aplicativo gráfico para uso interativo. Não é feito para um script agendado sem ninguém na tela.",
+      "C": "O Data Box é um dispositivo físico para grandes volumes enviados offline. Logs diários vão pela rede."
+    },
+    "src": [
+      {
+        "t": "Opções de movimentação de arquivos",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-storage-services/7-identify-azure-file-movement-options"
+      },
+      {
+        "t": "Enviar arquivos ao Blob Storage com o AzCopy",
+        "u": "https://learn.microsoft.com/azure/storage/common/storage-use-azcopy-blobs-upload"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-31",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "files",
+      "storage"
+    ],
+    "case": "Uma rede de clínicas tem um servidor de arquivos Windows em cada unidade. A empresa quer centralizar os compartilhamentos no Azure Files, mas manter um servidor local em cada clínica como cache: os arquivos mais usados ficam disponíveis localmente e os antigos ficam só na nuvem até alguém pedir.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AzCopy"
+      },
+      {
+        "k": "B",
+        "t": "Azure Data Box"
+      },
+      {
+        "k": "C",
+        "t": "Azure Migrate"
+      },
+      {
+        "k": "D",
+        "t": "Azure File Sync"
+      }
+    ],
+    "ans": [
+      "D"
+    ],
+    "why": {
+      "ok": "O File Sync instalado no Windows Server mantém sincronização nas duas direções com o Azure Files. A camada de nuvem (cloud tiering) deixa os arquivos mais acessados no servidor local e mantém os pouco usados na nuvem até alguém pedir.",
+      "A": "O AzCopy copia numa direção, quando é executado. Não mantém cache local nem sincroniza nas duas direções.",
+      "B": "O Data Box transfere um grande volume uma única vez, offline. Não mantém sincronização contínua.",
+      "C": "O Azure Migrate avalia e migra servidores para o Azure. Não mantém um cache local de compartilhamento."
+    },
+    "src": [
+      {
+        "t": "Opções de movimentação de arquivos",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-storage-services/7-identify-azure-file-movement-options"
+      },
+      {
+        "t": "O que é o Azure File Sync",
+        "u": "https://learn.microsoft.com/azure/storage/file-sync/file-sync-introduction"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-32",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "migracao-dados"
+    ],
+    "case": "Uma empresa tem 120 servidores em VMware. Antes de mover qualquer coisa, quer descobrir o que existe e avaliar se cada servidor está pronto para o Azure e qual tamanho usar. Depois, quer executar a migração e acompanhar tudo num único lugar.",
+    "stem": "Qual serviço foi feito para isso?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Advisor"
+      },
+      {
+        "k": "B",
+        "t": "Azure Data Box"
+      },
+      {
+        "k": "C",
+        "t": "Azure Migrate"
+      },
+      {
+        "k": "D",
+        "t": "Azure Arc"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "O Azure Migrate é o hub de migração para o Azure. Reúne descoberta e avaliação, migração de servidores e opções para bancos de dados e aplicativos web, com acompanhamento num único portal.",
+      "A": "O Advisor recomenda melhorias para recursos que já estão no Azure.",
+      "B": "O Data Box transporta dados num dispositivo físico. Não descobre nem avalia servidores.",
+      "D": "O Arc traz servidores de fora do Azure para serem gerenciados pelo Azure, mas eles continuam onde estão. Ele não faz migração."
+    },
+    "src": [
+      {
+        "t": "Opções de migração de dados do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-storage-services/6-identify-azure-data-migration-options"
+      },
+      {
+        "t": "Sobre o Azure Migrate",
+        "u": "https://learn.microsoft.com/azure/migrate/migrate-services-overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-33",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "entra-vs-adds",
+      "identidade"
+    ],
+    "case": "Uma aplicação legada vai para VMs no Azure. Ela autentica usuários por LDAP e Kerberos, e as VMs precisam ingressar num domínio com política de grupo. A equipe não quer implantar, corrigir nem fazer backup de controladores de domínio.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Active Directory Domain Services instalado em VMs do Azure"
+      },
+      {
+        "k": "B",
+        "t": "Microsoft Entra ID, sem outro serviço"
+      },
+      {
+        "k": "C",
+        "t": "Microsoft Entra Domain Services"
+      },
+      {
+        "k": "D",
+        "t": "Acesso Condicional do Microsoft Entra"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "O Entra Domain Services oferece um domínio gerenciado com ingresso no domínio, política de grupo, LDAP e autenticação Kerberos/NTLM. O Azure implanta e administra os controladores, incluindo os backups, sem que a equipe opere servidores.",
+      "A": "Funciona tecnicamente, mas a equipe teria de implantar e manter os controladores de domínio, que é exatamente o que ela quer evitar.",
+      "B": "O Entra ID trabalha com protocolos modernos de autenticação na nuvem. Sozinho, não oferece domínio tradicional com política de grupo, LDAP e Kerberos para a aplicação legada.",
+      "D": "O Acesso Condicional decide se um login é permitido com base em sinais como local e risco. Não fornece serviço de domínio."
+    },
+    "src": [
+      {
+        "t": "Serviços de diretório do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/2-directory-services"
+      },
+      {
+        "t": "Visão geral do Microsoft Entra Domain Services",
+        "u": "https://learn.microsoft.com/entra/identity/domain-services/overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-34",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "entra-id",
+      "identidade"
+    ],
+    "case": "Consultores de uma empresa parceira vão trabalhar seis meses num projeto e precisam acessar o SharePoint e um aplicativo interno. A empresa não quer criar nem gerenciar senhas para eles: os consultores devem entrar com a conta corporativa que já usam na empresa deles.",
+    "stem": "Qual recurso atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Microsoft Entra Domain Services"
+      },
+      {
+        "k": "B",
+        "t": "Contas internas no Entra ID criadas para cada consultor"
+      },
+      {
+        "k": "C",
+        "t": "Colaboração B2B do Microsoft Entra External ID, com os consultores como convidados"
+      },
+      {
+        "k": "D",
+        "t": "Uma identidade gerenciada para cada consultor"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "Na colaboração B2B o usuário externo entra com a identidade que já tem e aparece no seu diretório como convidado. A autenticação fica com o provedor de identidade dele, e você controla a autorização e pode revisar o acesso.",
+      "A": "O Domain Services fornece domínio gerenciado para aplicações legadas. Não trata de acesso de parceiros com identidade própria.",
+      "B": "Contas internas obrigam a criar e gerenciar credenciais para cada consultor, que é o que a empresa quer evitar.",
+      "D": "Identidade gerenciada serve para aplicações e recursos do Azure acessarem outros serviços, não para pessoas."
+    },
+    "src": [
+      {
+        "t": "Identidades externas do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/4-external-identities"
+      },
+      {
+        "t": "Visão geral do Microsoft Entra External ID",
+        "u": "https://learn.microsoft.com/entra/external-id/external-identities-overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-35",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "order",
+    "sec": 90,
+    "tags": [
+      "identidade"
+    ],
+    "stem": "Ordene as camadas do modelo de defesa em profundidade da MAIS EXTERNA para a MAIS INTERNA.",
+    "items": [
+      {
+        "t": "Segurança física"
+      },
+      {
+        "t": "Identidade e acesso"
+      },
+      {
+        "t": "Perímetro"
+      },
+      {
+        "t": "Rede"
+      },
+      {
+        "t": "Computação"
+      },
+      {
+        "t": "Aplicativo"
+      },
+      {
+        "t": "Dados"
+      }
+    ],
+    "e": "A defesa em profundidade coloca várias camadas em volta dos dados, para que a falha de uma não exponha tudo. Começa no acesso físico ao datacenter e passa por identidade e acesso, perímetro (proteção contra DDoS e firewalls), rede (segmentação), computação (VMs e endpoints) e aplicativo, até chegar aos dados, no centro.",
+    "src": [
+      {
+        "t": "Defesa em profundidade",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/8-describe-defense-depth"
+      }
+    ]
+  },
+  {
+    "id": "az-d2-36",
+    "exam": "az900",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 90,
+    "tags": [
+      "defender"
+    ],
+    "case": "Uma empresa tem cargas no Azure, em servidores no datacenter próprio e na AWS, e quer uma visão única de segurança sobre tudo isso.",
+    "stem": "Quais DUAS capacidades ela obtém com o Microsoft Defender for Cloud?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Proteção contra ameaças com alertas de segurança, inclusive para recursos fora do Azure"
+      },
+      {
+        "k": "B",
+        "t": "Logon único para os aplicativos SaaS dos funcionários"
+      },
+      {
+        "k": "C",
+        "t": "Faturas separadas por departamento"
+      },
+      {
+        "k": "D",
+        "t": "Pontuação de segurança com recomendações priorizadas para melhorar a postura"
+      },
+      {
+        "k": "E",
+        "t": "Cópia de segurança automática das VMs"
+      }
+    ],
+    "ans": [
+      "A",
+      "D"
+    ],
+    "why": {
+      "ok": "O Defender for Cloud faz gerenciamento de postura e proteção contra ameaças. Ele avalia continuamente os recursos, resume a postura numa pontuação de segurança com recomendações e gera alertas sobre ameaças. Cobre o Azure, ambientes locais (via Azure Arc) e outras nuvens, como a AWS.",
+      "B": "O logon único é um recurso do Microsoft Entra ID.",
+      "C": "A separação de cobrança vem das assinaturas e do Microsoft Cost Management.",
+      "E": "Backup de VM é feito pelo Azure Backup, não pelo Defender for Cloud."
+    },
+    "src": [
+      {
+        "t": "Microsoft Defender for Cloud",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/9-describe-microsoft-defender-for-cloud"
+      },
+      {
+        "t": "Visão geral do Microsoft Defender for Cloud",
+        "u": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-15",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "custo-az",
+      "governanca-custo"
+    ],
+    "case": "Uma plataforma de cursos hospeda vídeos no Azure. O número de VMs e o volume armazenado não mudaram no último mês, mas a fatura subiu bastante depois que os alunos passaram a baixar as aulas para assistir offline.",
+    "stem": "Qual fator de custo explica o aumento?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Transferência de dados de saída (egress) dos datacenters do Azure"
+      },
+      {
+        "k": "B",
+        "t": "Transferência de dados de entrada (ingress) para o Azure"
+      },
+      {
+        "k": "C",
+        "t": "Tipo de assinatura"
+      },
+      {
+        "k": "D",
+        "t": "Quantidade de grupos de recursos na assinatura"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Largura de banda é o dado que entra e sai dos datacenters do Azure. A saída é cobrada conforme as zonas de cobrança, e cada download dos alunos é tráfego saindo do Azure.",
+      "B": "O aluno baixando um arquivo gera tráfego saindo do Azure, não entrando. Além disso, parte da transferência de entrada é gratuita.",
+      "C": "O tipo de assinatura pode incluir créditos ou franquias, mas não mudou e não explica uma alta ligada a downloads.",
+      "D": "Grupos de recursos servem para organizar e não têm custo próprio."
+    },
+    "src": [
+      {
+        "t": "Fatores que afetam custos no Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-cost-management-azure/2-describe-factors-affect-costs-azure"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-16",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 3,
+    "type": "multi",
+    "sec": 75,
+    "tags": [
+      "custo-az"
+    ],
+    "case": "Uma equipe compara o preço de uma mesma máquina virtual em vários cenários antes de decidir onde implantá-la.",
+    "stem": "Quais DUAS mudanças alteram o custo por hora dessa VM?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Escolher um tamanho com mais núcleos e mais memória"
+      },
+      {
+        "k": "B",
+        "t": "Adicionar a tag centro-de-custo=marketing"
+      },
+      {
+        "k": "C",
+        "t": "Renomear a assinatura onde ela está"
+      },
+      {
+        "k": "D",
+        "t": "Movê-la para outro grupo de recursos na mesma região"
+      },
+      {
+        "k": "E",
+        "t": "Implantá-la em outra região do Azure"
+      }
+    ],
+    "ans": [
+      "A",
+      "E"
+    ],
+    "why": {
+      "ok": "O preço depende do tipo do recurso, das configurações (como núcleos, memória e licença do sistema operacional) e da região. A mesma VM custa diferente em regiões diferentes, porque energia, mão de obra, impostos e taxas variam de lugar para lugar.",
+      "B": "A tag serve para organizar e ratear o custo nos relatórios. Não altera o preço do recurso.",
+      "C": "O nome da assinatura é um rótulo e não entra no cálculo do preço.",
+      "D": "Grupo de recursos é só organização. Mudar de grupo na mesma região não muda o preço."
+    },
+    "src": [
+      {
+        "t": "Fatores que afetam custos no Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-cost-management-azure/2-describe-factors-affect-costs-azure"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-17",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 3,
+    "type": "single",
+    "sec": 60,
+    "tags": [
+      "calculadoras",
+      "custo-az"
+    ],
+    "case": "Antes de criar qualquer recurso, um arquiteto precisa entregar ao cliente uma estimativa mensal de uma solução nova no Azure, com duas VMs, um banco no Azure SQL Database e 2 TB no Blob Storage, comparando opções de região e de camada.",
+    "stem": "Qual ferramenta ele deve usar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Análise de custo do Microsoft Cost Management"
+      },
+      {
+        "k": "B",
+        "t": "Calculadora de preços do Azure"
+      },
+      {
+        "k": "C",
+        "t": "Azure Advisor"
+      },
+      {
+        "k": "D",
+        "t": "Orçamentos do Microsoft Cost Management"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "A calculadora de preços estima o custo de serviços que ainda vão ser provisionados e permite trocar região, camada e quantidade para comparar opções.",
+      "A": "A análise de custo mostra o gasto de recursos que já existem. Antes da implantação não há dado para analisar.",
+      "C": "O Advisor recomenda melhorias para recursos já implantados.",
+      "D": "O orçamento define um limite e avisa sobre o gasto real. Não estima uma solução que ainda não existe."
+    },
+    "src": [
+      {
+        "t": "Explorar a calculadora de preços",
+        "u": "https://learn.microsoft.com/training/modules/describe-cost-management-azure/3-compare-pricing-total-cost-of-ownership-calculators"
+      },
+      {
+        "t": "Estimar custos com a calculadora de preços",
+        "u": "https://learn.microsoft.com/azure/cost-management-billing/costs/pricing-calculator"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-18",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "custo-az",
+      "governanca-custo"
+    ],
+    "case": "O gestor de TI quer descobrir qual grupo de recursos e qual serviço mais pesaram no gasto do último trimestre, e ver a curva de custo acumulado mês a mês comparada com o orçamento.",
+    "stem": "Qual recurso ele deve usar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Service Health"
+      },
+      {
+        "k": "B",
+        "t": "Análise de custo do Microsoft Cost Management"
+      },
+      {
+        "k": "C",
+        "t": "Calculadora de preços do Azure"
+      },
+      {
+        "k": "D",
+        "t": "Alertas de crédito do Cost Management"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "A análise de custo mostra o gasto por região, recurso, assinatura, grupo de recursos ou serviço, com o custo acumulado ao longo do tempo para comparar a tendência com o orçamento.",
+      "A": "O Service Health informa incidentes e manutenções da plataforma Azure, não gasto.",
+      "C": "A calculadora estima custo de algo que ainda vai ser implantado. Não mostra o gasto real que já aconteceu.",
+      "D": "Os alertas de crédito avisam quando o saldo pré-pago de um Contrato Enterprise chega a 90% ou 100%. Eles não detalham o gasto por grupo de recursos."
+    },
+    "src": [
+      {
+        "t": "Ferramenta Microsoft Cost Management",
+        "u": "https://learn.microsoft.com/training/modules/describe-cost-management-azure/6-describe-azure-tool"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-19",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "rbac-policy-lock"
+    ],
+    "case": "Uma varejista tem dados no Azure SQL Database, em contas de armazenamento, em bancos no datacenter próprio e em buckets do Amazon S3. O comitê de dados quer um mapa único desse patrimônio, saber onde há dado sensível, como CPF, e rastrear de onde cada dado veio e para onde foi.",
+    "stem": "Qual solução atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Microsoft Purview"
+      },
+      {
+        "k": "B",
+        "t": "Azure Policy"
+      },
+      {
+        "k": "C",
+        "t": "Azure Monitor"
+      },
+      {
+        "k": "D",
+        "t": "Microsoft Defender for Cloud"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O Purview é a família de soluções de governança, risco e conformidade de dados. A governança unificada monta um mapa do patrimônio de dados, com classificação de dados sensíveis e linhagem de ponta a ponta, cobrindo Azure, ambientes locais, SaaS e outras nuvens, como o Amazon S3.",
+      "B": "O Azure Policy avalia a configuração de recursos do Azure. Não cataloga o conteúdo dos dados nem rastreia linhagem.",
+      "C": "O Monitor coleta métricas e logs de funcionamento. Não classifica o conteúdo dos dados.",
+      "D": "O Defender for Cloud cuida da postura de segurança e de ameaças nas cargas. Não monta catálogo nem linhagem de dados."
+    },
+    "src": [
+      {
+        "t": "Finalidade do Microsoft Purview",
+        "u": "https://learn.microsoft.com/training/modules/describe-features-tools-azure-for-governance-compliance/2-describe-purpose-microsoft-purview"
+      },
+      {
+        "t": "Microsoft Purview",
+        "u": "https://learn.microsoft.com/purview/purview"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-20",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "policy",
+      "rbac-policy-lock"
+    ],
+    "case": "Para se preparar para uma auditoria, a equipe precisa aplicar e acompanhar dezenas de definições do Azure Policy ligadas a um mesmo objetivo de conformidade, vendo o estado de todas juntas, sem atribuir cada uma separadamente.",
+    "stem": "Qual recurso do Azure Policy atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Tag obrigatória nos recursos"
+      },
+      {
+        "k": "B",
+        "t": "Iniciativa de política"
+      },
+      {
+        "k": "C",
+        "t": "Bloqueio de recurso no grupo de recursos"
+      },
+      {
+        "k": "D",
+        "t": "Atribuição de função do RBAC"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Uma iniciativa agrupa definições de política relacionadas a uma meta maior. Atribuída uma vez, ela permite acompanhar a conformidade do conjunto inteiro.",
+      "A": "A tag é um metadado. Uma política pode exigi-la, mas a tag não agrupa políticas.",
+      "C": "O bloqueio impede excluir ou alterar recursos. Não avalia conformidade.",
+      "D": "O RBAC define quem pode fazer o quê. Não verifica se os recursos seguem regras."
+    },
+    "src": [
+      {
+        "t": "Finalidade do Azure Policy",
+        "u": "https://learn.microsoft.com/training/modules/describe-features-tools-azure-for-governance-compliance/3-describe-purpose-azure-policy"
+      },
+      {
+        "t": "Visão geral do Azure Policy",
+        "u": "https://learn.microsoft.com/azure/governance/policy/overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-21",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "lock",
+      "rbac-policy-lock"
+    ],
+    "case": "A conta de armazenamento de produção recebe ajustes de configuração toda semana, como regras de firewall e de ciclo de vida. A diretoria quer apenas garantir que ninguém, nem mesmo um Proprietário, consiga excluí-la por engano.",
+    "stem": "Qual configuração atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Bloqueio do tipo Excluir (CanNotDelete) na conta"
+      },
+      {
+        "k": "B",
+        "t": "Bloqueio do tipo ReadOnly na conta"
+      },
+      {
+        "k": "C",
+        "t": "Uma política do Azure que audita contas sem tag"
+      },
+      {
+        "k": "D",
+        "t": "Trocar a função de Proprietário de todos pela função Leitor"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O bloqueio de exclusão permite ler e alterar, mas impede excluir. Vale até para o Proprietário, que precisaria remover o bloqueio antes, o que evita a exclusão por engano.",
+      "B": "O ReadOnly também bloquearia os ajustes semanais de configuração.",
+      "C": "A auditoria só registra a não conformidade. Não impede a exclusão.",
+      "D": "A função Leitor impede excluir, mas também impede os ajustes que a equipe faz toda semana."
+    },
+    "src": [
+      {
+        "t": "Finalidade dos bloqueios de recursos",
+        "u": "https://learn.microsoft.com/training/modules/describe-features-tools-azure-for-governance-compliance/4-describe-purpose-resource-locks"
+      },
+      {
+        "t": "Bloquear recursos",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/lock-resources"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-22",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "yn",
+    "sec": 100,
+    "tags": [
+      "rbac",
+      "rbac-policy-lock"
+    ],
+    "stem": "Responda Sim ou Não sobre o controle de acesso baseado em função (RBAC) do Azure.",
+    "rows": [
+      {
+        "t": "Uma atribuição de função combina quem recebe o acesso, qual função (o conjunto de permissões) e em qual escopo.",
+        "a": true,
+        "e": "Entidade de segurança, definição de função e escopo são as três partes de toda atribuição de função."
+      },
+      {
+        "t": "Quem recebe a função Leitor num grupo de recursos pode ver os recursos dele, mas não alterá-los.",
+        "a": true,
+        "e": "Leitor dá permissão só de visualização no escopo atribuído e abaixo dele."
+      },
+      {
+        "t": "Uma atribuição feita no grupo de recursos A também dá acesso aos recursos do grupo de recursos B da mesma assinatura.",
+        "a": false,
+        "e": "O acesso vale para o escopo atribuído e para o que está abaixo dele. Grupos de recursos vizinhos não herdam um do outro; para isso a atribuição teria de ser na assinatura."
+      },
+      {
+        "t": "O RBAC é o mecanismo que define quais configurações um recurso pode ter, como as regiões permitidas.",
+        "a": false,
+        "e": "Isso é papel do Azure Policy. O RBAC controla as ações que cada pessoa pode executar; a Policy controla as propriedades que os recursos podem ter."
+      }
+    ],
+    "src": [
+      {
+        "t": "Controle de acesso baseado em função do Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-azure-identity-access-security/6-role-based-access-control"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-23",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "nuvem-hibrida",
+      "policy"
+    ],
+    "case": "Uma empresa tem 300 servidores Windows e Linux no datacenter próprio e 80 instâncias EC2 na AWS. Ela quer ver todos no portal do Azure ao lado das VMs do Azure, aplicar as mesmas definições do Azure Policy e organizar tudo com tags, sem migrar nenhum servidor.",
+    "stem": "Qual serviço atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Modelos do Azure Resource Manager"
+      },
+      {
+        "k": "B",
+        "t": "Azure Arc"
+      },
+      {
+        "k": "C",
+        "t": "Azure Migrate"
+      },
+      {
+        "k": "D",
+        "t": "Azure Virtual Desktop"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "O Azure Arc projeta recursos de fora do Azure no Azure Resource Manager. Servidores locais e de outras nuvens passam a ser gerenciados como recursos do Azure, com Policy, tags e inventário, sem sair de onde estão.",
+      "A": "Os modelos descrevem recursos a implantar no Azure. Sozinhos, não trazem servidores externos para serem gerenciados.",
+      "C": "O Migrate leva servidores para o Azure, e o cenário diz que nada será migrado.",
+      "D": "O Virtual Desktop entrega áreas de trabalho a usuários. Não gerencia servidores."
+    },
+    "src": [
+      {
+        "t": "Finalidade do Azure Arc",
+        "u": "https://learn.microsoft.com/training/modules/describe-features-tools-manage-deploy-azure-resources/3-describe-purpose-of-azure-arc"
+      },
+      {
+        "t": "Visão geral do Azure Arc",
+        "u": "https://learn.microsoft.com/azure/azure-arc/overview"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-24",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 80,
+    "tags": [
+      "arm",
+      "rbac-policy-lock"
+    ],
+    "stem": "Sobre a Azure CLI e o Azure PowerShell, quais DUAS afirmações são verdadeiras?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Os dois estão disponíveis no Azure Cloud Shell e também podem ser instalados no Windows, no Linux e no macOS"
+      },
+      {
+        "k": "B",
+        "t": "Os dois exigem um agente instalado em cada recurso administrado"
+      },
+      {
+        "k": "C",
+        "t": "O Azure PowerShell só administra recursos que foram criados pelo portal"
+      },
+      {
+        "k": "D",
+        "t": "A Azure CLI só funciona no Linux"
+      },
+      {
+        "k": "E",
+        "t": "Os dois têm capacidades equivalentes, e a diferença principal está na sintaxe dos comandos"
+      }
+    ],
+    "ans": [
+      "A",
+      "E"
+    ],
+    "why": {
+      "ok": "O Learn descreve as duas ferramentas como funcionalmente equivalentes: o Azure PowerShell usa cmdlets e a Azure CLI usa comandos no estilo Bash. Ambas rodam no Cloud Shell e podem ser instaladas no Windows, no Linux e no Mac; a escolha costuma seguir a linguagem que a equipe já conhece.",
+      "B": "As ferramentas falam com a API do Azure. Não precisam de agente nos recursos.",
+      "C": "As duas ferramentas chamam a API do Azure e administram qualquer recurso, seja qual for a ferramenta usada para criá-lo.",
+      "D": "A Azure CLI pode ser instalada no Windows, no Linux e no macOS, além de estar no Cloud Shell."
+    },
+    "src": [
+      {
+        "t": "Ferramentas para interagir com o Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-features-tools-manage-deploy-azure-resources/2-describe-interacting-azure"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-25",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "custo-az",
+      "governanca-custo"
+    ],
+    "case": "Uma equipe excluiu 15 VMs de um ambiente de testes encerrado. No mês seguinte a fatura caiu menos do que o esperado: ainda aparecem cobranças de armazenamento e de rede ligadas àquele ambiente.",
+    "stem": "Qual é a explicação mais provável e a ação correta?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A cobrança vem de uma reserva de instância; é preciso cancelar a assinatura inteira"
+      },
+      {
+        "k": "B",
+        "t": "Discos e IPs públicos criados junto com as VMs continuaram provisionados; é preciso revisar e excluir esses recursos, de preferência apagando o grupo de recursos do ambiente"
+      },
+      {
+        "k": "C",
+        "t": "As VMs tinham tags, e tags geram cobrança própria; é preciso remover as tags"
+      },
+      {
+        "k": "D",
+        "t": "O Azure continua cobrando as VMs por 30 dias após a exclusão; basta aguardar"
+      }
+    ],
+    "ans": [
+      "B"
+    ],
+    "why": {
+      "ok": "Ao provisionar uma VM, o Azure também cria recursos associados, como discos e rede, e excluir a VM pode não removê-los. Por isso o Learn recomenda revisar os recursos com frequência. Manter o ambiente num grupo de recursos próprio permite apagar tudo de uma vez.",
+      "A": "Uma reserva aparece como compra de capacidade de computação, não como armazenamento e rede. E cancelar a assinatura inteira derrubaria todo o resto.",
+      "C": "Tags não têm custo. Elas servem para organizar e ratear o gasto.",
+      "D": "Não existe cobrança de VM depois da exclusão. O gasto vem de recursos que continuam existindo."
+    },
+    "src": [
+      {
+        "t": "Fatores que afetam custos no Azure",
+        "u": "https://learn.microsoft.com/training/modules/describe-cost-management-azure/2-describe-factors-affect-costs-azure"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-26",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 5,
+    "type": "single",
+    "sec": 100,
+    "tags": [
+      "arm",
+      "lock"
+    ],
+    "case": "Um administrador aplicou um bloqueio de exclusão numa VM pelo portal. Um colega tentou apagar a mesma VM com um comando da Azure CLI, e outro tentou pela API REST, achando que o bloqueio só valia no portal. As duas tentativas falharam.",
+    "stem": "Por que o bloqueio vale para todas as ferramentas?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Porque a Azure CLI e a API REST só têm permissão de leitura"
+      },
+      {
+        "k": "B",
+        "t": "Porque o bloqueio é aplicado dentro do sistema operacional da VM"
+      },
+      {
+        "k": "C",
+        "t": "Porque toda solicitação, venha do portal, da CLI, do PowerShell ou da API, passa pelo Azure Resource Manager, que autentica, autoriza e aplica os controles antes de repassá-la ao serviço"
+      },
+      {
+        "k": "D",
+        "t": "Porque o portal replica os bloqueios para cada ferramenta instalada nas máquinas dos administradores"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "O Resource Manager é a camada de implantação e gerenciamento do Azure. Qualquer ferramenta ou SDK envia a solicitação para a mesma API, e o ARM autentica, autoriza e aplica controles como os bloqueios. Por isso o resultado é o mesmo em todas as ferramentas.",
+      "A": "A CLI e a API podem criar, alterar e excluir recursos. O que impediu a exclusão foi o bloqueio.",
+      "B": "O bloqueio atua no plano de gerenciamento do Azure, não dentro do sistema operacional da VM.",
+      "D": "Não existe replicação por ferramenta. Há um único ponto de controle, o Resource Manager."
+    },
+    "src": [
+      {
+        "t": "Azure Resource Manager e modelos ARM",
+        "u": "https://learn.microsoft.com/training/modules/describe-features-tools-manage-deploy-azure-resources/4-describe-azure-resource-manager-azure-arm-templates"
+      },
+      {
+        "t": "Bloquear recursos",
+        "u": "https://learn.microsoft.com/azure/azure-resource-manager/management/lock-resources"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-27",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 80,
+    "tags": [
+      "monitor-az",
+      "monitor"
+    ],
+    "case": "Os clientes reclamam que o checkout de uma loja virtual fica lento em alguns horários. Os desenvolvedores querem ver o tempo de resposta e a taxa de falha das requisições, o desempenho das chamadas ao banco e às APIs externas, e criar testes que acessem o site periodicamente, até de madrugada.",
+    "stem": "Qual recurso atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Application Insights, do Azure Monitor"
+      },
+      {
+        "k": "B",
+        "t": "Azure Advisor"
+      },
+      {
+        "k": "C",
+        "t": "Azure Service Health"
+      },
+      {
+        "k": "D",
+        "t": "Microsoft Defender for Cloud"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O Application Insights monitora desempenho e uso de aplicações web: taxa de requisições, tempo de resposta, falhas, chamadas a dependências e testes de disponibilidade com requisições sintéticas. Pode ser ativado por SDK no código ou por agente, sem mudar o código.",
+      "B": "O Advisor faz recomendações de configuração. Não mede o tempo de resposta das requisições.",
+      "C": "O Service Health mostra incidentes da plataforma Azure. Não instrumenta a aplicação.",
+      "D": "O Defender for Cloud trata de segurança, não de desempenho da aplicação."
+    },
+    "src": [
+      {
+        "t": "Azure Monitor",
+        "u": "https://learn.microsoft.com/training/modules/describe-monitoring-tools-azure/4-describe-azure-monitor"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-28",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "monitor-az",
+      "monitor"
+    ],
+    "case": "Um analista quer, num único lugar do portal, escrever consultas sobre os logs coletados de 200 VMs para achar todos os erros da última hora e montar um gráfico com a tendência da semana.",
+    "stem": "Qual ferramenta ele deve usar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Advisor"
+      },
+      {
+        "k": "B",
+        "t": "Resource Health"
+      },
+      {
+        "k": "C",
+        "t": "Log Analytics"
+      },
+      {
+        "k": "D",
+        "t": "Gerenciador de Armazenamento do Azure (Storage Explorer)"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "O Log Analytics é a ferramenta do portal para escrever e executar consultas sobre os dados coletados pelo Azure Monitor, de filtros simples a análises com gráficos de tendência.",
+      "A": "O Advisor entrega recomendações prontas. Não permite consultar logs.",
+      "B": "O Resource Health mostra se um recurso está saudável e se a causa de um problema é da plataforma. Não consulta os logs de 200 VMs.",
+      "D": "O Storage Explorer gerencia arquivos e blobs em contas de armazenamento. Não analisa logs."
+    },
+    "src": [
+      {
+        "t": "Azure Monitor",
+        "u": "https://learn.microsoft.com/training/modules/describe-monitoring-tools-azure/4-describe-azure-monitor"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-29",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 3,
+    "type": "order",
+    "sec": 75,
+    "tags": [
+      "monitor-az",
+      "monitor"
+    ],
+    "stem": "Uma regra de alerta do Azure Monitor avisa a equipe quando a CPU de uma VM passa de 80%. Ordene o que acontece, do primeiro ao último passo.",
+    "items": [
+      {
+        "t": "O Azure Monitor coleta a métrica de CPU da VM"
+      },
+      {
+        "t": "A regra de alerta compara a métrica com a condição definida"
+      },
+      {
+        "t": "A condição é atendida e o alerta é disparado"
+      },
+      {
+        "t": "O grupo de ações notifica a equipe, por exemplo por e-mail"
+      }
+    ],
+    "e": "O alerta depende do dado coletado. A regra compara esse dado com a condição; quando a condição é atendida, o alerta dispara, e o grupo de ações define quem é avisado e o que acontece. O mesmo grupo de ações pode ser reutilizado por várias regras.",
+    "src": [
+      {
+        "t": "Azure Monitor",
+        "u": "https://learn.microsoft.com/training/modules/describe-monitoring-tools-azure/4-describe-azure-monitor"
+      }
+    ]
+  },
+  {
+    "id": "az-d3-30",
+    "exam": "az900",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "service-health",
+      "monitor-az"
+    ],
+    "case": "Uma VM de produção ficou inacessível. A página de status do Azure não mostra nenhum incidente, e o Service Health não lista problemas para os serviços e a região da empresa. O administrador quer saber se aquela VM está com problema e se a causa é da plataforma ou da configuração dele.",
+    "stem": "Onde ele deve consultar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Azure Policy"
+      },
+      {
+        "k": "B",
+        "t": "Página de status do Azure"
+      },
+      {
+        "k": "C",
+        "t": "Resource Health"
+      },
+      {
+        "k": "D",
+        "t": "Azure Advisor"
+      }
+    ],
+    "ans": [
+      "C"
+    ],
+    "why": {
+      "ok": "O Resource Health é a parte do Azure Service Health focada em recursos individuais. Mostra se aquela VM está funcionando normalmente e se o problema vem do Azure ou do lado do cliente.",
+      "A": "O Azure Policy avalia se os recursos seguem regras de configuração. Não informa a saúde da VM.",
+      "B": "A página de status dá uma visão global de todos os serviços e regiões, e o cenário já diz que não há incidente amplo.",
+      "D": "O Advisor faz recomendações de melhoria. Não diagnostica a indisponibilidade atual de uma VM."
+    },
+    "src": [
+      {
+        "t": "Azure Service Health",
+        "u": "https://learn.microsoft.com/training/modules/describe-monitoring-tools-azure/3-describe-azure-service-health"
+      },
+      {
+        "t": "Visão geral do Azure Service Health",
+        "u": "https://learn.microsoft.com/azure/service-health/overview"
       }
     ]
   }
