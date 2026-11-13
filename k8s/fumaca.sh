@@ -10,19 +10,21 @@ erro() { printf '  ERRO %s\n' "$1"; falhas=$((falhas + 1)); }
 # espera o serviço responder (até 60 s)
 for _ in $(seq 1 30); do curl -fsS -o /dev/null "$BASE/healthz" && break; sleep 2; done
 
-cab=$(curl -fsS -D - -o /tmp/cq-index.html "$BASE/")
+cab=$(curl -fsS -D - -o /tmp/cq-index.html "$BASE/" | tr -d '\r')
 grep -qi '^content-security-policy:.*frame-ancestors' <<<"$cab" && ok "home com CSP" || erro "home sem CSP"
 grep -qi '^x-content-type-options: nosniff' <<<"$cab" && ok "nosniff" || erro "sem nosniff"
 grep -q 'id="app"' /tmp/cq-index.html && grep -q '<title>CloudQuest' /tmp/cq-index.html && ok "home é o app" || erro "home não é o app"
 grep -qi '^server: nginx$' <<<"$cab" && ok "versão do nginx escondida" || erro "cabeçalho Server expõe versão"
 
 asset=$(grep -o '/assets/[^"]*\.js' /tmp/cq-index.html | head -1)
-cab=$(curl -fsS -D - -o /dev/null "$BASE$asset")
+cab=$(curl -fsS -D - -o /dev/null "$BASE$asset" | tr -d '\r')
 grep -qi '^cache-control: public, max-age=31536000, immutable' <<<"$cab" && ok "asset imutável em cache" || erro "asset sem cache longo ($asset)"
 
-cab=$(curl -fsS -D - -o /dev/null "$BASE/sw.js")
+cab=$(curl -fsS -D - -o /dev/null "$BASE/sw.js" | tr -d '\r')
 grep -qi '^cache-control: no-cache' <<<"$cab" && ok "service worker sem cache" || erro "sw.js com cache"
-grep -qi '^content-type: text/javascript' <<<"$cab" && ok "sw.js como JavaScript" || erro "sw.js com tipo errado"
+grep -qi '^content-type: text/javascript' <<<"$cab" && ok "sw.js como JavaScript" || erro "sw.js com tipo errado: $(grep -i '^content-type' <<<"$cab")"
+cab=$(curl -fsS -D - -o /dev/null "$BASE/manifest.webmanifest" | tr -d '\r')
+grep -qi '^content-type: application/manifest+json' <<<"$cab" && ok "manifesto com tipo certo" || erro "manifesto com tipo errado: $(grep -i '^content-type' <<<"$cab")"
 
 code=$(curl -s -o /dev/null -w '%{http_code}' "$BASE/api/r?e=saa&s=812&d=2026-11-12")
 [ "$code" = 200 ] && ok "página de resultado via /api" || erro "/api/r respondeu $code"

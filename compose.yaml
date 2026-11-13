@@ -24,7 +24,9 @@ services:
       api: { condition: service_healthy }
     read_only: true
     # o nginx escreve a configuração gerada e arquivos temporários
-    tmpfs: [/tmp, /etc/nginx/conf.d]
+    tmpfs:
+      - /tmp:uid=101,gid=101,mode=0755
+      - /etc/nginx/conf.d:uid=101,gid=101,mode=0755
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
     restart: unless-stopped

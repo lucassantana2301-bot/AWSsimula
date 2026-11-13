@@ -39,12 +39,15 @@ server {
     }
 
     location = /sw.js {
-        default_type text/javascript;
+        # types vazio: sem isso o mime.types manda application/javascript
+        types { }
+        default_type "text/javascript; charset=utf-8";
         add_header Cache-Control "no-cache" always;
         include /etc/nginx/snippets/seguranca.conf;
     }
 
     location = /manifest.webmanifest {
+        types { }
         default_type application/manifest+json;
         add_header Cache-Control "public, max-age=3600" always;
         include /etc/nginx/snippets/seguranca.conf;
