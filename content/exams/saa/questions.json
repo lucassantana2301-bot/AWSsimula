@@ -7516,5 +7516,327 @@
         "u": "https://docs.aws.amazon.com/aws-backup/latest/devguide/plan-options-and-configuration.html"
       }
     ]
+  },
+  {
+    "id": "saa-d1-42",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "iam-permissoes"
+    ],
+    "case": "Um aplicativo móvel deixa o cliente enviar uma foto de documento de até 20 MB para um bucket privado do S3. Hoje o arquivo passa por uma API em EC2 que repassa ao S3, e as instâncias saturam nos picos. Os usuários não têm credenciais da AWS.",
+    "stem": "Qual mudança tira o arquivo do caminho da API mantendo o bucket privado?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "A API gera uma URL pré-assinada de PUT, válida por poucos minutos, e o aplicativo envia direto ao S3"
+      },
+      {
+        "k": "B",
+        "t": "Liberar escrita pública no bucket só para o prefixo de uploads"
+      },
+      {
+        "k": "C",
+        "t": "Embutir no aplicativo uma chave de acesso de um usuário do IAM com permissão de PutObject"
+      },
+      {
+        "k": "D",
+        "t": "Aumentar o tamanho das instâncias da API para aguentar o pico"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A URL pré-assinada permite o upload sem que o cliente tenha credencial da AWS, com prazo de validade e limitada às permissões de quem a gerou. O arquivo vai direto ao S3 e a API só assina.",
+      "B": "Escrita pública num prefixo deixa qualquer pessoa gravar qualquer coisa ali, inclusive para gerar custo.",
+      "C": "Chave dentro do aplicativo vaza com facilidade e é de longa duração: qualquer um que extrair o binário passa a gravar no bucket.",
+      "D": "Resolve o sintoma pagando mais e mantém o tráfego dos arquivos passando pela API sem necessidade."
+    },
+    "src": [
+      {
+        "t": "Upload de objetos com URLs pré-assinadas",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/PresignedUrlUploadObject.html"
+      }
+    ]
+  },
+  {
+    "id": "saa-d1-43",
+    "exam": "saa",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "criptografia-segredos"
+    ],
+    "case": "Uma auditoria exige que nenhum acesso a um bucket do S3 com dados de clientes aconteça por HTTP sem criptografia, venha de onde vier.",
+    "stem": "Como garantir isso no próprio bucket?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Política do bucket negando qualquer ação quando a condição aws:SecureTransport for falsa"
+      },
+      {
+        "k": "B",
+        "t": "Ativar a criptografia padrão SSE-S3 no bucket"
+      },
+      {
+        "k": "C",
+        "t": "Ativar o Bloqueio de Acesso Público do S3"
+      },
+      {
+        "k": "D",
+        "t": "Exigir SSE-KMS com chave gerenciada pelo cliente"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "aws:SecureTransport indica se a requisição veio por TLS. Negar quando ela é falsa bloqueia todo acesso por HTTP, qualquer que seja o principal, e é a prática recomendada pela AWS.",
+      "B": "SSE-S3 criptografa o dado gravado (em repouso); não impede uma requisição pelo canal sem TLS.",
+      "C": "O bloqueio de acesso público trata de quem pode acessar, não do protocolo usado.",
+      "D": "Também é criptografia em repouso: muda a chave, não o transporte."
+    },
+    "src": [
+      {
+        "t": "Boas práticas de segurança do Amazon S3",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-best-practices.html"
+      }
+    ]
+  },
+  {
+    "id": "saa-d2-43",
+    "exam": "saa",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "alta-disponibilidade"
+    ],
+    "case": "Durante as implantações, um grupo de Auto Scaling troca instâncias atrás de um Application Load Balancer. Requisições de geração de relatório levam até 90 segundos, e os clientes reclamam de erros 5xx bem no momento em que uma instância sai. O atraso de cancelamento do registro foi reduzido para 10 segundos para \"acelerar o deploy\".",
+    "stem": "O que corrige os erros?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Voltar o atraso de cancelamento do registro para um valor acima de 90 segundos, para as requisições em andamento terminarem"
+      },
+      {
+        "k": "B",
+        "t": "Ativar a persistência de sessão no grupo de destino"
+      },
+      {
+        "k": "C",
+        "t": "Diminuir o intervalo da verificação de integridade"
+      },
+      {
+        "k": "D",
+        "t": "Trocar o ALB por um Network Load Balancer"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "No cancelamento do registro, o balanceador para de mandar requisições novas e espera as em andamento pelo atraso configurado (300 segundos por padrão). Com 10 segundos, a instância sai no meio de relatórios de 90, e o cliente recebe 5xx.",
+      "B": "Persistência prende o cliente a uma instância, o que piora o problema quando ela sai.",
+      "C": "A verificação de integridade detecta instância ruim; aqui a instância está saudável e é removida de propósito.",
+      "D": "Trocar de balanceador não resolve: o NLB também tem atraso de cancelamento do registro, e a causa é o valor curto."
+    },
+    "src": [
+      {
+        "t": "Atributos do grupo de destino: atraso de cancelamento do registro",
+        "u": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html"
+      }
+    ]
+  },
+  {
+    "id": "saa-d2-44",
+    "exam": "saa",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "alta-disponibilidade"
+    ],
+    "case": "Uma aplicação Java leva 8 minutos para iniciar (aquece cache e carrega modelos). Nos picos, o Auto Scaling demora tanto para colocar capacidade que a latência dispara. Manter instâncias extras ligadas o tempo todo ficou caro.",
+    "stem": "Qual a melhor opção?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Um warm pool no grupo de Auto Scaling, com instâncias já inicializadas no estado Stopped ou Hibernated"
+      },
+      {
+        "k": "B",
+        "t": "Aumentar a capacidade mínima do grupo para o tamanho do pico"
+      },
+      {
+        "k": "C",
+        "t": "Trocar o tipo de instância por um maior"
+      },
+      {
+        "k": "D",
+        "t": "Reduzir o período de espera (cooldown) da política de escala"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O warm pool guarda instâncias pré-inicializadas ao lado do grupo, o que corta a latência de escala de aplicações com inicialização longa. Paradas ou hibernadas, elas custam bem menos que instâncias ligadas.",
+      "B": "Resolve a latência pagando o pico o tempo todo, que é o custo que a equipe quer evitar.",
+      "C": "Instância maior não elimina os 8 minutos de inicialização da instância nova.",
+      "D": "Reduzir o cooldown faz a escala reagir antes, mas cada instância nova ainda leva 8 minutos para ficar pronta."
+    },
+    "src": [
+      {
+        "t": "Warm pools do Amazon EC2 Auto Scaling",
+        "u": "https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-warm-pools.html"
+      }
+    ]
+  },
+  {
+    "id": "saa-d3-41",
+    "exam": "saa",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "rede-desempenho"
+    ],
+    "case": "Um catálogo de produtos fica atrás do CloudFront, mas a taxa de acerto do cache está baixa e a origem continua sobrecarregada. Os links de campanha chegam com parâmetros como utm_source e utm_campaign, e a distribuição repassa e usa todas as query strings, cookies e cabeçalhos na chave de cache. A página só muda conforme os parâmetros categoria e pagina.",
+    "stem": "Qual mudança mais aumenta a taxa de acerto?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma política de cache que inclui na chave só as query strings categoria e pagina, sem cookies nem cabeçalhos desnecessários"
+      },
+      {
+        "k": "B",
+        "t": "Reduzir o TTL para o conteúdo ficar sempre atualizado"
+      },
+      {
+        "k": "C",
+        "t": "Desativar a compressão para a origem processar menos"
+      },
+      {
+        "k": "D",
+        "t": "Criar uma segunda distribuição só para as campanhas"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Cada variação de parâmetro, cookie ou cabeçalho na chave gera uma cópia separada do mesmo objeto. Manter na chave só o que realmente muda a resposta une as variações e faz o cache acertar mais.",
+      "B": "TTL menor faz o CloudFront voltar à origem com mais frequência: diminui a taxa de acerto em vez de aumentar.",
+      "C": "Compressão não muda a chave de cache, e desligá-la só aumenta os bytes transferidos.",
+      "D": "Outra distribuição com a mesma chave repete o problema e divide o cache em dois."
+    },
+    "src": [
+      {
+        "t": "Aumentar a proporção de acertos do cache",
+        "u": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cache-hit-ratio.html"
+      }
+    ]
+  },
+  {
+    "id": "saa-d4-38",
+    "exam": "saa",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "custo-banco-rede"
+    ],
+    "case": "Uma tabela do DynamoDB guarda sessões de usuário que só servem por 24 horas. Hoje um job noturno lê a tabela inteira e apaga as sessões vencidas, consumindo muita capacidade de leitura e escrita. Não é preciso que a sessão suma no segundo exato em que vence, porque a aplicação já confere a validade ao ler.",
+    "stem": "Qual a forma mais barata de remover as sessões vencidas?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Ativar o TTL da tabela com um atributo de expiração em cada item"
+      },
+      {
+        "k": "B",
+        "t": "Manter o job, mas em horário de menor uso"
+      },
+      {
+        "k": "C",
+        "t": "Criar um índice secundário global por data e apagar a partir dele"
+      },
+      {
+        "k": "D",
+        "t": "Recriar a tabela toda noite"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O TTL apaga automaticamente os itens vencidos, em geral alguns dias depois da expiração, sem consumir capacidade de escrita. Como a aplicação já confere a validade, o atraso não atrapalha.",
+      "B": "Mudar o horário mantém a leitura completa e as exclusões cobradas.",
+      "C": "O índice tem custo próprio de armazenamento e escrita, e as exclusões continuam consumindo capacidade.",
+      "D": "Recriar derruba as sessões válidas e exige parar o acesso durante a troca."
+    },
+    "src": [
+      {
+        "t": "Tempo de vida (TTL) no DynamoDB",
+        "u": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html"
+      }
+    ]
+  },
+  {
+    "id": "saa-d4-39",
+    "exam": "saa",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "custo-armazenamento"
+    ],
+    "case": "A conta do S3 de um serviço de vídeos cresce todo mês, mas o número de objetos listados no bucket quase não muda. Os vídeos são enviados em várias partes, e muitos envios são interrompidos pelos usuários no meio.",
+    "stem": "Qual ação reduz o custo sem afetar os vídeos válidos?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma regra de ciclo de vida AbortIncompleteMultipartUpload, removendo envios incompletos alguns dias após o início"
+      },
+      {
+        "k": "B",
+        "t": "Mover todos os objetos para S3 Glacier Instant Retrieval"
+      },
+      {
+        "k": "C",
+        "t": "Desativar o versionamento do bucket"
+      },
+      {
+        "k": "D",
+        "t": "Ativar o S3 Transfer Acceleration"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "As partes de um envio em várias partes não concluído ficam guardadas sem aparecer na listagem de objetos. A regra de ciclo de vida interrompe esses envios depois do prazo e apaga as partes, sem cobrança de exclusão antecipada.",
+      "B": "Muda a classe dos vídeos válidos e encarece o acesso, sem tocar nas partes órfãs.",
+      "C": "Desativar o versionamento não apaga as versões que já existem e não trata envios incompletos.",
+      "D": "Acelera o envio e é cobrado à parte; não remove nada."
+    },
+    "src": [
+      {
+        "t": "Ciclo de vida para envios em várias partes incompletos",
+        "u": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpu-abort-incomplete-mpu-lifecycle-config.html"
+      }
+    ]
   }
 ]

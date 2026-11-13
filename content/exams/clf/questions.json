@@ -6110,5 +6110,189 @@
         "u": "https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_tag-policies.html"
       }
     ]
+  },
+  {
+    "id": "aw-d1-29",
+    "exam": "clf",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "infra-global"
+    ],
+    "case": "Um estúdio de efeitos visuais numa grande cidade quer rodar estações de renderização na AWS com latência muito baixa para os artistas no escritório. A região mais próxima fica a centenas de quilômetros, e o tráfego não vem de rede móvel 5G.",
+    "stem": "Que tipo de infraestrutura atende melhor?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma AWS Local Zone na cidade"
+      },
+      {
+        "k": "B",
+        "t": "Uma Wavelength Zone"
+      },
+      {
+        "k": "C",
+        "t": "Os pontos de presença do CloudFront"
+      },
+      {
+        "k": "D",
+        "t": "Uma zona de disponibilidade adicional na região mais próxima"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "As Local Zones colocam computação, armazenamento e bancos de dados perto de grandes centros populacionais e industriais, para acesso com baixa latência a aplicações exigentes como renderização.",
+      "B": "Wavelength fica dentro da rede 5G das operadoras e serve a dispositivos móveis, que não é o caso.",
+      "C": "Pontos de presença fazem cache e entrega de conteúdo; não rodam estações de renderização.",
+      "D": "Zona de disponibilidade pertence à região, que continua longe do escritório."
+    },
+    "src": [
+      {
+        "t": "O que são as AWS Local Zones",
+        "u": "https://docs.aws.amazon.com/local-zones/latest/ug/what-is-aws-local-zones.html"
+      }
+    ]
+  },
+  {
+    "id": "aw-d1-30",
+    "exam": "clf",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "well-architected"
+    ],
+    "case": "A diretoria quer reduzir o impacto ambiental da carga na nuvem: maximizar o uso do que já está provisionado, usar serviços gerenciados e escolher instâncias mais eficientes.",
+    "stem": "Qual pilar do AWS Well-Architected Framework trata disso?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Sustentabilidade"
+      },
+      {
+        "k": "B",
+        "t": "Otimização de custos"
+      },
+      {
+        "k": "C",
+        "t": "Eficiência de desempenho"
+      },
+      {
+        "k": "D",
+        "t": "Excelência operacional"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O pilar de sustentabilidade trata do impacto ambiental da carga, com princípios como maximizar a utilização, usar serviços gerenciados e adotar hardware e software mais eficientes.",
+      "B": "Muitas dessas ações também cortam custo, mas o objetivo declarado é o impacto ambiental, que tem pilar próprio.",
+      "C": "Eficiência de desempenho trata de usar os recursos para atender à demanda com bom desempenho, não do impacto ambiental.",
+      "D": "Excelência operacional trata de operar e melhorar processos e procedimentos."
+    },
+    "src": [
+      {
+        "t": "Sustentabilidade: princípios de design",
+        "u": "https://docs.aws.amazon.com/wellarchitected/latest/framework/sus-design-principles.html"
+      }
+    ]
+  },
+  {
+    "id": "aw-d2-37",
+    "exam": "clf",
+    "dom": "d2",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "seguranca-servicos"
+    ],
+    "case": "Uma startup lança um aplicativo e precisa de cadastro e login dos clientes, com opção de entrar com a conta do Google e autenticação multifator. Ela não quer criar e manter um banco de senhas próprio.",
+    "stem": "Qual serviço da AWS atende?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Grupos de usuários do Amazon Cognito"
+      },
+      {
+        "k": "B",
+        "t": "Usuários do AWS IAM, um para cada cliente"
+      },
+      {
+        "k": "C",
+        "t": "AWS IAM Identity Center"
+      },
+      {
+        "k": "D",
+        "t": "AWS Directory Service"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O grupo de usuários do Cognito é um diretório de usuários para aplicativos web e móveis, com cadastro, login, entrada por Google e outros provedores, e autenticação multifator.",
+      "B": "Usuários do IAM são identidades para acessar a AWS, não para clientes de um aplicativo, e não escalam para isso.",
+      "C": "O IAM Identity Center dá acesso da força de trabalho às contas e aplicações da empresa, não a clientes do aplicativo.",
+      "D": "O Directory Service oferece Active Directory gerenciado, pensado para funcionários e cargas Windows."
+    },
+    "src": [
+      {
+        "t": "Grupos de usuários do Amazon Cognito",
+        "u": "https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools.html"
+      }
+    ]
+  },
+  {
+    "id": "aw-d4-25",
+    "exam": "clf",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "custo-ferramentas"
+    ],
+    "case": "No mês passado, uma chave vazada foi usada para subir instâncias caras, e a empresa só percebeu ao receber a fatura. Ela quer ser avisada por e-mail quando o gasto de um serviço fugir do padrão habitual, sem ter que adivinhar um valor fixo de alerta para cada serviço.",
+    "stem": "Qual recurso atende melhor?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "AWS Cost Anomaly Detection"
+      },
+      {
+        "k": "B",
+        "t": "AWS Pricing Calculator"
+      },
+      {
+        "k": "C",
+        "t": "AWS Cost and Usage Report"
+      },
+      {
+        "k": "D",
+        "t": "AWS Artifact"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O Cost Anomaly Detection usa modelos de aprendizado de máquina para detectar padrões de gasto anormais e avisa por e-mail ou por um tópico do SNS, sem exigir um limite fixo por serviço.",
+      "B": "A calculadora estima o custo de uma arquitetura planejada; não monitora gasto real.",
+      "C": "O relatório traz o detalhe do gasto para análise, mas não detecta anomalia nem envia alerta.",
+      "D": "O Artifact entrega relatórios de conformidade da AWS; não tem relação com custo."
+    },
+    "src": [
+      {
+        "t": "Detectar gasto incomum com o AWS Cost Anomaly Detection",
+        "u": "https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html"
+      }
+    ]
   }
 ]

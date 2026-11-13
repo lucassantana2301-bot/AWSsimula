@@ -5512,5 +5512,377 @@
         "u": "https://learn.microsoft.com/azure/app-service/configure-ssl-certificate"
       }
     ]
+  },
+  {
+    "id": "104-d1-28",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "rbac-governanca"
+    ],
+    "case": "Três engenheiros precisam da função Proprietário na assinatura de produção algumas vezes por mês, para manutenção. A auditoria exige que ninguém tenha esse acesso de forma permanente e que cada uso tenha aprovação e prazo.",
+    "stem": "O que você deve configurar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Atribuições qualificadas (eligible) no Privileged Identity Management, com ativação mediante aprovação e duração limitada"
+      },
+      {
+        "k": "B",
+        "t": "Atribuição ativa de Proprietário e revisão manual da lista uma vez por trimestre"
+      },
+      {
+        "k": "C",
+        "t": "Um bloqueio CanNotDelete na assinatura e a função Colaborador permanente"
+      },
+      {
+        "k": "D",
+        "t": "Uma função personalizada com as mesmas permissões de Proprietário"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "O PIM oferece acesso privilegiado sob demanda (just-in-time): a pessoa fica qualificada e precisa ativar a função, com aprovação e por tempo limitado. Assim ninguém fica com o privilégio parado.",
+      "B": "Atribuição ativa é permanente, que é exatamente o que a auditoria proíbe; revisão trimestral não exige aprovação a cada uso.",
+      "C": "Bloqueio impede exclusão, não controla quem tem privilégio. E Colaborador permanente continua sendo acesso parado e sem aprovação.",
+      "D": "Função personalizada muda o conjunto de permissões, mas a atribuição continua permanente e sem aprovação."
+    },
+    "src": [
+      {
+        "t": "O que é o Privileged Identity Management",
+        "u": "https://learn.microsoft.com/entra/id-governance/privileged-identity-management/pim-configure"
+      }
+    ]
+  },
+  {
+    "id": "104-d1-29",
+    "exam": "az104",
+    "dom": "d1",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "entra-id"
+    ],
+    "case": "O RH mandou uma planilha com 300 funcionários novos que precisam de conta no Microsoft Entra ID amanhã cedo. Você não tem script pronto e quer usar o centro de administração.",
+    "stem": "Qual o caminho mais direto?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Usuários, Criar em massa: baixar o modelo CSV, preencher uma linha por usuário e enviar o arquivo"
+      },
+      {
+        "k": "B",
+        "t": "Convidar os 300 como usuários convidados (B2B) por e-mail"
+      },
+      {
+        "k": "C",
+        "t": "Criar um grupo dinâmico com os 300 nomes na regra de associação"
+      },
+      {
+        "k": "D",
+        "t": "Criar uma unidade administrativa e importar a planilha nela"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A criação em massa usa um modelo CSV com nome, nome de usuário e senha inicial, cria contas de membro internas e não envia convite. Para arquivos grandes, a recomendação é dividir em lotes que terminem dentro de uma hora.",
+      "B": "Convidado é para gente de fora da organização. Funcionário novo é membro interno, e convite depende de a pessoa aceitar.",
+      "C": "Grupo dinâmico agrupa usuários que já existem a partir de atributos; ele não cria contas.",
+      "D": "Unidade administrativa delimita quem administra quais usuários; não é um caminho de importação de contas."
+    },
+    "src": [
+      {
+        "t": "Criar usuários em massa no Microsoft Entra ID",
+        "u": "https://learn.microsoft.com/entra/identity/users/users-bulk-add"
+      }
+    ]
+  },
+  {
+    "id": "104-d2-25",
+    "exam": "az104",
+    "dom": "d2",
+    "lvl": 5,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "armazenamento-acesso"
+    ],
+    "case": "A equipe de dados pede para habilitar o namespace hierárquico (Data Lake Storage) numa conta de armazenamento que já está em produção, para ter pastas de verdade e renomear diretórios inteiros de uma vez.",
+    "stem": "O que você precisa avaliar antes de aceitar?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Que a habilitação não pode ser desfeita: a conta não volta para o namespace plano, então é preciso testar cargas, custos e integrações antes"
+      },
+      {
+        "k": "B",
+        "t": "Nada: a opção pode ser ligada e desligada a qualquer momento pelo portal"
+      },
+      {
+        "k": "C",
+        "t": "Que só é possível em conta nova, então será preciso recriar a conta"
+      },
+      {
+        "k": "D",
+        "t": "Que a conta passa a aceitar apenas acesso pelo protocolo SFTP"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Contas existentes podem ser atualizadas para o namespace hierárquico, mas depois disso não voltam para o namespace plano. Por isso a própria documentação pede avaliar cargas, custos e integrações antes.",
+      "B": "Não existe desligar: a mudança é de mão única.",
+      "C": "Conta nova pode nascer com o recurso, mas conta existente também pode ser atualizada; recriar não é obrigatório.",
+      "D": "O namespace hierárquico não restringe protocolos; ele organiza os objetos em diretórios e torna atômicas as operações de pasta."
+    },
+    "src": [
+      {
+        "t": "Namespace hierárquico do Data Lake Storage",
+        "u": "https://learn.microsoft.com/azure/storage/blobs/data-lake-storage-namespace"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-28",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "vm-disponibilidade"
+    ],
+    "case": "Toda VM Linux nova de um projeto precisa, logo depois de criada, instalar um agente de inventário e ajustar um arquivo de configuração. O script está num blob privado e a equipe não quer guardar chave de conta nem SAS no comando.",
+    "stem": "Qual a solução?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Extensão de Script Personalizado, baixando o script do blob com a identidade gerenciada da VM"
+      },
+      {
+        "k": "B",
+        "t": "Executar o script manualmente por SSH depois de cada criação"
+      },
+      {
+        "k": "C",
+        "t": "Tornar o contêiner do blob público para a VM conseguir baixar"
+      },
+      {
+        "k": "D",
+        "t": "Colocar a chave da conta de armazenamento no parâmetro do comando da extensão"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "A Extensão de Script Personalizado baixa e roda scripts na VM para configuração pós-implantação. Para blob privado ela aceita identidade gerenciada, o que evita guardar SAS ou chave.",
+      "B": "Funciona, mas é manual, não escala e não garante que toda VM nova saia configurada.",
+      "C": "Expor o contêiner publicamente resolve o download criando um problema de segurança.",
+      "D": "É justamente o que a equipe quer evitar: a chave dá acesso total à conta e fica gravada na configuração."
+    },
+    "src": [
+      {
+        "t": "Extensão de Script Personalizado para Linux",
+        "u": "https://learn.microsoft.com/azure/virtual-machines/extensions/custom-script-linux"
+      }
+    ]
+  },
+  {
+    "id": "104-d3-29",
+    "exam": "az104",
+    "dom": "d3",
+    "lvl": 4,
+    "type": "multi",
+    "sec": 90,
+    "tags": [
+      "app-containers"
+    ],
+    "case": "Você vai rodar no Azure Container Instances uma API e um contêiner auxiliar que coleta os logs dela, os dois no mesmo grupo de contêineres. Ambos são imagens Linux.",
+    "stem": "Quais afirmações sobre esse grupo de contêineres estão corretas? Escolha as DUAS.",
+    "opts": [
+      {
+        "k": "A",
+        "t": "O auxiliar alcança a API por localhost, em qualquer porta, mesmo sem expô-la no IP do grupo"
+      },
+      {
+        "k": "B",
+        "t": "Os contêineres do grupo compartilham ciclo de vida, recursos, rede local e volumes, e rodam no mesmo host"
+      },
+      {
+        "k": "C",
+        "t": "Cada contêiner do grupo recebe um IP público diferente"
+      },
+      {
+        "k": "D",
+        "t": "O mesmo desenho funcionaria igual com dois contêineres Windows no grupo"
+      }
+    ],
+    "ans": [
+      "A",
+      "B"
+    ],
+    "why": {
+      "ok": "Um grupo de contêineres é agendado num mesmo host, e os contêineres dele compartilham ciclo de vida, recursos, rede local e volumes. Por isso o auxiliar fala com a API por localhost.",
+      "C": "O IP, quando existe, é do grupo, e os contêineres dividem esse endereço.",
+      "D": "Grupo com vários contêineres só aceita Linux; para Windows o ACI implanta um contêiner por vez."
+    },
+    "src": [
+      {
+        "t": "Grupos de contêineres no Azure Container Instances",
+        "u": "https://learn.microsoft.com/azure/container-instances/container-instances-container-groups"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-25",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "A rede vnet-vendas usa 10.1.0.0/16 e a rede vnet-estoque, criada por outra equipe, também usa 10.1.0.0/16. Você tenta criar um emparelhamento entre elas e a operação falha.",
+    "stem": "Qual a causa e a correção?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Os espaços de endereço se sobrepõem; é preciso renumerar uma das redes para uma faixa que não colida"
+      },
+      {
+        "k": "B",
+        "t": "Faltou habilitar o trânsito de gateway nas duas redes"
+      },
+      {
+        "k": "C",
+        "t": "Emparelhamento só funciona entre redes de regiões diferentes"
+      },
+      {
+        "k": "D",
+        "t": "Falta um grupo de segurança de rede liberando o tráfego entre as redes"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Redes emparelhadas precisam ter espaços de endereço sem sobreposição; com a mesma faixa, o roteamento não teria como saber para onde mandar cada pacote.",
+      "B": "Trânsito de gateway serve para uma rede usar o gateway da outra; não tem relação com a falha na criação do emparelhamento.",
+      "C": "Emparelhamento funciona na mesma região e entre regiões (emparelhamento global).",
+      "D": "NSG filtra tráfego depois que a conectividade existe; ele não impede a criação do emparelhamento."
+    },
+    "src": [
+      {
+        "t": "Emparelhamento de redes virtuais",
+        "u": "https://learn.microsoft.com/azure/virtual-network/virtual-network-peering-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d4-26",
+    "exam": "az104",
+    "dom": "d4",
+    "lvl": 5,
+    "type": "single",
+    "sec": 90,
+    "tags": [
+      "rede-virtual"
+    ],
+    "case": "Atrás de um Azure Load Balancer, duas VMs aparecem como não íntegras desde que alguém adicionou ao NSG da sub-rede uma regra de prioridade 100 que nega todo tráfego de entrada vindo de qualquer origem. As aplicações estão funcionando dentro das VMs.",
+    "stem": "Qual a correção mínima, mantendo o bloqueio geral?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "Uma regra de entrada com prioridade menor que 100 permitindo a marca de serviço AzureLoadBalancer na porta da investigação de integridade"
+      },
+      {
+        "k": "B",
+        "t": "Trocar o Load Balancer por um Application Gateway"
+      },
+      {
+        "k": "C",
+        "t": "Liberar a porta da aplicação para a internet inteira"
+      },
+      {
+        "k": "D",
+        "t": "Remover o NSG da sub-rede"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "As investigações de integridade saem do endereço 168.63.129.16, representado pela marca de serviço AzureLoadBalancer. A regra de negação geral bloqueou esse tráfego. Uma regra permitindo a marca, com número menor (avaliada antes), resolve sem abrir o resto.",
+      "B": "Troca o produto sem atacar a causa: as investigações do Application Gateway também seriam bloqueadas por um NSG que nega tudo.",
+      "C": "Abre a aplicação para qualquer origem, muito além do necessário, e a marca AzureLoadBalancer só cobre a investigação, não o tráfego real.",
+      "D": "Resolve derrubando toda a filtragem da sub-rede."
+    },
+    "src": [
+      {
+        "t": "Marcas de serviço do Azure",
+        "u": "https://learn.microsoft.com/azure/virtual-network/service-tags-overview"
+      },
+      {
+        "t": "Investigações de integridade do Load Balancer",
+        "u": "https://learn.microsoft.com/azure/load-balancer/load-balancer-custom-probe-overview"
+      }
+    ]
+  },
+  {
+    "id": "104-d5-21",
+    "exam": "az104",
+    "dom": "d5",
+    "lvl": 4,
+    "type": "single",
+    "sec": 75,
+    "tags": [
+      "monitorar-recuperar"
+    ],
+    "case": "As VMs de produção ficam em Brazil South. Para \"ficar longe de desastres\", alguém criou o cofre dos Serviços de Recuperação em East US e tenta configurar o backup das VMs nele, sem sucesso.",
+    "stem": "O que explica a falha e qual o desenho correto?",
+    "opts": [
+      {
+        "k": "A",
+        "t": "O cofre precisa estar na mesma região das VMs; para cópia fora da região, use a restauração entre regiões ou a redundância geográfica do cofre"
+      },
+      {
+        "k": "B",
+        "t": "Falta dar ao cofre a função Proprietário na assinatura"
+      },
+      {
+        "k": "C",
+        "t": "O backup de VM só funciona com o agente MARS instalado em cada máquina"
+      },
+      {
+        "k": "D",
+        "t": "O cofre precisa estar numa assinatura diferente da das VMs"
+      }
+    ],
+    "ans": [
+      "A"
+    ],
+    "why": {
+      "ok": "Fazer backup de VM para um cofre em outra região não é suportado: VM e cofre precisam estar na mesma região. A proteção contra desastre regional vem do armazenamento geográfico do cofre e da restauração entre regiões.",
+      "B": "Não é questão de permissão: mesmo com qualquer função, o backup entre regiões não é suportado.",
+      "C": "O backup de VM do Azure usa a extensão de backup e não depende do agente MARS, que é para arquivos e pastas.",
+      "D": "Assinatura diferente não é exigida; a restrição que causa a falha é a região."
+    },
+    "src": [
+      {
+        "t": "Matriz de suporte do backup de VMs do Azure",
+        "u": "https://learn.microsoft.com/azure/backup/backup-support-matrix-iaas"
+      }
+    ]
   }
 ]
