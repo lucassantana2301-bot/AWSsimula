@@ -8,6 +8,7 @@ import { montarConteudo } from "./content/bundle";
 import { blocoVideos, definirVideos, instalarVideos } from "./features/guia/videos";
 import * as fsrs from "./features/srs/fsrs";
 import { montarIndice, servicosCitados, type EntradaIndice } from "./features/guia/citados";
+import { acaoDoGuia, filtrarGuia, ligarGuia, telaDoGuia } from "./features/guia/telas";
 import { agendar, blocoConta, iniciarConta, type Motor } from "./features/conta/conta";
 import {
   blocoPrivacidade,
@@ -20,7 +21,15 @@ import {
 } from "./features/telemetria/telemetria";
 import { blocoApp, iniciarPwa } from "./features/pwa/pwa";
 import { blocoCalendario } from "./features/progresso/calendario";
+import { type Html } from "./lib/html";
 import indiceGuia from "../content/guia/indice.json";
+
+interface GuiaTelas {
+  ligar: typeof ligarGuia;
+  tela: (nome: string) => string;
+  acao: typeof acaoDoGuia;
+  filtrar: typeof filtrarGuia;
+}
 
 type Conteudo = ReturnType<typeof montarConteudo> & {
   blocoVideos: (servicoId: string) => string;
@@ -32,6 +41,7 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   aoSalvar: () => void;
   aoNavegar: (tela: string, o?: Record<string, unknown>) => void;
   evento: (nome: NomeEvento, dados?: Record<string, unknown>) => void;
+  guiaTelas: GuiaTelas;
 };
 
 declare global {
@@ -43,6 +53,9 @@ declare global {
 /* erros desde o primeiro instante, inclusive os do carregamento do motor */
 instalarTelemetria(() => globalThis.__CQ_MOTOR?.tela() ?? "inicio");
 
+/** O motor legado ainda monta HTML com strings: a conversão acontece só aqui. */
+const paraMotor = (h: Html | false): string => (h ? h.texto : "");
+
 const conteudo = montarConteudo();
 const indice = montarIndice(indiceGuia satisfies EntradaIndice[]);
 globalThis.__CQ_CONTENT = {
@@ -53,19 +66,21 @@ globalThis.__CQ_CONTENT = {
     definirVideos(g.VIDEOS);
     return g;
   },
-  blocoVideos,
+  blocoVideos: (id) => paraMotor(blocoVideos(id)),
   fsrs,
   /** serviços do guia citados na explicação, na resposta certa e no enunciado */
   citados: (textos: string[]): string[] => servicosCitados(textos, indice),
   nomesGuia: Object.fromEntries(indiceGuia.map((e) => [e.id, e.nome.replace(/\s*\(.*\)$/, "")])),
-  blocoConta: () => blocoApp() + blocoConta() + blocoPrivacidade(),
-  blocoCalendario: (dias, meta) => blocoCalendario(dias, meta),
+  blocoConta: () => paraMotor(blocoApp()) + paraMotor(blocoConta()) + paraMotor(blocoPrivacidade()),
+  blocoCalendario: (dias, meta) => paraMotor(blocoCalendario(dias, meta)),
   aoSalvar: agendar,
   aoNavegar: (tela, o) => {
     const ev = eventoDaRota(tela, o);
     if (ev) registrarEvento(ev.nome, ev.dados);
   },
   evento: registrarEvento,
+  /* guia de serviços: telas e ações fora do motor (fase 3) */
+  guiaTelas: { ligar: ligarGuia, tela: (nome) => telaDoGuia(nome).texto, acao: acaoDoGuia, filtrar: filtrarGuia },
 };
 instalarVideos();
 

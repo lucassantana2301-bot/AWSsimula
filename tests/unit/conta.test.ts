@@ -35,7 +35,7 @@ describe("painel do dono", () => {
     erros: [{ mensagem: '<img src=x onerror="alert(1)">', n: 2, ultimo: "", versao: "abc1234" }],
   };
   it("mostra os números e escapa texto vindo do banco", () => {
-    const h = htmlPainel(p);
+    const h = htmlPainel(p).texto;
     expect(h).toContain("42");
     expect(h).toContain("SAA: média 712");
     expect(h).toContain("3/4 aprovados");

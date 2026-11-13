@@ -6,6 +6,8 @@
  * - avisa quando a internet cai/volta;
  * - guarda o pedido de instalação do navegador para o botão do Perfil.
  */
+import { html, type Html } from "../../lib/html";
+
 interface PedidoInstalacao extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
@@ -43,16 +45,15 @@ export function atualizar(): void {
 }
 
 /** Bloco do Perfil: instalar e atualizar (vazio se não houver nada a oferecer). */
-export function blocoApp(): string {
-  const botoes = [
-    temAtualizacao() ? `<button class="btn fill sm" data-pwa="atualizar">Atualizar para a versão nova</button>` : "",
-    podeInstalar() ? `<button class="btn sm" data-pwa="instalar">Instalar o app neste aparelho</button>` : "",
-  ].join("");
-  if (!botoes) return "";
-  return `<section class="sheet stack" aria-labelledby="app-h">
+export function blocoApp(): Html | false {
+  if (!temAtualizacao() && !podeInstalar()) return false;
+  return html`<section class="sheet stack" aria-labelledby="app-h">
     <div class="hd"><h2 id="app-h">App</h2></div>
     <p class="t-sm dim">Instalado, o CloudQuest abre direto da tela inicial e funciona sem internet.</p>
-    <div class="row" style="flex-wrap:wrap;gap:8px">${botoes}</div>
+    <div class="row" style="flex-wrap:wrap;gap:8px">
+      ${temAtualizacao() && html`<button class="btn fill sm" data-pwa="atualizar">Atualizar para a versão nova</button>`}
+      ${podeInstalar() && html`<button class="btn sm" data-pwa="instalar">Instalar o app neste aparelho</button>`}
+    </div>
   </section>`;
 }
 
