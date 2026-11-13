@@ -490,7 +490,19 @@ function load(){
   catch(e){ /* navegador sem storage ou dado corrompido: começa do zero */ }
   rollDay(); rollWeek(); regenLives(); applyTheme();
 }
-function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){ /* cota cheia: segue sem salvar */ } }
+function save(){
+  S.upd=Date.now();
+  try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){ /* cota cheia: segue sem salvar */ }
+  if(typeof C.aoSalvar==="function") C.aoSalvar();
+}
+/* troca o estado inteiro vindo da conta (src/features/conta): não marca edição nova */
+function substituirEstado(novo){
+  if(!novo||typeof novo!=="object") return;
+  S=Object.assign(DEF(),novo);
+  rollDay(); rollWeek(); regenLives(); applyTheme();
+  try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){}
+  render();
+}
 
 /* chave local, para a virada do dia seguir o fuso de quem estuda */
 function dayKey(d){ d=d||new Date(); const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4); return z.toISOString().slice(0,10); }
@@ -706,6 +718,7 @@ let V={name:"home"}, SES=null, SIM=null, PL=null, RD=null, CARD=null, DK=null, S
 const clearTimers=()=>{ timers.forEach(t=>{clearTimeout(t);clearInterval(t);}); timers=[]; };
 function go(name,o){
   clearTimers();
+  if(typeof C.aoNavegar==="function") C.aoNavegar(name,o);
   const de=V.name;
   V=Object.assign({name},o||{});
   /* o estado já mudou; só a troca de DOM espera a transição */
@@ -1552,6 +1565,7 @@ function finishSim(){
   const rec={exam:SIM.exam,score,pass,right,total:SIM.qs.length,byDom,ts:Date.now(),chall:!!SIM.chall,full:!!SIM.full,
     secs:Math.round(SIM.t.reduce((a,b)=>a+b,0)/1000)};
   S.sims.unshift(rec); S.sims=S.sims.slice(0,20);
+  if(typeof C.evento==="function") C.evento("simulado_fim",{exam:SIM.exam,score,pass,total:SIM.qs.length,completo:!!SIM.full});
   if(S.answered>=50) unlock("q50");
   if(pass) unlock(isAws(SIM.exam)?"passaw":"passaz");
   if(right===SIM.qs.length) unlock("perfect");
@@ -2045,6 +2059,7 @@ function viewMe(){
   const fr=FICHAS.filter(f=>S.fichas[f.id]).length;
   return `<div class="stack-lg">
     <section><h1 class="t-xl">Seu progresso</h1></section>
+    ${typeof C.blocoConta==="function"?C.blocoConta():""}
 
     <section class="sheet">
       ${[["XP acumulado",S.xp],["Ofensiva",S.streak+(S.streak===1?" dia":" dias")],
@@ -2572,6 +2587,16 @@ load();
 if(parseChall(location.hash)) V={name:"chall",hash:location.hash};
 render();
 window.addEventListener("hashchange",()=>{ if(parseChall(location.hash)) go("chall",{hash:location.hash}); });
+
+/* Contrato com os módulos tipados (src/main.ts): estado, troca de estado
+   vinda da conta, render e aviso. Some na fase 3, quando o estado sair daqui. */
+globalThis.__CQ_MOTOR = {
+  estado: () => S,
+  substituir: substituirEstado,
+  render: () => render(),
+  toast: (m, t) => toast(m, t),
+  tela: () => V.name,
+};
 
 /* Gancho de inspeção para testes de navegador (só com ?cq-test na URL).
    Expõe leitura do estado interno sem voltar a poluir o escopo global. */
