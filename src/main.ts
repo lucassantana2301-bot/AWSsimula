@@ -17,6 +17,7 @@ import {
   especCompleta,
   minutosProporcionais,
   montarErros,
+  montarAdaptativo,
   montarPorDominio,
   montarSimulado,
   motivoValido,
@@ -35,6 +36,7 @@ import {
   salvarEstado,
   validarEstado,
 } from "./features/progresso/armazenamento";
+import { blocoPlano, montarPlano, type EntradaPlano } from "./features/progresso/plano";
 import { leuAsDuasNuvens, telaComparar } from "./features/comparar/comparar";
 import type { Equiv } from "./content/schema";
 import { agendar, blocoConta, iniciarConta, type Motor } from "./features/conta/conta";
@@ -78,6 +80,7 @@ interface MotorProgresso {
 interface MotorSimulado {
   montar: typeof montarSimulado;
   montarPorDominio: typeof montarPorDominio;
+  montarAdaptativo: typeof montarAdaptativo;
   montarErros: typeof montarErros;
   erros: typeof errosDoBanco;
   minutos: typeof minutosProporcionais;
@@ -103,6 +106,7 @@ type Conteudo = ReturnType<typeof montarConteudo> & {
   evento: (nome: NomeEvento, dados?: Record<string, unknown>) => boolean;
   guiaTelas: GuiaTelas;
   simulado: MotorSimulado;
+  plano: (e: EntradaPlano) => string;
   progresso: MotorProgresso;
   comparar: {
     tela: (equiv: readonly Equiv[]) => string;
@@ -189,10 +193,16 @@ globalThis.__CQ_CONTENT = {
       void pedirPersistencia(navigator);
     },
   },
+  /* plano até a prova (auditoria, item 48) */
+  plano: (e) => {
+    const b = blocoPlano(montarPlano(e));
+    return b ? b.texto : "";
+  },
   /* simulado: montagem, nota, revisão e reporte (fase 3) */
   simulado: {
     montar: montarSimulado,
     montarPorDominio,
+    montarAdaptativo,
     montarErros,
     erros: errosDoBanco,
     minutos: minutosProporcionais,

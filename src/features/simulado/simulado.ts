@@ -12,7 +12,7 @@
  */
 import { html, type Html } from "../../lib/html";
 
-export type ModoSimulado = "curto" | "completo" | "dominio" | "erros";
+export type ModoSimulado = "curto" | "completo" | "dominio" | "erros" | "adaptativo";
 export interface DominioPeso {
   id: string;
   w: string;
@@ -130,6 +130,31 @@ export function montarPorDominio<T extends QuestaoBase>(
   );
 }
 
+/**
+ * Adaptativo (item 46): mesma quantidade do curto, mas o peso de cada domínio
+ * cresce onde a proficiência é baixa. Peso efetivo = oficial × (1,5 − prof),
+ * com prof entre 0 e 1: domínio dominado (1,0) pesa metade de um zerado.
+ */
+export function pesosAdaptativos(dominios: readonly DominioPeso[], proficiencia: Readonly<Record<string, number>>): number[] {
+  return dominios.map((d) => {
+    const p = Math.min(1, Math.max(0, proficiencia[d.id] ?? 0));
+    return pesoDoDominio(d.w) * (1.5 - p);
+  });
+}
+export function montarAdaptativo<T extends QuestaoBase>(
+  banco: readonly T[],
+  dominios: readonly DominioPeso[],
+  n: number,
+  vistos: Vistos,
+  proficiencia: Readonly<Record<string, number>>,
+  rnd: Rnd = Math.random,
+): T[] {
+  const pesos = pesosAdaptativos(dominios, proficiencia);
+  /* reaproveita a montagem por cota: o peso entra como porcentagem no texto */
+  const ajustados = dominios.map((d, i) => ({ id: d.id, w: `${String(pesos[i] ?? 0)}%` }));
+  return montarSimulado(banco, ajustados, n, vistos, rnd);
+}
+
 /** Só as que a pessoa errou da última vez, das erradas mais recentes para as antigas. */
 export function errosDoBanco<T extends QuestaoBase>(banco: readonly T[], vistos: Vistos): T[] {
   return banco.filter((q) => vistos[q.id]?.ok === false).sort((a, b) => (vistos[b.id]?.lastTs ?? 0) - (vistos[a.id]?.lastTs ?? 0));
@@ -190,12 +215,15 @@ export function rotuloModo(modo: ModoSimulado, nomeDominio?: string): string {
       return nomeDominio ? `Simulado do domínio: ${nomeDominio}` : "Simulado por domínio";
     case "erros":
       return "Refazer as que errei";
+    case "adaptativo":
+      return "Simulado adaptativo (foco nos pontos fracos)";
     default:
       return "Simulado curto";
   }
 }
 /** Domínio e erros não contam para a prontidão: medem só um pedaço do exame. */
-export const contaParaProntidao = (modo: ModoSimulado | undefined): boolean => modo !== "dominio" && modo !== "erros";
+export const contaParaProntidao = (modo: ModoSimulado | undefined): boolean =>
+  modo !== "dominio" && modo !== "erros" && modo !== "adaptativo";
 
 export function relogio(ms: number): string {
   const s = Math.max(0, Math.round(ms / 1000));

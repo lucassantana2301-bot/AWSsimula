@@ -250,7 +250,8 @@ const ACHS=[
 
 /* ---------- estado ---------- */
 const KEY="cloudquest.v2";
-const DEF=()=>({v:2,xp:0,todayXp:0,streak:0,lastDay:null,shields:1,lives:MAX_LIVES,livesTs:Date.now(),
+const ESCALAS=[1,1.12,1.25,1.4];
+const DEF=()=>({v:2,fonte:0,contraste:false,onb:0,xp:0,todayXp:0,streak:0,lastDay:null,shields:1,lives:MAX_LIVES,livesTs:Date.now(),
   goal:2,concepts:{},seen:{},fichas:{},guia:{},lessons:{},bosses:{},sims:[],ach:{},dates:{},sim:null,cards:{},theme:"auto",decks:{},sprints:[],challenges:[],
   meta:"admin",certs:{},catProv:"all",catGroup:"trilha",
   weekXp:0,weekKey:null,combo:0,bestCombo:0,dailyDone:null,dayKeyCur:null,answered:0,dias:{}});
@@ -298,6 +299,10 @@ function substituirEstado(novo){
   PROG.salvar(ARMAZ,S);
   render();
 }
+/* fechar ou recarregar no meio do simulado: salva e pede confirmação (item 31) */
+window.addEventListener("beforeunload",ev=>{
+  if(SIM&&!SIM.done){ saveSim(); ev.preventDefault(); ev.returnValue=""; }
+});
 /* outra aba salvou: junta sem regredir nada (mesma regra da conta) e redesenha */
 window.addEventListener("storage",ev=>{
   if(ev.key!==KEY||!ev.newValue) return;
@@ -527,8 +532,28 @@ function go(name,o){
 /* ============================================================
    RENDER — gramática de diagrama
    ============================================================ */
+/* anúncios para leitor de tela: a região existe desde o começo (uma região
+   criada junto com o texto costuma não ser lida) */
+let ANUNCIO=null;
+function anunciar(t){
+  if(!ANUNCIO){
+    if(!document.body||typeof document.createElement!=="function") return;
+    ANUNCIO=document.createElement("p"); ANUNCIO.id="anuncio"; ANUNCIO.className="sr-only";
+    ANUNCIO.setAttribute("aria-live","polite"); ANUNCIO.setAttribute("aria-atomic","true"); document.body.appendChild(ANUNCIO);
+    /* região recém-criada costuma ser ignorada: o texto entra no tique seguinte */
+  }
+  ANUNCIO.textContent=""; setTimeout(()=>{ if(ANUNCIO) ANUNCIO.textContent=t; },80);
+}
+let Q_ANUNCIADA=null;
 function render(){
   regenLives(); rollDay(); rollWeek();
+  /* modo foco na prova e escala do texto da questão (itens 32 e 33) */
+  const raiz=document.documentElement;
+  if(document.body&&document.body.dataset) document.body.dataset.tela=V.name;
+  if(raiz&&raiz.style&&raiz.setAttribute){
+    raiz.style.setProperty("--q-zoom",String(ESCALAS[S.fonte|0]||1));
+    if(S.contraste) raiz.setAttribute("data-contraste","alto"); else raiz.removeAttribute("data-contraste");
+  }
   const app=$("#app");
   if(V.name==="ficha"){ app.innerHTML=viewFicha(); afterFicha(); return; }
   if(V.name==="aula"){  app.innerHTML=viewAula();  afterAula();  return; }
@@ -553,6 +578,10 @@ function render(){
   app.innerHTML=shell(body);
   motion();
   if(V.name==="sim") afterSim();
+  if(V.name==="sim"&&SIM&&!SIM.review){
+    const chave=SIM.i+"/"+SIM.qs.length;
+    if(chave!==Q_ANUNCIADA){ Q_ANUNCIADA=chave; anunciar("Questão "+(SIM.i+1)+" de "+SIM.qs.length); }
+  } else if(V.name!=="sim") Q_ANUNCIADA=null;
   if(V.name==="exam") requestAnimationFrame(animateRuler);
   if(V.name==="guia"&&V.gq) GUIA_MOD.filtrar();
 }
@@ -587,6 +616,17 @@ function viewHome(){
       <h1 class="t-2xl" style="max-width:19ch">Estude pelo guia do exame, não por vídeo solto.</h1>
       <p class="t-md dim" style="margin-top:10px;max-width:62ch">Cada domínio é uma fronteira com quatro etapas ligadas em sequência: ficha, aula, prática e chefe. A prática só abre quando o conteúdo do domínio tiver sido lido.</p>
     </section>
+
+    ${!S.onb&&!S.xp&&!S.sim?`<section class="sheet onb" aria-labelledby="onb-h">
+      <h2 class="t-md" id="onb-h">Comece em 3 passos</h2>
+      <ol class="onb-passos">
+        <li><b>Escolha a prova</b><div class="row" style="gap:6px;margin-top:6px">${act.map(e=>
+          `<button class="btn sm ${isAws(e.id)?"aw":"az"}" data-act="onb-prova" data-exam="${e.id}">${e.code}</button>`).join("")}</div></li>
+        <li><b>Marque a data da prova</b> na tela dela: o app monta o plano dia a dia.</li>
+        <li><b>Defina a meta diária</b> no Perfil e volte todo dia para a revisão.</li>
+      </ol>
+      <button class="btn sm ghost" data-act="onb-pular">Já sei usar, esconder</button>
+    </section>`:""}
 
     ${S.sim&&S.sim.end>Date.now()?`<section class="sheet tight" style="border-color:var(--fl)">
       <div class="spread">
@@ -914,6 +954,7 @@ function viewExam(){
         <div style="max-width:46ch">
           <h2 class="t-sm">Data da prova</h2>
           <p class="t-xs dim" style="margin-top:2px" id="pace">${paceText(V.exam)}</p>
+          <div id="plano">${planoHtml(V.exam)}</div>
         </div>
         <input type="date" id="examdate" data-act="noop" aria-label="Data da prova" value="${S.dates[V.exam]||""}"
           style="font:inherit;font-size:13px;padding:6px 9px;border:1px solid var(--rule2);border-radius:2px;background:var(--sheet);color:var(--ink)">
@@ -937,6 +978,8 @@ function viewExam(){
           <select id="simdom" data-act="noop">${e.domains.map(d=>`<option value="${d.id}">${esc(d.name)} (${esc(d.w)})</option>`).join("")}</select>
           <button class="btn sm" data-act="simstart" data-modo="dominio" data-exam="${V.exam}">15 questões</button>
         </div>
+        <div class="spread" style="margin-top:8px"><span class="t-xs dim">Adaptativo: ${e.simQ} questões puxando mais dos domínios em que você está fraco</span>
+          <button class="btn sm" data-act="simstart" data-modo="adaptativo" data-exam="${V.exam}">Adaptativo</button></div>
         ${(()=>{ const n=SIMM.erros(qPool(V.exam),S.seen).length;
           return n>=3?`<div class="spread" style="margin-top:8px"><span class="t-xs dim">${n} questões que você errou da última vez</span>
           <button class="btn sm" data-act="simstart" data-modo="erros" data-exam="${V.exam}">Refazer erradas (até 20)</button></div>`:""; })()}
@@ -1002,6 +1045,12 @@ function paceText(exam){
     ? "Faltam "+d+(d===1?" dia":" dias")+" e "+falta+(falta===1?" ficha":" fichas")+": cerca de "+porDia+(porDia===1?" ficha":" fichas")+" por dia, mais prática."
     : "Faltam "+d+(d===1?" dia":" dias")+". Conteúdo lido: use o tempo em simulado e revisão.";
 }
+function planoHtml(exam){
+  if(!S.dates[exam]) return "";
+  const pool=qPool(exam);
+  return C.plano({hoje:dayKey(),prova:S.dates[exam],questoesNovas:pool.filter(q=>!S.seen[q.id]).length,
+    fichasNovas:fichasOf(exam).filter(f=>!S.fichas[f.id]).length,temCompleta:fullReady(exam)});
+}
 function animateRuler(){ const m=document.getElementById("dlv"); if(m) m.style.left=m.dataset.to+"%"; }
 
 /* ---------------- leitor de ficha ---------------- */
@@ -1064,6 +1113,7 @@ function closeFicha(fallbackExam){
   RD=null;
   if(from==="review") return go("review");
   if(from==="study"&&SES) return go("study");
+  if(from==="simres"&&RES_VOLTA){ const r=RES_VOLTA; RES_VOLTA=null; V=r.v; render(); const el=r.alvo&&document.getElementById(r.alvo); if(el&&el.scrollIntoView) el.scrollIntoView({block:"center"}); return; }
   if(ex) return go("exam",{exam:ex});
   return go("home");
 }
@@ -1191,6 +1241,9 @@ function qHtml(q,shown,sel,risc){
     <span class="tag">${esc(e.domains.find(d=>d.id===q.dom).name)}</span>
     <span class="tag ${q.lvl>=4?"no":""} mono">nível ${q.lvl}/5</span>
     ${kind?`<span class="tag fl">${kind}</span>`:""}
+    ${shown?"":`<span class="q-zoom" role="group" aria-label="Tamanho do texto">
+      <button data-act="fonte" data-d="-1" aria-label="A− (diminuir o texto)" ${(S.fonte|0)<=0?"disabled":""}>A−</button>
+      <button data-act="fonte" data-d="1" aria-label="A+ (aumentar o texto)" ${(S.fonte|0)>=ESCALAS.length-1?"disabled":""}>A+</button></span>`}
   </div>`;
   const body=(()=>{
     if(q.type==="single"||q.type==="multi"){
@@ -1240,9 +1293,10 @@ function verdictHtml(q,sel){
     : `<p class="why">${esc(q.e||"Veja o retorno item a item acima.")}</p>`;
   /* do erro para o estudo: só na sessão, que tem como voltar para a questão */
   let estude="";
-  if(V.name==="study"&&SES&&typeof C.citados==="function"){
+  if((V.name==="study"&&SES)||V.name==="simres"){
+    /* a ficha não depende do guia: sem o módulo de citados, segue só com ela */
     const certas=(q.opts||[]).filter(o=>(q.ans||[]).includes(o.k)).map(o=>o.t).join(" ");
-    const ids=isAws(q.exam)?C.citados([(q.why&&q.why.ok)||q.e||"",certas,q.stem]):[];
+    const ids=isAws(q.exam)&&typeof C.citados==="function"?C.citados([(q.why&&q.why.ok)||q.e||"",certas,q.stem]):[];
     const ficha=FICHAS.find(f=>f.exam===q.exam&&f.concept&&(q.tags||[]).includes(f.concept));
     const nomes=C.nomesGuia||{};
     if(ids.length||ficha) estude=`<div class="estude"><span class="t-xs dim">Para estudar:</span>
@@ -1326,6 +1380,10 @@ function startSim(exam,modo,dom){
     if(qs.length<5){ toast("Este domínio ainda tem poucas questões","no"); return; }
     min=SIMM.minutos(e.simMin,e.simQ,qs.length);
   }
+  else if(modo==="adaptativo"){
+    const prof={}; e.domains.forEach(d=>{ prof[d.id]=domProf(exam,d.id); });
+    qs=SIMM.montarAdaptativo(qPool(exam),e.domains,e.simQ,S.seen,prof); min=e.simMin;
+  }
   else if(modo==="erros"){
     qs=SIMM.montarErros(qPool(exam),S.seen,20);
     if(qs.length<3){ toast("Você precisa ter errado pelo menos 3 questões deste exame","no"); return; }
@@ -1350,7 +1408,7 @@ function viewSim(){
   return `<div class="stack">
     <div class="sim-bar ${aw?"aw":"az"}">
       <i class="sim-prog" aria-hidden="true" style="--p:${pct}%"></i>
-      <span class="tag ${aw?"aw":"az"} mono" title="${esc(simRotulo(SIM))}">${e.code}${SIM.full?" · completa":SIM.modo==="dominio"?" · domínio":SIM.modo==="erros"?" · erros":""}</span>
+      <span class="tag ${aw?"aw":"az"} mono" title="${esc(simRotulo(SIM))}">${e.code}${SIM.full?" · completa":SIM.modo==="dominio"?" · domínio":SIM.modo==="erros"?" · erros":SIM.modo==="adaptativo"?" · adaptativo":""}</span>
       <span class="clock ${left<12e4?"crit":left<3e5?"warn":""}" id="simclock">${clock(left)}</span>
       <span class="tag mono" title="${feitas} respondidas">${SIM.i+1}/${SIM.qs.length}</span>
       <span class="sp"></span>
@@ -1364,6 +1422,7 @@ function viewSim(){
     </div>
     <div class="qnav ${aw?"aw":"az"}">${SIM.qs.map((_,i)=>`<button data-act="simgo" data-i="${i}" aria-current="${i===SIM.i}"
       data-st="${SIM.flags[i]?"flag":SIM.ans[i]!=null?"ans":""}" aria-label="Questão ${i+1}">${i+1}</button>`).join("")}</div>
+    <div class="row" style="justify-content:flex-end"><button class="btn sm ghost" data-act="simpausa">Sair por enquanto (o tempo continua contando)</button></div>
     <p class="t-xs dim2">Modo prova: sem retorno agora. Correção e explicações saem na entrega. Teclado: 1 a 9 escolhem, setas navegam, F marca. Use o ✕ ao lado de uma alternativa para riscá-la.</p>
   </div>`;
 }
@@ -1371,6 +1430,9 @@ function afterSim(){
   timers.push(setInterval(()=>{
     if(!SIM||SIM.done) return;
     const left=SIM.end-Date.now(), el=document.getElementById("simclock");
+    /* minutos finais em voz (item 29): a cada minuto nos últimos 5 */
+    const min=Math.ceil(left/6e4);
+    if(left>0&&min<=5&&min!==SIM.avisoMin){ SIM.avisoMin=min; anunciar(min<=1?"Falta menos de 1 minuto":"Faltam "+min+" minutos"); }
     if(el){ el.textContent=clock(left); el.className="clock "+(left<12e4?"crit":left<3e5?"warn":""); }
     if(left<=0){ toast("Tempo esgotado","no"); finishSim(); }
   },1000));
@@ -1455,6 +1517,7 @@ function prontidaoHtml(exam){
     <p class="t-xs dim" style="margin-top:2px">Faça ${fullReady(exam)?"uma prova completa":"um simulado"} para o app começar a medir quando você está pronto para marcar a prova.</p></section>`;
   const lst=p.todas.slice(0,12).reverse();
   const veredito=p.n===3?["Pronto para marcar","go"]:p.n===2?["Quase lá","fl"]:["Ainda não",""];
+  const melhor=p.n===3?p.todas.slice(0,3).reduce((a,r)=>r.score>a.score?r:a,p.todas[0]):null;
   const crit=[[p.c1,p.temFull?"Duas últimas provas completas com 30 pontos acima do corte":"Dois últimos simulados com 30 pontos acima do corte"],
     [p.c2,"Todos os domínios com 70% ou mais nas últimas três tentativas"],
     [p.c3,`Banco respondido: ${p.vistas} de ${p.total} questões (${Math.round(p.cob*100)}%, meta 70%)`]];
@@ -1462,7 +1525,8 @@ function prontidaoHtml(exam){
   return `<section class="sheet">
     <div class="hd"><h2 class="t-md">Prontidão</h2><span class="n">${p.todas.length} tentativa${p.todas.length>1?"s":""}</span></div>
     <div class="pront-top">
-      <div><p class="t-xs dim">Veredito</p><p class="pront-v ${veredito[1]}">${veredito[0]}</p><p class="t-xs dim2">${p.n} de 3 critérios</p></div>
+      <div><p class="t-xs dim">Veredito</p><p class="pront-v ${veredito[1]}">${veredito[0]}</p><p class="t-xs dim2">${p.n} de 3 critérios</p>
+        ${melhor&&typeof C.compartilharResultado==="function"?`<button class="btn sm fill" style="margin-top:8px" data-act="pronto-share" data-exam="${exam}">Compartilhar que estou pronto</button>`:""}</div>
       <ul class="pront-c">${crit.map(([ok,t])=>`<li data-ok="${ok?1:0}"><span class="ic" aria-hidden="true">${ok?"✓":"·"}</span><span>${t}<span class="sr-only">${ok?": atingido":": ainda não"}</span></span></li>`).join("")}</ul>
     </div>
     <div class="ch-wrap ${isAws(exam)?"":"az"}">${scoreChartSvg(lst,e)}
@@ -1537,7 +1601,7 @@ function viewSimRes(){
       <div id="gabarito" class="gab" data-f="all">
       ${V.qs.map((q,i)=>{
         const ok=grade(q,V.ans[i]), sec=V.t?Math.round((V.t[i]||0)/1000):null, fl=!!(V.flags&&V.flags[i]);
-        return `<div class="sheet gab-i" data-ok="${ok?1:0}" data-flag="${fl?1:0}" style="border-left:3px solid ${ok?"var(--go)":"var(--no)"}">
+        return `<div class="sheet gab-i" id="gab-${i}" data-ok="${ok?1:0}" data-flag="${fl?1:0}" style="border-left:3px solid ${ok?"var(--go)":"var(--no)"}">
           <div class="row" style="margin-bottom:9px"><span class="tag ${ok?"go":"no"} mono">${i+1}</span>
           <span class="t-sm ${ok?"":"dim"}">${ok?"Você acertou":"Você errou"}</span>
           ${fl?'<span class="tag mono">marcada</span>':""}<span style="flex:1"></span>
@@ -1878,7 +1942,7 @@ function viewCompare(){
 }
 
 /* ---------------- progresso ---------------- */
-let IMPORT_PENDENTE=null;
+let IMPORT_PENDENTE=null, RES_VOLTA=null;
 function previaImport(){
   if(!IMPORT_PENDENTE) return "";
   const r=IMPORT_PENDENTE.resumo, d=r.atualizado?new Date(r.atualizado).toLocaleString("pt-BR"):"data desconhecida";
@@ -1913,6 +1977,13 @@ function viewMe(){
       <h2 class="t-md" style="margin-bottom:9px">Aparência</h2>
       <div class="row">${[["auto","Seguir o sistema"],["light","Claro"],["dark","Escuro"]].map(([v,t])=>
         `<button class="btn sm ${S.theme===v?"fill":""}" data-act="theme" data-v="${v}" aria-pressed="${S.theme===v}">${t}</button>`).join("")}</div>
+      <div class="row" style="margin-top:9px">
+        <button class="btn sm ${S.contraste?"fill":""}" data-act="contraste" aria-pressed="${!!S.contraste}">Alto contraste</button>
+        <span class="t-xs dim">Texto das questões:</span>
+        <button class="btn sm" data-act="fonte" data-d="-1" aria-label="A− (diminuir o texto das questões)">A−</button>
+        <span class="mono t-xs">${Math.round((ESCALAS[S.fonte|0]||1)*100)}%</span>
+        <button class="btn sm" data-act="fonte" data-d="1" aria-label="A+ (aumentar o texto das questões)">A+</button>
+      </div>
     </section>
 
     <section class="sheet">
@@ -2085,6 +2156,7 @@ document.addEventListener("click",ev=>{
 
   if(a==="home")    return go("home");
   if(a==="compare") return go("compare");
+  if(a==="gserv"&&V.name==="simres"){ const g=b.closest(".gab-i"); RES_VOLTA={v:V,alvo:g&&g.id}; }
   if(GUIA_MOD.acao(a,b)) return;
   if(a==="me")      return go("me");
   if(a==="exam")    return go("exam",{exam:b.dataset.exam||V.exam});
@@ -2108,7 +2180,10 @@ document.addEventListener("click",ev=>{
   }
 
   /* ficha */
-  if(a==="ficha"){ RD=null; return go("ficha",{ficha:b.dataset.ficha,exam:b.dataset.exam||V.exam,from:V.name}); }
+  if(a==="ficha"){
+    if(V.name==="simres"){ const g=b.closest(".gab-i"); RES_VOLTA={v:V,alvo:g&&g.id}; }
+    RD=null; return go("ficha",{ficha:b.dataset.ficha,exam:b.dataset.exam||V.exam,from:V.name});
+  }
   if(a==="rclose") return closeFicha();
   if(a==="rdone"){
     const f=FICHAS.find(x=>x.id===RD.id);
@@ -2213,6 +2288,23 @@ document.addEventListener("click",ev=>{
   if(a==="simnext"){ if(SIM.i<SIM.qs.length-1){ SIM.i++; FX.nav="next"; } else SIM.review=true; saveSim(); render(); window.scrollTo(0,0); return; }
   if(a==="simreview"){ SIM.review=true; saveSim(); render(); window.scrollTo(0,0); return; }
   if(a==="simback"){ SIM.review=false; render(); return; }
+  if(a==="simpausa"){
+    saveSim(); clearTimers(); const ex=SIM.exam; SIM=null;
+    toast("Simulado salvo. Retome pelo início; o tempo segue correndo como na prova real."); return go("home");
+  }
+  if(a==="fonte"){
+    S.fonte=Math.max(0,Math.min(ESCALAS.length-1,(S.fonte|0)+(+b.dataset.d||0))); save(); render();
+    anunciar("Tamanho do texto "+Math.round(ESCALAS[S.fonte]*100)+"%"); return;
+  }
+  if(a==="contraste"){ S.contraste=!S.contraste; save(); return render(); }
+  if(a==="onb-pular"){ S.onb=1; save(); return render(); }
+  if(a==="onb-prova"){ S.onb=1; save(); return go("exam",{exam:b.dataset.exam}); }
+  if(a==="res-back"){
+    if(!RES_VOLTA) return go("home");
+    V=RES_VOLTA.v; const alvo=RES_VOLTA.alvo; RES_VOLTA=null; render();
+    const el=alvo&&document.getElementById(alvo); if(el&&el.scrollIntoView) el.scrollIntoView({block:"center"});
+    return;
+  }
   if(a==="simrisc"){
     const r=SIM.risc[SIM.i]||(SIM.risc[SIM.i]=[]), k=b.dataset.k, at=r.indexOf(k);
     if(at>=0) r.splice(at,1); else r.push(k);
@@ -2306,6 +2398,12 @@ document.addEventListener("click",ev=>{
     return startChall(c);
   }
   if(a==="share-result"){ shareResult(); return; }
+  if(a==="pronto-share"){
+    const p=prontidao(b.dataset.exam); if(p.n!==3) return;
+    const r=p.todas.slice(0,3).reduce((m,x)=>x.score>m.score?x:m,p.todas[0]);
+    if(r&&typeof C.compartilharResultado==="function") C.compartilharResultado({exam:r.exam,score:r.score,pass:r.pass,data:dayKey(new Date(r.ts||Date.now()))});
+    return;
+  }
   if(a==="share-linkedin"){ const r=V.res; if(r&&typeof C.compartilharResultado==="function") C.compartilharResultado({exam:r.exam,score:r.score,pass:r.pass,data:dayKey(new Date(r.ts||Date.now()))}); return; }
   if(a==="card-flip"){ CARD.flip=true; FX.flip=true; return render(); }
   if(a==="card-ok"||a==="card-no"){
@@ -2355,6 +2453,8 @@ document.addEventListener("change",ev=>{
     save();
     const p=document.getElementById("pace");
     if(p) p.textContent=paceText(V.exam);
+    const pl=document.getElementById("plano");
+    if(pl) pl.innerHTML=planoHtml(V.exam);
     return;
   }
   if(t&&t.id==="impfile"&&t.files&&t.files[0]){

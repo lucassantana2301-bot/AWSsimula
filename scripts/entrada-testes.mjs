@@ -9,6 +9,7 @@ import {
   especCompleta,
   minutosProporcionais,
   montarErros,
+  montarAdaptativo,
   montarPorDominio,
   montarSimulado,
   motivoValido,
@@ -26,6 +27,7 @@ import {
   validarEstado,
 } from "../src/features/progresso/armazenamento";
 import { mesclar } from "../src/features/conta/mesclar";
+import { blocoPlano, montarPlano } from "../src/features/progresso/plano";
 import { leuAsDuasNuvens, telaComparar } from "../src/features/comparar/comparar";
 import { acaoDoGuia, filtrarGuia, ligarGuia, telaDoGuia } from "../src/features/guia/telas";
 
@@ -36,6 +38,7 @@ C.comparar = { tela: (equiv) => telaComparar(equiv).texto, leuAsDuasNuvens };
 C.simulado = {
   montar: montarSimulado,
   montarPorDominio,
+  montarAdaptativo,
   montarErros,
   erros: errosDoBanco,
   minutos: minutosProporcionais,
@@ -60,4 +63,8 @@ C.progresso = {
   persistir: () => {
     /* sem navegador nos testes de JSDOM */
   },
+};
+C.plano = (e) => {
+  const b = blocoPlano(montarPlano(e));
+  return b ? b.texto : "";
 };
